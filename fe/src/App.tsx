@@ -1,4 +1,4 @@
-import { ThemeProvider } from '@emotion/react/macro';
+import { ThemeProvider } from '@emotion/react';
 import { designSystem } from '@styles/designSystem';
 import { RouterProvider } from 'react-router-dom';
 import { router } from 'router';
