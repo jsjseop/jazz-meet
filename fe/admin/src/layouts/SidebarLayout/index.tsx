@@ -41,7 +41,6 @@ const SidebarLayout: FC<SidebarLayoutProps> = () => {
           }
         }}
       >
-        <Header />
         <Sidebar />
         <Box
           sx={{
@@ -49,7 +48,6 @@ const SidebarLayout: FC<SidebarLayoutProps> = () => {
             zIndex: 5,
             display: 'block',
             flex: 1,
-            pt: `${theme.header.height}`,
             [theme.breakpoints.up('lg')]: {
               ml: `${theme.sidebar.width}`
             }
