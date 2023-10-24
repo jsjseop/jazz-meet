@@ -1,11 +1,24 @@
-export const getQueryString = (params: Record<string, string | number>) => {
-  const searchParams = new URLSearchParams();
+export const getQueryString = (
+  params:
+    | string
+    | string[][]
+    | Record<string, string | number>
+    | URLSearchParams,
+) => {
+  let searchParams: URLSearchParams;
 
-  Object.entries(params).forEach(([key, value]) => {
-    if (key && value) {
-      searchParams.append(key, String(value));
-    }
-  });
+  if (typeof params === 'string' || Array.isArray(params)) {
+    searchParams = new URLSearchParams(params);
+  } else if (params instanceof URLSearchParams) {
+    searchParams = params;
+  } else {
+    searchParams = new URLSearchParams();
+
+    Object.entries(params).forEach(([key, value]) => {
+      const paramValue = typeof value === 'number' ? String(value) : value;
+      searchParams.append(key, paramValue);
+    });
+  }
 
   const result = searchParams.toString();
   const hasQuery = result.length > 0;
