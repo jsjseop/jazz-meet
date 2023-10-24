@@ -7,7 +7,7 @@ export const getAroundVenues = async (
   coordinate: Coordinate,
 ): Promise<GetAroundVenuesResponse> => {
   const queryString = getQueryString(coordinate);
-  const response = await fetchData(`/api/venues/around-venues?${queryString}`);
+  const response = await fetchData(`/api/venues/around-venues${queryString}`);
 
   return response.json();
 };
@@ -23,7 +23,7 @@ export const getAroundVenuePins = async (
 ): Promise<Pin[]> => {
   const queryString = getQueryString(coordinate);
   const response = await fetchData(
-    `/api/venues/pins/around-venues?${queryString}`,
+    `/api/venues/pins/around-venues${queryString}`,
   );
 
   return response.json();
@@ -34,7 +34,7 @@ export const getVenuePinsOnMap = async (
 ): Promise<Pin[]> => {
   const queryString = getQueryString(coordinate);
   const response = await fetchData(
-    `/api/venues/pins/around-venues?${queryString}`,
+    `/api/venues/pins/around-venues${queryString}`,
   );
 
   return response.json();
