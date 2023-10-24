@@ -17,7 +17,7 @@ export const Header: React.FC = () => {
   );
 };
 
-const StyledHeader = styled.div`
+const StyledHeader = styled.header`
   width: 100%;
   display: flex;
   justify-content: space-between;
