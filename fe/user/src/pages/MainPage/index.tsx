@@ -2,6 +2,7 @@ import styled from '@emotion/styled';
 import { AroundVenus } from './AroundVenus';
 import { Banner } from './Banner';
 import { OngoingShows } from './OngoingShows';
+import { Footer } from './Footer';
 
 export const MainPage: React.FC = () => {
   return (
@@ -11,6 +12,7 @@ export const MainPage: React.FC = () => {
         <AroundVenus />
         <OngoingShows />
       </MainSection>
+      <Footer />
     </>
   );
 };
