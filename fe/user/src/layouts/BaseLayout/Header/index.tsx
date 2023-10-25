@@ -20,6 +20,8 @@ export const Header: React.FC = () => {
 const StyledHeader = styled.header`
   width: 100%;
   height: 73px;
+  padding: 0 42px;
+  box-sizing: border-box;
   display: flex;
   justify-content: space-between;
   align-items: center;
