@@ -12,6 +12,7 @@ export const SearchBar: React.FC = () => {
 
 const StyledSearchBar = styled.div`
   border: 1px solid black;
+  background-color: #fff;
 `;
 
 const StyledInput = styled.input`
