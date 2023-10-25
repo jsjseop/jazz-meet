@@ -118,7 +118,7 @@ jobs:
         if: contains(github.ref, 'release')
         with:
           host: ${{ secrets.HOST }}
-          username: ec2-user
+          username: ubuntu
           key: ${{ secrets.PRIVATE_KEY }}
           port: 22
           source: "docker-compose.yml"
@@ -130,7 +130,7 @@ jobs:
         if: contains(github.ref, 'release')
         with:
           host: ${{ secrets.HOST }}  # EC2 인스턴스 퍼블릭 DNS
-          username: ec2-user
+          username: ubuntu
           key: ${{ secrets.PRIVATE_KEY }}  # pem 키
           port: 22
           script: |
