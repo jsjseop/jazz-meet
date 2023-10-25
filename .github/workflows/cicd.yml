@@ -31,7 +31,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: '17'
-          distribution: 'termurin'
+          distribution: 'adopt'
 
       # gradle caching - 빌드 시간 향상
       - name: Gradle Caching
