@@ -5,8 +5,8 @@ import { router } from 'router';
 
 export const App: React.FC = () => {
   return (
-    <ThemeProvider theme={designSystem}>
+    // <ThemeProvider theme={designSystem}>
       <RouterProvider router={router} />
-    </ThemeProvider>
+    // </ThemeProvider>
   );
 };
