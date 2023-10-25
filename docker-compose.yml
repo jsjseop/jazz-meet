@@ -1,0 +1,19 @@
+version: "3.8"
+services:
+  app:
+    container_name: jazz_meet_app_release
+    image: chunghye98/jazz_meet_app_release:latest
+    ports:
+      - 8080:8080
+    volumes:
+      - jazz_meet_app_release:/app
+  web:
+    container_name: jazz_meet_web_release
+    image: chunghye98/jazz_meet_web_release:latest
+    ports:
+      - 80:80
+      - 443:443
+    depends_on:
+      - app
+volumes:
+  jazz_meet_app_release:
