@@ -21,11 +21,16 @@ export const Card: React.FC<Props> = ({ poster }) => {
   );
 };
 
-const StyledCard = styled.li``;
+const StyledCard = styled.div`
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 37px;
+`;
 
 const CardImage = styled.img`
-  width: 282px;
+  width: 100%;
   height: 380px;
+  object-fit: cover;
   margin-bottom: 24px;
 `;
 
