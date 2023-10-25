@@ -26,8 +26,11 @@ const StyledCard = styled.li``;
 const CardImage = styled.img`
   width: 282px;
   height: 380px;
+  margin-bottom: 24px;
 `;
 
-const Title = styled.div``;
+const Title = styled.div`
+  margin-bottom: 5px;
+`;
 
 const SubTitle = styled.div``;

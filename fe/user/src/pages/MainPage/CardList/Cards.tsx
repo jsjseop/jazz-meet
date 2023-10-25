@@ -21,6 +21,7 @@ export const Cards: React.FC<Props> = ({ posters }) => {
 };
 
 const StyledCards = styled.ul`
+  margin-bottom: 37px;
   display: flex;
   gap: 24px;
 `;

@@ -18,6 +18,7 @@ export const CardListHeader: React.FC<Props> = ({ title, onMoreClick }) => {
 };
 
 const StyledCardListHeader = styled.div`
+  margin-bottom: 31px;
   display: flex;
   justify-content: space-between;
 `;
