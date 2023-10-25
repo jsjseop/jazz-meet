@@ -1,11 +1,11 @@
 import { AroundVenus } from './AroundVenus';
-import { Carousel } from './Carousel';
+import { Banner } from './Banner';
 import { OngoingShows } from './OngoingShows';
 
 export const MainPage: React.FC = () => {
   return (
     <div>
-      <Carousel />
+      <Banner />
       <AroundVenus />
       <OngoingShows />
     </div>

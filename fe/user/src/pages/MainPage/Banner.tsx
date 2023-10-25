@@ -1,6 +1,6 @@
 import { SwiperComponent } from './SwiperComponent';
 
-export const Carousel: React.FC = () => {
+export const Banner: React.FC = () => {
   return (
     <SwiperComponent
       imageUrls={[
