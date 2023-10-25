@@ -3,32 +3,13 @@ import styled from '@emotion/styled';
 type Props = {
   title: string;
   onMoreClick?: () => void;
-  tabItems?: {
-    name: string;
-    onClick: () => void;
-  }[];
 };
 
-export const CardListHeader: React.FC<Props> = ({
-  title,
-  onMoreClick,
-  tabItems,
-}) => {
+export const CardListHeader: React.FC<Props> = ({ title, onMoreClick }) => {
   return (
     <StyledCardListHeader>
       <LeftContainer>
         <Title>{title}</Title>
-        {tabItems && (
-          <Tabs>
-            {tabItems.map((item, index) => {
-              return (
-                <Tab key={index} onClick={item.onClick}>
-                  {item.name}
-                </Tab>
-              );
-            })}
-          </Tabs>
-        )}
       </LeftContainer>
 
       {onMoreClick && <MoreButton>더보기</MoreButton>}
@@ -49,17 +30,6 @@ const LeftContainer = styled.div`
 const Title = styled.div`
   font-size: 24px;
   color: #ff4d00;
-`;
-
-const Tabs = styled.div`
-  display: flex;
-  gap: 32px;
-  justify-content: space-between;
-  align-items: center;
-`;
-
-const Tab = styled.div`
-  cursor: pointer;
 `;
 
 const MoreButton = styled.button`

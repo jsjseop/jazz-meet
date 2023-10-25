@@ -3,12 +3,6 @@ import { CardList } from './CardList';
 import { CardListHeader } from './CardList/CardListHeader';
 
 export const AroundVenus: React.FC = () => {
-  const tabItems = [
-    { name: '종로구', onClick: () => {} },
-    { name: '서초구', onClick: () => {} },
-    { name: '성북구', onClick: () => {} },
-    { name: '강남구', onClick: () => {} },
-  ];
   const posters = [
     {
       id: 1,
@@ -42,11 +36,7 @@ export const AroundVenus: React.FC = () => {
 
   return (
     <CardList>
-      <CardListHeader
-        title="주변 공연장"
-        onMoreClick={() => {}}
-        tabItems={tabItems}
-      />
+      <CardListHeader title="주변 공연장" />
 
       <Cards posters={posters} />
     </CardList>
