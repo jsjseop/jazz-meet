@@ -12,6 +12,7 @@ services:
     image: chunghye98/jazz_meet_web_release:latest
     restart: always
     ports:
+      - 80:80
       - 443:443
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
