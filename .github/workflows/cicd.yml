@@ -101,7 +101,7 @@ jobs:
       - uses: actions/checkout@master
 
       # nginx.conf 파일 EC2에 업로드
-      - name: copy nginx-release.conf file via ssh password
+      - name: copy nginx.conf file via ssh password
         uses: appleboy/scp-action@master
         if: contains(github.ref, 'release') ||
           contains(github.ref, 'infra/#11-cicd')
