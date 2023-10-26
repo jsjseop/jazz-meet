@@ -8,8 +8,8 @@ fi
 
 domains="jazzmeet.site"
 rsa_key_size=4096
-data_path="../certbot"
-staging=1 # Set to 1 if you're testing your setup to avoid hitting request limits
+data_path="./data/certbot"
+staging=0 # Set to 1 if you're testing your setup to avoid hitting request limits
 
 # 기존 인증서가 있으면 사용자에게 덮어 쓸 것인지 질문
 if [ -d "$data_path" ]; then
@@ -71,5 +71,5 @@ echo
 
 # Nginx 재시작
 echo "### Reloading nginx ..."
-docker-compose exec nginx nginx -s reload
+docker-compose exec web nginx -s reload
 
