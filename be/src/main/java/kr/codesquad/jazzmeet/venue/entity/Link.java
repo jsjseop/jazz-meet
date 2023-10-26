@@ -19,7 +19,7 @@ public class Link {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	@Column(nullable = false)
-	private String name;
+	private String url;
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "link_type_id")
 	private LinkType linkType;
