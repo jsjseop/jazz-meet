@@ -1,27 +1,12 @@
 import styled from '@emotion/styled';
+import { VenueDetail } from './VenueDetail';
 
 export const Panel: React.FC = () => {
-  return (<StyledPanel>
-    
-    <VenueList>
-      <Header />
-      <Venues>
-        <VenueItem/>
-        <VenueItem/>
-        <VenueItem/>
-      </Venues>
-      <Pagenation/>
-    <VenueList />
-      
-    <VenueDetail>
-      <ImageGrid />
-      <Header />
-      <BasicInfo />
-      <RestInfo />
-      { showInfoDetail && <InfoDetail /> }
-      { showInfoDetail && createPortal(<Images/> )}
-    </VenueDetail>
-  </StyledPanel>)
+  return (
+    <StyledPanel>
+      <VenueDetail />
+    </StyledPanel>
+  );
 };
 
 const StyledPanel = styled.div`
