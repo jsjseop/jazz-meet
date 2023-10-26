@@ -2,13 +2,15 @@ import styled from '@emotion/styled';
 import Backpack from '@assets/icons/Backpack.svg?react';
 import BeerBottle from '@assets/icons/BeerBottle.svg?react';
 import Buildings from '@assets/icons/Buildings.svg?react';
+import { Tabs } from './Tabs';
+import { Tab } from './Tabs/Tab';
 
 export const BasicInfo: React.FC = () => {
   return (
     <StyledBasicInfo>
-      <StyledTabs>
-        <StyledTab isSelected>상세정보</StyledTab>
-      </StyledTabs>
+      <Tabs>
+        <Tab isSelected>상세정보</Tab>
+      </Tabs>
       <StyledContentContainer>
         <StyledContent>
           <Backpack />
@@ -35,23 +37,6 @@ export const BasicInfo: React.FC = () => {
 
 const StyledBasicInfo = styled.div`
   padding: 0 24px;
-`;
-
-const StyledTabs = styled.div`
-  position: relative;
-  height: 32px;
-  padding-left: 48px;
-  margin: 0 -24px;
-  border-bottom: 1px solid #c7c7c7;
-  display: flex;
-  gap: 12px;
-`;
-
-const StyledTab = styled.div<{ isSelected?: boolean }>`
-  position: relative;
-  top: 2.5px;
-  padding: 6px;
-  ${({ isSelected }) => isSelected && `border-bottom: 4px solid #484848;`};
 `;
 
 const StyledContentContainer = styled.div`
