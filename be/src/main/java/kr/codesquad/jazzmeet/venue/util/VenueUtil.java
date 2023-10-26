@@ -6,7 +6,11 @@ import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.Point;
 import org.locationtech.jts.geom.impl.CoordinateArraySequence;
 
-public class VenueUtil {
+public final class VenueUtil {
+
+	private VenueUtil() {
+		throw new UnsupportedOperationException();
+	}
 
 	public static Point createPoint(Double latitude, Double longitude) {
 		Coordinate[] coordinates = new Coordinate[] {
