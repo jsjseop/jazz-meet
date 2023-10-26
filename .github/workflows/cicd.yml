@@ -149,7 +149,7 @@ jobs:
           contains(github.ref, 'infra/#11-cicd')
         with:
           host: ${{ secrets.HOST }}
-          username: ec2-user
+          username: ubuntu
           key: ${{ secrets.PRIVATE_KEY }}
           port: 22
           source: "./letsencrypt_setup.sh"
