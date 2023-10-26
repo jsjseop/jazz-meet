@@ -1,3 +1,13 @@
+import { Banner } from './Banner';
+import { MainSection } from './MainSection';
+import { Footer } from './Footer';
+
 export const MainPage: React.FC = () => {
-  return <div>메인페이지</div>;
+  return (
+    <>
+      <Banner />
+      <MainSection />
+      <Footer />
+    </>
+  );
 };

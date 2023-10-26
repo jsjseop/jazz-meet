@@ -7,6 +7,6 @@ import tsconfigPaths from 'vite-tsconfig-paths';
 export default defineConfig({
   plugins: [react(), svgr(), tsconfigPaths()],
   resolve: {
-    extensions: ['.ts', '.tsx'],
+    extensions: ['.ts', '.tsx', '.js', '.jsx'],
   },
 });
