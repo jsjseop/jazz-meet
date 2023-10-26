@@ -16,10 +16,10 @@ export const InquiryEditor: React.FC = () => {
           value={inquiryContent}
           onChange={onChangeInquiryContent}
         />
-        <StyledInputs>
+        <StyledInputContainer>
           <input type="text" placeholder="닉네임" />
           <input type="password" placeholder="비밀번호" />
-        </StyledInputs>
+        </StyledInputContainer>
       </StyledForms>
       <StyledSubmit>등록하기</StyledSubmit>
     </StyledWrapper>
@@ -63,7 +63,7 @@ const StyledForms = styled.div`
   }
 `;
 
-const StyledInputs = styled.div`
+const StyledInputContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -72,6 +72,7 @@ const StyledInputs = styled.div`
     width: 180px;
     height: 44px;
     padding: 8px 24px;
+    border-radius: 2px;
 
     &::placeholder {
       text-align: center;
