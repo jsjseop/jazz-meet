@@ -11,5 +11,5 @@ export const Panel: React.FC = () => {
 
 const StyledPanel = styled.div`
   width: 100%;
-  height: calc(100% - 73px);
+  height: 100%;
 `;
