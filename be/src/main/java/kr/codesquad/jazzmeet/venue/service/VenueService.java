@@ -16,7 +16,7 @@ public class VenueService {
 	private final VenueRepository venueRepository;
 
 	public List<VenueAutocompleteResponse> searchAutocompleteList(String word) {
-		List<Venue> venues = venueRepository.findAllByNameContainingOrRoadNameAddressContaining(
+		List<Venue> venues = venueRepository.findAllByNameContainingOrRoadNameAddressContaining(word,
 			word);
 
 		return venues.stream()

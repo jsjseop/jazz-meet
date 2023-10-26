@@ -1,6 +1,6 @@
 package kr.codesquad.jazzmeet.venue.entity;
 
-import org.springframework.data.geo.Point;
+import org.locationtech.jts.geom.Point;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
@@ -9,6 +9,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -35,4 +36,13 @@ public class Venue {
 	private Images images;
 	@Embedded
 	private Links links;
+
+	@Builder
+	public Venue(String name, String roadNameAddress, String phoneNumber, String description, Point location) {
+		this.name = name;
+		this.roadNameAddress = roadNameAddress;
+		this.phoneNumber = phoneNumber;
+		this.description = description;
+		this.location = location;
+	}
 }

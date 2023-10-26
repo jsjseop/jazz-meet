@@ -7,5 +7,5 @@ import org.springframework.data.repository.CrudRepository;
 import kr.codesquad.jazzmeet.venue.entity.Venue;
 
 public interface VenueRepository extends CrudRepository<Venue, Long> {
-	List<Venue> findAllByNameContainingOrRoadNameAddressContaining(String word);
+	List<Venue> findAllByNameContainingOrRoadNameAddressContaining(String nameWord, String roadNameAddressWord);
 }

@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import kr.codesquad.jazzmeet.venue.dto.response.VenueAutocompleteResponse;
@@ -17,8 +18,7 @@ public class VenueController {
 	private final VenueService venueService;
 
 	@GetMapping("/api/search")
-	public ResponseEntity<List<VenueAutocompleteResponse>> searchAutocompleteList() {
-		String word = "강남";
+	public ResponseEntity<List<VenueAutocompleteResponse>> searchAutocompleteList(@RequestParam String word) {
 		return ResponseEntity.ok().body(venueService.searchAutocompleteList(word));
 	}
 
