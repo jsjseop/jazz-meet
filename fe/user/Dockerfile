@@ -1,9 +1,9 @@
 # 첫 번째 빌드 단계
 FROM node:18-alpine as web
 WORKDIR /web
-COPY package.json .
+COPY ./fe/user/package.json .
 RUN npm install
-COPY . .
+COPY ./fe/user/ .
 RUN npm run build
 
 # 두 번째 빌드 단계
