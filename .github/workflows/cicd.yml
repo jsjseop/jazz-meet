@@ -110,7 +110,7 @@ jobs:
           username: ubuntu
           key: ${{ secrets.PRIVATE_KEY }}
           port: 22
-          source: "./nginx/nginx.conf"
+          source: "./nginx.conf"
           target: "/home/ubuntu/"
 
       # docker-compose.yml 파일 EC2에 업로드
