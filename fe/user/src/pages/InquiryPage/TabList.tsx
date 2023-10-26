@@ -1,17 +1,17 @@
 import styled from '@emotion/styled';
 
-export type InquiryTypeData = {
+export type InquiryTab = {
   id: number;
   name: '공연정보' | '등록문의' | '기타문의';
 };
 
 type Props = {
-  activeTypeId: number;
-  onChange: (InquiryType: InquiryTypeData) => void;
+  activaTabId: number;
+  onChange: (InquiryType: InquiryTab) => void;
 };
 
-export const TypeFilter: React.FC<Props> = ({ activeTypeId, onChange }) => {
-  const typeList: InquiryTypeData[] = [
+export const TypeFilter: React.FC<Props> = ({ activaTabId, onChange }) => {
+  const tabList: InquiryTab[] = [
     {
       id: 1,
       name: '공연정보',
@@ -28,13 +28,10 @@ export const TypeFilter: React.FC<Props> = ({ activeTypeId, onChange }) => {
 
   return (
     <StyledList>
-      {typeList.map((type) => {
+      {tabList.map((tab) => {
         return (
-          <li
-            key={type.id}
-            className={activeTypeId === type.id ? 'active' : ''}
-          >
-            <button onClick={() => onChange(type)}>{type.name}</button>
+          <li key={tab.id} className={activaTabId === tab.id ? 'active' : ''}>
+            <button onClick={() => onChange(tab)}>{tab.name}</button>
           </li>
         );
       })}

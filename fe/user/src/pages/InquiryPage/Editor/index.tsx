@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import { useState } from 'react';
-import { AutoSizingTextArea } from './AutoSizingTextArea';
+import { AutoSizingTextArea } from '../../../components/AutoSizingTextArea';
 
 export const InquiryEditor: React.FC = () => {
   const [inquiryContent, setInquiryContent] = useState('');

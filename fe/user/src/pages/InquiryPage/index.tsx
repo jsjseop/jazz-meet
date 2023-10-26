@@ -1,17 +1,17 @@
 import { PaginationBox } from '@components/PaginationBox';
 import styled from '@emotion/styled';
 import React, { useState } from 'react';
-import { InquiryEditor } from './InquiryEditor';
-import { InquiryTypeData, TypeFilter } from './TypeFilter';
+import { InquiryEditor } from './Editor';
 import { InquiryPageHeader } from './Header';
 import { InquiryData, InquiryList } from './InquiryList';
+import { InquiryTab, TypeFilter } from './TabList';
 
 export const InquiryPage: React.FC = () => {
   const [maxPage, setMaxPage] = useState<number>(25);
   const [pageNumber, setPageNumber] = useState(
     Math.floor(Math.random() * maxPage),
   );
-  const [inquiryType, setInquiryType] = useState<InquiryTypeData>({
+  const [inquiryTab, setInquiryTab] = useState<InquiryTab>({
     id: 1,
     name: '공연정보',
   });
@@ -67,16 +67,16 @@ export const InquiryPage: React.FC = () => {
     setPageNumber(value);
   };
 
-  const handleTypeChange = (inquiryType: InquiryTypeData) => {
-    setInquiryType(inquiryType);
+  const handleTypeChange = (inquiryTab: InquiryTab) => {
+    setInquiryTab(inquiryTab);
   };
 
   return (
     <StyledDiv>
       <InquiryPageHeader />
 
-      <TypeFilter activeTypeId={inquiryType.id} onChange={handleTypeChange} />
-      <InquiryList inquiries={inquires[inquiryType.name] as InquiryData[]} />
+      <TypeFilter activaTabId={inquiryTab.id} onChange={handleTypeChange} />
+      <InquiryList inquiries={inquires[inquiryTab.name] as InquiryData[]} />
       <InquiryEditor />
 
       <PaginationBox
@@ -94,5 +94,3 @@ const StyledDiv = styled.div`
   flex-direction: column;
   align-items: center;
 `;
-
-

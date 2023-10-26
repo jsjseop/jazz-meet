@@ -28,9 +28,11 @@ export const AutoSizingTextArea: React.FC<Props> = ({
     onChange(value);
   };
 
-  return <StyledTextArea {...rest} ref={textareaRef} onChange={onChangeTextarea} />;
+  return (
+    <StyledTextArea {...rest} ref={textareaRef} onChange={onChangeTextarea} />
+  );
 };
 
 const StyledTextArea = styled.textarea`
   border-radius: 2px;
-`
+`;
