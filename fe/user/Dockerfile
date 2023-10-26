@@ -10,5 +10,5 @@ RUN npm run build
 FROM nginx
 COPY ./nginx/nginx.conf /etc/nginx/nginx.conf
 # 이전 빌드 단계에서 빌드한 결과물을 /usr/share/nginx/html로 복사
-COPY --from=web /app/dist /usr/share/nginx/html
+COPY --from=web /web/dist /usr/share/nginx/html
 CMD ["nginx", "-g", "daemon off;"]
