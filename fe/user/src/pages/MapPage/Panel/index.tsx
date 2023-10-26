@@ -1,30 +1,23 @@
 import styled from '@emotion/styled';
+import { VenueList } from './VenueList';
 
 export const Panel: React.FC = () => {
   return (<StyledPanel>
     
-    <VenueList>
-      <Header />
-      <Venues>
-        <VenueItem/>
-        <VenueItem/>
-        <VenueItem/>
-      </Venues>
-      <Pagenation/>
     <VenueList />
       
-    <VenueDetail>
+    {/* <VenueDetail>
       <ImageGrid />
       <Header />
       <BasicInfo />
       <RestInfo />
       { showInfoDetail && <InfoDetail /> }
       { showInfoDetail && createPortal(<Images/> )}
-    </VenueDetail>
+    </VenueDetail> */}
   </StyledPanel>)
 };
 
 const StyledPanel = styled.div`
   width: 100%;
-  height: calc(100% - 73px);
+  height: inherit;
 `;

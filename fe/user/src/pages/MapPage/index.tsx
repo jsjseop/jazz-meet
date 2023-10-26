@@ -12,6 +12,6 @@ export const MapPage: React.FC = () => {
 };
 
 const StyledMapPage = styled.div`
-  height: calc(100% - 73px);
+  height: calc(100vh - 73px);
   display: flex;
 `;
