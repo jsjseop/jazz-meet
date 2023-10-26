@@ -55,7 +55,7 @@ const IconButton = styled.div<{ isMoreButton?: boolean }>`
   height: 36px;
   border-radius: 50%;
   background-color: #000;
-  ${({ isMoreButton }) => isMoreButton && `background-color: #d9d9d9;`}
+  ${({ isMoreButton }) => isMoreButton && `background-color: #d9d9d9;`};
   display: flex;
   justify-content: center;
   align-items: center;
