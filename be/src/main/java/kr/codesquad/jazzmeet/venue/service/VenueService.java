@@ -17,7 +17,7 @@ public class VenueService {
 	private final VenueRepository venueRepository;
 
 	public List<VenueAutocompleteResponse> searchAutocompleteList(String word) {
-
+		// word가 "" 이면 공연장 목록 전부 조회
 		List<Venue> venues = venueRepository.findTop10ByNameContainingOrRoadNameAddressContaining(word,
 			word);
 

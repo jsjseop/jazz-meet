@@ -9,6 +9,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -35,5 +36,12 @@ public class Venue {
 	private Images images;
 	@Embedded
 	private Links links;
-	
+
+	@Builder
+	public Venue(String name, String roadNameAddress, String lotNumberAddress, Point location) {
+		this.name = name;
+		this.roadNameAddress = roadNameAddress;
+		this.lotNumberAddress = lotNumberAddress;
+		this.location = location;
+	}
 }
