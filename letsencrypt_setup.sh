@@ -1,5 +1,7 @@
 #!/bin/bash
 
+#최초에 let's encrypt 인증서를 발급 받을 때 사용하는 스크립트
+
 # docker-compose 설치 확인
 if ! [ -x "$(command -v docker-compose)" ]; then
   echo 'Error: docker-compose is not installed.' >&2
