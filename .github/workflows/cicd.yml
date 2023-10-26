@@ -167,4 +167,4 @@ jobs:
           port: 22
           script: |
             chmod +x /home/ubuntu/letsencrypt_setup.sh
-            /home/ubuntu/letsencrypt_setup.sh
+            sudo /home/ubuntu/letsencrypt_setup.sh
