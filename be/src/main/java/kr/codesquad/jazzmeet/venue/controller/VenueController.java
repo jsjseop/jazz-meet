@@ -21,8 +21,5 @@ public class VenueController {
 	public ResponseEntity<List<VenueAutocompleteResponse>> searchAutocompleteList(@RequestParam String word) {
 		List<VenueAutocompleteResponse> venues = venueService.searchAutocompleteList(word);
 		return ResponseEntity.ok(venues);
-	@GetMapping("/")
-	public ResponseEntity<?> getHello() {
-		return ResponseEntity.ok().body("아뇽!");
 	}
 }
