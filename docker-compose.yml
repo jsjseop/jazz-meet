@@ -11,12 +11,23 @@ services:
     container_name: jazz_meet_web_release
     image: chunghye98/jazz_meet_web_release:latest
     ports:
-      - 80:80
-      - 443:443
-    expose:
-      - 80
-      - 443
+      - '80:80'
+      - '443:443'
+    volumes:
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
+    command : "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
     depends_on:
       - app
+  certbot:
+    container_name: certbot
+    image: certbot/certbot
+    restart: unless-stopped
+    volumes:
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
+    entrypoint : "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+    depends_on:
+      - web
 volumes:
   jazz_meet_app_release:
