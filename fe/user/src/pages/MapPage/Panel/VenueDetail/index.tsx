@@ -2,6 +2,7 @@ import styled from '@emotion/styled';
 import { PreviewImages } from './PreviewImages';
 import { Header } from './Header';
 import { BasicInfo } from './BasicInfo';
+import { RestInfo } from './RestInfo';
 
 export const VenueDetail: React.FC = () => {
   return (
@@ -9,8 +10,8 @@ export const VenueDetail: React.FC = () => {
       <PreviewImages />
       <Header />
       <BasicInfo />
+      <RestInfo />
 
-      {/* <RestInfo /> */}
       {/* {showInfoDetail && <InfoDetail />} */}
       {/* {showInfoDetail && createPortal(<Images />)} */}
     </StyledVenueDetail>

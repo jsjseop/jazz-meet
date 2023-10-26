@@ -36,7 +36,7 @@ export const BasicInfo: React.FC = () => {
 };
 
 const StyledBasicInfo = styled.div`
-  padding: 0 24px;
+  padding: 29px 24px 32px 24px;
 `;
 
 const StyledContentContainer = styled.div`
