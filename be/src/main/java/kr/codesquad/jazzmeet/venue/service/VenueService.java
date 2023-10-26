@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import kr.codesquad.jazzmeet.venue.dto.response.VenueAutocompleteResponse;
 import kr.codesquad.jazzmeet.venue.entity.Venue;
+import kr.codesquad.jazzmeet.venue.mapper.VenueMapper;
 import kr.codesquad.jazzmeet.venue.repository.VenueRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -20,12 +21,7 @@ public class VenueService {
 			word);
 
 		return venues.stream()
-			.map(venue -> VenueAutocompleteResponse.builder()
-				.id(venue.getId())
-				.name(venue.getName())
-				.address(venue.getRoadNameAddress())
-				.latitude(venue.getLocation().getX())
-				.longitude(venue.getLocation().getY())
-				.build()).toList();
+			.map(VenueMapper.INSTANCE::toVenueAutocompleteResponse)
+			.toList();
 	}
 }
