@@ -1,12 +1,13 @@
 import styled from '@emotion/styled';
 import { PreviewImages } from './PreviewImages';
+import { Header } from './Header';
 
 export const VenueDetail: React.FC = () => {
   return (
     <StyledVenueDetail>
       <PreviewImages />
+      <Header />
 
-      {/* <Header /> */}
       {/* <BasicInfo /> */}
       {/* <RestInfo /> */}
       {/* {showInfoDetail && <InfoDetail />} */}
