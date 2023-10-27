@@ -1,13 +1,13 @@
 import { PaginationBox } from '@components/PaginationBox';
 import styled from '@emotion/styled';
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { InquiryEditor } from './Editor';
 import { InquiryPageHeader } from './Header';
 import { InquiryData, InquiryList } from './InquiryList';
 import { InquiryTab, TypeFilter } from './TabList';
 
 export const InquiryPage: React.FC = () => {
-  const [maxPage, setMaxPage] = useState<number>(25);
+  const maxPage = useMemo(() => 25, []);
   const [pageNumber, setPageNumber] = useState(
     Math.floor(Math.random() * maxPage),
   );

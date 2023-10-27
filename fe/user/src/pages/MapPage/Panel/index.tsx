@@ -1,9 +1,11 @@
 import styled from '@emotion/styled';
+import { VenueList } from './VenueList';
 import { VenueDetail } from './VenueDetail';
 
 export const Panel: React.FC = () => {
   return (
     <StyledPanel>
+      <VenueList />
       <VenueDetail />
     </StyledPanel>
   );
