@@ -1,23 +1,22 @@
 import styled from '@emotion/styled';
 import { VenueList } from './VenueList';
+import { VenueDetail } from './VenueDetail';
+import { useParams } from 'react-router-dom';
 
 export const Panel: React.FC = () => {
-  return (<StyledPanel>
-    
-    <VenueList />
-      
-    {/* <VenueDetail>
-      <ImageGrid />
-      <Header />
-      <BasicInfo />
-      <RestInfo />
-      { showInfoDetail && <InfoDetail /> }
-      { showInfoDetail && createPortal(<Images/> )}
-    </VenueDetail> */}
-  </StyledPanel>)
+  const { id } = useParams();
+
+  return (
+    <StyledPanel>
+      <VenueList />
+      {id && <VenueDetail />}
+    </StyledPanel>
+  );
 };
 
 const StyledPanel = styled.div`
+  position: relative;
   width: 100%;
-  height: inherit;
+  height: 100%;
+  display: flex;
 `;
