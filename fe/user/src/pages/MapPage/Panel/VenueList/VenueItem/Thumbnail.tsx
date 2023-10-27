@@ -3,7 +3,7 @@ import styled from '@emotion/styled';
 export const Thumbnail: React.FC = () => {
   return (
     <StyledWrapper>
-      <ThumbnailImage
+      <StyledThumbnail
         src="https://search.pstatic.net/common/?src=https%3A%2F%2Fldb-phinf.pstatic.net%2F20221111_235%2F1668155402284iEk7x_JPEG%2FKakaoTalk_20221111_172729297.jpg"
         alt=""
       />
@@ -18,7 +18,7 @@ const StyledWrapper = styled.div`
   height: 256px;
 `;
 
-const ThumbnailImage = styled.img`
+const StyledThumbnail = styled.img`
   width: 100%;
   height: 100%;
   object-fit: cover;

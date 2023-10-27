@@ -19,21 +19,21 @@ export const VenueList: React.FC = () => {
 
   return (
     <StyledVenueList>
-      <ContentContainer>
+      <StyledScrollContainer>
         <Header />
-        <Venues>
+        <StyledVenues>
           <VenueItem />
           <VenueItem />
           <VenueItem />
           <VenueItem />
           <VenueItem />
-        </Venues>
-      </ContentContainer>
-      <PaginationBox
-        maxPage={maxPage}
-        currentPage={pageNumber}
-        onChange={handlePageChange}
-      />
+        </StyledVenues>
+        <PaginationBox
+          maxPage={maxPage}
+          currentPage={pageNumber}
+          onChange={handlePageChange}
+        />
+      </StyledScrollContainer>
     </StyledVenueList>
   );
 };
@@ -59,11 +59,11 @@ const StyledVenueList = styled.div`
   }
 `;
 
-const ContentContainer = styled.div`
+const StyledScrollContainer = styled.div`
   padding: 20px;
 `;
 
-const Venues = styled.ul`
+const StyledVenues = styled.ul`
   display: flex;
   flex-direction: column;
   gap: 20px;

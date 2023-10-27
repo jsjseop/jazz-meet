@@ -6,24 +6,24 @@ export const Description: React.FC = () => {
 
   return (
     <StyledDescription>
-      <Header>
-        <Name>연남5701</Name>
-        <Address>서울시 마포구 교동로23길 64</Address>
-      </Header>
+      <StyledHeader>
+        <StyledName>연남5701</StyledName>
+        <StyledAddress>서울시 마포구 교동로23길 64</StyledAddress>
+      </StyledHeader>
 
-      <MainContent>
-        <Introduction>{introduction}</Introduction>
-        <Schedule>
-          <ShowTime>
+      <StyledMainContent>
+        <StyledIntroduction>{introduction}</StyledIntroduction>
+        <StyledSchedule>
+          <StyledShowTime>
             <span>1부</span>
             <span>19:30~20:30</span>
-          </ShowTime>
-          <ShowTime>
+          </StyledShowTime>
+          <StyledShowTime>
             <span>2부</span>
             <span>21:00~22:00</span>
-          </ShowTime>
-        </Schedule>
-      </MainContent>
+          </StyledShowTime>
+        </StyledSchedule>
+      </StyledMainContent>
     </StyledDescription>
   );
 };
@@ -35,31 +35,31 @@ const StyledDescription = styled.article`
   gap: 75px;
 `;
 
-const Header = styled.header`
+const StyledHeader = styled.header`
   display: flex;
   flex-direction: column;
   gap: 8px;
 `;
 
-const Name = styled.h3`
+const StyledName = styled.h3`
   font-size: 24px;
   font-weight: 800;
   color: #1b1b1b;
 `;
 
-const Address = styled.span`
+const StyledAddress = styled.span`
   font-size: 20px;
   font-weight: 500;
   color: #848484;
 `;
 
-const MainContent = styled.section`
+const StyledMainContent = styled.section`
   display: flex;
   flex-direction: column;
   gap: 11px;
 `;
 
-const Introduction = styled.p`
+const StyledIntroduction = styled.p`
   font-size: 20px;
   font-weight: 500;
   color: #5B5B5B;
@@ -72,7 +72,7 @@ const Introduction = styled.p`
   overflow: hidden;
 `;
 
-const Schedule = styled.div`
+const StyledSchedule = styled.div`
   & * {
     font-size: 18px;
     font-weight: 400;
@@ -80,7 +80,7 @@ const Schedule = styled.div`
   }
 `;
 
-const ShowTime = styled.div`
+const StyledShowTime = styled.div`
   display: flex;
   gap: 8px;
 `;

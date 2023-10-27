@@ -5,43 +5,43 @@ import styled from '@emotion/styled';
 export const Header: React.FC = () => {
   return (
     <StyledHeader>
-      <MainSection>
-        <TotalCount>
+      <StyledMainSection>
+        <StyledTotalCount>
           <h2>전체</h2>
           <span>4</span>
-        </TotalCount>
+        </StyledTotalCount>
 
-        <SortSelect>
+        <StyledSortSelect>
           <option value="">정렬</option>
           <option value="">거리순</option>
           <option value="">최신순</option>
-        </SortSelect>
-      </MainSection>
-      <SubSection>
+        </StyledSortSelect>
+      </StyledMainSection>
+      <StyledSubSection>
         <PillShapeButton>10월13일</PillShapeButton>
         <PillShapeButton>10월14일</PillShapeButton>
         <PillShapeButton>10월15일 19:30</PillShapeButton>
 
         <DatePicker />
-      </SubSection>
+      </StyledSubSection>
     </StyledHeader>
   );
 };
 
 const StyledHeader = styled.div``;
 
-const MainSection = styled.section`
+const StyledMainSection = styled.section`
   display: flex;
   justify-content: space-between;
 `;
 
-const SubSection = styled.section`
+const StyledSubSection = styled.section`
   margin-top: 20px;
   display: flex;
   gap: 8px;
 `;
 
-const TotalCount = styled.div`
+const StyledTotalCount = styled.div`
   display: flex;
   gap: 13px;
   font-size: 26px;
@@ -56,7 +56,7 @@ const TotalCount = styled.div`
   }
 `;
 
-const SortSelect = styled.select`
+const StyledSortSelect = styled.select`
   padding: 4px 0;
   border: none;
   font-size: 22px;
