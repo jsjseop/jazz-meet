@@ -15,10 +15,8 @@ public interface VenueRepository extends JpaRepository<Venue, Long> {
 	List<Venue> findTop10ByNameContainingOrRoadNameAddressContaining(String nameWord, String roadNameAddressWord);
 
 	@Query(value =
-		"select venue.id as id, venue.name as name, venue.road_name_address as address, venue.location as location, image.url as thumbnailUrl "
-			+ "from venue venue "
-			+ "left join venue_image venue_image on (venue.id = venue_image.venue_id and venue_image.image_order = 1) "
-			+ "left join image image on (venue_image.image_id = image.id) "
+		"select id, name, road_name_address as address, location, thumbnail_url "
+			+ "from venue "
 			+ "order by st_distance_sphere(location, point(:longitude, :latitude)) "
 			+ "limit 10",
 		nativeQuery = true)
