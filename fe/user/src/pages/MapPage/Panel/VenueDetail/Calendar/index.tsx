@@ -54,7 +54,7 @@ export const Calendar: React.FC = () => {
 };
 
 const StyledCalendar = styled.div`
-  width: 300px;
+  min-width: 300px;
 
   border: 1px solid #dbdbdb;
   border-radius: 8px;
