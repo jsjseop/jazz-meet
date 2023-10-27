@@ -34,16 +34,25 @@ export const Header: React.FC = () => {
 const StyledHeader = styled.div`
   display: flex;
   justify-content: space-between;
+  padding: 26px 44px;
 `;
 
 const StyledTitleContainer = styled.div`
   display: flex;
   gap: 10px;
+  align-items: baseline;
 `;
 
-const StyledTitle = styled.div``;
+const StyledTitle = styled.div`
+  font-size: 36px;
+  font-weight: bolder;
+`;
 
-const StyledSubTitle = styled.div``;
+const StyledSubTitle = styled.div`
+  font-size: 26px;
+  font-weight: medium;
+  color: #6f6f6f;
+`;
 
 const StyledButtons = styled.div`
   display: flex;

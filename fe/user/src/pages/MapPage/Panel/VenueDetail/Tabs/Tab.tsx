@@ -10,8 +10,12 @@ export const Tab: React.FC<Props> = ({ isSelected, children }) => {
 };
 
 const StyledTab = styled.div<{ isSelected?: boolean }>`
+  font-size: 22px;
+  font-weight: bold;
+  color: #9a9a9a;
   position: relative;
-  top: 2.5px;
-  padding: 6px;
+  top: 3px;
+  padding: 10px 6px;
+  ${({ isSelected }) => isSelected && `color: #1b1b1b;`};
   ${({ isSelected }) => isSelected && `border-bottom: 4px solid #484848;`};
 `;

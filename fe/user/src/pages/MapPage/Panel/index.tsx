@@ -12,4 +12,5 @@ export const Panel: React.FC = () => {
 const StyledPanel = styled.div`
   width: 100%;
   height: 100%;
+  overflow: scroll;
 `;

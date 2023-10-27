@@ -10,9 +10,7 @@ export const Tabs: React.FC<Props> = ({ children }) => {
 
 const StyledTabs = styled.div`
   position: relative;
-  height: 32px;
-  padding-left: 48px;
-  margin: 0 -24px;
+  padding-left: 54px;
   border-bottom: 1px solid #c7c7c7;
   display: flex;
   gap: 12px;

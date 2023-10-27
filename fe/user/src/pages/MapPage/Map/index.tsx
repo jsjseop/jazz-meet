@@ -15,5 +15,5 @@ export const Map: React.FC = () => {
 
 const StyledMap = styled.div`
   width: 100%;
-  height: calc(100vh - 73px);
+  height: 100%;
 `;

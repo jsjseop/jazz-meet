@@ -25,11 +25,11 @@ export const Calendar: React.FC = () => {
   return (
     <StyledCalendar>
       <StyledCalendarHeader>
-        <ChevronLeftIcon onClick={prevMonth} />
+        <ChevronLeftIcon onClick={prevMonth} sx={{ fill: '#B5BEC6' }} />
         <StyledCalendarHeaderTitle>
           {currentDate.toLocaleString('en-US', { month: 'long' })} {currentYear}
         </StyledCalendarHeaderTitle>
-        <ChevronRightIcon onClick={nextMonth} />
+        <ChevronRightIcon onClick={nextMonth} sx={{ fill: '#B5BEC6' }} />
       </StyledCalendarHeader>
 
       <StyledDaysOfTheWeek>
@@ -43,26 +43,45 @@ export const Calendar: React.FC = () => {
       </StyledDaysOfTheWeek>
       <StyledDaysGrid>
         {Array.from({ length: firstDay }).map((_, index) => (
-          <span key={index}></span>
+          <div key={index}></div>
         ))}
         {Array.from({ length: lastDay }).map((_, index) => (
-          <span key={index}>{index + 1}</span>
+          <div key={index}>{index + 1}</div>
         ))}
       </StyledDaysGrid>
     </StyledCalendar>
   );
 };
 
-const StyledCalendar = styled.div``;
+const StyledCalendar = styled.div`
+  width: 300px;
+
+  border: 1px solid #dbdbdb;
+  border-radius: 8px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  box-sizing: border-box;
+`;
 
 const StyledCalendarHeader = styled.div`
+  font-size: 14px;
+  font-weight: 600;
   display: flex;
   align-items: center;
   justify-content: space-between;
 `;
 
-const StyledCalendarHeaderTitle = styled.div``;
+const StyledCalendarHeaderTitle = styled.div`
+  color: #4a5660;
+`;
+
 const StyledDaysOfTheWeek = styled.div`
+  color: #b5bec6;
+  font-size: 10px;
+  letter-spacing: 1.5px;
+
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   align-items: center;
@@ -70,10 +89,19 @@ const StyledDaysOfTheWeek = styled.div`
 `;
 
 const StyledDaysGrid = styled.div`
+  position: relative;
+  color: #4a5660;
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   grid-template-rows: repeat(5, 1fr);
   align-items: center;
   justify-items: center;
   gap: 10px;
+
+  > div {
+    padding: 50% 0;
+    height: 0;
+    position: relative;
+    top: -20%;
+  }
 `;
