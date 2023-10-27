@@ -13,7 +13,9 @@ export const router = createBrowserRouter(
     <Route path="/">
       <Route element={<BaseLayout />}>
         <Route index element={<MainPage />} />
-        <Route path="map" element={<MapPage />} />
+        <Route path="map" element={<MapPage />}>
+          <Route path=":id" element={<MapPage />} />
+        </Route>
         <Route path="inquiry" element={<InquiryPage />} />
       </Route>
     </Route>,

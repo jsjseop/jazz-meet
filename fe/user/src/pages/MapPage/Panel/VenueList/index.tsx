@@ -3,6 +3,7 @@ import styled from '@emotion/styled';
 import { useMemo, useState } from 'react';
 import { Header } from './Header';
 import { VenueItem } from './VenueItem';
+import { Link } from 'react-router-dom';
 
 export const VenueList: React.FC = () => {
   const maxPage = useMemo(() => 25, []);
@@ -19,28 +20,29 @@ export const VenueList: React.FC = () => {
 
   return (
     <StyledVenueList>
-      <StyledScrollContainer>
-        <Header />
-        <StyledVenues>
+      <Header />
+      <StyledVenues>
+        <Link to="/map/1">
           <VenueItem />
-          <VenueItem />
-          <VenueItem />
-          <VenueItem />
-          <VenueItem />
-        </StyledVenues>
-        <PaginationBox
-          maxPage={maxPage}
-          currentPage={pageNumber}
-          onChange={handlePageChange}
-        />
-      </StyledScrollContainer>
+        </Link>
+        <VenueItem />
+        <VenueItem />
+        <VenueItem />
+        <VenueItem />
+      </StyledVenues>
+      <PaginationBox
+        maxPage={maxPage}
+        currentPage={pageNumber}
+        onChange={handlePageChange}
+      />
     </StyledVenueList>
   );
 };
 
 const StyledVenueList = styled.div`
   width: 100%;
-  height: inherit;
+  background-color: #fff;
+  padding: 20px;
   overflow-y: auto;
 
   &::-webkit-scrollbar {
@@ -59,13 +61,13 @@ const StyledVenueList = styled.div`
   }
 `;
 
-const StyledScrollContainer = styled.div`
-  padding: 20px;
-`;
-
 const StyledVenues = styled.ul`
   display: flex;
   flex-direction: column;
   gap: 20px;
   margin-top: 20px;
+
+  a {
+    text-decoration: none;
+  }
 `;

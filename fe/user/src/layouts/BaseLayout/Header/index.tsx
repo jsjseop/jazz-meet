@@ -1,14 +1,17 @@
 import { SearchBar } from '@components/SearchBar';
 import styled from '@emotion/styled';
+import { Link } from 'react-router-dom';
 
 export const Header: React.FC = () => {
   return (
     <StyledHeader>
       <StyledLeftContainer>
-        <StyledLogoImage src="https://github.com/jsh3418/js-calculator-bonobono/assets/57666791/07da94d4-01b3-4e70-8973-db44780f6d6e" />
+        <Link to="/">
+          <StyledLogoImage src="https://github.com/jsh3418/js-calculator-bonobono/assets/57666791/07da94d4-01b3-4e70-8973-db44780f6d6e" />
+        </Link>
         <StyledButtons>
-          <button type="button">지도</button>
-          <button type="button">문의</button>
+          <Link to="/map">지도</Link>
+          <Link to="/inquiry">문의</Link>
         </StyledButtons>
       </StyledLeftContainer>
 
@@ -41,9 +44,12 @@ const StyledLogoImage = styled.img`
 
 const StyledButtons = styled.nav`
   display: flex;
+  align-items: center;
   gap: 34px;
 
-  > button {
+  > a {
     color: #fff;
+    cursor: pointer;
+    text-decoration: none;
   }
 `;
