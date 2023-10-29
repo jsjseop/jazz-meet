@@ -56,6 +56,7 @@ export const ShowDetail: React.FC = () => {
 
 const StyledShowDetail = styled.div`
   position: relative;
+  z-index: 101;
   width: 100%;
   height: 100%;
   padding: 20px;

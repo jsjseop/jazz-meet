@@ -31,6 +31,7 @@ export const ImageDetail: React.FC = () => {
 
 const StyledImageDetail = styled.div`
   position: fixed;
+  z-index: 101;
   top: 73px;
   width: 100vw;
   height: 100vh;
