@@ -17,13 +17,11 @@ public class ShowService {
 
 	private final ShowRepository showRepository;
 
-	public List<UpcomingShowResponse> getUpcomingShows() {
-		LocalDateTime nowTime = LocalDateTime.now();
-
+	public List<UpcomingShowResponse> getUpcomingShows(LocalDateTime nowTime) {
 		// 10개 제한, 현재 시간 < 공연 시작 시간 , 현재 시간 < 공연 끝나는 시간, 공연 시작 시간 순으로 오름차순 정렬
+		// TODO: N+1 문제 해결 필요
 		List<Show> shows = showRepository.findTop10BystartTimeGreaterThanOrEndTimeGreaterThanOrderByStartTime(
 			nowTime, nowTime);
-		// TODO: image.url만 필요한데 select시 image의 모든 필드를 가져오는 문제를 어떻게 해결할 수 있을까?
 
 		return shows.stream().map(ShowMapper.INSTANCE::toUpcomingShowResponse).toList();
 	}

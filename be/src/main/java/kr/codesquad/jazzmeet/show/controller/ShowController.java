@@ -1,5 +1,6 @@
 package kr.codesquad.jazzmeet.show.controller;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
@@ -18,7 +19,9 @@ public class ShowController {
 
 	@GetMapping("/api/shows/upcoming")
 	public ResponseEntity<List<UpcomingShowResponse>> getUpcomingShows() {
-		List<UpcomingShowResponse> upcomingShowResponses = showService.getUpcomingShows();
+		LocalDateTime nowTime = LocalDateTime.now();
+		List<UpcomingShowResponse> upcomingShowResponses = showService.getUpcomingShows(nowTime);
+
 		return ResponseEntity.ok(upcomingShowResponses);
 	}
 
