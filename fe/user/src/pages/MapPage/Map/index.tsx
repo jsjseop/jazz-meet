@@ -1,7 +1,11 @@
 import styled from '@emotion/styled';
 import { useEffect } from 'react';
 
-export const Map: React.FC = () => {
+type Props = {
+  mapRef: React.RefObject<HTMLDivElement>;
+};
+
+export const Map: React.FC<Props> = ({ mapRef }) => {
   useEffect(() => {
     const mapOptions = {
       center: new naver.maps.LatLng(37.5666103, 126.9783882),
@@ -10,7 +14,7 @@ export const Map: React.FC = () => {
     new naver.maps.Map('map', mapOptions);
   }, []);
 
-  return <StyledMap id="map" />;
+  return <StyledMap id="map" ref={mapRef} />;
 };
 
 const StyledMap = styled.div`

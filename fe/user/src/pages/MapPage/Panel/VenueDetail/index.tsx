@@ -4,8 +4,10 @@ import { Header } from './Header';
 import { BasicInfo } from './BasicInfo';
 import { RestInfo } from './RestInfo';
 import { useEffect, useState } from 'react';
+import { Outlet, useOutletContext } from 'react-router-dom';
 
 export const VenueDetail: React.FC = () => {
+  const mapRef = useOutletContext<React.RefObject<HTMLDivElement>>();
   const [isRender, setRender] = useState(false);
 
   useEffect(() => {
@@ -18,8 +20,7 @@ export const VenueDetail: React.FC = () => {
       <Header />
       <BasicInfo />
       <RestInfo />
-
-      {/* {showInfoDetail && <InfoDetail />} */}
+      <Outlet context={mapRef} />
       {/* {showInfoDetail && createPortal(<Images />)} */}
     </StyledVenueDetail>
   );
