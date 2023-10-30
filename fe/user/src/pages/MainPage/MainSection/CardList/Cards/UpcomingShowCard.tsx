@@ -1,22 +1,22 @@
 import styled from '@emotion/styled';
+import { useNavigate } from 'react-router-dom';
+import { UpcomingShow } from 'types/api.types';
 
 type Props = {
-  poster: {
-    id: number;
-    thumbnailUrl: string;
-    name: string;
-    address: string;
-  };
+  upcomingShow: UpcomingShow;
 };
 
-export const UpcomingCard: React.FC<Props> = ({ poster }) => {
-  const { id, thumbnailUrl, name, address } = poster;
+export const UpcomingShowCard: React.FC<Props> = ({ upcomingShow }) => {
+  const { venueId, showId, posterUrl, showName, startTime, endTime } =
+    upcomingShow;
+  const navigate = useNavigate();
 
   return (
-    <StyledCard key={id}>
-      <CardImage src={thumbnailUrl} alt="poster" />
-      <Title>{name}</Title>
-      <SubTitle>{address}</SubTitle>
+    <StyledCard onClick={() => navigate(`/venues/${venueId}/shows/${showId}`)}>
+      <CardImage src={posterUrl} alt="poster" />
+      <Title>{showName}</Title>
+      <SubTitle>{startTime}</SubTitle>
+      <SubTitle>{endTime}</SubTitle>
     </StyledCard>
   );
 };

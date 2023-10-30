@@ -11,3 +11,12 @@ export type Pin = {
   id: number;
   name: string;
 } & Coordinate;
+
+export type UpcomingShow = {
+  venueId: number;
+  showId: number;
+  posterUrl: string;
+  showName: string;
+  startTime: string;
+  endTime: string;
+};
