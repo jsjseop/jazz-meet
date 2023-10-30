@@ -34,8 +34,8 @@ public class VenueController {
 	}
 
 	@GetMapping("/api/venues/pins/search")
-	public ResponseEntity<List<VenuePinsBySearchResponse>> findVenuePinsList(@RequestParam String word) {
-		List<VenuePinsBySearchResponse> venuePins = venueService.findVenuePinsList(word);
+	public ResponseEntity<List<VenuePinsBySearchResponse>> findVenuePins(@RequestParam String word) {
+		List<VenuePinsBySearchResponse> venuePins = venueService.findVenuePins(word);
 		return ResponseEntity.ok(venuePins);
 	}
 }

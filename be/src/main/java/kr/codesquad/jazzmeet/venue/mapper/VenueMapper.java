@@ -16,8 +16,8 @@ public interface VenueMapper {
 	VenueMapper INSTANCE = Mappers.getMapper(VenueMapper.class);
 
 	@Mapping(target = "address", source = "roadNameAddress")
-	@Mapping(target = "latitude", source = "location.x")
-	@Mapping(target = "longitude", source = "location.y")
+	@Mapping(target = "latitude", source = "location.y")
+	@Mapping(target = "longitude", source = "location.x")
 	VenueAutocompleteResponse toVenueAutocompleteResponse(Venue venue);
 
 	@Mapping(target = "latitude", source = "location.y")

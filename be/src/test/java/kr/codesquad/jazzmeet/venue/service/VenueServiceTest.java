@@ -17,6 +17,7 @@ import kr.codesquad.jazzmeet.venue.dto.response.VenueAutocompleteResponse;
 import kr.codesquad.jazzmeet.venue.dto.response.VenuePinsBySearchResponse;
 import kr.codesquad.jazzmeet.venue.entity.Venue;
 import kr.codesquad.jazzmeet.venue.repository.VenueRepository;
+import kr.codesquad.jazzmeet.venue.util.VenueTestUtil;
 import kr.codesquad.jazzmeet.venue.util.VenueUtil;
 
 class VenueServiceTest extends IntegrationTestSupport {
@@ -145,12 +146,13 @@ class VenueServiceTest extends IntegrationTestSupport {
 	public void findVenuesPinsByWordInName() throws Exception {
 		//given
 		String word = "부기우기";
-		Venue venue1 = createVenue("부기우기", "서울 용산구 회나무로 21 2층");
-		Venue venue2 = createVenue("Entry55", "서울 동작구 동작대로1길 18 B-102");
+		Point point = VenueUtil.createPoint(123.11111, 123.123123);
+		Venue venue1 = VenueTestUtil.createVenues("부기우기", "서울 용산구 회나무로 21 2층", point);
+		Venue venue2 = VenueTestUtil.createVenues("Entry55", "서울 동작구 동작대로1길 18 B-102", point);
 		venueRepository.saveAll(List.of(venue1, venue2));
 
 		//when
-		List<VenuePinsBySearchResponse> venuePinsList = venueService.findVenuePinsList(word);
+		List<VenuePinsBySearchResponse> venuePinsList = venueService.findVenuePins(word);
 
 		//then
 		assertThat(venuePinsList).hasSize(1)
@@ -163,12 +165,13 @@ class VenueServiceTest extends IntegrationTestSupport {
 	public void findVenuesPinsByWordInAddress() throws Exception {
 		//given
 		String word = "서울";
-		Venue venue1 = createVenue("부기우기", "서울 용산구 회나무로 21 2층");
-		Venue venue2 = createVenue("Entry55", "서울 동작구 동작대로1길 18 B-102");
+		Point point = VenueUtil.createPoint(123.11111, 123.123123);
+		Venue venue1 = VenueTestUtil.createVenues("부기우기", "서울 용산구 회나무로 21 2층", point);
+		Venue venue2 = VenueTestUtil.createVenues("Entry55", "서울 동작구 동작대로1길 18 B-102", point);
 		venueRepository.saveAll(List.of(venue1, venue2));
 
 		//when
-		List<VenuePinsBySearchResponse> venuePinsList = venueService.findVenuePinsList(word);
+		List<VenuePinsBySearchResponse> venuePinsList = venueService.findVenuePins(word);
 
 		//then
 		assertThat(venuePinsList).hasSize(2)
