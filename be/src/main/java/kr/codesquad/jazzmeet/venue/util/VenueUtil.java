@@ -12,6 +12,7 @@ public final class VenueUtil {
 
 	public static Point createPoint(Double latitude, Double longitude) {
 		GeometryFactory geometryFactory = new GeometryFactory();
+		// TODO: 잘못된 위치 정보인 경우 예외 처리
 		return geometryFactory.createPoint(new Coordinate(longitude, latitude));
 	}
 }
