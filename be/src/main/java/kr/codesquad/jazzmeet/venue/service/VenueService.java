@@ -40,7 +40,7 @@ public class VenueService {
 			.toList();
 	}
 
-	public List<VenuePinsBySearchResponse> findVenuePinsList(String word) {
+	public List<VenuePinsBySearchResponse> findVenuePins(String word) {
 		List<VenuePinsByWord> venues = venueQueryRepository.findVenuePinsByWord(word);
 
 		return venues.stream()

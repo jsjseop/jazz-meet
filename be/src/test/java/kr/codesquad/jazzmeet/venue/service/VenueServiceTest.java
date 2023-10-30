@@ -114,7 +114,7 @@ class VenueServiceTest extends IntegrationTestSupport {
 		venueRepository.saveAll(List.of(venue1, venue2));
 
 		//when
-		List<VenuePinsBySearchResponse> venuePinsList = venueService.findVenuePinsList(word);
+		List<VenuePinsBySearchResponse> venuePinsList = venueService.findVenuePins(word);
 
 		//then
 		assertThat(venuePinsList).hasSize(1)
@@ -133,7 +133,7 @@ class VenueServiceTest extends IntegrationTestSupport {
 		venueRepository.saveAll(List.of(venue1, venue2));
 
 		//when
-		List<VenuePinsBySearchResponse> venuePinsList = venueService.findVenuePinsList(word);
+		List<VenuePinsBySearchResponse> venuePinsList = venueService.findVenuePins(word);
 
 		//then
 		assertThat(venuePinsList).hasSize(2)
