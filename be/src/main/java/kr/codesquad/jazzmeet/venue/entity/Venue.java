@@ -38,6 +38,8 @@ public class Venue {
 	private Images images;
 	@Embedded
 	private Links links;
+	@Embedded
+	private VenueHours venueHours;
 
 	@Builder
 	public Venue(String name, String roadNameAddress, String lotNumberAddress, Point location) {
