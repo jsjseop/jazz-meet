@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import kr.codesquad.jazzmeet.venue.dto.response.NearbyVenueResponse;
 import kr.codesquad.jazzmeet.venue.dto.response.VenueAutocompleteResponse;
+import kr.codesquad.jazzmeet.venue.dto.response.VenuePinsBySearchResponse;
 import kr.codesquad.jazzmeet.venue.service.VenueService;
 import lombok.RequiredArgsConstructor;
 
@@ -30,5 +31,11 @@ public class VenueController {
 		@RequestParam Double longitude) {
 		List<NearbyVenueResponse> nearByVenues = venueService.findNearByVenues(latitude, longitude);
 		return ResponseEntity.ok(nearByVenues);
+	}
+
+	@GetMapping("/api/venues/pins/search")
+	public ResponseEntity<List<VenuePinsBySearchResponse>> findVenuePinsList(@RequestParam String word) {
+		List<VenuePinsBySearchResponse> venuePins = venueService.findVenuePinsList(word);
+		return ResponseEntity.ok(venuePins);
 	}
 }

@@ -40,10 +40,11 @@ public class Venue {
 	private Links links;
 
 	@Builder
-	public Venue(String name, String roadNameAddress, String lotNumberAddress, Point location) {
+	public Venue(String name, String roadNameAddress, String lotNumberAddress, Point location, String thumbnailUrl) {
 		this.name = name;
 		this.roadNameAddress = roadNameAddress;
 		this.lotNumberAddress = lotNumberAddress;
 		this.location = location;
+		this.thumbnailUrl = thumbnailUrl;
 	}
 }
