@@ -13,11 +13,19 @@ const initialState = {
 export const useCalendarStore = create<CalendarStore>()((set) => ({
   ...initialState,
   prevMonth: () =>
-    set(({ currentDate }) => ({
-      currentDate: new Date(currentDate.getMonth() - 1),
-    })),
+    set(({ currentDate }) => {
+      currentDate.setMonth(currentDate.getMonth() - 1);
+
+      return {
+        currentDate: new Date(currentDate),
+      };
+    }),
   nextMonth: () =>
-    set(({ currentDate }) => ({
-      currentDate: new Date(currentDate.getMonth() + 1),
-    })),
+    set(({ currentDate }) => {
+      currentDate.setMonth(currentDate.getMonth() + 1);
+
+      return {
+        currentDate: new Date(currentDate),
+      };
+    }),
 }));

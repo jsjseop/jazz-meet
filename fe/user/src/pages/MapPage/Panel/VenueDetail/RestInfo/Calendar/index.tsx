@@ -1,21 +1,14 @@
 import styled from '@emotion/styled';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import { useState } from 'react';
+
 import { getFirstDay, getLastDay } from './getFirstDayAndLastDay';
+import { useCalendarStore } from '../useCalendarStore';
 
 export const Calendar: React.FC = () => {
-  const [currentDate, setCurrentDate] = useState(new Date());
-
-  const nextMonth = () => {
-    currentDate.setMonth(currentDate.getMonth() + 1);
-    setCurrentDate(new Date(currentDate));
-  };
-
-  const prevMonth = () => {
-    currentDate.setMonth(currentDate.getMonth() - 1);
-    setCurrentDate(new Date(currentDate));
-  };
+  const currentDate = useCalendarStore(({ currentDate }) => currentDate);
+  const prevMonth = useCalendarStore(({ prevMonth }) => prevMonth);
+  const nextMonth = useCalendarStore(({ nextMonth }) => nextMonth);
 
   const currentYear = currentDate.getFullYear();
   const currentMonth = currentDate.getMonth() + 1;
@@ -71,6 +64,10 @@ const StyledCalendarHeader = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+
+  svg {
+    cursor: pointer;
+  }
 `;
 
 const StyledCalendarHeaderTitle = styled.div`
