@@ -4,6 +4,9 @@ import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.Point;
 
+import kr.codesquad.jazzmeet.global.error.CustomException;
+import kr.codesquad.jazzmeet.global.error.statuscode.LocationErrorCode;
+
 public final class VenueUtil {
 
 	private VenueUtil() {
@@ -12,7 +15,10 @@ public final class VenueUtil {
 
 	public static Point createPoint(Double latitude, Double longitude) {
 		GeometryFactory geometryFactory = new GeometryFactory();
-		// TODO: 잘못된 위치 정보인 경우 예외 처리
-		return geometryFactory.createPoint(new Coordinate(longitude, latitude));
+		try {
+			return geometryFactory.createPoint(new Coordinate(longitude, latitude));
+		} catch (Exception e) {
+			throw new CustomException(LocationErrorCode.INVALID_LOCATION_ERROR);
+		}
 	}
 }

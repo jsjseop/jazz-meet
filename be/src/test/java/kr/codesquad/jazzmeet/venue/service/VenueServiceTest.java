@@ -127,7 +127,7 @@ class VenueServiceTest extends IntegrationTestSupport {
 			.build();
 	}
 
-	Venue createVenueWithLocation(String name, String roadNameAddress, double latitude, double longitude) {
+	Venue createVenueWithLocation(String name, String roadNameAddress, Double latitude, Double longitude) {
 		Point point = VenueUtil.createPoint(latitude, longitude);
 
 		return Venue.builder()
