@@ -1,16 +1,19 @@
 import { SearchBar } from '@components/SearchBar';
 import styled from '@emotion/styled';
+import { Link } from 'react-router-dom';
 
 export const Header: React.FC = () => {
   return (
     <StyledHeader>
-      <LeftContainer>
-        <LogoImage src="https://github.com/jsh3418/js-calculator-bonobono/assets/57666791/07da94d4-01b3-4e70-8973-db44780f6d6e" />
-        <Buttons>
-          <button>지도</button>
-          <button>문의</button>
-        </Buttons>
-      </LeftContainer>
+      <StyledLeftContainer>
+        <Link to="/">
+          <StyledLogoImage src="https://github.com/jsh3418/js-calculator-bonobono/assets/57666791/07da94d4-01b3-4e70-8973-db44780f6d6e" />
+        </Link>
+        <StyledButtons>
+          <Link to="/map">지도</Link>
+          <Link to="/inquiry">문의</Link>
+        </StyledButtons>
+      </StyledLeftContainer>
 
       <SearchBar />
     </StyledHeader>
@@ -28,22 +31,25 @@ const StyledHeader = styled.header`
   background-color: #000;
 `;
 
-const LeftContainer = styled.div`
+const StyledLeftContainer = styled.div`
   display: flex;
   gap: 34px;
 `;
 
-const LogoImage = styled.img`
+const StyledLogoImage = styled.img`
   width: 146px;
   height: 27px;
   object-fit: cover;
 `;
 
-const Buttons = styled.nav`
+const StyledButtons = styled.nav`
   display: flex;
+  align-items: center;
   gap: 34px;
 
-  > button {
+  > a {
     color: #fff;
+    cursor: pointer;
+    text-decoration: none;
   }
 `;
