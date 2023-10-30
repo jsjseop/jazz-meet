@@ -3,7 +3,7 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 
 import { getFirstDay, getLastDay } from './getFirstDayAndLastDay';
-import { useCalendarStore } from '../useCalendarStore';
+import { useCalendarStore } from '../../useCalendarStore';
 
 export const Calendar: React.FC = () => {
   const currentDate = useCalendarStore(({ currentDate }) => currentDate);
