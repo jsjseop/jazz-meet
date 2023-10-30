@@ -1,7 +1,7 @@
 import { fetchData } from 'apis/fetchData';
-import { AroundVenue, Pin } from './types';
+import { AroundVenue, Pin } from '../types/api.types';
 import { getQueryString } from '@utils/getQueryString';
-import { Coordinate, CoordinateBoundary } from 'types/map';
+import { Coordinate, CoordinateBoundary } from 'types/map.types';
 
 export const getAroundVenues = async (
   coordinate: Coordinate,

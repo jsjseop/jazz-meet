@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { AroundVenue } from 'apis/venue/types';
+import { AroundVenue } from 'types/api.types';
 import { useNavigate } from 'react-router-dom';
 
 type Props = {

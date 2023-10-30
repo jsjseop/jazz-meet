@@ -2,7 +2,7 @@ import { Cards } from './CardList/Cards';
 import { CardList } from './CardList';
 import { CardListHeader } from './CardList/CardListHeader';
 import { useEffect, useState } from 'react';
-import { AroundVenue } from 'apis/venue/types';
+import { AroundVenue } from 'types/api.types';
 import { getAroundVenues } from 'apis/venue';
 import { BASIC_COORDINATE } from '@constants/COORDINATE';
 import { AroundVenueCard } from './CardList/Cards/AroundVenueCard';
