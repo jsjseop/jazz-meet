@@ -60,10 +60,7 @@ export const InquiryPage: React.FC = () => {
     기타문의: [] as InquiryData[],
   };
 
-  const handlePageChange = (
-    event: React.ChangeEvent<unknown>,
-    value: number,
-  ) => {
+  const handlePageChange = (_: React.ChangeEvent<unknown>, value: number) => {
     setPageNumber(value);
   };
 

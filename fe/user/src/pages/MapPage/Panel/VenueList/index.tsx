@@ -11,10 +11,7 @@ export const VenueList: React.FC = () => {
     Math.floor(Math.random() * maxPage),
   );
 
-  const handlePageChange = (
-    event: React.ChangeEvent<unknown>,
-    value: number,
-  ) => {
+  const handlePageChange = (_: React.ChangeEvent<unknown>, value: number) => {
     setPageNumber(value);
   };
 
