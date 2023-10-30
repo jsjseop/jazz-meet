@@ -9,7 +9,7 @@ type Props = {
   };
 };
 
-export const Card: React.FC<Props> = ({ poster }) => {
+export const UpcomingCard: React.FC<Props> = ({ poster }) => {
   const { id, thumbnailUrl, name, address } = poster;
 
   return (

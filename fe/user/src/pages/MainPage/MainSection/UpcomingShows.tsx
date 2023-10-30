@@ -2,7 +2,7 @@ import { Cards } from './CardList/Cards';
 import { CardListHeader } from './CardList/CardListHeader';
 import { CardList } from './CardList';
 
-export const OngoingShows: React.FC = () => {
+export const UpcomingShows: React.FC = () => {
   const posters = [
     {
       id: 1,
