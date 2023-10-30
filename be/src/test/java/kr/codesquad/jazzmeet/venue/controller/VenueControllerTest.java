@@ -22,10 +22,10 @@ class VenueControllerTest {
 	@DisplayName("검색어에 해당하는 공연장의 위치 정보 목록을 조회한다.")
 	@Test
 	public void findVenuesPinsByWord() throws Exception {
-	    //given
+		//given
 		String word = "부기우기";
 
-	    //when //then
+		//when //then
 		mockMvc.perform(
 				get("/api/venues/pins/search")
 					.queryParam("word", word)

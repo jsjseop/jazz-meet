@@ -27,7 +27,7 @@ class VenueQueryRepositoryTest extends IntegrationTestSupport {
 	@DisplayName("이름에 검색어가 포함되어 있는 공연장 정보 리스트를 조회한다.")
 	@Test
 	public void findVenuesByWordInName() throws Exception {
-	    //given
+		//given
 		String word = "부기우기";
 		Point point = VenueUtil.createPoint(111.111, 222.222);
 		Venue venue1 = createVenues("부기우기", "서울 용산구 회나무로 21 2층", point);
@@ -42,6 +42,7 @@ class VenueQueryRepositoryTest extends IntegrationTestSupport {
 			.extracting("name", "location")
 			.contains(tuple("부기우기", point));
 	}
+
 	private Venue createVenues(String name, String address, Point point) {
 
 		return Venue.builder()

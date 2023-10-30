@@ -105,7 +105,7 @@ class VenueServiceTest extends IntegrationTestSupport {
 	@DisplayName("이름에 검색어가 포함되는 공연장의 위치 데이터 목록을 조회한다.")
 	@Test
 	public void findVenuesPinsByWordInName() throws Exception {
-	    //given
+		//given
 		String word = "부기우기";
 		Venue venue1 = createVenue("부기우기", "서울 용산구 회나무로 21 2층");
 		Venue venue2 = createVenue("Entry55", "서울 동작구 동작대로1길 18 B-102");
@@ -116,14 +116,14 @@ class VenueServiceTest extends IntegrationTestSupport {
 
 		//then
 		assertThat(venuePinsList).hasSize(1)
-			.extracting( "name", "latitude","longitude")
-			.contains(tuple( "부기우기", 123.11111, 123.123123));
+			.extracting("name", "latitude", "longitude")
+			.contains(tuple("부기우기", 123.11111, 123.123123));
 	}
 
 	@DisplayName("주소에 검색어가 포함되는 공연장의 위치 데이터 목록을 조회한다.")
 	@Test
 	public void findVenuesPinsByWordInAddress() throws Exception {
-	    //given
+		//given
 		String word = "서울";
 		Venue venue1 = createVenue("부기우기", "서울 용산구 회나무로 21 2층");
 		Venue venue2 = createVenue("Entry55", "서울 동작구 동작대로1길 18 B-102");
@@ -134,9 +134,9 @@ class VenueServiceTest extends IntegrationTestSupport {
 
 		//then
 		assertThat(venuePinsList).hasSize(2)
-			.extracting( "name", "latitude","longitude")
+			.extracting("name", "latitude", "longitude")
 			.contains(
-				tuple( "부기우기", 123.11111, 123.123123),
+				tuple("부기우기", 123.11111, 123.123123),
 				tuple("Entry55", 123.11111, 123.123123));
 	}
 
