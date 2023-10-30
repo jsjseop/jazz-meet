@@ -17,6 +17,8 @@ import lombok.RequiredArgsConstructor;
 @Repository
 public class VenueQueryRepository {
 
+	private static final int NEARBY_VENUES_COUNT = 10;
+
 	private final JPAQueryFactory query;
 
 	public List<NearbyVenue> findNearbyVenuesByLocation(Double latitude, Double longitude) {
@@ -26,14 +28,17 @@ public class VenueQueryRepository {
 					venue.name,
 					venue.roadNameAddress,
 					venue.location,
-					venue.thumbnailUrl)
+					venue.thumbnailUrl
+				)
 			)
 			.from(venue)
 			.orderBy(
-				Expressions.stringTemplate("ST_Distance_Sphere(venue.location, POINT({0}, {1})",
-						longitude, latitude)
+				Expressions.stringTemplate("ST_DISTANCE_SPHERE(venue.location, {0})",
+						Expressions.stringTemplate("POINT({0}, {1})", longitude, latitude)
+					)
 					.asc()
 			)
+			.limit(NEARBY_VENUES_COUNT)
 			.fetch();
 	}
 }
