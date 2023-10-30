@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import { Calendar } from './Calendar';
-import { Tabs } from './Tabs';
-import { Tab } from './Tabs/Tab';
+import { Tabs } from '../Tabs';
+import { Tab } from '../Tabs/Tab';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import LocalCafeOutlinedIcon from '@mui/icons-material/LocalCafeOutlined';
