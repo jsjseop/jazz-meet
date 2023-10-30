@@ -57,13 +57,15 @@ export const PaginationBox: React.FC<Props> = ({
 };
 
 const StyledNavigation = styled.nav`
-  margin-top: 34px;
+  margin: 36px auto;
+  display: flex;
+  justify-content: center;
 `;
 
 const StyledButtonList = styled.ul`
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 12px;
 
   & * {
     font-size: 22px;
