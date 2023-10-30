@@ -1,14 +1,15 @@
 import { PaginationBox } from '@components/PaginationBox';
 import styled from '@emotion/styled';
-import { VenueData } from 'apis/venue/types';
 import { Header } from './Header';
 import { VenueItem } from './VenueItem';
+import { VenueData } from 'types/api.types';
 
 export type VenueListProps = {
   venueList: VenueData[];
   venueCount: number;
   currentPage: number;
   maxPage: number;
+  updateVenueList: (page: number) => void;
 };
 
 export const VenueList: React.FC<VenueListProps> = ({
@@ -16,9 +17,11 @@ export const VenueList: React.FC<VenueListProps> = ({
   venueCount,
   currentPage,
   maxPage,
+  updateVenueList
 }) => {
   const handlePageChange = (_: React.ChangeEvent<unknown>, value: number) => {
     console.log('page', value);
+    updateVenueList(value);
   };
 
   return (

@@ -1,6 +1,6 @@
 import { getVenuesByKeyword } from 'apis/venue';
-import { VenueData } from 'apis/venue/types';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import { VenueData } from 'types/api.types';
 
 export const useVenueList = () => {
   const [venueList, setVenueList] = useState<VenueData[]>([]);
@@ -8,19 +8,20 @@ export const useVenueList = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [maxPage, setMaxPage] = useState(1);
 
-  useEffect(() => {
-    const fetchVenueList = async () => {
-      const { venues, venueCount, currentPage, maxPage } =
-        await getVenuesByKeyword();
+  const updateVenueList = useCallback(async (page: number = 1) => {
+    const { venues, venueCount, currentPage, maxPage } = await getVenuesByKeyword({
+      page
+    });
 
-      setVenueList(venues);
-      setVenueCount(venueCount);
-      setCurrentPage(currentPage);
-      setMaxPage(maxPage);
-    };
-
-    fetchVenueList();
+    setVenueList(venues);
+    setVenueCount(venueCount);
+    setCurrentPage(currentPage);
+    setMaxPage(maxPage);
   }, []);
 
-  return { venueList, venueCount, currentPage, maxPage };
+  useEffect(() => {
+    updateVenueList();
+  }, []);
+
+  return { venueList, venueCount, currentPage, maxPage, updateVenueList };
 };

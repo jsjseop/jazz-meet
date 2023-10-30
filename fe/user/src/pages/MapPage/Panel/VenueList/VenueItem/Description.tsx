@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
-import { VenueData } from 'apis/venue/types';
+import { isoToTimeFormat } from '@utils/formatTime';
+import { VenueData } from 'types/api.types';
 
 type Props = Omit<VenueData, 'id' | 'thumbnailUrl' | 'latitude' | 'longitude'>;
 
@@ -22,7 +23,7 @@ export const Description: React.FC<Props> = ({
             <StyledShowTime key={index}>
               <span>{index + 1}부</span>
               <span>
-                {startTime}~{endTime}
+                {isoToTimeFormat(startTime)}~{isoToTimeFormat(endTime)}
               </span>
             </StyledShowTime>
           ))}
