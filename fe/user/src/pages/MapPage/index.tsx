@@ -1,12 +1,15 @@
 import styled from '@emotion/styled';
 import { Map } from './Map';
 import { Panel } from './Panel';
+import { useRef } from 'react';
 
 export const MapPage: React.FC = () => {
+  const mapRef = useRef<HTMLDivElement>(null);
+
   return (
     <StyledMapPage>
-      <Map />
-      <Panel />
+      <Map mapRef={mapRef} />
+      <Panel mapRef={mapRef} />
     </StyledMapPage>
   );
 };
