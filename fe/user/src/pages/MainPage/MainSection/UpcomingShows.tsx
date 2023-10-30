@@ -10,13 +10,13 @@ import { UpcomingShowCard } from './CardList/Cards/UpcomingShowCard';
 export const UpcomingShows: React.FC = () => {
   const [upcomingShows, setUpcomingShows] = useState<UpcomingShow[]>();
 
-  const updateAroundVenues = async () => {
-    const aroundVenues = await getUpcomingShows();
-    setUpcomingShows(aroundVenues);
-  };
-
   useEffect(() => {
-    updateAroundVenues();
+    const updateUpcomingShows = async () => {
+      const upcomingShows = await getUpcomingShows();
+      setUpcomingShows(upcomingShows);
+    };
+
+    updateUpcomingShows();
   }, []);
 
   return (
