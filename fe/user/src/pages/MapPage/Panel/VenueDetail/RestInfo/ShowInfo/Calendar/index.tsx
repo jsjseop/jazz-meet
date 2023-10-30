@@ -1,15 +1,19 @@
 import styled from '@emotion/styled';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-
 import { getFirstDay, getLastDay } from './getFirstDayAndLastDay';
-import { useCalendarStore } from '../../useCalendarStore';
 
-export const Calendar: React.FC = () => {
-  const currentDate = useCalendarStore(({ currentDate }) => currentDate);
-  const prevMonth = useCalendarStore(({ prevMonth }) => prevMonth);
-  const nextMonth = useCalendarStore(({ nextMonth }) => nextMonth);
+type Props = {
+  currentDate: Date;
+  prevMonth: () => void;
+  nextMonth: () => void;
+};
 
+export const Calendar: React.FC<Props> = ({
+  currentDate,
+  prevMonth,
+  nextMonth,
+}) => {
   const currentYear = currentDate.getFullYear();
   const currentMonth = currentDate.getMonth() + 1;
   const firstDay = getFirstDay(currentYear, currentMonth);
