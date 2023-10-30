@@ -113,6 +113,7 @@ const StyledImageWrapper = styled.div<{ imagesLength: number }>`
       color: #fff;
       background: rgba(0, 0, 0, 0.3);
       content: '+${({ imagesLength }) => imagesLength - PREVIEW_IMAGE_COUNT}';
+      cursor: pointer;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -126,4 +127,9 @@ const StyledImage = styled.img`
   width: 100%;
   height: 100%;
   object-fit: cover;
+  cursor: pointer;
+
+  &:hover {
+    opacity: 0.7;
+  }
 `;

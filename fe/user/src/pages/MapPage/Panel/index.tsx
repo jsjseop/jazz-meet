@@ -1,15 +1,16 @@
 import styled from '@emotion/styled';
 import { VenueList } from './VenueList';
-import { VenueDetail } from './VenueDetail';
-import { useParams } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 
-export const Panel: React.FC = () => {
-  const { id } = useParams();
+type Props = {
+  mapRef: React.RefObject<HTMLDivElement>;
+};
 
+export const Panel: React.FC<Props> = ({ mapRef }) => {
   return (
     <StyledPanel>
       <VenueList />
-      {id && <VenueDetail />}
+      <Outlet context={mapRef} />
     </StyledPanel>
   );
 };

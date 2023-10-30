@@ -24,30 +24,42 @@ export const RestInfo: React.FC = () => {
             <ChevronRightIcon sx={{ fill: '#B5BEC6' }} />
           </StyledShowListHeader>
           <StyledShowListContent>
-            <div></div>
-            <div></div>
-            <div>시작</div>
-            <div>종료</div>
+            <StyledShowListContentHeader>
+              <div>시작</div>
+              <div>종료</div>
+            </StyledShowListContentHeader>
 
-            <StyledShowListIndex>01</StyledShowListIndex>
-            <StyledShowListName>권트리오</StyledShowListName>
-            <div>12:00</div>
-            <div>14:00</div>
+            <StyledShowListItem>
+              <StyledShowListItemIndex>01</StyledShowListItemIndex>
+              <StyledShowListItemName>권트리오</StyledShowListItemName>
+              <StyledShowListItemTime>12:00</StyledShowListItemTime>
+              <StyledShowListItemTime>14:00</StyledShowListItemTime>
+            </StyledShowListItem>
 
-            <StyledShowListIndex>02</StyledShowListIndex>
-            <StyledShowListName>김철수 쿼텟</StyledShowListName>
-            <div>12:00</div>
-            <div>14:00</div>
+            <StyledShowListItem>
+              <StyledShowListItemIndex>02</StyledShowListItemIndex>
+              <StyledShowListItemName>김철수 쿼텟</StyledShowListItemName>
+              <StyledShowListItemTime>12:00</StyledShowListItemTime>
+              <StyledShowListItemTime>14:00</StyledShowListItemTime>
+            </StyledShowListItem>
 
-            <StyledShowListIndex>03</StyledShowListIndex>
-            <StyledShowListName>WE 필하모닉스의 피아노 퀀텟</StyledShowListName>
-            <div>12:00</div>
-            <div>14:00</div>
+            <StyledShowListItem>
+              <StyledShowListItemIndex>03</StyledShowListItemIndex>
+              <StyledShowListItemName>
+                WE 필하모닉스의 피아노 퀀텟
+              </StyledShowListItemName>
+              <StyledShowListItemTime>12:00</StyledShowListItemTime>
+              <StyledShowListItemTime>14:00</StyledShowListItemTime>
+            </StyledShowListItem>
 
-            <StyledShowListIndex>04</StyledShowListIndex>
-            <StyledShowListName>러셀 말론 솔로 기타</StyledShowListName>
-            <div>12:00</div>
-            <div>14:00</div>
+            <StyledShowListItem>
+              <StyledShowListItemIndex>04</StyledShowListItemIndex>
+              <StyledShowListItemName>
+                러셀 말론 솔로 기타
+              </StyledShowListItemName>
+              <StyledShowListItemTime>12:00</StyledShowListItemTime>
+              <StyledShowListItemTime>14:00</StyledShowListItemTime>
+            </StyledShowListItem>
           </StyledShowListContent>
         </StyledShowList>
       </StyledRestInfoContent>
@@ -102,21 +114,45 @@ const StyledShowListHeader = styled.div`
 `;
 
 const StyledShowListContent = styled.div`
-  display: grid;
-  grid-template-columns: 40px 1fr 40px 40px;
-  align-items: center;
-  justify-items: center;
+  display: flex;
+  flex-direction: column;
   gap: 14px;
 `;
 
-const StyledShowListIndex = styled.div`
+const StyledShowListContentHeader = styled.div`
+  display: flex;
+  justify-content: end;
+  gap: 14px;
+
+  > div {
+    width: 40px;
+    text-align: center;
+  }
+`;
+
+const StyledShowListItem = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 14px;
+`;
+
+const StyledShowListItemIndex = styled.div`
+  width: 40px;
   background-color: #d9d9d9;
   padding: 4px 8px;
   border-radius: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
-const StyledShowListName = styled.div`
+const StyledShowListItemName = styled.div`
+  width: 100%;
   justify-self: start;
+`;
+
+const StyledShowListItemTime = styled.div`
+  width: 40px;
 `;
 
 const StyledContentContainer = styled.div`

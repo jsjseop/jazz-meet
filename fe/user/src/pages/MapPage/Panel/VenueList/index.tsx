@@ -22,7 +22,7 @@ export const VenueList: React.FC = () => {
     <StyledVenueList>
       <Header />
       <StyledVenues>
-        <Link to="/map/1">
+        <Link to="/map/venues/1">
           <VenueItem />
         </Link>
         <VenueItem />
