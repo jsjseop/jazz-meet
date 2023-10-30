@@ -6,11 +6,13 @@ import org.springframework.stereotype.Service;
 
 import kr.codesquad.jazzmeet.venue.dto.response.NearbyVenueResponse;
 import kr.codesquad.jazzmeet.venue.dto.response.VenueAutocompleteResponse;
+import kr.codesquad.jazzmeet.venue.dto.response.VenuePinsBySearchResponse;
 import kr.codesquad.jazzmeet.venue.entity.Venue;
 import kr.codesquad.jazzmeet.venue.mapper.VenueMapper;
 import kr.codesquad.jazzmeet.venue.repository.VenueQueryRepository;
 import kr.codesquad.jazzmeet.venue.repository.VenueRepository;
 import kr.codesquad.jazzmeet.venue.vo.NearbyVenue;
+import kr.codesquad.jazzmeet.venue.vo.VenuePinsByWord;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -35,6 +37,14 @@ public class VenueService {
 
 		return venues.stream()
 			.map(VenueMapper.INSTANCE::toNearByVenueResponse)
+			.toList();
+	}
+
+	public List<VenuePinsBySearchResponse> findVenuePinsList(String word) {
+		List<VenuePinsByWord> venues = venueQueryRepository.findVenuePinsByWord(word);
+
+		return venues.stream()
+			.map(VenueMapper.INSTANCE::toVenuePinsBySearchResponse)
 			.toList();
 	}
 }
