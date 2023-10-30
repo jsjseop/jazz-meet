@@ -1,11 +1,11 @@
 import { Coordinate } from 'types/map';
 
-export type GetAroundVenuesResponse = {
+export type AroundVenue = {
   id: number;
   thumbnailUrl: string;
   name: string;
   address: string;
-};
+} & Coordinate;
 
 export type Pin = {
   id: number;

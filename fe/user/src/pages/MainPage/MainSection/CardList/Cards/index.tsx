@@ -1,20 +1,14 @@
 import styled from '@emotion/styled';
-import { Card } from './Card';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import { Navigation } from 'swiper/modules';
-import { Swiper, SwiperSlide } from 'swiper/react';
+import { Swiper } from 'swiper/react';
 
 type Props = {
-  posters: {
-    id: number;
-    thumbnailUrl: string;
-    name: string;
-    address: string;
-  }[];
+  children: React.ReactNode;
 };
 
-export const Cards: React.FC<Props> = ({ posters }) => {
+export const Cards: React.FC<Props> = ({ children }) => {
   return (
     <StyledCards>
       <Swiper
@@ -43,11 +37,7 @@ export const Cards: React.FC<Props> = ({ posters }) => {
           },
         }}
       >
-        {posters.map((poster) => (
-          <SwiperSlide key={poster.id}>
-            <Card poster={poster} />
-          </SwiperSlide>
-        ))}
+        {children}
       </Swiper>
     </StyledCards>
   );
