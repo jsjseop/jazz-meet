@@ -1,18 +1,18 @@
 package kr.codesquad.jazzmeet.venue.util;
 
 import org.locationtech.jts.geom.Coordinate;
-import org.locationtech.jts.geom.CoordinateSequence;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.Point;
-import org.locationtech.jts.geom.impl.CoordinateArraySequence;
 
-public class VenueUtil {
+public final class VenueUtil {
+
+	private VenueUtil() {
+		throw new UnsupportedOperationException();
+	}
 
 	public static Point createPoint(Double latitude, Double longitude) {
-		Coordinate[] coordinates = new Coordinate[] {
-			new Coordinate(latitude, longitude)};
-		CoordinateSequence coordinateSequence = new CoordinateArraySequence(coordinates);
 		GeometryFactory geometryFactory = new GeometryFactory();
-		return geometryFactory.createPoint(coordinateSequence);
+		// TODO: 잘못된 위치 정보인 경우 예외 처리
+		return geometryFactory.createPoint(new Coordinate(longitude, latitude));
 	}
 }
