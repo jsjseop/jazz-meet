@@ -16,8 +16,11 @@ import jakarta.persistence.Table;
 import kr.codesquad.jazzmeet.image.entity.Image;
 import kr.codesquad.jazzmeet.venue.entity.Venue;
 import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "`show`")
@@ -39,4 +42,11 @@ public class Show {
 	@JoinColumn(name = "poster_id")
 	private Image poster;
 	private Long adminId;
+
+	@Builder
+	public Show(String teamName, LocalDateTime startTime, LocalDateTime endTime) {
+		this.teamName = teamName;
+		this.startTime = startTime;
+		this.endTime = endTime;
+	}
 }
