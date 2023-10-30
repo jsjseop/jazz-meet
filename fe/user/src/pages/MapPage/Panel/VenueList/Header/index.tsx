@@ -2,17 +2,19 @@ import { DatePicker } from '@components/DatePicker';
 import { PillShapeButton } from '@components/PillShapeButton';
 import styled from '@emotion/styled';
 
-export const Header: React.FC = () => {
+type Props = {
+  count: number;
+};
+
+export const Header: React.FC<Props> = ({ count }) => {
   return (
     <StyledHeader>
       <StyledMainSection>
         <StyledTotalCount>
           <h2>전체</h2>
-          <span>4</span>
+          <span>{count}</span>
         </StyledTotalCount>
-
         <StyledSortSelect>
-          <option value="">정렬</option>
           <option value="">거리순</option>
           <option value="">최신순</option>
         </StyledSortSelect>
@@ -75,7 +77,7 @@ const StyledSortSelect = styled.select`
   }
 
   & > option:checked {
-    background-color: #DCDCDC;
+    background-color: #dcdcdc;
     color: #888888;
   }
 `;

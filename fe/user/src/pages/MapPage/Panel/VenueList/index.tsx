@@ -1,38 +1,40 @@
 import { PaginationBox } from '@components/PaginationBox';
 import styled from '@emotion/styled';
-import { useMemo, useState } from 'react';
+import { VenueData } from 'apis/venue/types';
 import { Header } from './Header';
 import { VenueItem } from './VenueItem';
-import { Link } from 'react-router-dom';
 
-export const VenueList: React.FC = () => {
-  const maxPage = useMemo(() => 25, []);
-  const [pageNumber, setPageNumber] = useState(
-    Math.floor(Math.random() * maxPage),
-  );
+export type VenueListProps = {
+  venueList: VenueData[];
+  venueCount: number;
+  currentPage: number;
+  maxPage: number;
+};
 
-  const handlePageChange = (
-    event: React.ChangeEvent<unknown>,
-    value: number,
-  ) => {
-    setPageNumber(value);
+export const VenueList: React.FC<VenueListProps> = ({
+  venueList,
+  venueCount,
+  currentPage,
+  maxPage,
+}) => {
+  const handlePageChange = (_: React.ChangeEvent<unknown>, value: number) => {
+    console.log('page', value);
   };
 
   return (
     <StyledVenueList>
-      <Header />
+      <Header count={venueCount} />
       <StyledVenues>
-        <Link to="/map/venues/1">
+        {/* <Link to="/map/venues/1">
           <VenueItem />
-        </Link>
-        <VenueItem />
-        <VenueItem />
-        <VenueItem />
-        <VenueItem />
+        </Link> */}
+        {venueList.map((venue) => (
+          <VenueItem key={venue.id} {...venue} />
+        ))}
       </StyledVenues>
       <PaginationBox
         maxPage={maxPage}
-        currentPage={pageNumber}
+        currentPage={currentPage}
         onChange={handlePageChange}
       />
     </StyledVenueList>

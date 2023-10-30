@@ -61,7 +61,7 @@ export const InquiryPage: React.FC = () => {
   };
 
   const handlePageChange = (
-    event: React.ChangeEvent<unknown>,
+    _: React.ChangeEvent<unknown>,
     value: number,
   ) => {
     setPageNumber(value);
