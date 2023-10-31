@@ -27,7 +27,7 @@ public class Show {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	@Column(nullable = false, length = 20)
+	@Column(nullable = false, length = 50)
 	private String teamName;
 	@Column(length = 1000)
 	private String description;
