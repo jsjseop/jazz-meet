@@ -1,37 +1,24 @@
 import SearchIcon from '@mui/icons-material/Search';
 import { IconButton, InputBase, Paper } from '@mui/material';
-import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 export const SearchBar: React.FC = () => {
   const navigate = useNavigate();
-  const [keyword, setKeyword] = useState('');
 
-  const onKeywordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setKeyword(e.target.value);
-  };
+  const onKeywordSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
 
-  const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      searchVenueByKeyword();
+    const keyword = e.currentTarget.keyword.value.trim();
+
+    if (keyword.length > 0) {
+      navigate(`/map?word=${keyword}`);
     }
-  };
-
-  const searchVenueByKeyword = () => {
-    if (keyword.trim().length === 0) {
-      setKeyword('');
-
-      // TODO: (토스트 팝업)빈 검색어로는 검색할 수 없습니다.
-      return;
-    }
-
-    navigate(`/map?word=${keyword}`);
   };
 
   return (
     <Paper
       component="form"
+      onSubmit={onKeywordSubmit}
       elevation={0}
       sx={{
         p: '2px 4px',
@@ -45,16 +32,9 @@ export const SearchBar: React.FC = () => {
       <InputBase
         sx={{ ml: 1, flex: 1 }}
         placeholder="함께 맞는 주말 햇살, 나란히 듣는 재즈."
-        value={keyword}
-        onChange={onKeywordChange}
-        onKeyDown={onKeyDown}
+        name="keyword"
       />
-      <IconButton
-        type="button"
-        sx={{ p: '10px' }}
-        aria-label="search"
-        onClick={() => searchVenueByKeyword()}
-      >
+      <IconButton type="submit" sx={{ p: '10px' }} aria-label="search">
         <SearchIcon />
       </IconButton>
     </Paper>
