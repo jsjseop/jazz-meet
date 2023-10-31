@@ -20,3 +20,12 @@ export type UpcomingShow = {
   startTime: string;
   endTime: string;
 };
+
+export type ShowDetail = {
+  id: number;
+  posterUrl: string;
+  teamName: string;
+  description: string;
+  startTime: string;
+  endTime: string;
+};

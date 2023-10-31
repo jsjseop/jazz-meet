@@ -4,8 +4,13 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { useCalendar } from './useCalendar';
 import { getKoreanWeekdayName } from '@utils/dateUtils';
+import { useEffect, useState } from 'react';
+import { ShowDetail } from 'types/api.types';
+import { useParams } from 'react-router-dom';
+import { getShowsByDate } from 'apis/show';
 
 export const ShowInfo: React.FC = () => {
+  const [showList, setShowList] = useState<ShowDetail[] | null>(null);
   const {
     calendarDate,
     selectedDate,
@@ -15,6 +20,18 @@ export const ShowInfo: React.FC = () => {
     selectPreviousDate,
     selectNextDate,
   } = useCalendar();
+  const { venueId } = useParams();
+
+  useEffect(() => {
+    if (!venueId) return;
+
+    const updateShowList = async () => {
+      const shows = await getShowsByDate({ venueId, date: selectedDate });
+      setShowList(shows);
+    };
+
+    updateShowList();
+  }, [venueId, selectedDate]);
 
   return (
     <>
@@ -46,35 +63,17 @@ export const ShowInfo: React.FC = () => {
             <div>종료</div>
           </StyledShowListContentHeader>
 
-          <StyledShowListItem>
-            <StyledShowListItemIndex>01</StyledShowListItemIndex>
-            <StyledShowListItemName>권트리오</StyledShowListItemName>
-            <StyledShowListItemTime>12:00</StyledShowListItemTime>
-            <StyledShowListItemTime>14:00</StyledShowListItemTime>
-          </StyledShowListItem>
-
-          <StyledShowListItem>
-            <StyledShowListItemIndex>02</StyledShowListItemIndex>
-            <StyledShowListItemName>김철수 쿼텟</StyledShowListItemName>
-            <StyledShowListItemTime>12:00</StyledShowListItemTime>
-            <StyledShowListItemTime>14:00</StyledShowListItemTime>
-          </StyledShowListItem>
-
-          <StyledShowListItem>
-            <StyledShowListItemIndex>03</StyledShowListItemIndex>
-            <StyledShowListItemName>
-              WE 필하모닉스의 피아노 퀀텟
-            </StyledShowListItemName>
-            <StyledShowListItemTime>12:00</StyledShowListItemTime>
-            <StyledShowListItemTime>14:00</StyledShowListItemTime>
-          </StyledShowListItem>
-
-          <StyledShowListItem>
-            <StyledShowListItemIndex>04</StyledShowListItemIndex>
-            <StyledShowListItemName>러셀 말론 솔로 기타</StyledShowListItemName>
-            <StyledShowListItemTime>12:00</StyledShowListItemTime>
-            <StyledShowListItemTime>14:00</StyledShowListItemTime>
-          </StyledShowListItem>
+          {showList &&
+            showList.map((show, index) => (
+              <StyledShowListItem key={show.id}>
+                <StyledShowListItemIndex>{index + 1}</StyledShowListItemIndex>
+                <StyledShowListItemName>{show.teamName}</StyledShowListItemName>
+                <StyledShowListItemTime>
+                  {show.startTime}
+                </StyledShowListItemTime>
+                <StyledShowListItemTime>{show.endTime}</StyledShowListItemTime>
+              </StyledShowListItem>
+            ))}
         </StyledShowListContent>
       </StyledShowList>
     </>
