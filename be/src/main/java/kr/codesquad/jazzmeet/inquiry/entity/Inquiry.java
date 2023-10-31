@@ -17,15 +17,15 @@ public class Inquiry {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	@Column(nullable = false)
+	@Column(nullable = false, length = 20)
 	private String nickname;
-	@Column(nullable = false)
+	@Column(nullable = false, length = 200)
 	private String password;
-	@Column(nullable = false)
+	@Column(nullable = false, length = 500)
 	private String content;
-	@Column(nullable = false)
+	@Column(nullable = false, length = 10)
 	private String category;
-	@Column(nullable = false)
+	@Column(nullable = false, length = 10)
 	private String status;
 	@Column(nullable = false)
 	private LocalDateTime createdAt;

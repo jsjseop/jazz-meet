@@ -18,7 +18,7 @@ public class Link {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	@Column(nullable = false)
+	@Column(nullable = false, length = 500)
 	private String url;
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "link_type_id")

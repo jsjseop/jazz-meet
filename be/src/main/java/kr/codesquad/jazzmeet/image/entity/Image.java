@@ -18,9 +18,9 @@ public class Image {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	@Getter
-	@Column(nullable = false)
+	@Column(nullable = false, length = 500)
 	private String url;
-	@Column(nullable = false)
+	@Column(nullable = false, length = 10)
 	private String status;
 	@Column(nullable = false)
 	private LocalDateTime createdAt;
