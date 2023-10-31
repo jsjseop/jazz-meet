@@ -5,17 +5,24 @@ import { getFirstDay, getLastDay } from './getFirstDayAndLastDay';
 
 type Props = {
   currentDate: Date;
+  selectedDate: Date;
   prevMonth: () => void;
   nextMonth: () => void;
+  selectDate: (date: Date) => void;
 };
 
 export const Calendar: React.FC<Props> = ({
   currentDate,
+  selectedDate,
   prevMonth,
   nextMonth,
+  selectDate,
 }) => {
   const currentYear = currentDate.getFullYear();
   const currentMonth = currentDate.getMonth() + 1;
+  const selectedYear = selectedDate.getFullYear();
+  const selectedMonth = selectedDate.getMonth() + 1;
+  const selectedDay = selectedDate.getDate();
   const firstDay = getFirstDay(currentYear, currentMonth);
   const lastDay = getLastDay(currentDate.getFullYear(), currentMonth);
 
@@ -40,11 +47,27 @@ export const Calendar: React.FC<Props> = ({
       </StyledDaysOfTheWeek>
       <StyledDaysGrid>
         {Array.from({ length: firstDay }).map((_, index) => (
-          <div key={index}></div>
+          <StyledDay key={index}></StyledDay>
         ))}
-        {Array.from({ length: lastDay }).map((_, index) => (
-          <div key={index}>{index + 1}</div>
-        ))}
+        {Array.from({ length: lastDay }).map((_, index) => {
+          const day = index + 1;
+
+          return (
+            <StyledDay
+              key={index}
+              isCurrentDay={
+                currentYear === selectedYear &&
+                currentMonth === selectedMonth &&
+                day === selectedDay
+              }
+              onClick={() =>
+                selectDate(new Date(currentYear, currentMonth - 1, day))
+              }
+            >
+              <div>{day}</div>
+            </StyledDay>
+          );
+        })}
       </StyledDaysGrid>
     </StyledCalendar>
   );
@@ -98,11 +121,28 @@ const StyledDaysGrid = styled.div`
   align-items: center;
   justify-items: center;
   gap: 10px;
+`;
+
+const StyledDay = styled.div<{ isCurrentDay?: boolean }>`
+  width: 100%;
+  padding-top: 100%;
+  position: relative;
+  cursor: pointer;
+  ${({ isCurrentDay }) =>
+    isCurrentDay &&
+    `
+      background-color: #F04D23;
+      border-radius: 50%;
+      color: #fff;
+  `};
 
   > div {
-    padding: 50% 0;
-    height: 0;
-    position: relative;
-    top: -20%;
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 `;

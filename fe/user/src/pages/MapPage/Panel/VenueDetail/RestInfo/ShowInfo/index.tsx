@@ -5,11 +5,14 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { useCalendar } from './useCalendar';
 
 export const ShowInfo: React.FC = () => {
-  const { currentDate, prevMonth, nextMonth } = useCalendar();
+  const { currentDate, selectedDate, prevMonth, nextMonth, selectDate } =
+    useCalendar();
 
   return (
     <>
-      <Calendar {...{ currentDate, prevMonth, nextMonth }} />
+      <Calendar
+        {...{ currentDate, selectedDate, prevMonth, nextMonth, selectDate }}
+      />
       <StyledShowList>
         <StyledShowListHeader>
           <ChevronLeftIcon sx={{ fill: '#B5BEC6' }} />
