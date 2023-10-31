@@ -30,7 +30,7 @@ export const VenueList: React.FC<VenueListProps> = ({
         <h2>전체</h2>
         <span>{venueCount ?? 0}</span>
       </StyledTotalCount>
-      {venueList ? (
+      {venueList.length > 0 ? (
         <>
           <StyledVenues>
             {venueList.map((venue) => (
