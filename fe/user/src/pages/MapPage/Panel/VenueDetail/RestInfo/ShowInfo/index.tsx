@@ -3,7 +3,7 @@ import { Calendar } from './Calendar';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { useCalendar } from './useCalendar';
-import { getWeekDay } from '@utils/dateUtils';
+import { getKoreanWeekdayName } from '@utils/dateUtils';
 
 export const ShowInfo: React.FC = () => {
   const { currentDate, selectedDate, prevMonth, nextMonth, selectDate } =
@@ -19,7 +19,7 @@ export const ShowInfo: React.FC = () => {
           <ChevronLeftIcon sx={{ fill: '#B5BEC6' }} />
           <div>{`${
             selectedDate.getMonth() + 1
-          }월 ${selectedDate.getDate()}일 ${getWeekDay(
+          }월 ${selectedDate.getDate()}일 ${getKoreanWeekdayName(
             selectedDate.getDay(),
           )}요일`}</div>
           <ChevronRightIcon sx={{ fill: '#B5BEC6' }} />
