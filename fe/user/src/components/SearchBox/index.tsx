@@ -1,9 +1,11 @@
+import styled from '@emotion/styled';
 import SearchIcon from '@mui/icons-material/Search';
 import { IconButton, InputBase, Paper } from '@mui/material';
+import { ResultBox } from './ResultBox';
 
-export const SearchBar: React.FC = () => {
+export const SearchBox: React.FC = () => {
   return (
-    <>
+    <StyledSearchBox>
       <Paper
         component="form"
         elevation={0}
@@ -26,6 +28,13 @@ export const SearchBar: React.FC = () => {
           <SearchIcon />
         </IconButton>
       </Paper>
-    </>
+
+      <ResultBox />
+    </StyledSearchBox>
   );
 };
+
+const StyledSearchBox = styled.div`
+  position: relative;
+  z-index: 2;
+`;
