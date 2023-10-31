@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import 'swiper/css';
 import 'swiper/css/pagination';
-import { Pagination } from 'swiper/modules';
+import { Autoplay, Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
 type Props = {
@@ -15,7 +15,14 @@ export const SwiperComponent: React.FC<Props> = ({
 }) => {
   return (
     <StyledCarousel>
-      <Swiper modules={[Pagination]} pagination={{ clickable: true }}>
+      <Swiper
+        modules={[Pagination, Autoplay]}
+        pagination={{ clickable: true }}
+        autoplay={{
+          delay: 3000,
+          pauseOnMouseEnter: true,
+        }}
+      >
         {imageUrls.map((imageUrl, index) => (
           <SwiperSlide key={`${imageUrl}-${index}`}>
             <SlideImage src={imageUrl} alt={description} />
