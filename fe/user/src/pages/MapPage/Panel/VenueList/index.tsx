@@ -1,37 +1,57 @@
 import { PaginationBox } from '@components/PaginationBox';
 import styled from '@emotion/styled';
-import { useMemo, useState } from 'react';
-import { Header } from './Header';
-import { VenueItem } from './VenueItem';
+import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import { Link } from 'react-router-dom';
+import { VenueData } from 'types/api.types';
+import { VenueItem } from './VenueItem';
 
-export const VenueList: React.FC = () => {
-  const maxPage = useMemo(() => 25, []);
-  const [pageNumber, setPageNumber] = useState(
-    Math.floor(Math.random() * maxPage),
-  );
+export type VenueListProps = {
+  venueList: VenueData[];
+  venueCount: number;
+  currentPage: number;
+  maxPage: number;
+  updateVenueList: (page: number) => void;
+};
 
+export const VenueList: React.FC<VenueListProps> = ({
+  venueList,
+  venueCount,
+  currentPage,
+  maxPage,
+  updateVenueList,
+}) => {
   const handlePageChange = (_: React.ChangeEvent<unknown>, value: number) => {
-    setPageNumber(value);
+    updateVenueList(value);
   };
 
   return (
     <StyledVenueList>
-      <Header />
-      <StyledVenues>
-        <Link to="/map/venues/1">
-          <VenueItem />
-        </Link>
-        <VenueItem />
-        <VenueItem />
-        <VenueItem />
-        <VenueItem />
-      </StyledVenues>
-      <PaginationBox
-        maxPage={maxPage}
-        currentPage={pageNumber}
-        onChange={handlePageChange}
-      />
+      <StyledTotalCount>
+        <h2>전체</h2>
+        <span>{venueCount}</span>
+      </StyledTotalCount>
+
+      {venueList.length > 0 ? (
+        <>
+          <StyledVenues>
+            {venueList.map((venue) => (
+              <Link to={`/map/venues/${venue.id}`} key={venue.id}>
+                <VenueItem {...venue} />
+              </Link>
+            ))}
+          </StyledVenues>
+          <PaginationBox
+            maxPage={maxPage}
+            currentPage={currentPage}
+            onChange={handlePageChange}
+          />
+        </>
+      ) : (
+        <EmptyList>
+          <ErrorOutlineIcon />
+          검색 결과가 없습니다.
+        </EmptyList>
+      )}
     </StyledVenueList>
   );
 };
@@ -58,6 +78,21 @@ const StyledVenueList = styled.div`
   }
 `;
 
+const StyledTotalCount = styled.div`
+  display: flex;
+  gap: 13px;
+  font-size: 26px;
+  font-weight: 800;
+
+  & h2 {
+    color: #212121;
+  }
+
+  & span {
+    color: #ff4d00;
+  }
+`;
+
 const StyledVenues = styled.ul`
   display: flex;
   flex-direction: column;
@@ -67,4 +102,15 @@ const StyledVenues = styled.ul`
   a {
     text-decoration: none;
   }
+`;
+
+const EmptyList = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+  height: 100px;
+  font-size: 16px;
+  color: #888;
+  margin-top: 20px;
 `;

@@ -1,12 +1,15 @@
 import styled from '@emotion/styled';
 import { Description } from './Description';
 import { Thumbnail } from './Thumbnail';
+import { VenueData } from 'types/api.types';
 
-export const VenueItem: React.FC = () => {
+type Props = VenueData;
+
+export const VenueItem: React.FC<Props> = (venueData) => {
   return (
     <StyledVenue>
-      <Description />
-      <Thumbnail />
+      <Description {...venueData} />
+      <Thumbnail url={venueData.thumbnailUrl} />
     </StyledVenue>
   );
 };
