@@ -5,12 +5,13 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { useCalendar } from './useCalendar';
 import { getKoreanWeekdayName } from '@utils/dateUtils';
 import { useEffect, useState } from 'react';
-import { ShowDetail } from 'types/api.types';
+import { HasShowDates, ShowDetail } from 'types/api.types';
 import { useParams } from 'react-router-dom';
-import { getShowsByDate } from 'apis/show';
+import { getHasShowDates, getShowsByDate } from 'apis/show';
 
 export const ShowInfo: React.FC = () => {
-  const [showList, setShowList] = useState<ShowDetail[] | null>(null);
+  const [showList, setShowList] = useState<ShowDetail[]>();
+  const [hasShowDates, setHasShowDates] = useState<HasShowDates>();
   const {
     calendarDate,
     selectedDate,
@@ -33,12 +34,24 @@ export const ShowInfo: React.FC = () => {
     updateShowList();
   }, [venueId, selectedDate]);
 
+  useEffect(() => {
+    if (!venueId) return;
+
+    const updateHasShowDates = async () => {
+      const dates = await getHasShowDates({ venueId, date: calendarDate });
+      setHasShowDates(dates);
+    };
+
+    updateHasShowDates();
+  }, [venueId, calendarDate]);
+
   return (
     <>
       <Calendar
         {...{
           calendarDate,
           selectedDate,
+          eventDates: hasShowDates?.hasShow,
           goToPreviousMonth,
           goToNextMonth,
           selectDate,

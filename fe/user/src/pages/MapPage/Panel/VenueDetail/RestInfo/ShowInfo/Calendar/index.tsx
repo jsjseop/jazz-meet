@@ -6,6 +6,7 @@ import { getFirstDay, getLastDay } from './getFirstDayAndLastDay';
 type Props = {
   calendarDate: Date;
   selectedDate: Date;
+  eventDates?: number[];
   goToPreviousMonth: () => void;
   goToNextMonth: () => void;
   selectDate: (date: Date) => void;
@@ -14,6 +15,7 @@ type Props = {
 export const Calendar: React.FC<Props> = ({
   calendarDate,
   selectedDate,
+  eventDates,
   goToPreviousMonth,
   goToNextMonth,
   selectDate,
@@ -60,6 +62,7 @@ export const Calendar: React.FC<Props> = ({
                 currentMonth === selectedMonth &&
                 day === selectedDay
               }
+              isEventDate={eventDates?.includes(day)}
               onClick={() =>
                 selectDate(new Date(currentYear, currentMonth - 1, day))
               }
@@ -123,7 +126,7 @@ const StyledDaysGrid = styled.div`
   gap: 10px;
 `;
 
-const StyledDay = styled.div<{ isCurrentDay?: boolean }>`
+const StyledDay = styled.div<{ isCurrentDay?: boolean; isEventDate?: boolean }>`
   width: 100%;
   padding-top: 100%;
   position: relative;
@@ -144,5 +147,19 @@ const StyledDay = styled.div<{ isCurrentDay?: boolean }>`
     display: flex;
     justify-content: center;
     align-items: center;
+
+ ${({ isEventDate }) =>
+   isEventDate &&
+   `
+     &::after {
+      content: '';
+      width: 10%;
+      height: 10%;
+      position: absolute;
+      bottom: 0;
+      border-radius: 50%;
+      background-color: #f04d23;
   }
+  `};
+    
 `;

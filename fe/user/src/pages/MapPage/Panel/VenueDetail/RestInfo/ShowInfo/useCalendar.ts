@@ -5,11 +5,13 @@ export const useCalendar = () => {
   const [selectedDate, setSelectedDate] = useState(() => new Date());
 
   const goToPreviousMonth = () => {
+    calendarDate.setDate(1);
     calendarDate.setMonth(calendarDate.getMonth() - 1);
     setCalendarDate(new Date(calendarDate));
   };
 
   const goToNextMonth = () => {
+    calendarDate.setDate(1);
     calendarDate.setMonth(calendarDate.getMonth() + 1);
     setCalendarDate(new Date(calendarDate));
   };
@@ -20,16 +22,14 @@ export const useCalendar = () => {
 
   const selectPreviousDate = () => {
     selectedDate.setDate(selectedDate.getDate() - 1);
-    const newDate = new Date(selectedDate);
-    setCalendarDate(newDate);
-    setSelectedDate(newDate);
+    setCalendarDate(new Date(selectedDate));
+    setSelectedDate(new Date(selectedDate));
   };
 
   const selectNextDate = () => {
     selectedDate.setDate(selectedDate.getDate() + 1);
-    const newDate = new Date(selectedDate);
-    setCalendarDate(newDate);
-    setSelectedDate(newDate);
+    setCalendarDate(new Date(selectedDate));
+    setSelectedDate(new Date(selectedDate));
   };
 
   return {
