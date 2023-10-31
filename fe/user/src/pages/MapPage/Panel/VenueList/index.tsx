@@ -3,7 +3,6 @@ import styled from '@emotion/styled';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import { Link } from 'react-router-dom';
 import { VenueData } from 'types/api.types';
-import { Header } from './Header';
 import { VenueItem } from './VenueItem';
 
 export type VenueListProps = {
@@ -29,7 +28,10 @@ export const VenueList: React.FC<VenueListProps> = ({
   if (!venueList) {
     return (
       <StyledVenueList>
-        <Header count={0} />
+        <StyledTotalCount>
+          <h2>전체</h2>
+          <span>{0}</span>
+        </StyledTotalCount>
         <StyledVenues>
           <EmptyList>
             <ErrorOutlineIcon />
@@ -42,7 +44,10 @@ export const VenueList: React.FC<VenueListProps> = ({
 
   return (
     <StyledVenueList>
-      <Header count={venueCount} />
+      <StyledTotalCount>
+        <h2>전체</h2>
+        <span>{venueCount}</span>
+      </StyledTotalCount>
       <StyledVenues>
         {venueList.map((venue) => (
           <Link to={`/map/venues/${venue.id}`} key={venue.id}>
@@ -78,6 +83,21 @@ const StyledVenueList = styled.div`
 
   &::-webkit-scrollbar-track {
     background-color: transparent;
+  }
+`;
+
+const StyledTotalCount = styled.div`
+  display: flex;
+  gap: 13px;
+  font-size: 26px;
+  font-weight: 800;
+
+  & h2 {
+    color: #212121;
+  }
+
+  & span {
+    color: #ff4d00;
   }
 `;
 
