@@ -19,6 +19,13 @@ export const SearchBar: React.FC = () => {
   };
 
   const searchVenueByKeyword = () => {
+    if (keyword.trim().length === 0) {
+      setKeyword('');
+
+      // TODO: (토스트 팝업)빈 검색어로는 검색할 수 없습니다.
+      return;
+    }
+
     navigate(`/map?word=${keyword}`);
   };
 
