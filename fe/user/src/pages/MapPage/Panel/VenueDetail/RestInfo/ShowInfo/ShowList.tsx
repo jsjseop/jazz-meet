@@ -41,7 +41,9 @@ export const ShowList: React.FC<Props> = ({
         {showList &&
           showList.map((show, index) => (
             <StyledShowListItem key={show.id}>
-              <StyledShowListItemIndex>{index + 1}</StyledShowListItemIndex>
+              <StyledShowListItemIndex>
+                {String(index + 1).padStart(2, '0')}
+              </StyledShowListItemIndex>
               <StyledShowListItemName>{show.teamName}</StyledShowListItemName>
               <StyledShowListItemTime>{show.startTime}</StyledShowListItemTime>
               <StyledShowListItemTime>{show.endTime}</StyledShowListItemTime>
