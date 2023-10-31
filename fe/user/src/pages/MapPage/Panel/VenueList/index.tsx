@@ -1,8 +1,10 @@
 import { PaginationBox } from '@components/PaginationBox';
 import styled from '@emotion/styled';
+import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
+import { Link } from 'react-router-dom';
+import { VenueData } from 'types/api.types';
 import { Header } from './Header';
 import { VenueItem } from './VenueItem';
-import { VenueData } from 'types/api.types';
 
 export type VenueListProps = {
   venueList: VenueData[];
@@ -17,22 +19,35 @@ export const VenueList: React.FC<VenueListProps> = ({
   venueCount,
   currentPage,
   maxPage,
-  updateVenueList
+  updateVenueList,
 }) => {
   const handlePageChange = (_: React.ChangeEvent<unknown>, value: number) => {
     console.log('page', value);
     updateVenueList(value);
   };
 
+  if (!venueList) {
+    return (
+      <StyledVenueList>
+        <Header count={0} />
+        <StyledVenues>
+          <EmptyList>
+            <ErrorOutlineIcon />
+            검색 결과가 없습니다.
+          </EmptyList>
+        </StyledVenues>
+      </StyledVenueList>
+    );
+  }
+
   return (
     <StyledVenueList>
       <Header count={venueCount} />
       <StyledVenues>
-        {/* <Link to="/map/venues/1">
-          <VenueItem />
-        </Link> */}
         {venueList.map((venue) => (
-          <VenueItem key={venue.id} {...venue} />
+          <Link to={`/map/venues/${venue.id}`} key={venue.id}>
+            <VenueItem {...venue} />
+          </Link>
         ))}
       </StyledVenues>
       <PaginationBox
@@ -75,4 +90,14 @@ const StyledVenues = styled.ul`
   a {
     text-decoration: none;
   }
+`;
+
+const EmptyList = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+  height: 100px;
+  font-size: 16px;
+  color: #888;
 `;
