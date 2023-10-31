@@ -17,6 +17,11 @@ export const ShowList: React.FC<Props> = ({
   selectPreviousDate,
   selectNextDate,
 }) => {
+  const month = selectedDate.getMonth() + 1;
+  const date = selectedDate.getDate();
+  const weekName = getKoreanWeekdayName(selectedDate.getDay());
+  const dateString = `${month}월 ${date}일 ${weekName}요일`;
+
   return (
     <StyledShowList>
       <StyledShowListHeader>
@@ -24,11 +29,7 @@ export const ShowList: React.FC<Props> = ({
           sx={{ fill: '#B5BEC6' }}
           onClick={selectPreviousDate}
         />
-        <div>{`${
-          selectedDate.getMonth() + 1
-        }월 ${selectedDate.getDate()}일 ${getKoreanWeekdayName(
-          selectedDate.getDay(),
-        )}요일`}</div>
+        <div>{dateString}</div>
         <ChevronRightIcon sx={{ fill: '#B5BEC6' }} onClick={selectNextDate} />
       </StyledShowListHeader>
       <StyledShowListContent>
