@@ -1,7 +1,12 @@
 package kr.codesquad.jazzmeet.venue.controller;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -10,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import kr.codesquad.jazzmeet.venue.dto.response.NearbyVenueResponse;
 import kr.codesquad.jazzmeet.venue.dto.response.VenueAutocompleteResponse;
 import kr.codesquad.jazzmeet.venue.dto.response.VenuePinsBySearchResponse;
+import kr.codesquad.jazzmeet.venue.dto.response.VenueSearchResponse;
 import kr.codesquad.jazzmeet.venue.service.VenueService;
 import lombok.RequiredArgsConstructor;
 
@@ -37,5 +43,15 @@ public class VenueController {
 	public ResponseEntity<List<VenuePinsBySearchResponse>> findVenuePins(@RequestParam String word) {
 		List<VenuePinsBySearchResponse> venuePins = venueService.findVenuePins(word);
 		return ResponseEntity.ok(venuePins);
+	}
+
+	@GetMapping("/api/venues/search")
+	public ResponseEntity<VenueSearchResponse> searchVenueList(
+		@RequestParam String word,
+		@PageableDefault(size = 2, page = 1) Pageable pageable) {
+		LocalDateTime nowTime = LocalDateTime.of(LocalDate.now(), LocalTime.MIN);
+		VenueSearchResponse venuesResponse = venueService.searchVenueList(word, pageable, nowTime);
+
+		return ResponseEntity.ok(venuesResponse);
 	}
 }
