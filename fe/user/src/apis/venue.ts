@@ -45,5 +45,5 @@ export const getVenuesByKeyword = async (
   const queryString = getQueryString(searchParams);
   const response = await fetchData(`/api/venues${queryString}`);
 
-  return await response.json();
+  return response.json();
 };

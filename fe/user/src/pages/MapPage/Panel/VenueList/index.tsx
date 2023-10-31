@@ -28,8 +28,9 @@ export const VenueList: React.FC<VenueListProps> = ({
     <StyledVenueList>
       <StyledTotalCount>
         <h2>전체</h2>
-        <span>{venueCount ?? 0}</span>
+        <span>{venueCount}</span>
       </StyledTotalCount>
+
       {venueList.length > 0 ? (
         <>
           <StyledVenues>
@@ -46,12 +47,10 @@ export const VenueList: React.FC<VenueListProps> = ({
           />
         </>
       ) : (
-        <StyledVenues>
-          <EmptyList>
-            <ErrorOutlineIcon />
-            검색 결과가 없습니다.
-          </EmptyList>
-        </StyledVenues>
+        <EmptyList>
+          <ErrorOutlineIcon />
+          검색 결과가 없습니다.
+        </EmptyList>
       )}
     </StyledVenueList>
   );
@@ -113,4 +112,5 @@ const EmptyList = styled.div`
   height: 100px;
   font-size: 16px;
   color: #888;
+  margin-top: 20px;
 `;
