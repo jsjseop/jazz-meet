@@ -19,6 +19,8 @@ export const SearchBar: React.FC = () => {
         <InputBase
           sx={{ ml: 1, flex: 1 }}
           placeholder="함께 맞는 주말 햇살, 나란히 듣는 재즈."
+          name="keyword"
+          autoComplete="off"
         />
         <IconButton type="button" sx={{ p: '10px' }} aria-label="search">
           <SearchIcon />
