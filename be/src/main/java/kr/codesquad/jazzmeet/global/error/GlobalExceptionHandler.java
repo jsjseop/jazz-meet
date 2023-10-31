@@ -39,7 +39,8 @@ public class GlobalExceptionHandler {
 		ErrorCode errorCode = ErrorCode.INTERNAL_SERVER_ERROR;
 		log.error("Exception: ", ex);
 		return ResponseEntity.status(errorCode.getHttpStatus())
-			.body(new ErrorResponse(errorCode.getMessage(), ex.getMessage() + ", " + NestedExceptionUtils.getMostSpecificCause(ex)));
+			.body(new ErrorResponse(errorCode.getMessage(),
+				ex.getMessage() + ", " + NestedExceptionUtils.getMostSpecificCause(ex)));
 	}
 
 	// @Valid 예외 처리
@@ -48,6 +49,7 @@ public class GlobalExceptionHandler {
 		ErrorCode errorCode = ErrorCode.VALIDATION_FAILED;
 		log.warn("MethodArgumentNotValidException handling: {}", ex.getMessage());
 		return ResponseEntity.status(errorCode.getHttpStatus())
-			.body(new ErrorResponse(errorCode.getMessage(), ex.getMessage() + ", " + NestedExceptionUtils.getMostSpecificCause(ex)));
+			.body(new ErrorResponse(errorCode.getMessage(),
+				ex.getMessage() + ", " + NestedExceptionUtils.getMostSpecificCause(ex)));
 	}
 }

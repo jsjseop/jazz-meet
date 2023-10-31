@@ -21,7 +21,6 @@ export const VenueList: React.FC<VenueListProps> = ({
   updateVenueList,
 }) => {
   const handlePageChange = (_: React.ChangeEvent<unknown>, value: number) => {
-    console.log('page', value);
     updateVenueList(value);
   };
 

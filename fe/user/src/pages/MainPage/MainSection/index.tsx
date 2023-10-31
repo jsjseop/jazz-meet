@@ -1,12 +1,12 @@
 import styled from '@emotion/styled';
 import { AroundVenus } from './AroundVenus';
-import { OngoingShows } from './OngoingShows';
+import { UpcomingShows } from './UpcomingShows';
 
 export const MainSection: React.FC = () => {
   return (
     <StyledMainSection>
       <AroundVenus />
-      <OngoingShows />
+      <UpcomingShows />
     </StyledMainSection>
   );
 };

@@ -1,1 +1,1 @@
-export const BASE_URL: string = import.meta.env.VITE_APP_BASE_URL;
+export const BASE_URL: string = import.meta.env.VITE_MOCK_URL;
