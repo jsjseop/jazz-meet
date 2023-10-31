@@ -24,41 +24,35 @@ export const VenueList: React.FC<VenueListProps> = ({
     updateVenueList(value);
   };
 
-  if (!venueList) {
-    return (
-      <StyledVenueList>
-        <StyledTotalCount>
-          <h2>전체</h2>
-          <span>{0}</span>
-        </StyledTotalCount>
+  return (
+    <StyledVenueList>
+      <StyledTotalCount>
+        <h2>전체</h2>
+        <span>{venueCount ?? 0}</span>
+      </StyledTotalCount>
+      {venueList ? (
+        <>
+          <StyledVenues>
+            {venueList.map((venue) => (
+              <Link to={`/map/venues/${venue.id}`} key={venue.id}>
+                <VenueItem {...venue} />
+              </Link>
+            ))}
+          </StyledVenues>
+          <PaginationBox
+            maxPage={maxPage}
+            currentPage={currentPage}
+            onChange={handlePageChange}
+          />
+        </>
+      ) : (
         <StyledVenues>
           <EmptyList>
             <ErrorOutlineIcon />
             검색 결과가 없습니다.
           </EmptyList>
         </StyledVenues>
-      </StyledVenueList>
-    );
-  }
-
-  return (
-    <StyledVenueList>
-      <StyledTotalCount>
-        <h2>전체</h2>
-        <span>{venueCount}</span>
-      </StyledTotalCount>
-      <StyledVenues>
-        {venueList.map((venue) => (
-          <Link to={`/map/venues/${venue.id}`} key={venue.id}>
-            <VenueItem {...venue} />
-          </Link>
-        ))}
-      </StyledVenues>
-      <PaginationBox
-        maxPage={maxPage}
-        currentPage={currentPage}
-        onChange={handlePageChange}
-      />
+      )}
     </StyledVenueList>
   );
 };
