@@ -21,6 +21,10 @@ export type UpcomingShow = {
   endTime: string;
 };
 
+export type HasShowDates = {
+  hasShow: number[];
+};
+
 export type ShowDetail = {
   id: number;
   posterUrl: string;
