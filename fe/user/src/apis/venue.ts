@@ -43,7 +43,7 @@ export const getVenuesByKeyword = async (
   searchParams: SearchParams = {},
 ): Promise<SearchedVenues> => {
   const queryString = getQueryString(searchParams);
-  const response = await fetchData(`/searchVenues${queryString}`);
+  const response = await fetchData(`/api/venues${queryString}`);
 
   return await response.json();
 };
