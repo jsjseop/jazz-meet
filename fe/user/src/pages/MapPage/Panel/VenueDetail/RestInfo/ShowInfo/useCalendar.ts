@@ -1,28 +1,44 @@
 import { useState } from 'react';
 
 export const useCalendar = () => {
-  const [currentDate, setCurrentDate] = useState(() => new Date());
+  const [calendarDate, setCalendarDate] = useState(() => new Date());
   const [selectedDate, setSelectedDate] = useState(() => new Date());
 
-  const prevMonth = () => {
-    currentDate.setMonth(currentDate.getMonth() - 1);
-    setCurrentDate(new Date(currentDate));
+  const goToPreviousMonth = () => {
+    calendarDate.setMonth(calendarDate.getMonth() - 1);
+    setCalendarDate(new Date(calendarDate));
   };
 
-  const nextMonth = () => {
-    currentDate.setMonth(currentDate.getMonth() + 1);
-    setCurrentDate(new Date(currentDate));
+  const goToNextMonth = () => {
+    calendarDate.setMonth(calendarDate.getMonth() + 1);
+    setCalendarDate(new Date(calendarDate));
   };
 
   const selectDate = (date: Date) => {
     setSelectedDate(date);
   };
 
+  const selectPreviousDate = () => {
+    selectedDate.setDate(selectedDate.getDate() - 1);
+    const newDate = new Date(selectedDate);
+    setCalendarDate(newDate);
+    setSelectedDate(newDate);
+  };
+
+  const selectNextDate = () => {
+    selectedDate.setDate(selectedDate.getDate() + 1);
+    const newDate = new Date(selectedDate);
+    setCalendarDate(newDate);
+    setSelectedDate(newDate);
+  };
+
   return {
-    currentDate,
+    calendarDate,
     selectedDate,
-    prevMonth,
-    nextMonth,
+    goToPreviousMonth,
+    goToNextMonth,
     selectDate,
+    selectPreviousDate,
+    selectNextDate,
   };
 };

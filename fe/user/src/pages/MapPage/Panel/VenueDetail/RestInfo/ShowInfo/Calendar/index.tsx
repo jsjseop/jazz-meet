@@ -4,38 +4,38 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { getFirstDay, getLastDay } from './getFirstDayAndLastDay';
 
 type Props = {
-  currentDate: Date;
+  calendarDate: Date;
   selectedDate: Date;
-  prevMonth: () => void;
-  nextMonth: () => void;
+  goToPreviousMonth: () => void;
+  goToNextMonth: () => void;
   selectDate: (date: Date) => void;
 };
 
 export const Calendar: React.FC<Props> = ({
-  currentDate,
+  calendarDate,
   selectedDate,
-  prevMonth,
-  nextMonth,
+  goToPreviousMonth,
+  goToNextMonth,
   selectDate,
 }) => {
-  const currentYear = currentDate.getFullYear();
-  const currentMonth = currentDate.getMonth() + 1;
+  const currentYear = calendarDate.getFullYear();
+  const currentMonth = calendarDate.getMonth() + 1;
   const selectedYear = selectedDate.getFullYear();
   const selectedMonth = selectedDate.getMonth() + 1;
   const selectedDay = selectedDate.getDate();
   const firstDay = getFirstDay(currentYear, currentMonth);
-  const lastDay = getLastDay(currentDate.getFullYear(), currentMonth);
+  const lastDay = getLastDay(calendarDate.getFullYear(), currentMonth);
 
   return (
     <StyledCalendar>
       <StyledCalendarHeader>
-        <ChevronLeftIcon onClick={prevMonth} sx={{ fill: '#B5BEC6' }} />
+        <ChevronLeftIcon onClick={goToPreviousMonth} sx={{ fill: '#B5BEC6' }} />
         <StyledCalendarHeaderTitle>
-          {currentDate.toLocaleString('en-US', { month: 'long' })} {currentYear}
+          {calendarDate.toLocaleString('en-US', { month: 'long' })}{' '}
+          {currentYear}
         </StyledCalendarHeaderTitle>
-        <ChevronRightIcon onClick={nextMonth} sx={{ fill: '#B5BEC6' }} />
+        <ChevronRightIcon onClick={goToNextMonth} sx={{ fill: '#B5BEC6' }} />
       </StyledCalendarHeader>
-
       <StyledDaysOfTheWeek>
         <div>SAN</div>
         <div>MON</div>

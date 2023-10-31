@@ -6,23 +6,39 @@ import { useCalendar } from './useCalendar';
 import { getKoreanWeekdayName } from '@utils/dateUtils';
 
 export const ShowInfo: React.FC = () => {
-  const { currentDate, selectedDate, prevMonth, nextMonth, selectDate } =
-    useCalendar();
+  const {
+    calendarDate,
+    selectedDate,
+    goToPreviousMonth,
+    goToNextMonth,
+    selectDate,
+    selectPreviousDate,
+    selectNextDate,
+  } = useCalendar();
 
   return (
     <>
       <Calendar
-        {...{ currentDate, selectedDate, prevMonth, nextMonth, selectDate }}
+        {...{
+          calendarDate,
+          selectedDate,
+          goToPreviousMonth,
+          goToNextMonth,
+          selectDate,
+        }}
       />
       <StyledShowList>
         <StyledShowListHeader>
-          <ChevronLeftIcon sx={{ fill: '#B5BEC6' }} />
+          <ChevronLeftIcon
+            sx={{ fill: '#B5BEC6' }}
+            onClick={selectPreviousDate}
+          />
           <div>{`${
             selectedDate.getMonth() + 1
           }월 ${selectedDate.getDate()}일 ${getKoreanWeekdayName(
             selectedDate.getDay(),
           )}요일`}</div>
-          <ChevronRightIcon sx={{ fill: '#B5BEC6' }} />
+          <ChevronRightIcon sx={{ fill: '#B5BEC6' }} onClick={selectNextDate} />
         </StyledShowListHeader>
         <StyledShowListContent>
           <StyledShowListContentHeader>
@@ -79,6 +95,10 @@ const StyledShowListHeader = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+
+  svg {
+    cursor: pointer;
+  }
 `;
 
 const StyledShowListContent = styled.div`
