@@ -1,7 +1,7 @@
 import { getVenuesByKeyword } from 'apis/venue';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { SearchParams, SearchedVenues } from 'types/api.types';
+import { SearchedVenues } from 'types/api.types';
 
 export const useVenueList = () => {
   const { search } = useLocation();
@@ -15,8 +15,10 @@ export const useVenueList = () => {
 
   const updateVenueList = useCallback(
     async (page?: number) => {
-      const searchParams = getSearchParams(page, urlSearchParams);
-      const searchedVenues = await getVenuesByKeyword(searchParams);
+      const searchedVenues = await getVenuesByKeyword({
+        page,
+        word: urlSearchParams.get('word'),
+      });
 
       setVenueListData(searchedVenues);
     },
@@ -34,21 +36,4 @@ export const useVenueList = () => {
     maxPage: venueListData.maxPage,
     updateVenueList,
   };
-};
-
-const getSearchParams = (
-  page: number | undefined,
-  urlSearchParams: URLSearchParams,
-) => {
-  const searchParams: SearchParams = {};
-
-  if (page && page > 1) {
-    searchParams.page = page;
-  }
-
-  if (urlSearchParams.get('word')) {
-    searchParams.word = urlSearchParams.get('word') ?? '';
-  }
-
-  return searchParams;
 };

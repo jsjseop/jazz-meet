@@ -2,7 +2,7 @@ export const getQueryString = (
   params:
     | string
     | string[][]
-    | Record<string, string | number>
+    | Record<string, string | number | undefined | null>
     | URLSearchParams,
 ) => {
   let searchParams: URLSearchParams;
@@ -15,6 +15,10 @@ export const getQueryString = (
     searchParams = new URLSearchParams();
 
     Object.entries(params).forEach(([key, value]) => {
+      if (value === undefined || value === null) {
+        return;
+      }
+
       const paramValue = typeof value === 'number' ? String(value) : value;
       searchParams.append(key, paramValue);
     });
