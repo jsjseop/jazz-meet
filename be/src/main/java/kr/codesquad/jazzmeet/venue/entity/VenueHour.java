@@ -1,9 +1,9 @@
 package kr.codesquad.jazzmeet.venue.entity;
 
-import java.time.DayOfWeek;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -21,10 +21,11 @@ public class VenueHour {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	@Column(nullable = false)
+	@Enumerated(value = EnumType.ORDINAL)
+	@Column(nullable = false, length = 10)
 	private DayOfWeek day;
-	@Column(nullable = false)
-	private String business_hour;
+	@Column(nullable = false, length = 20)
+	private String businessHour;
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "venue_id")
 	private Venue venue;

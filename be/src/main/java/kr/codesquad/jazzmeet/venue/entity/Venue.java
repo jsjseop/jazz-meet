@@ -21,17 +21,20 @@ public class Venue {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	@Column(nullable = false)
+	@Column(nullable = false, length = 50)
 	private String name;
-	@Column(nullable = false)
+	@Column(nullable = false, length = 50)
 	private String roadNameAddress; // 도로명
-	@Column(nullable = false)
+	@Column(nullable = false, length = 50)
 	private String lotNumberAddress; // 지번
+	@Column(length = 20)
 	private String phoneNumber;
+	@Column(length = 1000)
 	private String description;
 	@Column(nullable = false, columnDefinition = "point")
 	private Point location;
 	private Long adminId;
+	@Column(length = 500)
 	private String thumbnailUrl;
 	@Embedded
 	private Images images;
