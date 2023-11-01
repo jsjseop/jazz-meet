@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
-import { isoToTimeFormat } from '@utils/formatTime';
-import { VenueData } from 'types/api.types';
+import { VenueData } from '~/types/api.types';
+import { isoToTimeFormat } from '~/utils/formatTime';
 
 type Props = Omit<VenueData, 'id' | 'thumbnailUrl' | 'latitude' | 'longitude'>;
 

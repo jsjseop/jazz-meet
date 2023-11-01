@@ -1,4 +1,4 @@
-import { UpcomingShow } from 'types/api.types';
+import { UpcomingShow } from '~/types/api.types';
 import { fetchData } from './fetchData';
 
 export const getUpcomingShows = async (): Promise<UpcomingShow[]> => {
