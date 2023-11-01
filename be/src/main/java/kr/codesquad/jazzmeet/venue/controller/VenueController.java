@@ -49,9 +49,8 @@ public class VenueController {
 	public ResponseEntity<VenueSearchResponse> searchVenueList(
 		@RequestParam String word,
 		@PageableDefault(page = 1) Pageable pageable) {
-		// pageable의 default size는 10개
-		LocalDateTime todayStartTime = LocalDateTime.of(LocalDate.now(), LocalTime.MAX);
-		LocalDateTime todayEndTime = LocalDateTime.of(LocalDate.now(), LocalTime.MIN);
+		LocalDateTime todayStartTime = LocalDateTime.of(LocalDate.now(), LocalTime.MIN);
+		LocalDateTime todayEndTime = LocalDateTime.of(LocalDate.now(), LocalTime.MAX);
 		VenueSearchResponse venuesResponse = venueService.searchVenueList(word, pageable, todayStartTime, todayEndTime);
 
 		return ResponseEntity.ok(venuesResponse);

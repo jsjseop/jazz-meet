@@ -2,7 +2,14 @@ package kr.codesquad.jazzmeet.venue.dto;
 
 import java.time.LocalDateTime;
 
-public record ShowInfo(
-	LocalDateTime startTime,
-	LocalDateTime endTime) {
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
+public class ShowInfo {
+	private LocalDateTime startTime;
+	private LocalDateTime endTime;
 }

@@ -15,8 +15,8 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
+import kr.codesquad.jazzmeet.venue.dto.ShowInfo;
 import kr.codesquad.jazzmeet.venue.vo.NearbyVenue;
-import kr.codesquad.jazzmeet.venue.vo.ShowInfoData;
 import kr.codesquad.jazzmeet.venue.vo.VenuePinsByWord;
 import kr.codesquad.jazzmeet.venue.vo.VenueSearchData;
 import lombok.RequiredArgsConstructor;
@@ -78,7 +78,7 @@ public class VenueQueryRepository {
 		LocalDateTime todayEndTime) {
 		return query.select(venue).from(venue)
 			.leftJoin(show)
-			.on(venue.id.eq(show.venue.id))
+			.on(venue.id.eq(show.venue.id).and(show.startTime.between(todayStartTime, todayEndTime)))
 			.where(venue.name.contains(word).or(venue.roadNameAddress.contains(word)))
 			.limit(pageable.getPageSize())
 			.offset(pageable.getOffset() - pageable.getPageSize())
@@ -92,10 +92,10 @@ public class VenueQueryRepository {
 						venue.description,
 						venue.location,
 						GroupBy.list(
-							Projections.fields(ShowInfoData.class,
+							Projections.fields(ShowInfo.class,
 								show.startTime,
 								show.endTime
-							)).as("showInfoData")
+							)).as("showInfo")
 					)
 				)
 			);

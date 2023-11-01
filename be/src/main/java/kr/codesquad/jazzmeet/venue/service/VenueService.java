@@ -6,7 +6,6 @@ import java.util.List;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import kr.codesquad.jazzmeet.venue.dto.ShowInfo;
 import kr.codesquad.jazzmeet.venue.dto.VenueSearch;
 import kr.codesquad.jazzmeet.venue.dto.response.NearbyVenueResponse;
 import kr.codesquad.jazzmeet.venue.dto.response.VenueAutocompleteResponse;
@@ -18,7 +17,6 @@ import kr.codesquad.jazzmeet.venue.repository.VenueQueryRepository;
 import kr.codesquad.jazzmeet.venue.repository.VenueRepository;
 import kr.codesquad.jazzmeet.venue.vo.NearbyVenue;
 import kr.codesquad.jazzmeet.venue.vo.VenuePinsByWord;
-import kr.codesquad.jazzmeet.venue.vo.VenueSearchData;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -66,19 +64,13 @@ public class VenueService {
 		int currentPage = pageable.getPageNumber();
 		int maxPage = calculateMaxPage(venueCount, pageable);
 
-		List<VenueSearchData> venueSearchDataList = venueQueryRepository
-			.searchVenueList(word, pageable, todayStartTime, todayEndTime);
+		List<VenueSearch> venueSearch = venueQueryRepository
+			.searchVenueList(word, pageable, todayStartTime, todayEndTime)
+			.stream()
+			.map(VenueMapper.INSTANCE::toVenueSearch)
+			.toList();
 
-		List<VenueSearch> venueSearchList = venueSearchDataList.stream()
-			.map(venueSearchData -> {
-				List<ShowInfo> showInfo = venueSearchData.getShowInfoData()
-					.stream()
-					.map(VenueMapper.INSTANCE::toShowInfo)
-					.toList();
-				return VenueMapper.INSTANCE.toVenueSearch(venueSearchData, showInfo);
-			}).toList();
-
-		return VenueMapper.INSTANCE.toVenueSearchResponse(venueSearchList, venueCount, currentPage, maxPage);
+		return VenueMapper.INSTANCE.toVenueSearchResponse(venueSearch, venueCount, currentPage, maxPage);
 	}
 
 	private int calculateMaxPage(int venueCount, Pageable pageable) {
