@@ -45,7 +45,7 @@ export const Map: React.FC<Props> = ({ mapRef }) => {
 
       map.fitBounds(boundary);
     })();
-  }, []);
+  }, [search]);
 
   return <StyledMap id="map" ref={mapRef} />;
 };
