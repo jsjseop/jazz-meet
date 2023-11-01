@@ -12,4 +12,8 @@ import lombok.NoArgsConstructor;
 public class ShowInfo {
 	private LocalDateTime startTime;
 	private LocalDateTime endTime;
+
+	public boolean emptyCheck() {
+		return startTime == null && endTime == null;
+	}
 }

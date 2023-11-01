@@ -1,11 +1,13 @@
 package kr.codesquad.jazzmeet.venue.mapper;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
+import kr.codesquad.jazzmeet.venue.dto.ShowInfo;
 import kr.codesquad.jazzmeet.venue.dto.VenueSearch;
 import kr.codesquad.jazzmeet.venue.dto.response.NearbyVenueResponse;
 import kr.codesquad.jazzmeet.venue.dto.response.VenueAutocompleteResponse;
@@ -43,7 +45,17 @@ public interface VenueMapper {
 	VenueSearchResponse toVenueSearchResponse(Integer dummy, List<VenueSearch> venueSearchList,
 		int venueCount, int currentPage, int maxPage);
 
-	@Mapping(target = "latitude", source = "location.y")
-	@Mapping(target = "longitude", source = "location.x")
-	VenueSearch toVenueSearch(VenueSearchData venueSearchData);
+	default VenueSearch toVenueSearch(VenueSearchData venueSearchData) {
+		Integer dummy = null;
+		List<ShowInfo> showInfo = venueSearchData.getShowInfo();
+		if ((showInfo.size() == 1) && showInfo.get(0).emptyCheck()) {
+			showInfo = new ArrayList<>();
+		}
+		return toVenueSearch(dummy, venueSearchData, showInfo);
+	}
+
+	@Mapping(target = "latitude", source = "venueSearchData.location.y")
+	@Mapping(target = "longitude", source = "venueSearchData.location.x")
+	@Mapping(target = "showInfo", source = "showInfoList")
+	VenueSearch toVenueSearch(Integer dummy, VenueSearchData venueSearchData, List<ShowInfo> showInfoList);
 }
