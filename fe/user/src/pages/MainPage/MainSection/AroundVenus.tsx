@@ -4,7 +4,7 @@ import { CardListHeader } from './CardList/CardListHeader';
 import { useEffect, useState } from 'react';
 import { AroundVenue } from 'types/api.types';
 import { getAroundVenues } from 'apis/venue';
-import { BASIC_COORDINATE } from '@constants/COORDINATE';
+import { BASIC_COORDINATE } from '@constants/MAP';
 import { AroundVenueCard } from './CardList/Cards/AroundVenueCard';
 import { SwiperSlide } from 'swiper/react';
 
