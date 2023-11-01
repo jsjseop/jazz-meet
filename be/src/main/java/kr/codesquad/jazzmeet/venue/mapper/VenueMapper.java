@@ -6,10 +6,10 @@ import org.mapstruct.factory.Mappers;
 
 import kr.codesquad.jazzmeet.venue.dto.response.NearbyVenueResponse;
 import kr.codesquad.jazzmeet.venue.dto.response.VenueAutocompleteResponse;
-import kr.codesquad.jazzmeet.venue.dto.response.VenuePinsBySearchResponse;
+import kr.codesquad.jazzmeet.venue.dto.response.VenuePinsResponse;
 import kr.codesquad.jazzmeet.venue.entity.Venue;
 import kr.codesquad.jazzmeet.venue.vo.NearbyVenue;
-import kr.codesquad.jazzmeet.venue.vo.VenuePinsByWord;
+import kr.codesquad.jazzmeet.venue.vo.VenuePins;
 
 @Mapper
 public interface VenueMapper {
@@ -26,5 +26,5 @@ public interface VenueMapper {
 
 	@Mapping(target = "latitude", source = "location.y")
 	@Mapping(target = "longitude", source = "location.x")
-	VenuePinsBySearchResponse toVenuePinsBySearchResponse(VenuePinsByWord venuePinsByWord);
+	VenuePinsResponse toVenuePinsBySearchResponse(VenuePins venuePinsByWord);
 }

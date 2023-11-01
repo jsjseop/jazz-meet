@@ -1,4 +1,4 @@
-import { Coordinate } from 'types/map.types';
+import { Coordinate } from '~/types/map.types';
 
 export const BASIC_COORDINATE: Coordinate = {
   latitude: 37.5666103,

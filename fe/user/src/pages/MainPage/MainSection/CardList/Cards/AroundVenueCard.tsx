@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
-import { AroundVenue } from 'types/api.types';
 import { useNavigate } from 'react-router-dom';
+import { AroundVenue } from '~/types/api.types';
 
 type Props = {
   aroundVenue: AroundVenue;
