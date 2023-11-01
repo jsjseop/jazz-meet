@@ -181,4 +181,21 @@ class VenueServiceTest extends IntegrationTestSupport {
 				tuple("Entry55", 123.11111, 123.123123));
 	}
 
+	@DisplayName("검색어가 NULL이면 빈 배열을 응답한다.")
+	@Test
+	public void findVenuesByWordIsNull() throws Exception {
+		//given
+		String word = null;
+		Point point = VenueUtil.createPoint(123.11111, 123.123123);
+		Venue venue1 = VenueTestUtil.createVenues("부기우기", "서울 용산구 회나무로 21 2층", point);
+		Venue venue2 = VenueTestUtil.createVenues("Entry55", "서울 동작구 동작대로1길 18 B-102", point);
+		venueRepository.saveAll(List.of(venue1, venue2));
+
+		//when
+		List<VenuePinsBySearchResponse> venuePinsList = venueService.findVenuePins(word);
+
+		//then
+		assertThat(venuePinsList).hasSize(0);
+	}
+
 }
