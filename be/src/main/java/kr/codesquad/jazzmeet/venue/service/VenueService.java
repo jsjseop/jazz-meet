@@ -79,7 +79,7 @@ public class VenueService {
 			.toList();
 	}
 
-	public VenueSearchResponse getVenuesByLocation(Double lowLatitude, Double highLatitude,
+	public VenueSearchResponse findVenuesByLocation(Double lowLatitude, Double highLatitude,
 		Double lowLongitude, Double highLongitude, int page) {
 		if (validateCoordinates(lowLatitude, highLatitude, lowLongitude, highLongitude)) {
 			VenueSearchResponse.builder()
@@ -89,13 +89,14 @@ public class VenueService {
 
 		Polygon range = VenueUtil.createRange(lowLatitude, highLatitude, lowLongitude, highLongitude);
 		PageRequest pageRequest = PageRequest.of(page - PAGE_NUMBER_OFFSET, PAGE_SIZE);
-		Page<VenueSearchData> venuesByLocation = venueQueryRepository.getVenuesByLocation(range, pageRequest);
+		Page<VenueSearchData> venuesByLocation = venueQueryRepository.findVenuesByLocation(range, pageRequest);
 
 		List<VenueSearch> venueSearchList = venuesByLocation.getContent()
 			.stream()
 			.map(VenueMapper.INSTANCE::toVenueSearch)
 			.toList();
 
+		// Todo: Mapper로 변경
 		return VenueSearchResponse.builder()
 			.venues(venueSearchList)
 			.venueCount(venuesByLocation.getTotalElements())

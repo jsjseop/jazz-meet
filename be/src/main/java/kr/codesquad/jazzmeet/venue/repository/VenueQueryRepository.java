@@ -81,7 +81,7 @@ public class VenueQueryRepository {
 		return venues;
 	}
 
-	public Page<VenueSearchData> getVenuesByLocation(Polygon range, Pageable pageable) {
+	public Page<VenueSearchData> findVenuesByLocation(Polygon range, Pageable pageable) {
 		List<VenueSearchData> venueSearchList = query.from(venue)
 			.leftJoin(show)
 			.on(venue.id.eq(show.venue.id))

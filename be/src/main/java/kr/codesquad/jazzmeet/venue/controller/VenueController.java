@@ -58,12 +58,12 @@ public class VenueController {
 	}
 
 	@GetMapping("/api/venues/map")
-	public ResponseEntity<VenueSearchResponse> getVenuesByLocation(
+	public ResponseEntity<VenueSearchResponse> findVenuesByLocation(
 		@RequestParam Double lowLatitude, @RequestParam Double highLatitude,
 		@RequestParam Double lowLongitude, @RequestParam Double highLongitude,
 		@RequestParam(defaultValue = "1") @Min(value = 1) int page
 	) {
-		VenueSearchResponse venuesByLocation = venueService.getVenuesByLocation(lowLatitude, highLatitude,
+		VenueSearchResponse venuesByLocation = venueService.findVenuesByLocation(lowLatitude, highLatitude,
 			lowLongitude, highLongitude, page);
 		return ResponseEntity.ok(venuesByLocation);
 	}
