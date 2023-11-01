@@ -41,6 +41,10 @@ public class VenueService {
 	}
 
 	public List<VenuePinsBySearchResponse> findVenuePins(String word) {
+		if (word == null) {
+			return List.of();
+		}
+
 		List<VenuePinsByWord> venues = venueQueryRepository.findVenuePinsByWord(word);
 
 		return venues.stream()
