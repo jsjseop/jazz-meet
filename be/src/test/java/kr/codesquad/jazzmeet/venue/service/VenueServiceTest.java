@@ -15,6 +15,7 @@ import kr.codesquad.jazzmeet.IntegrationTestSupport;
 import kr.codesquad.jazzmeet.venue.dto.response.NearbyVenueResponse;
 import kr.codesquad.jazzmeet.venue.dto.response.VenueAutocompleteResponse;
 import kr.codesquad.jazzmeet.venue.dto.response.VenuePinsResponse;
+import kr.codesquad.jazzmeet.venue.dto.response.VenueSearchResponse;
 import kr.codesquad.jazzmeet.venue.entity.Venue;
 import kr.codesquad.jazzmeet.venue.repository.VenueRepository;
 import kr.codesquad.jazzmeet.venue.util.VenueTestUtil;
@@ -278,6 +279,68 @@ class VenueServiceTest extends IntegrationTestSupport {
 		//then
 		assertThat(venuePins).hasSize(0)
 			.isInstanceOf(List.class);
+	}
+
+	@Test
+	@DisplayName("위치 정보 4개의 범위에 포함되고 page에 해당하는 공연장 목록을 조회한다.")
+	void findVenuesByLocationMap() {
+		// given
+		Double lowLatitude = 37.54872034392914;
+		Double highLatitude = 37.56412598864679;
+		Double lowLongitude = 126.91146553944996;
+		Double highLongitude = 126.94298838861823;
+		int page = 1;
+
+		Point point1 = VenueUtil.createPoint(37.558531649528895, 126.91891927086303);
+		Point point2 = VenueUtil.createPoint(37.5560565982576, 126.930179961597);
+		Point point3 = VenueUtil.createPoint(37.5502406352943, 126.9229031896536);
+
+		Venue venue1 = VenueTestUtil.createVenues("연남5701", "서울 마포구 동교로23길 64 지하", point1);
+		Venue venue2 = VenueTestUtil.createVenues("숲길", "서울 마포구 와우산로37길 11", point2);
+		Venue venue3 = VenueTestUtil.createVenues("클럽에반스", "서울 마포구 와우산로 63 2층", point3);
+
+		venueRepository.saveAll(List.of(venue1, venue2, venue3));
+
+		// when
+		VenueSearchResponse venuesByLocation = venueService.findVenuesByLocation(lowLatitude, highLatitude,
+			lowLongitude, highLongitude, page);
+
+		// then
+		Assertions.assertAll(
+			() -> assertThat(venuesByLocation.venues()).hasSize(3)
+				.extracting("name")
+				.containsExactly("연남5701", "숲길", "클럽에반스"),
+			() -> assertThat(venuesByLocation.currentPage()).isEqualTo(page),
+			() -> assertThat(venuesByLocation.maxPage()).isEqualTo(page)
+		);
+	}
+
+	@Test
+	@DisplayName("위치 정보 4개 중 null 값이 존재하면 공연장 목록은 빈 배열로 응답한다.")
+	void findVenuesByLocationNull() {
+		// given
+		Double lowLatitude = null;
+		Double highLatitude = 37.56412598864679;
+		Double lowLongitude = 126.91146553944996;
+		Double highLongitude = null;
+		int page = 1;
+
+		Point point1 = VenueUtil.createPoint(37.558531649528895, 126.91891927086303);
+		Point point2 = VenueUtil.createPoint(37.5560565982576, 126.930179961597);
+		Point point3 = VenueUtil.createPoint(37.5502406352943, 126.9229031896536);
+
+		Venue venue1 = VenueTestUtil.createVenues("연남5701", "서울 마포구 동교로23길 64 지하", point1);
+		Venue venue2 = VenueTestUtil.createVenues("숲길", "서울 마포구 와우산로37길 11", point2);
+		Venue venue3 = VenueTestUtil.createVenues("클럽에반스", "서울 마포구 와우산로 63 2층", point3);
+
+		venueRepository.saveAll(List.of(venue1, venue2, venue3));
+
+		// when
+		VenueSearchResponse venuesByLocation = venueService.findVenuesByLocation(lowLatitude, highLatitude,
+			lowLongitude, highLongitude, page);
+
+		// then
+		assertThat(venuesByLocation.venues()).hasSize(0);
 	}
 
 }
