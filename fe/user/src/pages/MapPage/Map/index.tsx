@@ -1,8 +1,8 @@
 import styled from '@emotion/styled';
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { MARKER_SVG } from '@constants/MAP';
 import { getVenuePinsBySearch } from 'apis/venue';
+import { MARKER_SVG } from '~/constants/MAP';
 
 type Props = {
   mapRef: React.RefObject<HTMLDivElement>;

@@ -1,7 +1,7 @@
-import { getVenuesByKeyword } from 'apis/venue';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { SearchedVenues } from 'types/api.types';
+import { getVenuesByKeyword } from '~/apis/venue';
+import { SearchedVenues } from '~/types/api.types';
 
 export const useVenueList = () => {
   const { search } = useLocation();

@@ -1,4 +1,4 @@
-import { Coordinate } from 'types/map.types';
+import { Coordinate } from './map.types';
 
 export type AroundVenue = {
   id: number;
