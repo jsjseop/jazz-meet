@@ -17,7 +17,6 @@ import kr.codesquad.jazzmeet.venue.vo.NearbyVenue;
 import kr.codesquad.jazzmeet.venue.vo.ShowInfoData;
 import kr.codesquad.jazzmeet.venue.vo.VenuePinsByWord;
 import kr.codesquad.jazzmeet.venue.vo.VenueSearchData;
-import kr.codesquad.jazzmeet.venue.vo.VenueSearchVo;
 
 @Mapper
 public interface VenueMapper {
@@ -36,8 +35,17 @@ public interface VenueMapper {
 	@Mapping(target = "longitude", source = "location.x")
 	VenuePinsBySearchResponse toVenuePinsBySearchResponse(VenuePinsByWord venuePinsByWord);
 
+	default VenueSearchResponse toVenueSearchResponse(List<VenueSearch> venueSearchList, int venueCount,
+		int currentPage,
+		int maxPage) {
+		Integer dummy = null;
+		return toVenueSearchResponse(dummy, venueSearchList, venueCount, currentPage, maxPage);
+	}
+
 	@Mapping(target = "venues", source = "venueSearchList")
-	VenueSearchResponse toVenueSearchResponse(VenueSearchVo venueSearchVo, List<VenueSearch> venueSearchList);
+	VenueSearchResponse toVenueSearchResponse(Integer dummy, List<VenueSearch> venueSearchList, int venueCount,
+		int currentPage,
+		int maxPage);
 
 	default VenueSearch toVenueSearch(VenueSearchData venueSearchData, List<ShowInfo> showInfo) {
 		Integer dummy = null;
@@ -51,15 +59,4 @@ public interface VenueMapper {
 
 	ShowInfo toShowInfo(ShowInfoData showInfoData);
 
-	default VenueSearchVo toVenueSearchVo(List<VenueSearchData> venues, int venueCount, int currentPage, int maxPage) {
-		Integer dummy = null;
-		return toVenueSearchVo(dummy, venues, venueCount, currentPage, maxPage);
-	}
-
-	@Mapping(target = "venues", source = "venues")
-	@Mapping(target = "venueCount", source = "venueCount")
-	@Mapping(target = "currentPage", source = "currentPage")
-	@Mapping(target = "maxPage", source = "maxPage")
-	VenueSearchVo toVenueSearchVo(Integer dummy, List<VenueSearchData> venues, int venueCount, int currentPage,
-		int maxPage);
 }

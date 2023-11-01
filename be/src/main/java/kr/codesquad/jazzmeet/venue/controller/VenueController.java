@@ -48,9 +48,11 @@ public class VenueController {
 	@GetMapping("/api/venues/search")
 	public ResponseEntity<VenueSearchResponse> searchVenueList(
 		@RequestParam String word,
-		@PageableDefault(size = 2, page = 1) Pageable pageable) {
-		LocalDateTime nowTime = LocalDateTime.of(LocalDate.now(), LocalTime.MIN);
-		VenueSearchResponse venuesResponse = venueService.searchVenueList(word, pageable, nowTime);
+		@PageableDefault(page = 1) Pageable pageable) {
+		// pageable의 default size는 10개
+		LocalDateTime todayStartTime = LocalDateTime.of(LocalDate.now(), LocalTime.MAX);
+		LocalDateTime todayEndTime = LocalDateTime.of(LocalDate.now(), LocalTime.MIN);
+		VenueSearchResponse venuesResponse = venueService.searchVenueList(word, pageable, todayStartTime, todayEndTime);
 
 		return ResponseEntity.ok(venuesResponse);
 	}

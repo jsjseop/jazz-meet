@@ -1,6 +1,5 @@
 package kr.codesquad.jazzmeet.venue.repository;
 
-import static com.querydsl.core.group.GroupBy.*;
 import static kr.codesquad.jazzmeet.show.entity.QShow.*;
 import static kr.codesquad.jazzmeet.venue.entity.QVenue.*;
 
@@ -10,17 +9,16 @@ import java.util.List;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
+import com.querydsl.core.group.GroupBy;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
-import kr.codesquad.jazzmeet.venue.mapper.VenueMapper;
 import kr.codesquad.jazzmeet.venue.vo.NearbyVenue;
 import kr.codesquad.jazzmeet.venue.vo.ShowInfoData;
 import kr.codesquad.jazzmeet.venue.vo.VenuePinsByWord;
 import kr.codesquad.jazzmeet.venue.vo.VenueSearchData;
-import kr.codesquad.jazzmeet.venue.vo.VenueSearchVo;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -75,40 +73,38 @@ public class VenueQueryRepository {
 	private BooleanExpression isContainWordInAddress(String word) {
 		return venue.roadNameAddress.contains(word);
 	}
-	
-	public VenueSearchVo searchVenueList(String word, Pageable pageable, LocalDateTime nowTime) {
-		List<VenueSearchData> venueSearchData =
-			query.select(venue).from(venue)
-				.innerJoin(show)
-				.on(venue.id.eq(show.venue.id))
-				.where(venue.name.contains(word).or(venue.roadNameAddress.contains(word)))
-				.limit(pageable.getPageSize())
-				.offset(pageable.getOffset())
-				.transform(
-					groupBy(venue.id).list(
-						Projections.fields(VenueSearchData.class,
-							venue.id,
-							venue.thumbnailUrl,
-							venue.name,
-							venue.roadNameAddress.as("address"),
-							venue.description,
-							venue.location,
-							list(Projections.fields(ShowInfoData.class,
+
+	public List<VenueSearchData> searchVenueList(String word, Pageable pageable, LocalDateTime todayStartTime,
+		LocalDateTime todayEndTime) {
+		return query.select(venue).from(venue)
+			.leftJoin(show)
+			.on(venue.id.eq(show.venue.id))
+			.where(venue.name.contains(word).or(venue.roadNameAddress.contains(word)))
+			.limit(pageable.getPageSize())
+			.offset(pageable.getOffset() - pageable.getPageSize())
+			.transform(
+				GroupBy.groupBy(venue.id).list(
+					Projections.fields(VenueSearchData.class,
+						venue.id,
+						venue.thumbnailUrl,
+						venue.name,
+						venue.roadNameAddress.as("address"),
+						venue.description,
+						venue.location,
+						GroupBy.list(
+							Projections.fields(ShowInfoData.class,
 								show.startTime,
 								show.endTime
 							)).as("showInfoData")
-						)
 					)
-				);
+				)
+			);
+	}
 
-		int venueCount = venueSearchData.size();
-		int currentPage = pageable.getPageNumber();
-		int size = pageable.getPageSize();
-		int maxPage = venueCount / size;
-		if (maxPage == 0 || venueCount % size != 0) {
-			maxPage += 1;
-		}
-
-		return VenueMapper.INSTANCE.toVenueSearchVo(venueSearchData, venueCount, currentPage, maxPage);
+	public Long countSearchVenueList(String word) {
+		return query.select(venue.count())
+			.from(venue)
+			.where(venue.name.contains(word).or(venue.roadNameAddress.contains(word)))
+			.fetchFirst();
 	}
 }

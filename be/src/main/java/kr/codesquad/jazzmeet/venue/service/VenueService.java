@@ -18,7 +18,7 @@ import kr.codesquad.jazzmeet.venue.repository.VenueQueryRepository;
 import kr.codesquad.jazzmeet.venue.repository.VenueRepository;
 import kr.codesquad.jazzmeet.venue.vo.NearbyVenue;
 import kr.codesquad.jazzmeet.venue.vo.VenuePinsByWord;
-import kr.codesquad.jazzmeet.venue.vo.VenueSearchVo;
+import kr.codesquad.jazzmeet.venue.vo.VenueSearchData;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -54,16 +54,22 @@ public class VenueService {
 			.toList();
 	}
 
-	public VenueSearchResponse searchVenueList(String word, Pageable pageable, LocalDateTime nowTime) {
+	public VenueSearchResponse searchVenueList(String word, Pageable pageable, LocalDateTime todayStartTime,
+		LocalDateTime todayEndTime) {
 		// TODO: default page, default size, maxPage 검증하기
 		// querydsl을 사용하여 조회. date는 있을 수도(필터), 없을 수도(필터 초기화) 있기 때문에 동적 쿼리 적용해야 하기 때문.
 		if (word == "" || word == null) {
 			return VenueSearchResponse.emptyVenues();
 		}
 
-		VenueSearchVo venueSearchVo = venueQueryRepository.searchVenueList(word, pageable, nowTime);
-		List<VenueSearch> venueSearchList = venueSearchVo.getVenues()
-			.stream()
+		int venueCount = venueQueryRepository.countSearchVenueList(word).intValue();
+		int currentPage = pageable.getPageNumber();
+		int maxPage = calculateMaxPage(venueCount, pageable);
+
+		List<VenueSearchData> venueSearchDataList = venueQueryRepository
+			.searchVenueList(word, pageable, todayStartTime, todayEndTime);
+
+		List<VenueSearch> venueSearchList = venueSearchDataList.stream()
 			.map(venueSearchData -> {
 				List<ShowInfo> showInfo = venueSearchData.getShowInfoData()
 					.stream()
@@ -72,6 +78,15 @@ public class VenueService {
 				return VenueMapper.INSTANCE.toVenueSearch(venueSearchData, showInfo);
 			}).toList();
 
-		return VenueMapper.INSTANCE.toVenueSearchResponse(venueSearchVo, venueSearchList);
+		return VenueMapper.INSTANCE.toVenueSearchResponse(venueSearchList, venueCount, currentPage, maxPage);
+	}
+
+	private int calculateMaxPage(int venueCount, Pageable pageable) {
+		int size = pageable.getPageSize();
+		int maxPage = venueCount / size;
+		if (maxPage == 0 || venueCount % size != 0) {
+			maxPage += 1;
+		}
+		return maxPage;
 	}
 }
