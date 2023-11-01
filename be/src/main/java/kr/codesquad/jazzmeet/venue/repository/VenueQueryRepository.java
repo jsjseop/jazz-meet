@@ -94,16 +94,8 @@ public class VenueQueryRepository {
 			);
 
 		JPAQuery<Long> venuesByLocationCount = getVenuesByLocationCount(range);
-		
+
 		return PageableExecutionUtils.getPage(venueSearchList, pageable, venuesByLocationCount::fetchOne);
-	}
-
-	private BooleanExpression isContainWordInName(String word) {
-		return venue.name.contains(word);
-	}
-
-	private BooleanExpression isContainWordInAddress(String word) {
-		return venue.roadNameAddress.contains(word);
 	}
 
 	// 쿼리를 생성하여 사각형 범위 내에 있는 장소를 찾습니다.
@@ -118,6 +110,14 @@ public class VenueQueryRepository {
 			.fetch();
 
 		return venues;
+	}
+
+	private BooleanExpression isContainWordInName(String word) {
+		return venue.name.contains(word);
+	}
+
+	private BooleanExpression isContainWordInAddress(String word) {
+		return venue.roadNameAddress.contains(word);
 	}
 
 	private BooleanExpression isLocationWithInRange(Polygon range) {
