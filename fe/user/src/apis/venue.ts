@@ -13,8 +13,8 @@ export const getAroundVenues = async (
   return response.json();
 };
 
-export const searchVenuePins = async (word: string): Promise<Pin[]> => {
-  const response = await fetchData(`/api/venues/pins/search?word=${word}`);
+export const getVenuePinsBySearch = async (word: string): Promise<Pin[]> => {
+  const response = await fetchData(`/api/venues/pins/search${word}`);
 
   return response.json();
 };

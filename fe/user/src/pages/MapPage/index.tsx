@@ -7,7 +7,7 @@ import { Panel } from './Panel';
 export const MapPage: React.FC = () => {
   const venueListData = useVenueList();
   const mapRef = useRef<HTMLDivElement>(null);
-  
+
   return (
     <StyledMapPage>
       <Map mapRef={mapRef} />
