@@ -31,8 +31,8 @@ public class VenueController {
 
 	@GetMapping("/api/venues/around-venues")
 	public ResponseEntity<List<NearbyVenueResponse>> findNearbyVenues(
-		@RequestParam Double latitude,
-		@RequestParam Double longitude) {
+		@RequestParam(required = false) Double latitude,
+		@RequestParam(required = false) Double longitude) {
 		List<NearbyVenueResponse> nearByVenues = venueService.findNearByVenues(latitude, longitude);
 		return ResponseEntity.ok(nearByVenues);
 	}
@@ -59,8 +59,8 @@ public class VenueController {
 
 	@GetMapping("/api/venues/map")
 	public ResponseEntity<VenueSearchResponse> findVenuesByLocation(
-		@RequestParam Double lowLatitude, @RequestParam Double highLatitude,
-		@RequestParam Double lowLongitude, @RequestParam Double highLongitude,
+		@RequestParam(required = false) Double lowLatitude, @RequestParam(required = false) Double highLatitude,
+		@RequestParam(required = false) Double lowLongitude, @RequestParam(required = false) Double highLongitude,
 		@RequestParam(defaultValue = "1") @Min(value = 1) int page
 	) {
 		VenueSearchResponse venuesByLocation = venueService.findVenuesByLocation(lowLatitude, highLatitude,

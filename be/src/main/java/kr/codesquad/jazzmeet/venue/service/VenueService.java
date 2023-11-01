@@ -44,6 +44,10 @@ public class VenueService {
 	}
 
 	public List<NearbyVenueResponse> findNearByVenues(Double latitude, Double longitude) {
+		if (validateCoordinates(latitude, longitude)) {
+			return List.of();
+		}
+
 		Point point = VenueUtil.createPoint(latitude, longitude);
 		List<NearbyVenue> venues = venueQueryRepository.findNearbyVenuesByLocation(point);
 
@@ -82,7 +86,7 @@ public class VenueService {
 	public VenueSearchResponse findVenuesByLocation(Double lowLatitude, Double highLatitude,
 		Double lowLongitude, Double highLongitude, int page) {
 		if (validateCoordinates(lowLatitude, highLatitude, lowLongitude, highLongitude)) {
-			VenueSearchResponse.builder()
+			return VenueSearchResponse.builder()
 				.venues(List.of())
 				.build();
 		}
@@ -103,6 +107,10 @@ public class VenueService {
 			.currentPage(venuesByLocation.getNumber() + PAGE_NUMBER_OFFSET)
 			.maxPage(venuesByLocation.getTotalPages())
 			.build();
+	}
+
+	private boolean validateCoordinates(Double latitude, Double longitude) {
+		return latitude == null || longitude == null;
 	}
 
 	private boolean validateCoordinates(Double lowLatitude, Double highLatitude, Double lowLongitude,
