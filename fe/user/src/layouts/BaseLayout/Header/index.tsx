@@ -1,6 +1,6 @@
-import { SearchBar } from '@components/SearchBar';
 import styled from '@emotion/styled';
 import { Link } from 'react-router-dom';
+import { SearchBar } from '~/components/SearchBar';
 
 export const Header: React.FC = () => {
   return (
