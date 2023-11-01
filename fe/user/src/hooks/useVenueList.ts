@@ -15,10 +15,13 @@ export const useVenueList = () => {
 
   const updateVenueList = useCallback(
     async (page?: number) => {
-      const searchedVenues = await getVenuesByKeyword({
-        page,
-        word: urlSearchParams.get('word'),
-      });
+      const word = urlSearchParams.get('word');
+
+      if (!word) {
+        return;
+      }
+
+      const searchedVenues = await getVenuesByKeyword({ page, word });
 
       setVenueListData(searchedVenues);
     },
