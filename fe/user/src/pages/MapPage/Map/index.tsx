@@ -1,51 +1,47 @@
 import styled from '@emotion/styled';
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { getVenuePinsBySearch } from 'apis/venue';
-import { MARKER_SVG } from '~/constants/MAP';
+import { getVenuePinsBySearch } from '~/apis/venue';
+import { BASIC_COORDINATE } from '~/constants/COORDINATE';
+import { useUserCoordinate } from '~/hooks/useUserCoordinate';
+import { addPinsOnMap, fitBoundsToPins } from '~/utils/map';
 
 type Props = {
   mapRef: React.RefObject<HTMLDivElement>;
 };
 
 export const Map: React.FC<Props> = ({ mapRef }) => {
-  const { search } = useLocation();
+  const { search: searchQueryString } = useLocation();
+  const { userCoordinate } = useUserCoordinate();
+
+  const getInitMap = useCallback(() => {
+    const initCoordinate = userCoordinate ?? BASIC_COORDINATE;
+
+    return new naver.maps.Map('map', {
+      center: new naver.maps.LatLng(
+        initCoordinate.latitude,
+        initCoordinate.longitude,
+      ),
+      zoom: 10000,
+    });
+  }, [userCoordinate]);
 
   useEffect(() => {
-    (async () => {
-      const mapOptions = {
-        center: new naver.maps.LatLng(37.5666103, 126.9783882),
-      };
+    const updateView = async () => {
+      const map = getInitMap();
 
-      const map = new naver.maps.Map('map', mapOptions);
+      if (!searchQueryString) {
+        return;
+      }
 
-      if (!search) return;
+      const pins = await getVenuePinsBySearch(searchQueryString);
 
-      const pins = await getVenuePinsBySearch(search);
+      fitBoundsToPins(pins, map);
+      addPinsOnMap(pins, map, 'pin');
+    };
 
-      if (pins.length === 0) return;
-
-      const boundary = new naver.maps.LatLngBounds(
-        new naver.maps.LatLng(37.5013976004701, 127.0329803750662),
-        new naver.maps.LatLng(37.55721930476495, 126.90496892094431),
-      );
-
-      pins.forEach((pin) => {
-        boundary.extend(new naver.maps.LatLng(pin.latitude, pin.longitude));
-
-        new naver.maps.Marker({
-          position: new naver.maps.LatLng(pin.latitude, pin.longitude),
-          map: map,
-          icon: {
-            content: MARKER_SVG,
-            size: new naver.maps.Size(10, 48),
-          },
-        });
-      });
-
-      map.fitBounds(boundary);
-    })();
-  }, [search]);
+    updateView();
+  }, [searchQueryString, userCoordinate, getInitMap]);
 
   return <StyledMap id="map" ref={mapRef} />;
 };
