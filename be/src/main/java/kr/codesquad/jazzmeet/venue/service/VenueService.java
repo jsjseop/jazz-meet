@@ -27,7 +27,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 public class VenueService {
 
-	private static final int PAGE_NUMBER_OFFSET = 1;
+	private static final int PAGE_NUMBER_OFFSET = 1; // 페이지를 1부터 시작하게 하기 위한 offset
 	private static final int PAGE_SIZE = 10;
 
 	private final VenueRepository venueRepository;
