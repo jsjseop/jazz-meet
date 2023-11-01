@@ -67,6 +67,20 @@ public class VenueQueryRepository {
 			.fetch();
 	}
 
+	// 쿼리를 생성하여 사각형 범위 내에 있는 장소를 찾습니다.
+	public List<VenuePins> findVenuePinsByLocation(Polygon range) {
+		List<VenuePins> venues = query
+			.select(Projections.constructor(VenuePins.class,
+				venue.id,
+				venue.name,
+				venue.location))
+			.from(venue)
+			.where(isLocationWithInRange(range))
+			.fetch();
+
+		return venues;
+	}
+
 	public Page<VenueSearchData> getVenuesByLocation(Polygon range, Pageable pageable) {
 		List<VenueSearchData> venueSearchList = query.from(venue)
 			.leftJoin(show)
@@ -96,20 +110,6 @@ public class VenueQueryRepository {
 		JPAQuery<Long> venuesByLocationCount = getVenuesByLocationCount(range);
 
 		return PageableExecutionUtils.getPage(venueSearchList, pageable, venuesByLocationCount::fetchOne);
-	}
-
-	// 쿼리를 생성하여 사각형 범위 내에 있는 장소를 찾습니다.
-	public List<VenuePins> findVenuePinsByLocation(Polygon range) {
-		List<VenuePins> venues = query
-			.select(Projections.constructor(VenuePins.class,
-				venue.id,
-				venue.name,
-				venue.location))
-			.from(venue)
-			.where(isLocationWithInRange(range))
-			.fetch();
-
-		return venues;
 	}
 
 	private BooleanExpression isContainWordInName(String word) {
