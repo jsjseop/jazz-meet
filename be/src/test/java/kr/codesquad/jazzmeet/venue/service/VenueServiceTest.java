@@ -261,4 +261,26 @@ class VenueServiceTest extends IntegrationTestSupport {
 		assertThat(venuePins).hasSize(0);
 	}
 
+	@DisplayName("위치 정보 4개 중 하나라도 값이 Null이면 빈 배열을 응답한다.")
+	@Test
+	public void findVenuesWhenLocationNull() throws Exception {
+		//given
+		Double lowLatitude = 37.51387497068088 ;
+		Double highLatitude = 37.61077342780979 ;
+		Double lowLongitude = 126.9293615244093 ;
+		Double highLongitude = null ;
+
+		Venue venue1 = VenueTestUtil.createVenues("부기우기", "서울 용산구 회나무로 21 2층", VenueUtil.createPoint(37.52387497068088, 126.9294615244093));
+		Venue venue2 = VenueTestUtil.createVenues("Entry55", "서울 동작구 동작대로1길 18 B-102", VenueUtil.createPoint(37.53387497068088, 126.9394615244093));
+		Venue venue3 = VenueTestUtil.createVenues("러스틱 재즈", "서울 마포구 망원로 74 지하", VenueUtil.createPoint(38.0, 128.0)); // 범위 벗어남
+		venueRepository.saveAll(List.of(venue1, venue2, venue3));
+
+		//when
+		List<VenuePinsResponse> venuePins = venueService.findVenuePinsByLocation(lowLatitude, highLatitude, lowLongitude, highLongitude);
+
+		//then
+		assertThat(venuePins).hasSize(0)
+			.isInstanceOf(List.class);
+	}
+
 }
