@@ -2,9 +2,6 @@ package kr.codesquad.jazzmeet.venue.dto;
 
 import java.util.List;
 
-import lombok.Builder;
-
-@Builder
 public record VenueSearch(
 	Long id,
 	String thumbnailUrl,

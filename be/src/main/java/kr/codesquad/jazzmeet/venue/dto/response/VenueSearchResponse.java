@@ -8,10 +8,10 @@ import lombok.Builder;
 @Builder
 public record VenueSearchResponse(
 	List<VenueSearch> venues,
-	int venueCount,
+	Long venueCount,
 	int currentPage,
 	int maxPage) {
 	public static VenueSearchResponse emptyVenues() {
-		return VenueSearchResponse.builder().venues(List.of()).venueCount(0).currentPage(1).maxPage(1).build();
+		return VenueSearchResponse.builder().venues(List.of()).venueCount(0L).currentPage(1).maxPage(1).build();
 	}
 }
