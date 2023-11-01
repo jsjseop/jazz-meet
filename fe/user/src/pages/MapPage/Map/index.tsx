@@ -22,7 +22,17 @@ export const Map: React.FC<Props> = ({ mapRef }) => {
       if (!search) return;
 
       const pins = await getVenuePinsBySearch(search);
+
+      if (pins.length === 0) return;
+
+      const boundary = new naver.maps.LatLngBounds(
+        new naver.maps.LatLng(37.5013976004701, 127.0329803750662),
+        new naver.maps.LatLng(37.55721930476495, 126.90496892094431),
+      );
+
       pins.forEach((pin) => {
+        boundary.extend(new naver.maps.LatLng(pin.latitude, pin.longitude));
+
         new naver.maps.Marker({
           position: new naver.maps.LatLng(pin.latitude, pin.longitude),
           map: map,
@@ -32,6 +42,8 @@ export const Map: React.FC<Props> = ({ mapRef }) => {
           },
         });
       });
+
+      map.fitBounds(boundary);
     })();
   }, []);
 
