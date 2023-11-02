@@ -16,28 +16,46 @@ export const AroundVenueCard: React.FC<Props> = ({ aroundVenue }) => {
         navigate(`/map/venues/${id}`, { state: { latitude, longitude } })
       }
     >
-      <CardImage src={thumbnailUrl} alt="around-venue" />
-      <Title>{name}</Title>
-      <SubTitle>{address}</SubTitle>
+      <StyledCardImage src={thumbnailUrl} alt="around-venue" />
+      <StyledTitleContainer>
+        <StyledTitle>{name}</StyledTitle>
+        <StyledSubTitle>{address}</StyledSubTitle>
+      </StyledTitleContainer>
     </StyledCard>
   );
 };
 
 const StyledCard = styled.div`
   width: 100%;
-  box-sizing: border-box;
-  margin-bottom: 37px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  cursor: pointer;
 `;
 
-const CardImage = styled.img`
+const StyledCardImage = styled.img`
   width: 100%;
   height: 380px;
   object-fit: cover;
-  margin-bottom: 24px;
 `;
 
-const Title = styled.div`
-  margin-bottom: 5px;
+const StyledTitleContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 `;
 
-const SubTitle = styled.div``;
+const StyledTitle = styled.div`
+  font-size: 22px;
+  font-weight: bold;
+  line-height: 140%;
+  color: #141313;
+`;
+
+const StyledSubTitle = styled.div`
+  font-size: 22px;
+  font-weight: medium;
+  line-height: 140%;
+  letter-spacing: -1px;
+  color: #686970;
+`;
