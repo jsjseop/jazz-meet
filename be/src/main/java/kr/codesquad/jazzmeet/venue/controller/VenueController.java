@@ -6,6 +6,7 @@ import java.time.LocalTime;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,6 +20,7 @@ import kr.codesquad.jazzmeet.venue.service.VenueService;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
+@Validated
 @RestController
 public class VenueController {
 
@@ -32,8 +34,8 @@ public class VenueController {
 
 	@GetMapping("/api/venues/around-venues")
 	public ResponseEntity<List<NearbyVenueResponse>> findNearbyVenues(
-		@RequestParam Double latitude,
-		@RequestParam Double longitude) {
+		@RequestParam(required = false) Double latitude,
+		@RequestParam(required = false) Double longitude) {
 		List<NearbyVenueResponse> nearByVenues = venueService.findNearByVenues(latitude, longitude);
 		return ResponseEntity.ok(nearByVenues);
 	}
@@ -56,6 +58,17 @@ public class VenueController {
 		List<VenuePinsResponse> venuePins = venueService.findVenuePinsByLocation(lowLatitude, highLatitude,
 			lowLongitude, highLongitude);
 		return ResponseEntity.ok(venuePins);
+	}
+
+	@GetMapping("/api/venues/map")
+	public ResponseEntity<VenueSearchResponse> findVenuesByLocation(
+		@RequestParam(required = false) Double lowLatitude, @RequestParam(required = false) Double highLatitude,
+		@RequestParam(required = false) Double lowLongitude, @RequestParam(required = false) Double highLongitude,
+		@RequestParam(defaultValue = "1") @Min(value = 1) int page
+	) {
+		VenueSearchResponse venuesByLocation = venueService.findVenuesByLocation(lowLatitude, highLatitude,
+			lowLongitude, highLongitude, page);
+		return ResponseEntity.ok(venuesByLocation);
 	}
 
 	@GetMapping("/api/venues/search")
