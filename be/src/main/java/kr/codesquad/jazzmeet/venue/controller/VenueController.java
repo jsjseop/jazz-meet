@@ -1,8 +1,5 @@
 package kr.codesquad.jazzmeet.venue.controller;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
@@ -74,9 +71,7 @@ public class VenueController {
 	@GetMapping("/api/venues/search")
 	public ResponseEntity<VenueSearchResponse> searchVenueList(
 		@RequestParam String word, @RequestParam(defaultValue = "1") @Min(value = 1) int page) {
-		LocalDateTime todayStartTime = LocalDateTime.of(LocalDate.now(), LocalTime.MIN);
-		LocalDateTime todayEndTime = LocalDateTime.of(LocalDate.now(), LocalTime.MAX);
-		VenueSearchResponse venuesResponse = venueService.searchVenueList(word, page, todayStartTime, todayEndTime);
+		VenueSearchResponse venuesResponse = venueService.searchVenueList(word, page);
 
 		return ResponseEntity.ok(venuesResponse);
 	}

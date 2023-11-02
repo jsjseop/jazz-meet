@@ -4,7 +4,7 @@ import static com.querydsl.core.group.GroupBy.*;
 import static kr.codesquad.jazzmeet.show.entity.QShow.*;
 import static kr.codesquad.jazzmeet.venue.entity.QVenue.*;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 import org.locationtech.jts.geom.Point;
@@ -136,11 +136,11 @@ public class VenueQueryRepository {
 			.where(isLocationWithInRange(range));
 	}
 
-	public Page<VenueSearchData> searchVenueList(String word, Pageable pageable, LocalDateTime todayStartTime,
-		LocalDateTime todayEndTime) {
+	public Page<VenueSearchData> searchVenueList(String word, Pageable pageable, LocalDate curDate) {
 		List<VenueSearchData> venueSearchDataList = query.select(venue).from(venue)
 			.leftJoin(show)
-			.on(venue.id.eq(show.venue.id).and(show.startTime.between(todayStartTime, todayEndTime)))
+			.on(venue.id.eq(show.venue.id))
+			.on(checkDate(curDate))
 			.where(venue.name.contains(word).or(venue.roadNameAddress.contains(word)))
 			.limit(pageable.getPageSize())
 			.offset(pageable.getOffset())
@@ -171,5 +171,10 @@ public class VenueQueryRepository {
 		return query.select(venue.count())
 			.from(venue)
 			.where(venue.name.contains(word).or(venue.roadNameAddress.contains(word)));
+	}
+
+	private BooleanExpression checkDate(LocalDate curDate) {
+		return Expressions.stringTemplate("DATE({0})", show.startTime)
+			.eq(Expressions.stringTemplate("DATE({0})", curDate));
 	}
 }

@@ -1,6 +1,6 @@
 package kr.codesquad.jazzmeet.venue.service;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 import org.locationtech.jts.geom.Point;
@@ -113,15 +113,15 @@ public class VenueService {
 		return lowLatitude == null || highLatitude == null || lowLongitude == null || highLongitude == null;
 	}
 
-	public VenueSearchResponse searchVenueList(String word, int page, LocalDateTime todayStartTime,
-		LocalDateTime todayEndTime) {
+	public VenueSearchResponse searchVenueList(String word, int page) {
 		if (word == "" || word == null) {
 			return VenueSearchResponse.emptyVenues();
 		}
 		PageRequest pageRequest = PageRequest.of(page - PAGE_NUMBER_OFFSET, PAGE_SIZE);
+		LocalDate curDate = LocalDate.now();
 
 		Page<VenueSearchData> venueSearchDataList = venueQueryRepository
-			.searchVenueList(word, pageRequest, todayStartTime, todayEndTime);
+			.searchVenueList(word, pageRequest, curDate);
 
 		List<VenueSearch> venueSearchList = venueSearchDataList.stream()
 			.map(VenueMapper.INSTANCE::toVenueSearch)
