@@ -38,10 +38,6 @@ export const Map: React.FC<Props> = ({ mapRef }) => {
   }, [searchQueryString]);
 
   useEffect(() => {
-    if (!map.current) {
-      map.current = getInitMap(userCoordinate);
-    }
-
     let boundsChangeEventListener: naver.maps.MapEventListener;
     let dragendEventListener: naver.maps.MapEventListener;
     (async () => {
@@ -79,7 +75,13 @@ export const Map: React.FC<Props> = ({ mapRef }) => {
       naver.maps.Event.removeListener(boundsChangeEventListener);
       naver.maps.Event.removeListener(dragendEventListener);
     };
-  }, [searchQueryString, userCoordinate, updatePins]);
+  }, [searchQueryString, updatePins]);
+
+  useEffect(() => {
+    if (!map.current) {
+      map.current = getInitMap(userCoordinate);
+    }
+  }, [userCoordinate]);
 
   const onMapSearchButtonClick = () => {
     if (!map.current) {
