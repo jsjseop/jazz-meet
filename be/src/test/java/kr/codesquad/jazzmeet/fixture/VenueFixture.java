@@ -6,7 +6,7 @@ import kr.codesquad.jazzmeet.venue.entity.Venue;
 import kr.codesquad.jazzmeet.venue.util.VenueUtil;
 
 public class VenueFixture {
-	public static Venue createVenues(String name, String address, Point point) {
+	public static Venue createVenue(String name, String address, Point point) {
 
 		return Venue.builder()
 			.name(name)
