@@ -25,6 +25,7 @@ import kr.codesquad.jazzmeet.venue.vo.VenuePins;
 import kr.codesquad.jazzmeet.venue.vo.VenueSearchData;
 import lombok.RequiredArgsConstructor;
 
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 @Service
 public class VenueService {
@@ -112,7 +113,6 @@ public class VenueService {
 		return lowLatitude == null || highLatitude == null || lowLongitude == null || highLongitude == null;
 	}
 
-	@Transactional(readOnly = true)
 	public VenueSearchResponse searchVenueList(String word, int page, LocalDateTime todayStartTime,
 		LocalDateTime todayEndTime) {
 		if (word == "" || word == null) {
