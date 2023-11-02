@@ -8,8 +8,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import kr.codesquad.jazzmeet.global.error.CustomException;
-import kr.codesquad.jazzmeet.global.error.statuscode.ErrorCode;
 import kr.codesquad.jazzmeet.venue.dto.VenueSearch;
 import kr.codesquad.jazzmeet.venue.dto.response.NearbyVenueResponse;
 import kr.codesquad.jazzmeet.venue.dto.response.VenueAutocompleteResponse;
@@ -82,7 +80,7 @@ public class VenueService {
 		if (word == "" || word == null) {
 			return VenueSearchResponse.emptyVenues();
 		}
-		PageRequest pageRequest = makePageRequest(page);
+		PageRequest pageRequest = PageRequest.of(page, 10);
 
 		List<VenueSearch> venueSearch = venueQueryRepository
 			.searchVenueList(word, pageRequest, todayStartTime, todayEndTime)
@@ -91,15 +89,6 @@ public class VenueService {
 			.toList();
 
 		return makeVenueSearchResponse(word, pageRequest, venueSearch);
-	}
-
-	private PageRequest makePageRequest(int page) {
-		if (page <= 0) {
-			// TODO: 커스텀 에러코드 만들어서 출력
-			throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR_DB);
-		}
-
-		return PageRequest.of(page, 10);
 	}
 
 	private VenueSearchResponse makeVenueSearchResponse(String word, PageRequest pageRequest,
