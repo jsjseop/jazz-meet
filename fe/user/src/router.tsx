@@ -16,8 +16,8 @@ export const router = createBrowserRouter(
       <Route element={<BaseLayout />}>
         <Route index element={<MainPage />} />
         <Route path="map" element={<MapPage />}>
-          <Route path="venues/:id" element={<VenueDetail />}>
-            <Route path="shows/:id" element={<ShowDetail />} />
+          <Route path="venues/:venueId" element={<VenueDetail />}>
+            <Route path="shows/:showId" element={<ShowDetail />} />
           </Route>
         </Route>
         <Route path="inquiry" element={<InquiryPage />} />

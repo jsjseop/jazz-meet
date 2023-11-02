@@ -18,12 +18,16 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
 
 import kr.codesquad.jazzmeet.IntegrationTestSupport;
+import kr.codesquad.jazzmeet.fixture.ImageFixture;
 import kr.codesquad.jazzmeet.fixture.ShowFixture;
 import kr.codesquad.jazzmeet.fixture.VenueFixture;
+import kr.codesquad.jazzmeet.image.entity.Image;
 import kr.codesquad.jazzmeet.show.entity.Show;
 import kr.codesquad.jazzmeet.show.repository.ShowRepository;
 import kr.codesquad.jazzmeet.venue.entity.Venue;
+import kr.codesquad.jazzmeet.venue.entity.VenueImage;
 import kr.codesquad.jazzmeet.venue.util.VenueUtil;
+import kr.codesquad.jazzmeet.venue.vo.VenueDetail;
 import kr.codesquad.jazzmeet.venue.vo.VenuePins;
 import kr.codesquad.jazzmeet.venue.vo.VenueSearchData;
 
@@ -39,9 +43,15 @@ class VenueQueryRepositoryTest extends IntegrationTestSupport {
 	@Autowired
 	ShowRepository showRepository;
 
+	@Autowired
+	VenueImageRepository venueImageRepository;
+
+	@Autowired
+	VenueHourRepository venueHourRepository;
+
 	@DisplayName("이름에 검색어가 포함되어 있는 공연장 정보 리스트를 조회한다.")
 	@Test
-	public void findVenuesByWordInName() throws Exception {
+	void findVenuesByWordInName() throws Exception {
 		//given
 		String word = "부기우기";
 		Point point = VenueUtil.createPoint(111.111, 222.222);
@@ -60,7 +70,7 @@ class VenueQueryRepositoryTest extends IntegrationTestSupport {
 
 	@DisplayName("주소에 검색어가 포함되어 있는 공연장 정보 리스트를 조회한다.")
 	@Test
-	public void findVenuesByWordInAddress() throws Exception {
+	void findVenuesByWordInAddress() throws Exception {
 		//given
 		String word = "서울";
 		Point point = VenueUtil.createPoint(111.111, 222.222);
@@ -81,7 +91,7 @@ class VenueQueryRepositoryTest extends IntegrationTestSupport {
 
 	@DisplayName("주어진 위치 정보 범위 안에 해당하는 공연장 위치 정보 목록을 조회한다.")
 	@Test
-	public void findVenuesInRange() throws Exception {
+	void findVenuesInRange() throws Exception {
 		//given
 		Double lowLatitude = 37.51387497068088;
 		Double highLatitude = 37.61077342780979;
@@ -193,5 +203,40 @@ class VenueQueryRepositoryTest extends IntegrationTestSupport {
 				.extracting("startTime")
 				.containsExactly(curStartTime1, curStartTime2)
 		);
+	}
+
+	@DisplayName("venue id에 해당하는 공연장 정보를 조회한다.")
+	@Test
+	void findVenueById() throws Exception {
+		//given
+		Long venueId = 1L;
+		// 공연장 생성
+		Venue venue = VenueFixture.createVenue("부기우기", "서울 용산구 회나무로 21 2층",
+			VenueUtil.createPoint(37.52387497068088, 126.9294615244093));
+
+		// 이미지 생성
+		Image image1 = ImageFixture.createImage("image1.url");
+		Image image2 = ImageFixture.createImage("image2.url");
+
+		// 공연장_이미지 생성
+		VenueImage venueImage1 = VenueFixture.createVenueImage(venue, image1, 1L);
+		VenueImage venueImage2 = VenueFixture.createVenueImage(venue, image2, 2L);
+
+		// 공연장_이미지 저장
+		venueImage1.add(venue, image1);
+		venueImage2.add(venue, image2);
+		venueImageRepository.saveAll(List.of(venueImage1, venueImage2));
+
+		//when
+		VenueDetail venueDetail = venueQueryRepository.findVenue(venueId).get();
+
+		//then
+		assertThat(venueDetail)
+			.extracting("name")
+			.isEqualTo("부기우기");
+
+		assertThat(venueDetail.getImages()).hasSize(2)
+			.extracting("url")
+			.contains("image1.url", "image2.url");
 	}
 }

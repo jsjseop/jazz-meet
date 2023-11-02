@@ -17,6 +17,17 @@ export type UpcomingShow = {
   showId: number;
   posterUrl: string;
   showName: string;
+} & ShowTime;
+
+export type HasShowDates = {
+  hasShow: number[];
+};
+
+export type ShowDetail = {
+  id: number;
+  posterUrl: string;
+  teamName: string;
+  description: string;
   startTime: string;
   endTime: string;
 };

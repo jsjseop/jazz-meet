@@ -10,9 +10,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import kr.codesquad.jazzmeet.global.error.CustomException;
+import kr.codesquad.jazzmeet.global.error.statuscode.ErrorCode;
 import kr.codesquad.jazzmeet.venue.dto.VenueSearch;
 import kr.codesquad.jazzmeet.venue.dto.response.NearbyVenueResponse;
 import kr.codesquad.jazzmeet.venue.dto.response.VenueAutocompleteResponse;
+import kr.codesquad.jazzmeet.venue.dto.response.VenueDetailResponse;
 import kr.codesquad.jazzmeet.venue.dto.response.VenuePinsResponse;
 import kr.codesquad.jazzmeet.venue.dto.response.VenueSearchResponse;
 import kr.codesquad.jazzmeet.venue.entity.Venue;
@@ -21,6 +24,7 @@ import kr.codesquad.jazzmeet.venue.repository.VenueQueryRepository;
 import kr.codesquad.jazzmeet.venue.repository.VenueRepository;
 import kr.codesquad.jazzmeet.venue.util.VenueUtil;
 import kr.codesquad.jazzmeet.venue.vo.NearbyVenue;
+import kr.codesquad.jazzmeet.venue.vo.VenueDetail;
 import kr.codesquad.jazzmeet.venue.vo.VenuePins;
 import kr.codesquad.jazzmeet.venue.vo.VenueSearchData;
 import lombok.RequiredArgsConstructor;
@@ -112,6 +116,15 @@ public class VenueService {
 	private boolean validateCoordinates(Double lowLatitude, Double highLatitude, Double lowLongitude,
 		Double highLongitude) {
 		return lowLatitude == null || highLatitude == null || lowLongitude == null || highLongitude == null;
+
+	}
+
+	public VenueDetailResponse findVenue(Long venueId) {
+		VenueDetail venueDetail = venueQueryRepository.findVenue(venueId)
+			.orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_VENUE));
+
+		return VenueMapper.INSTANCE.toVenueDetailResponse(venueDetail);
+
 	}
 
 	public VenueSearchResponse searchVenueList(String word, int page) {
