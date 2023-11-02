@@ -1,5 +1,6 @@
 package kr.codesquad.jazzmeet.venue.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.locationtech.jts.geom.Point;
@@ -7,6 +8,7 @@ import org.locationtech.jts.geom.Polygon;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import kr.codesquad.jazzmeet.venue.dto.VenueSearch;
 import kr.codesquad.jazzmeet.venue.dto.response.NearbyVenueResponse;
@@ -23,10 +25,10 @@ import kr.codesquad.jazzmeet.venue.vo.VenuePins;
 import kr.codesquad.jazzmeet.venue.vo.VenueSearchData;
 import lombok.RequiredArgsConstructor;
 
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 @Service
 public class VenueService {
-
 	private static final int PAGE_NUMBER_OFFSET = 1; // 페이지를 1부터 시작하게 하기 위한 offset
 	private static final int PAGE_SIZE = 10;
 
@@ -86,9 +88,7 @@ public class VenueService {
 	public VenueSearchResponse findVenuesByLocation(Double lowLatitude, Double highLatitude,
 		Double lowLongitude, Double highLongitude, int page) {
 		if (validateCoordinates(lowLatitude, highLatitude, lowLongitude, highLongitude)) {
-			return VenueSearchResponse.builder()
-				.venues(List.of())
-				.build();
+			return VenueSearchResponse.emptyVenues();
 		}
 
 		Polygon range = VenueUtil.createRange(lowLatitude, highLatitude, lowLongitude, highLongitude);
@@ -100,13 +100,8 @@ public class VenueService {
 			.map(VenueMapper.INSTANCE::toVenueSearch)
 			.toList();
 
-		// Todo: Mapper로 변경
-		return VenueSearchResponse.builder()
-			.venues(venueSearchList)
-			.venueCount(venuesByLocation.getTotalElements())
-			.currentPage(venuesByLocation.getNumber() + PAGE_NUMBER_OFFSET)
-			.maxPage(venuesByLocation.getTotalPages())
-			.build();
+		return VenueMapper.INSTANCE.toVenueSearchResponse(venueSearchList, venuesByLocation.getTotalElements(),
+			venuesByLocation.getNumber() + PAGE_NUMBER_OFFSET, venuesByLocation.getTotalPages());
 	}
 
 	private boolean validateCoordinates(Double latitude, Double longitude) {
@@ -116,5 +111,23 @@ public class VenueService {
 	private boolean validateCoordinates(Double lowLatitude, Double highLatitude, Double lowLongitude,
 		Double highLongitude) {
 		return lowLatitude == null || highLatitude == null || lowLongitude == null || highLongitude == null;
+	}
+
+	public VenueSearchResponse searchVenueList(String word, int page, LocalDateTime todayStartTime,
+		LocalDateTime todayEndTime) {
+		if (word == "" || word == null) {
+			return VenueSearchResponse.emptyVenues();
+		}
+		PageRequest pageRequest = PageRequest.of(page - PAGE_NUMBER_OFFSET, PAGE_SIZE);
+
+		Page<VenueSearchData> venueSearchDataList = venueQueryRepository
+			.searchVenueList(word, pageRequest, todayStartTime, todayEndTime);
+
+		List<VenueSearch> venueSearchList = venueSearchDataList.stream()
+			.map(VenueMapper.INSTANCE::toVenueSearch)
+			.toList();
+
+		return VenueMapper.INSTANCE.toVenueSearchResponse(venueSearchList, venueSearchDataList.getTotalElements(),
+			venueSearchDataList.getNumber() + PAGE_NUMBER_OFFSET, venueSearchDataList.getTotalPages());
 	}
 }

@@ -5,9 +5,13 @@ import java.util.List;
 import org.locationtech.jts.geom.Point;
 
 import kr.codesquad.jazzmeet.venue.dto.ShowInfo;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@AllArgsConstructor
+@NoArgsConstructor
 public class VenueSearchData {
 	private Long id;
 	private String thumbnailUrl;

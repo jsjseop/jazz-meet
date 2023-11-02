@@ -4,6 +4,7 @@ import static com.querydsl.core.group.GroupBy.*;
 import static kr.codesquad.jazzmeet.show.entity.QShow.*;
 import static kr.codesquad.jazzmeet.venue.entity.QVenue.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.locationtech.jts.geom.Point;
@@ -133,5 +134,42 @@ public class VenueQueryRepository {
 		return query.select(venue.count())
 			.from(venue)
 			.where(isLocationWithInRange(range));
+	}
+
+	public Page<VenueSearchData> searchVenueList(String word, Pageable pageable, LocalDateTime todayStartTime,
+		LocalDateTime todayEndTime) {
+		List<VenueSearchData> venueSearchDataList = query.select(venue).from(venue)
+			.leftJoin(show)
+			.on(venue.id.eq(show.venue.id).and(show.startTime.between(todayStartTime, todayEndTime)))
+			.where(venue.name.contains(word).or(venue.roadNameAddress.contains(word)))
+			.limit(pageable.getPageSize())
+			.offset(pageable.getOffset())
+			.transform(
+				groupBy(venue.id).list(
+					Projections.fields(VenueSearchData.class,
+						venue.id,
+						venue.thumbnailUrl,
+						venue.name,
+						venue.roadNameAddress.as("address"),
+						venue.description,
+						venue.location,
+						list(
+							Projections.fields(ShowInfo.class,
+								show.startTime,
+								show.endTime
+							)).as("showInfo")
+					)
+				)
+			);
+
+		JPAQuery<Long> venuesByWordCount = countSearchVenueList(word);
+
+		return PageableExecutionUtils.getPage(venueSearchDataList, pageable, venuesByWordCount::fetchOne);
+	}
+
+	private JPAQuery<Long> countSearchVenueList(String word) {
+		return query.select(venue.count())
+			.from(venue)
+			.where(venue.name.contains(word).or(venue.roadNameAddress.contains(word)));
 	}
 }
