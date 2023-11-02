@@ -130,4 +130,14 @@ public class VenueService {
 		return VenueMapper.INSTANCE.toVenueSearchResponse(venueSearchList, venueSearchDataList.getTotalElements(),
 			venueSearchDataList.getNumber() + PAGE_NUMBER_OFFSET, venueSearchDataList.getTotalPages());
 	}
+
+	public VenueSearchResponse findVenueSearchById(Long venueId) {
+		List<VenueSearchData> venueSearchDataList = venueQueryRepository.findVenueSearchById(venueId);
+		List<VenueSearch> venueSearchList = venueSearchDataList.stream()
+			.map(VenueMapper.INSTANCE::toVenueSearch)
+			.toList();
+
+		return VenueMapper.INSTANCE.toVenueSearchResponse(venueSearchList, venueSearchList.size(),
+			PAGE_NUMBER_OFFSET, PAGE_NUMBER_OFFSET);
+	}
 }

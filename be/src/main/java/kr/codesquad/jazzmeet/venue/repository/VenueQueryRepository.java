@@ -31,6 +31,8 @@ import lombok.RequiredArgsConstructor;
 public class VenueQueryRepository {
 
 	private static final int NEARBY_VENUES_COUNT = 10;
+	private static final String ADDRESS = "address";
+	private static final String SHOWINFO = "showInfo";
 
 	private final JPAQueryFactory query;
 
@@ -96,15 +98,15 @@ public class VenueQueryRepository {
 						venue.id,
 						venue.thumbnailUrl,
 						venue.name,
-						venue.roadNameAddress.as("address"),
+						venue.roadNameAddress.as(ADDRESS),
 						venue.description,
+						venue.location,
 						list(
 							Projections.fields(ShowInfo.class,
 								show.startTime,
 								show.endTime
 							)
-						).as("showInfo"),
-						venue.location)
+						).as(SHOWINFO))
 				)
 			);
 
@@ -150,14 +152,14 @@ public class VenueQueryRepository {
 						venue.id,
 						venue.thumbnailUrl,
 						venue.name,
-						venue.roadNameAddress.as("address"),
+						venue.roadNameAddress.as(ADDRESS),
 						venue.description,
 						venue.location,
 						list(
 							Projections.fields(ShowInfo.class,
 								show.startTime,
 								show.endTime
-							)).as("showInfo")
+							)).as(SHOWINFO)
 					)
 				)
 			);
@@ -171,5 +173,30 @@ public class VenueQueryRepository {
 		return query.select(venue.count())
 			.from(venue)
 			.where(venue.name.contains(word).or(venue.roadNameAddress.contains(word)));
+	}
+
+	public List<VenueSearchData> findVenueSearchById(Long venueId) {
+		return query.from(venue)
+			.leftJoin(show)
+			.on(venue.id.eq(show.venue.id))
+			.on(isStartTimeEqCurDate())
+			.where(venue.id.eq(venueId))
+			.transform(
+				groupBy(venue.id).list(
+					Projections.fields(VenueSearchData.class,
+						venue.id,
+						venue.thumbnailUrl,
+						venue.name,
+						venue.roadNameAddress.as(ADDRESS),
+						venue.description,
+						venue.location,
+						list(
+							Projections.fields(ShowInfo.class,
+								show.startTime,
+								show.endTime
+							)).as(SHOWINFO)
+					)
+				)
+			);
 	}
 }

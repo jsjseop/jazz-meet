@@ -14,6 +14,6 @@ public class VenueSearchData {
 	private String name;
 	private String address; // 도로명 주소
 	private String description;
-	private List<ShowInfo> showInfo;
 	private Point location;
+	private List<ShowInfo> showInfo;
 }
