@@ -13,14 +13,15 @@ export const SearchBox: React.FC = () => {
   >([]);
 
   useEffect(() => {
-    let timer: ReturnType<typeof setTimeout>;
-
-    if (searchText) {
-      timer = setTimeout(async () => {
-        const suggestions = await getSearchSuggestions(searchText);
-        setSearchSuggestions(suggestions);
-      }, 300);
+    if (searchText.trim().length === 0) {
+      setSearchSuggestions([]);
+      return;
     }
+
+    const timer = setTimeout(async () => {
+      const suggestions = await getSearchSuggestions(searchText);
+      setSearchSuggestions(suggestions);
+    }, 300);
 
     return () => {
       clearTimeout(timer);
