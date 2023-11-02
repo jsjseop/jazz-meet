@@ -343,4 +343,34 @@ class VenueServiceTest extends IntegrationTestSupport {
 		assertThat(venuesByLocation.venues()).hasSize(0);
 	}
 
+	@Test
+	@DisplayName("공연장 ID에 해당하는 공연장 정보를 목록으로 응답한다.")
+	void findVenueSearchById() {
+		// given
+		Venue venue = VenueTestUtil.createVenues("공연장", "주소", DEFAULT_POINT);
+
+		Venue savedVenue = venueRepository.save(venue);
+		Long venueId = savedVenue.getId();
+
+		// when
+		VenueSearchResponse venueSearch = venueService.findVenueSearchById(venueId);
+
+		// then
+		assertThat(venueSearch.venues()).hasSize(1)
+			.extracting("id")
+			.containsExactly(venueId);
+	}
+
+	@Test
+	@DisplayName("존재하지 않는 공연장 ID로 조회하면 빈 배열로 응답한다.")
+	void findVenueSearchByWrongId() {
+		// given
+		Long venueId = 2L;
+
+		// when
+		VenueSearchResponse venueSearch = venueService.findVenueSearchById(venueId);
+
+		// then
+		assertThat(venueSearch.venues()).isEmpty();
+	}
 }
