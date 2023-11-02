@@ -1,8 +1,8 @@
 import styled from '@emotion/styled';
 import RefreshIcon from '@mui/icons-material/Refresh';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { getVenuePinsBySearch } from '~/apis/venue';
+import { getVenuePinsByMapBounds, getVenuePinsBySearch } from '~/apis/venue';
 import { BASIC_COORDINATE } from '~/constants/COORDINATE';
 import { useUserCoordinate } from '~/hooks/useUserCoordinate';
 import { Coordinate } from '~/types/map.types';
@@ -18,7 +18,23 @@ export const Map: React.FC<Props> = ({ mapRef }) => {
   const { search: searchQueryString } = useLocation();
   const { userCoordinate } = useUserCoordinate();
   const [isBoundsChanged, setIsBoundsChanged] = useState(false);
-  const map = useRef<naver.maps.Map | null>(null);
+  const map = useRef<naver.maps.Map>();
+  const markers = useRef<naver.maps.Marker[]>();
+
+  const updatePins = useCallback(async () => {
+    if (!map.current) return;
+
+    if (searchQueryString.includes('word')) {
+      const pins = await getVenuePinsBySearch(searchQueryString);
+      fitBoundsToPins(pins, map.current);
+      markers.current = addPinsOnMap(pins, map.current, 'pin');
+    }
+
+    if (searchQueryString.includes('lowLatitude')) {
+      const pins = await getVenuePinsByMapBounds(searchQueryString);
+      markers.current = addPinsOnMap(pins, map.current, 'pin');
+    }
+  }, [searchQueryString]);
 
   useEffect(() => {
     if (!map.current) {
@@ -30,15 +46,16 @@ export const Map: React.FC<Props> = ({ mapRef }) => {
         return;
       }
 
-      const pins = await getVenuePinsBySearch(searchQueryString);
+      if (markers.current) {
+        markers.current.forEach((marker) => marker.setMap(null));
+      }
 
-      fitBoundsToPins(pins, map.current);
-      addPinsOnMap(pins, map.current, 'pin');
+      updatePins();
     };
 
     updateView();
 
-    const returnValue = naver.maps.Event.addListener(
+    const boundsChangeEventListener = naver.maps.Event.addListener(
       map.current,
       'bounds_changed',
       debounce(() => {
@@ -51,9 +68,9 @@ export const Map: React.FC<Props> = ({ mapRef }) => {
         return;
       }
 
-      naver.maps.Event.removeListener(returnValue);
+      naver.maps.Event.removeListener(boundsChangeEventListener);
     };
-  }, [searchQueryString, userCoordinate]);
+  }, [searchQueryString, userCoordinate, updatePins]);
 
   const onMapSearchButtonClick = () => {
     if (!map.current) {

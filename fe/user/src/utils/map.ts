@@ -40,11 +40,12 @@ export const addPinsOnMap = (
     },
   };
 
-  pins.forEach((pin) => {
-    new naver.maps.Marker({
-      position: new naver.maps.LatLng(pin.latitude, pin.longitude),
-      map: map,
-      icon: obj[icon],
-    });
-  });
+  return pins.map(
+    (pin) =>
+      new naver.maps.Marker({
+        position: new naver.maps.LatLng(pin.latitude, pin.longitude),
+        map: map,
+        icon: obj[icon],
+      }),
+  );
 };
