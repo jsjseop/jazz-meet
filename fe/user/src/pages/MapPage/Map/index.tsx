@@ -6,7 +6,6 @@ import { getVenuePinsByMapBounds, getVenuePinsBySearch } from '~/apis/venue';
 import { BASIC_COORDINATE } from '~/constants/COORDINATE';
 import { useUserCoordinate } from '~/hooks/useUserCoordinate';
 import { Coordinate } from '~/types/map.types';
-import { debounce } from '~/utils/debounce';
 import { addPinsOnMap, fitBoundsToPins } from '~/utils/map';
 
 type Props = {
@@ -28,6 +27,8 @@ export const Map: React.FC<Props> = ({ mapRef }) => {
       const pins = await getVenuePinsBySearch(searchQueryString);
       fitBoundsToPins(pins, map.current);
       markers.current = addPinsOnMap(pins, map.current, 'pin');
+
+      setIsBoundsChanged(false);
     }
 
     if (searchQueryString.includes('lowLatitude')) {
@@ -41,27 +42,34 @@ export const Map: React.FC<Props> = ({ mapRef }) => {
       map.current = getInitMap(userCoordinate);
     }
 
-    const updateView = async () => {
-      if (!map.current || !searchQueryString) {
-        return;
-      }
+    let boundsChangeEventListener: naver.maps.MapEventListener;
+    let dragendEventListener: naver.maps.MapEventListener;
+    (async () => {
+      const updateView = async () => {
+        if (!map.current || !searchQueryString) {
+          return;
+        }
 
-      if (markers.current) {
-        markers.current.forEach((marker) => marker.setMap(null));
-      }
+        if (markers.current) {
+          markers.current.forEach((marker) => marker.setMap(null));
+        }
 
-      updatePins();
-    };
+        await updatePins();
+      };
 
-    updateView();
+      await updateView();
 
-    const boundsChangeEventListener = naver.maps.Event.addListener(
-      map.current,
-      'bounds_changed',
-      debounce(() => {
-        setIsBoundsChanged(true);
-      }, 100),
-    );
+      boundsChangeEventListener = naver.maps.Event.addListener(
+        map.current,
+        'zoom_changed',
+        () => setIsBoundsChanged(true),
+      );
+      dragendEventListener = naver.maps.Event.addListener(
+        map.current,
+        'dragend',
+        () => setIsBoundsChanged(true),
+      );
+    })();
 
     return () => {
       if (!map.current) {
@@ -69,6 +77,7 @@ export const Map: React.FC<Props> = ({ mapRef }) => {
       }
 
       naver.maps.Event.removeListener(boundsChangeEventListener);
+      naver.maps.Event.removeListener(dragendEventListener);
     };
   }, [searchQueryString, userCoordinate, updatePins]);
 
