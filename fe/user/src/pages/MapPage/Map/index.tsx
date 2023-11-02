@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import { useEffect, useRef, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { getVenuePinsBySearch } from '~/apis/venue';
 import { BASIC_COORDINATE } from '~/constants/COORDINATE';
 import { useUserCoordinate } from '~/hooks/useUserCoordinate';
@@ -14,6 +14,7 @@ type Props = {
 };
 
 export const Map: React.FC<Props> = ({ mapRef }) => {
+  const navigate = useNavigate();
   const { search: searchQueryString } = useLocation();
   const { userCoordinate } = useUserCoordinate();
   const [isBoundsChanged, setIsBoundsChanged] = useState(false);
@@ -50,6 +51,19 @@ export const Map: React.FC<Props> = ({ mapRef }) => {
         <StyledButton
           onClick={() => {
             console.log('bounds', map.current?.getBounds());
+            if (!map.current) {
+              throw new Error('map is not initialized');
+            }
+
+            const bounds = map.current.getBounds();
+
+            if (!(bounds instanceof naver.maps.LatLngBounds)) {
+              return;
+            }
+
+            navigate(
+              `/map?lowLatitude=${bounds.south()}&highLatitude=${bounds.north()}&lowLongitude=${bounds.west()}&highLongitude=${bounds.east()}`,
+            );
           }}
         >
           <RefreshIcon />
