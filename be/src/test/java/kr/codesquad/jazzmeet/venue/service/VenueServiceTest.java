@@ -441,9 +441,10 @@ class VenueServiceTest extends IntegrationTestSupport {
 	@DisplayName("venue id가 주어지면 해당하는 공연장의 상세 정보를 조회한다.")
 	@Test
 	void findVenue() throws Exception {
-	    //given
-	    Long venueId = 1L;
-		Venue venue = VenueFixture.createVenue("부기우기", "서울 용산구 회나무로 21 2층", VenueUtil.createPoint(37.52387497068088, 126.9294615244093));
+		//given
+		Long venueId = 1L;
+		Venue venue = VenueFixture.createVenue("부기우기", "서울 용산구 회나무로 21 2층",
+			VenueUtil.createPoint(37.52387497068088, 126.9294615244093));
 
 		Image image1 = ImageFixture.createImage("image1.url");
 		Image image2 = ImageFixture.createImage("image2.url");
@@ -468,9 +469,10 @@ class VenueServiceTest extends IntegrationTestSupport {
 	@DisplayName("venue id에 해당하는 공연장이 없으면 예외를 응답한다.")
 	@Test
 	void findVenueWhenNotExistVenue() throws Exception {
-	    //given
-	    Long venueId = 2L;
-		Venue venue = VenueFixture.createVenue("부기우기", "서울 용산구 회나무로 21 2층", VenueUtil.createPoint(37.52387497068088, 126.9294615244093));
+		//given
+		Long venueId = 2L;
+		Venue venue = VenueFixture.createVenue("부기우기", "서울 용산구 회나무로 21 2층",
+			VenueUtil.createPoint(37.52387497068088, 126.9294615244093));
 
 		Image image1 = ImageFixture.createImage("image1.url");
 		Image image2 = ImageFixture.createImage("image2.url");

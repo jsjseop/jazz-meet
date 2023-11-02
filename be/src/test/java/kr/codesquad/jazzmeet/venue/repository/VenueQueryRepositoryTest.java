@@ -204,13 +204,15 @@ class VenueQueryRepositoryTest extends IntegrationTestSupport {
 				.containsExactly(curStartTime1, curStartTime2)
 		);
 	}
+
 	@DisplayName("venue id에 해당하는 공연장 정보를 조회한다.")
 	@Test
-	void findVenueById () throws Exception {
-	    //given
+	void findVenueById() throws Exception {
+		//given
 		Long venueId = 1L;
 		// 공연장 생성
-		Venue venue = VenueFixture.createVenue("부기우기", "서울 용산구 회나무로 21 2층", VenueUtil.createPoint(37.52387497068088, 126.9294615244093));
+		Venue venue = VenueFixture.createVenue("부기우기", "서울 용산구 회나무로 21 2층",
+			VenueUtil.createPoint(37.52387497068088, 126.9294615244093));
 
 		// 이미지 생성
 		Image image1 = ImageFixture.createImage("image1.url");
@@ -225,7 +227,7 @@ class VenueQueryRepositoryTest extends IntegrationTestSupport {
 		venueImage2.add(venue, image2);
 		venueImageRepository.saveAll(List.of(venueImage1, venueImage2));
 
-	    //when
+		//when
 		VenueDetail venueDetail = venueQueryRepository.findVenue(venueId).get();
 
 		//then

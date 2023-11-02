@@ -226,17 +226,17 @@ public class VenueQueryRepository {
 		}
 
 		return Optional.of(VenueDetail.builder()
-				.id(result.getId())
-				.name(result.getName())
-				.roadNameAddress(result.getRoadNameAddress())
-				.lotNumberAddress(result.getLotNumberAddress())
-				.phoneNumber(result.getPhoneNumber())
-				.description(result.getDescription())
-				.location(result.getLocation())
-				.images(images)
-				.links(links)
-				.venueHours(venueHours)
-				.build());
+			.id(result.getId())
+			.name(result.getName())
+			.roadNameAddress(result.getRoadNameAddress())
+			.lotNumberAddress(result.getLotNumberAddress())
+			.phoneNumber(result.getPhoneNumber())
+			.description(result.getDescription())
+			.location(result.getLocation())
+			.images(images)
+			.links(links)
+			.venueHours(venueHours)
+			.build());
 	}
 
 	private List<VenueDetailImage> getImages(Long venueId) {
