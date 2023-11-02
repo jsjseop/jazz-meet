@@ -12,8 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import kr.codesquad.jazzmeet.IntegrationTestSupport;
+import kr.codesquad.jazzmeet.fixture.VenueFixture;
 import kr.codesquad.jazzmeet.venue.entity.Venue;
-import kr.codesquad.jazzmeet.venue.util.VenueTestUtil;
 import kr.codesquad.jazzmeet.venue.util.VenueUtil;
 import kr.codesquad.jazzmeet.venue.vo.VenuePins;
 
@@ -32,8 +32,8 @@ class VenueQueryRepositoryTest extends IntegrationTestSupport {
 		//given
 		String word = "부기우기";
 		Point point = VenueUtil.createPoint(111.111, 222.222);
-		Venue venue1 = VenueTestUtil.createVenues("부기우기", "서울 용산구 회나무로 21 2층", point);
-		Venue venue2 = VenueTestUtil.createVenues("entry55", "서울 동작구 동작대로1길 18 B-102", point);
+		Venue venue1 = VenueFixture.createVenue("부기우기", "서울 용산구 회나무로 21 2층", point);
+		Venue venue2 = VenueFixture.createVenue("entry55", "서울 동작구 동작대로1길 18 B-102", point);
 		venueRepository.saveAll(List.of(venue1, venue2));
 
 		//when
@@ -51,8 +51,8 @@ class VenueQueryRepositoryTest extends IntegrationTestSupport {
 		//given
 		String word = "서울";
 		Point point = VenueUtil.createPoint(111.111, 222.222);
-		Venue venue1 = VenueTestUtil.createVenues("부기우기", "서울 용산구 회나무로 21 2층", point);
-		Venue venue2 = VenueTestUtil.createVenues("entry55", "서울 동작구 동작대로1길 18 B-102", point);
+		Venue venue1 = VenueFixture.createVenue("부기우기", "서울 용산구 회나무로 21 2층", point);
+		Venue venue2 = VenueFixture.createVenue("entry55", "서울 동작구 동작대로1길 18 B-102", point);
 		venueRepository.saveAll(List.of(venue1, venue2));
 
 		//when
@@ -70,16 +70,19 @@ class VenueQueryRepositoryTest extends IntegrationTestSupport {
 	@Test
 	public void findVenuesInRange() throws Exception {
 		//given
-		Double lowLatitude = 37.51387497068088 ;
-		Double highLatitude = 37.61077342780979 ;
-		Double lowLongitude = 126.9293615244093 ;
-		Double highLongitude = 127.10246683663273 ;
+		Double lowLatitude = 37.51387497068088;
+		Double highLatitude = 37.61077342780979;
+		Double lowLongitude = 126.9293615244093;
+		Double highLongitude = 127.10246683663273;
 
 		Polygon range = VenueUtil.createRange(lowLatitude, highLatitude, lowLongitude, highLongitude);
 
-		Venue venue1 = VenueTestUtil.createVenues("부기우기", "서울 용산구 회나무로 21 2층", VenueUtil.createPoint(37.52387497068088, 126.9394615244093));
-		Venue venue2 = VenueTestUtil.createVenues("Entry55", "서울 동작구 동작대로1길 18 B-102", VenueUtil.createPoint(37.53387497068088, 126.9494615244093));
-		Venue venue3 = VenueTestUtil.createVenues("러스틱 재즈", "서울 마포구 망원로 74 지하", VenueUtil.createPoint(38.0, 128.0)); // 범위 벗어남
+		Venue venue1 = VenueFixture.createVenue("부기우기", "서울 용산구 회나무로 21 2층",
+			VenueUtil.createPoint(37.52387497068088, 126.9394615244093));
+		Venue venue2 = VenueFixture.createVenue("Entry55", "서울 동작구 동작대로1길 18 B-102",
+			VenueUtil.createPoint(37.53387497068088, 126.9494615244093));
+		Venue venue3 = VenueFixture.createVenue("러스틱 재즈", "서울 마포구 망원로 74 지하",
+			VenueUtil.createPoint(38.0, 128.0)); // 범위 벗어남
 		venueRepository.saveAll(List.of(venue1, venue2, venue3));
 
 		//when

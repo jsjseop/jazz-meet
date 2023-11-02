@@ -12,13 +12,13 @@ import org.locationtech.jts.geom.Point;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import kr.codesquad.jazzmeet.IntegrationTestSupport;
+import kr.codesquad.jazzmeet.fixture.VenueFixture;
 import kr.codesquad.jazzmeet.venue.dto.response.NearbyVenueResponse;
 import kr.codesquad.jazzmeet.venue.dto.response.VenueAutocompleteResponse;
 import kr.codesquad.jazzmeet.venue.dto.response.VenuePinsResponse;
 import kr.codesquad.jazzmeet.venue.dto.response.VenueSearchResponse;
 import kr.codesquad.jazzmeet.venue.entity.Venue;
 import kr.codesquad.jazzmeet.venue.repository.VenueRepository;
-import kr.codesquad.jazzmeet.venue.util.VenueTestUtil;
 import kr.codesquad.jazzmeet.venue.util.VenueUtil;
 
 class VenueServiceTest extends IntegrationTestSupport {
@@ -42,8 +42,8 @@ class VenueServiceTest extends IntegrationTestSupport {
 	void searchVenueNameAutocompleteList() {
 		// given
 		String word = "블루";
-		Venue venue = VenueTestUtil.createVenues("플랫나인", "서울시 강남구", DEFAULT_POINT);
-		Venue venue2 = VenueTestUtil.createVenues("블루밍", "서울시 서초구", DEFAULT_POINT);
+		Venue venue = VenueFixture.createVenue("플랫나인", "서울시 강남구", DEFAULT_POINT);
+		Venue venue2 = VenueFixture.createVenue("블루밍", "서울시 서초구", DEFAULT_POINT);
 
 		venueRepository.save(venue);
 		venueRepository.save(venue2);
@@ -63,8 +63,8 @@ class VenueServiceTest extends IntegrationTestSupport {
 	void searchAddressNameAutocompleteList() {
 		// given
 		String word = "강남";
-		Venue venue = VenueTestUtil.createVenues("플랫나인", "서울시 강남구", DEFAULT_POINT);
-		Venue venue2 = VenueTestUtil.createVenues("블루밍", "서울시 서초구", DEFAULT_POINT);
+		Venue venue = VenueFixture.createVenue("플랫나인", "서울시 강남구", DEFAULT_POINT);
+		Venue venue2 = VenueFixture.createVenue("블루밍", "서울시 서초구", DEFAULT_POINT);
 
 		venueRepository.save(venue);
 		venueRepository.save(venue2);
@@ -84,8 +84,8 @@ class VenueServiceTest extends IntegrationTestSupport {
 	void searchEmptyListAutocompleteList() {
 		// given
 		String word = "안양";
-		Venue venue = VenueTestUtil.createVenues("플랫나인", "서울시 강남구", DEFAULT_POINT);
-		Venue venue2 = VenueTestUtil.createVenues("블루밍", "서울시 서초구", DEFAULT_POINT);
+		Venue venue = VenueFixture.createVenue("플랫나인", "서울시 강남구", DEFAULT_POINT);
+		Venue venue2 = VenueFixture.createVenue("블루밍", "서울시 서초구", DEFAULT_POINT);
 
 		venueRepository.save(venue);
 		venueRepository.save(venue2);
@@ -108,9 +108,9 @@ class VenueServiceTest extends IntegrationTestSupport {
 		Point pointB = VenueUtil.createPoint(37.5014268697288, 127.03302845194163);
 		Point pointC = VenueUtil.createPoint(37.49907417387371, 127.02848692360855);
 
-		Venue venueA = VenueTestUtil.createVenues("공연장A", "주소", pointA);
-		Venue venueB = VenueTestUtil.createVenues("공연장B", "주소", pointB);
-		Venue venueC = VenueTestUtil.createVenues("공연장C", "주소", pointC);
+		Venue venueA = VenueFixture.createVenue("공연장A", "주소", pointA);
+		Venue venueB = VenueFixture.createVenue("공연장B", "주소", pointB);
+		Venue venueC = VenueFixture.createVenue("공연장C", "주소", pointC);
 
 		venueRepository.saveAll(List.of(venueA, venueB, venueC));
 
@@ -131,8 +131,8 @@ class VenueServiceTest extends IntegrationTestSupport {
 		//given
 		String word = "부기우기";
 		Point point = VenueUtil.createPoint(123.11111, 123.123123);
-		Venue venue1 = VenueTestUtil.createVenues("부기우기", "서울 용산구 회나무로 21 2층", point);
-		Venue venue2 = VenueTestUtil.createVenues("Entry55", "서울 동작구 동작대로1길 18 B-102", point);
+		Venue venue1 = VenueFixture.createVenue("부기우기", "서울 용산구 회나무로 21 2층", point);
+		Venue venue2 = VenueFixture.createVenue("Entry55", "서울 동작구 동작대로1길 18 B-102", point);
 		venueRepository.saveAll(List.of(venue1, venue2));
 
 		//when
@@ -150,8 +150,8 @@ class VenueServiceTest extends IntegrationTestSupport {
 		//given
 		String word = "서울";
 		Point point = VenueUtil.createPoint(123.11111, 123.123123);
-		Venue venue1 = VenueTestUtil.createVenues("부기우기", "서울 용산구 회나무로 21 2층", point);
-		Venue venue2 = VenueTestUtil.createVenues("Entry55", "서울 동작구 동작대로1길 18 B-102", point);
+		Venue venue1 = VenueFixture.createVenue("부기우기", "서울 용산구 회나무로 21 2층", point);
+		Venue venue2 = VenueFixture.createVenue("Entry55", "서울 동작구 동작대로1길 18 B-102", point);
 		venueRepository.saveAll(List.of(venue1, venue2));
 
 		//when
@@ -171,8 +171,8 @@ class VenueServiceTest extends IntegrationTestSupport {
 		//given
 		String word = null;
 		Point point = VenueUtil.createPoint(123.11111, 123.123123);
-		Venue venue1 = VenueTestUtil.createVenues("부기우기", "서울 용산구 회나무로 21 2층", point);
-		Venue venue2 = VenueTestUtil.createVenues("Entry55", "서울 동작구 동작대로1길 18 B-102", point);
+		Venue venue1 = VenueFixture.createVenue("부기우기", "서울 용산구 회나무로 21 2층", point);
+		Venue venue2 = VenueFixture.createVenue("Entry55", "서울 동작구 동작대로1길 18 B-102", point);
 		venueRepository.saveAll(List.of(venue1, venue2));
 
 		//when
@@ -191,11 +191,11 @@ class VenueServiceTest extends IntegrationTestSupport {
 		Double lowLongitude = 126.9293615244093;
 		Double highLongitude = 127.10246683663273;
 
-		Venue venue1 = VenueTestUtil.createVenues("부기우기", "서울 용산구 회나무로 21 2층",
+		Venue venue1 = VenueFixture.createVenue("부기우기", "서울 용산구 회나무로 21 2층",
 			VenueUtil.createPoint(37.52387497068088, 126.9294615244093));
-		Venue venue2 = VenueTestUtil.createVenues("Entry55", "서울 동작구 동작대로1길 18 B-102",
+		Venue venue2 = VenueFixture.createVenue("Entry55", "서울 동작구 동작대로1길 18 B-102",
 			VenueUtil.createPoint(37.53387497068088, 126.9394615244093));
-		Venue venue3 = VenueTestUtil.createVenues("러스틱 재즈", "서울 마포구 망원로 74 지하",
+		Venue venue3 = VenueFixture.createVenue("러스틱 재즈", "서울 마포구 망원로 74 지하",
 			VenueUtil.createPoint(38.0, 128.0)); // 범위 벗어남
 		venueRepository.saveAll(List.of(venue1, venue2, venue3));
 
@@ -218,9 +218,9 @@ class VenueServiceTest extends IntegrationTestSupport {
 		Double lowLongitude = 126.9293615244093;
 		Double highLongitude = 127.10246683663273;
 
-		Venue venue1 = VenueTestUtil.createVenues("부기우기", "서울 용산구 회나무로 21 2층",
+		Venue venue1 = VenueFixture.createVenue("부기우기", "서울 용산구 회나무로 21 2층",
 			VenueUtil.createPoint(36.5387497068088, 125.9294615244093));
-		Venue venue2 = VenueTestUtil.createVenues("Entry55", "서울 동작구 동작대로1길 18 B-102",
+		Venue venue2 = VenueFixture.createVenue("Entry55", "서울 동작구 동작대로1길 18 B-102",
 			VenueUtil.createPoint(38.53387497068088, 128.9394615244093));
 		venueRepository.saveAll(List.of(venue1, venue2));
 
@@ -241,9 +241,9 @@ class VenueServiceTest extends IntegrationTestSupport {
 		Double lowLongitude = 126.9293615244093;
 		Double highLongitude = 127.10246683663273;
 
-		Venue venue1 = VenueTestUtil.createVenues("부기우기", "서울 용산구 회나무로 21 2층",
+		Venue venue1 = VenueFixture.createVenue("부기우기", "서울 용산구 회나무로 21 2층",
 			VenueUtil.createPoint(lowLatitude, highLongitude)); // 남동
-		Venue venue2 = VenueTestUtil.createVenues("Entry55", "서울 동작구 동작대로1길 18 B-102",
+		Venue venue2 = VenueFixture.createVenue("Entry55", "서울 동작구 동작대로1길 18 B-102",
 			VenueUtil.createPoint(highLatitude, lowLongitude)); // 북서
 		venueRepository.saveAll(List.of(venue1, venue2));
 
@@ -264,11 +264,11 @@ class VenueServiceTest extends IntegrationTestSupport {
 		Double lowLongitude = 126.9293615244093;
 		Double highLongitude = null;
 
-		Venue venue1 = VenueTestUtil.createVenues("부기우기", "서울 용산구 회나무로 21 2층",
+		Venue venue1 = VenueFixture.createVenue("부기우기", "서울 용산구 회나무로 21 2층",
 			VenueUtil.createPoint(37.52387497068088, 126.9294615244093));
-		Venue venue2 = VenueTestUtil.createVenues("Entry55", "서울 동작구 동작대로1길 18 B-102",
+		Venue venue2 = VenueFixture.createVenue("Entry55", "서울 동작구 동작대로1길 18 B-102",
 			VenueUtil.createPoint(37.53387497068088, 126.9394615244093));
-		Venue venue3 = VenueTestUtil.createVenues("러스틱 재즈", "서울 마포구 망원로 74 지하",
+		Venue venue3 = VenueFixture.createVenue("러스틱 재즈", "서울 마포구 망원로 74 지하",
 			VenueUtil.createPoint(38.0, 128.0)); // 범위 벗어남
 		venueRepository.saveAll(List.of(venue1, venue2, venue3));
 
@@ -295,9 +295,9 @@ class VenueServiceTest extends IntegrationTestSupport {
 		Point point2 = VenueUtil.createPoint(37.5560565982576, 126.930179961597);
 		Point point3 = VenueUtil.createPoint(37.5502406352943, 126.9229031896536);
 
-		Venue venue1 = VenueTestUtil.createVenues("연남5701", "서울 마포구 동교로23길 64 지하", point1);
-		Venue venue2 = VenueTestUtil.createVenues("숲길", "서울 마포구 와우산로37길 11", point2);
-		Venue venue3 = VenueTestUtil.createVenues("클럽에반스", "서울 마포구 와우산로 63 2층", point3);
+		Venue venue1 = VenueFixture.createVenue("연남5701", "서울 마포구 동교로23길 64 지하", point1);
+		Venue venue2 = VenueFixture.createVenue("숲길", "서울 마포구 와우산로37길 11", point2);
+		Venue venue3 = VenueFixture.createVenue("클럽에반스", "서울 마포구 와우산로 63 2층", point3);
 
 		venueRepository.saveAll(List.of(venue1, venue2, venue3));
 
@@ -329,9 +329,9 @@ class VenueServiceTest extends IntegrationTestSupport {
 		Point point2 = VenueUtil.createPoint(37.5560565982576, 126.930179961597);
 		Point point3 = VenueUtil.createPoint(37.5502406352943, 126.9229031896536);
 
-		Venue venue1 = VenueTestUtil.createVenues("연남5701", "서울 마포구 동교로23길 64 지하", point1);
-		Venue venue2 = VenueTestUtil.createVenues("숲길", "서울 마포구 와우산로37길 11", point2);
-		Venue venue3 = VenueTestUtil.createVenues("클럽에반스", "서울 마포구 와우산로 63 2층", point3);
+		Venue venue1 = VenueFixture.createVenue("연남5701", "서울 마포구 동교로23길 64 지하", point1);
+		Venue venue2 = VenueFixture.createVenue("숲길", "서울 마포구 와우산로37길 11", point2);
+		Venue venue3 = VenueFixture.createVenue("클럽에반스", "서울 마포구 와우산로 63 2층", point3);
 
 		venueRepository.saveAll(List.of(venue1, venue2, venue3));
 
@@ -347,7 +347,7 @@ class VenueServiceTest extends IntegrationTestSupport {
 	@DisplayName("공연장 ID에 해당하는 공연장 정보를 목록으로 응답한다.")
 	void findVenueSearchById() {
 		// given
-		Venue venue = VenueTestUtil.createVenues("공연장", "주소", DEFAULT_POINT);
+		Venue venue = VenueFixture.createVenue("공연장", "주소", DEFAULT_POINT);
 
 		Venue savedVenue = venueRepository.save(venue);
 		Long venueId = savedVenue.getId();
