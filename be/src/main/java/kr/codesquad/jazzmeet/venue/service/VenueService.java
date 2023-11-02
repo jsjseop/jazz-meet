@@ -120,30 +120,14 @@ public class VenueService {
 		}
 		PageRequest pageRequest = PageRequest.of(page - PAGE_NUMBER_OFFSET, PAGE_SIZE);
 
-		List<VenueSearch> venueSearch = venueQueryRepository
-			.searchVenueList(word, pageRequest, todayStartTime, todayEndTime)
-			.stream()
+		Page<VenueSearchData> venueSearchDataList = venueQueryRepository
+			.searchVenueList(word, pageRequest, todayStartTime, todayEndTime);
+
+		List<VenueSearch> venueSearchList = venueSearchDataList.stream()
 			.map(VenueMapper.INSTANCE::toVenueSearch)
 			.toList();
 
-		return makeVenueSearchResponse(word, pageRequest, venueSearch);
-	}
-
-	private VenueSearchResponse makeVenueSearchResponse(String word, PageRequest pageRequest,
-		List<VenueSearch> venueSearch) {
-		long venueCount = venueQueryRepository.countSearchVenueList(word);
-		int currentPage = pageRequest.getPageNumber() + 1;
-		long maxPage = calculateMaxPage(venueCount, pageRequest);
-
-		return VenueMapper.INSTANCE.toVenueSearchResponse(venueSearch, venueCount, currentPage, maxPage);
-	}
-
-	private long calculateMaxPage(long venueCount, PageRequest pageRequest) {
-		int size = pageRequest.getPageSize();
-		long maxPage = venueCount / size;
-		if (maxPage == 0 || venueCount % size != 0) {
-			maxPage += 1;
-		}
-		return maxPage;
+		return VenueMapper.INSTANCE.toVenueSearchResponse(venueSearchList, venueSearchDataList.getTotalElements(),
+			venueSearchDataList.getNumber() + PAGE_NUMBER_OFFSET, venueSearchDataList.getTotalPages());
 	}
 }

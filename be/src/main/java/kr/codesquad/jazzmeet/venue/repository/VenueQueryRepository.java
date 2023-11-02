@@ -10,12 +10,10 @@ import java.util.List;
 import org.locationtech.jts.geom.Point;
 import org.locationtech.jts.geom.Polygon;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
 
-import com.querydsl.core.group.GroupBy;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
@@ -138,16 +136,16 @@ public class VenueQueryRepository {
 			.where(isLocationWithInRange(range));
 	}
 
-	public List<VenueSearchData> searchVenueList(String word, PageRequest pageRequest, LocalDateTime todayStartTime,
+	public Page<VenueSearchData> searchVenueList(String word, Pageable pageable, LocalDateTime todayStartTime,
 		LocalDateTime todayEndTime) {
-		return query.select(venue).from(venue)
+		List<VenueSearchData> venueSearchDataList = query.select(venue).from(venue)
 			.leftJoin(show)
 			.on(venue.id.eq(show.venue.id).and(show.startTime.between(todayStartTime, todayEndTime)))
 			.where(venue.name.contains(word).or(venue.roadNameAddress.contains(word)))
-			.limit(pageRequest.getPageSize())
-			.offset(pageRequest.getOffset())
+			.limit(pageable.getPageSize())
+			.offset(pageable.getOffset())
 			.transform(
-				GroupBy.groupBy(venue.id).list(
+				groupBy(venue.id).list(
 					Projections.fields(VenueSearchData.class,
 						venue.id,
 						venue.thumbnailUrl,
@@ -155,7 +153,7 @@ public class VenueQueryRepository {
 						venue.roadNameAddress.as("address"),
 						venue.description,
 						venue.location,
-						GroupBy.list(
+						list(
 							Projections.fields(ShowInfo.class,
 								show.startTime,
 								show.endTime
@@ -163,12 +161,15 @@ public class VenueQueryRepository {
 					)
 				)
 			);
+
+		JPAQuery<Long> venuesByWordCount = countSearchVenueList(word);
+
+		return PageableExecutionUtils.getPage(venueSearchDataList, pageable, venuesByWordCount::fetchOne);
 	}
 
-	public Long countSearchVenueList(String word) {
+	private JPAQuery<Long> countSearchVenueList(String word) {
 		return query.select(venue.count())
 			.from(venue)
-			.where(venue.name.contains(word).or(venue.roadNameAddress.contains(word)))
-			.fetchFirst();
+			.where(venue.name.contains(word).or(venue.roadNameAddress.contains(word)));
 	}
 }
