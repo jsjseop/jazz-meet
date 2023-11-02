@@ -28,6 +28,8 @@ export type ShowDetail = {
   posterUrl: string;
   teamName: string;
   description: string;
+  startTime: string;
+  endTime: string;
 };
 
 export type SearchParams = {
