@@ -2,9 +2,6 @@ package kr.codesquad.jazzmeet.venue.service;
 
 import static org.assertj.core.api.Assertions.*;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
 
 import org.junit.jupiter.api.AfterEach;
@@ -360,11 +357,8 @@ class VenueServiceTest extends IntegrationTestSupport {
 		// when
 		String word = "강남";
 		int page = 1;
-		LocalDateTime todayStartTime = LocalDateTime.of(LocalDate.now(), LocalTime.MIN);
-		LocalDateTime todayEndTime = LocalDateTime.of(LocalDate.now(), LocalTime.MAX);
 
-		VenueSearchResponse venueSearchResponse = venueService.searchVenueList(word, page, todayStartTime,
-			todayEndTime);
+		VenueSearchResponse venueSearchResponse = venueService.searchVenueList(word, page);
 
 		// then
 		assertThat(venueSearchResponse.venueCount()).isEqualTo(2);
@@ -388,11 +382,8 @@ class VenueServiceTest extends IntegrationTestSupport {
 		// when
 		String word = "재즈";
 		int page = 1;
-		LocalDateTime todayStartTime = LocalDateTime.of(LocalDate.now(), LocalTime.MIN);
-		LocalDateTime todayEndTime = LocalDateTime.of(LocalDate.now(), LocalTime.MAX);
 
-		VenueSearchResponse venueSearchResponse = venueService.searchVenueList(word, page, todayStartTime,
-			todayEndTime);
+		VenueSearchResponse venueSearchResponse = venueService.searchVenueList(word, page);
 
 		// then
 		assertThat(venueSearchResponse.venueCount()).isEqualTo(2);
