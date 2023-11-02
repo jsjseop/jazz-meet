@@ -22,7 +22,6 @@ export const Map: React.FC<Props> = ({ mapRef }) => {
         initCoordinate.latitude,
         initCoordinate.longitude,
       ),
-      zoom: 10000,
     });
   }, [userCoordinate]);
 
