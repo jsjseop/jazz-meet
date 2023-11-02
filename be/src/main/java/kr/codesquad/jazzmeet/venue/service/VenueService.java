@@ -14,7 +14,6 @@ import kr.codesquad.jazzmeet.venue.dto.VenueSearch;
 import kr.codesquad.jazzmeet.venue.dto.response.NearbyVenueResponse;
 import kr.codesquad.jazzmeet.venue.dto.response.VenueAutocompleteResponse;
 import kr.codesquad.jazzmeet.venue.dto.response.VenuePinsResponse;
-import kr.codesquad.jazzmeet.venue.dto.response.VenuePinsBySearchResponse;
 import kr.codesquad.jazzmeet.venue.dto.response.VenueSearchResponse;
 import kr.codesquad.jazzmeet.venue.entity.Venue;
 import kr.codesquad.jazzmeet.venue.mapper.VenueMapper;
@@ -76,7 +75,6 @@ public class VenueService {
 			.map(VenueMapper.INSTANCE::toVenuePinsBySearchResponse)
 			.toList();
 	}
-
 
 	@Transactional(readOnly = true)
 	public VenueSearchResponse searchVenueList(String word, int page, LocalDateTime todayStartTime,
