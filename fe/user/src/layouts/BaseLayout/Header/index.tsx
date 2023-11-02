@@ -1,6 +1,6 @@
-import { SearchBox } from '@components/SearchBox';
 import styled from '@emotion/styled';
 import { Link } from 'react-router-dom';
+import { SearchBox } from '~/components/SearchBox';
 
 export const Header: React.FC = () => {
   return (

@@ -1,13 +1,16 @@
 package kr.codesquad.jazzmeet.venue.entity;
 
+import java.util.List;
+
 import org.locationtech.jts.geom.Point;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
-import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -36,12 +39,12 @@ public class Venue {
 	private Long adminId;
 	@Column(length = 500)
 	private String thumbnailUrl;
-	@Embedded
-	private Images images;
-	@Embedded
-	private Links links;
-	@Embedded
-	private VenueHours venueHours;
+	@OneToMany(mappedBy = "venue", cascade = CascadeType.REMOVE, orphanRemoval = true)
+	private List<VenueImage> images;
+	@OneToMany(mappedBy = "venue", cascade = CascadeType.REMOVE, orphanRemoval = true)
+	private List<Link> links;
+	@OneToMany(mappedBy = "venue", cascade = CascadeType.REMOVE, orphanRemoval = true)
+	private List<VenueHour> venueHours;
 
 	@Builder
 	public Venue(String name, String roadNameAddress, String lotNumberAddress, Point location, String thumbnailUrl) {
