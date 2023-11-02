@@ -21,18 +21,12 @@ export const Map: React.FC<Props> = ({ mapRef }) => {
   const map = useRef<naver.maps.Map | null>(null);
 
   useEffect(() => {
-    const updateView = async () => {
+    if (!map.current) {
       map.current = getInitMap(userCoordinate);
+    }
 
-      naver.maps.Event.addListener(
-        map.current,
-        'bounds_changed',
-        debounce(() => {
-          setIsBoundsChanged(true);
-        }, 100),
-      );
-
-      if (!searchQueryString) {
+    const updateView = async () => {
+      if (!map.current || !searchQueryString) {
         return;
       }
 
@@ -43,32 +37,49 @@ export const Map: React.FC<Props> = ({ mapRef }) => {
     };
 
     updateView();
+
+    const returnValue = naver.maps.Event.addListener(
+      map.current,
+      'bounds_changed',
+      debounce(() => {
+        setIsBoundsChanged(true);
+      }, 100),
+    );
+
+    return () => {
+      if (!map.current) {
+        return;
+      }
+
+      naver.maps.Event.removeListener(returnValue);
+    };
   }, [searchQueryString, userCoordinate]);
+
+  const onMapSearchButtonClick = () => {
+    if (!map.current) {
+      throw new Error('map is not initialized');
+    }
+
+    const bounds = map.current.getBounds();
+
+    if (!(bounds instanceof naver.maps.LatLngBounds)) {
+      return;
+    }
+
+    navigate(
+      `/map?lowLatitude=${bounds.south()}&highLatitude=${bounds.north()}&lowLongitude=${bounds.west()}&highLongitude=${bounds.east()}`,
+    );
+
+    setIsBoundsChanged(false);
+  };
 
   return (
     <StyledMap id="map" ref={mapRef}>
       {isBoundsChanged && (
-        <StyledButton
-          onClick={() => {
-            console.log('bounds', map.current?.getBounds());
-            if (!map.current) {
-              throw new Error('map is not initialized');
-            }
-
-            const bounds = map.current.getBounds();
-
-            if (!(bounds instanceof naver.maps.LatLngBounds)) {
-              return;
-            }
-
-            navigate(
-              `/map?lowLatitude=${bounds.south()}&highLatitude=${bounds.north()}&lowLongitude=${bounds.west()}&highLongitude=${bounds.east()}`,
-            );
-          }}
-        >
+        <StyledMapSearchButton onClick={onMapSearchButtonClick}>
           <RefreshIcon />
           <span>현 지도에서 검색</span>
-        </StyledButton>
+        </StyledMapSearchButton>
       )}
     </StyledMap>
   );
@@ -90,7 +101,7 @@ const StyledMap = styled.div`
   height: inherit;
 `;
 
-const StyledButton = styled.button`
+const StyledMapSearchButton = styled.button`
   position: absolute;
   bottom: 8%;
   left: 50%;
@@ -105,6 +116,7 @@ const StyledButton = styled.button`
   background-color: #0775f4;
 
   &:hover {
+    cursor: pointer;
     background-color: #0a84ff;
   }
 `;
