@@ -1,8 +1,8 @@
 import styled from '@emotion/styled';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import { getKoreanWeekdayName } from '@utils/dateUtils';
-import { ShowDetail } from 'types/api.types';
+import { ShowDetail } from '~/types/api.types';
+import { getKoreanWeekdayName } from '~/utils/dateUtils';
 
 type Props = {
   showList?: ShowDetail[];
