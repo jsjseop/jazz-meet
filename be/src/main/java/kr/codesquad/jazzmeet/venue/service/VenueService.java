@@ -87,9 +87,7 @@ public class VenueService {
 	public VenueSearchResponse findVenuesByLocation(Double lowLatitude, Double highLatitude,
 		Double lowLongitude, Double highLongitude, int page) {
 		if (validateCoordinates(lowLatitude, highLatitude, lowLongitude, highLongitude)) {
-			return VenueSearchResponse.builder()
-				.venues(List.of())
-				.build();
+			return VenueSearchResponse.emptyVenues();
 		}
 
 		Polygon range = VenueUtil.createRange(lowLatitude, highLatitude, lowLongitude, highLongitude);
@@ -101,13 +99,8 @@ public class VenueService {
 			.map(VenueMapper.INSTANCE::toVenueSearch)
 			.toList();
 
-		// Todo: Mapper로 변경
-		return VenueSearchResponse.builder()
-			.venues(venueSearchList)
-			.venueCount(venuesByLocation.getTotalElements())
-			.currentPage(venuesByLocation.getNumber() + PAGE_NUMBER_OFFSET)
-			.maxPage(venuesByLocation.getTotalPages())
-			.build();
+		return VenueMapper.INSTANCE.toVenueSearchResponse(venueSearchList, venuesByLocation.getTotalElements(),
+			venuesByLocation.getNumber() + PAGE_NUMBER_OFFSET, venuesByLocation.getTotalPages());
 	}
 
 	private boolean validateCoordinates(Double latitude, Double longitude) {

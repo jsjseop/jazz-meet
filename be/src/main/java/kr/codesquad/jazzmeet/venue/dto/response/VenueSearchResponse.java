@@ -12,6 +12,6 @@ public record VenueSearchResponse(
 	int currentPage,
 	long maxPage) {
 	public static VenueSearchResponse emptyVenues() {
-		return VenueSearchResponse.builder().venues(List.of()).venueCount(0).currentPage(1).maxPage(1).build();
+		return VenueSearchResponse.builder().venues(List.of()).build();
 	}
 }
