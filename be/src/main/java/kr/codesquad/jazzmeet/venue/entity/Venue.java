@@ -1,5 +1,6 @@
 package kr.codesquad.jazzmeet.venue.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.locationtech.jts.geom.Point;
@@ -40,17 +41,20 @@ public class Venue {
 	@Column(length = 500)
 	private String thumbnailUrl;
 	@OneToMany(mappedBy = "venue", cascade = CascadeType.REMOVE, orphanRemoval = true)
-	private List<VenueImage> images;
+	private List<VenueImage> images = new ArrayList<>();
 	@OneToMany(mappedBy = "venue", cascade = CascadeType.REMOVE, orphanRemoval = true)
-	private List<Link> links;
+	private List<Link> links = new ArrayList<>();
 	@OneToMany(mappedBy = "venue", cascade = CascadeType.REMOVE, orphanRemoval = true)
-	private List<VenueHour> venueHours;
+	private List<VenueHour> venueHours = new ArrayList<>();
 
 	@Builder
-	public Venue(String name, String roadNameAddress, String lotNumberAddress, Point location, String thumbnailUrl) {
+	public Venue(String name, String roadNameAddress, String lotNumberAddress, String phoneNumber, String description,
+		Point location, String thumbnailUrl) {
 		this.name = name;
 		this.roadNameAddress = roadNameAddress;
 		this.lotNumberAddress = lotNumberAddress;
+		this.phoneNumber = phoneNumber;
+		this.description = description;
 		this.location = location;
 		this.thumbnailUrl = thumbnailUrl;
 	}

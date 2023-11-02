@@ -2,7 +2,9 @@ package kr.codesquad.jazzmeet.fixture;
 
 import org.locationtech.jts.geom.Point;
 
+import kr.codesquad.jazzmeet.image.entity.Image;
 import kr.codesquad.jazzmeet.venue.entity.Venue;
+import kr.codesquad.jazzmeet.venue.entity.VenueImage;
 import kr.codesquad.jazzmeet.venue.util.VenueUtil;
 
 public class VenueFixture {
@@ -29,4 +31,11 @@ public class VenueFixture {
 			.build();
 	}
 
+	public static VenueImage createVenueImage(Venue venue, Image image, long imageOrder) {
+		return VenueImage.builder()
+			.venue(venue)
+			.image(image)
+			.imageOrder(imageOrder)
+			.build();
+	}
 }

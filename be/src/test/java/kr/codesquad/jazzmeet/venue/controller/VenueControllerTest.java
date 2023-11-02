@@ -1,7 +1,9 @@
 package kr.codesquad.jazzmeet.venue.controller;
 
 import static org.hamcrest.Matchers.*;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import java.util.List;
@@ -14,6 +16,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import kr.codesquad.jazzmeet.venue.dto.response.VenueDetailResponse;
 import kr.codesquad.jazzmeet.venue.service.VenueService;
 
 @WebMvcTest(controllers = VenueController.class)
@@ -61,5 +64,24 @@ class VenueControllerTest {
 					.contentType(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$", instanceOf(List.class)));
+	}
+
+	@DisplayName("venue id로 공연장의 상세 정보를 조회한다.")
+	@Test
+	public void findVenueById () throws Exception {
+	    //given
+		Long venueId = 1L;
+		VenueDetailResponse response = VenueDetailResponse.builder()
+			.id(venueId)
+			.build();
+		when(venueService.findVenue(venueId)).thenReturn(response);
+
+	    //when //then
+		mockMvc.perform(
+			get("/api/venues/{venueId}", venueId)
+				.contentType(MediaType.APPLICATION_JSON))
+			.andDo(print())
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.id").value(venueId));
 	}
 }

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import jakarta.validation.constraints.Min;
 import kr.codesquad.jazzmeet.venue.dto.response.NearbyVenueResponse;
 import kr.codesquad.jazzmeet.venue.dto.response.VenueAutocompleteResponse;
+import kr.codesquad.jazzmeet.venue.dto.response.VenueDetailResponse;
 import kr.codesquad.jazzmeet.venue.dto.response.VenuePinsResponse;
 import kr.codesquad.jazzmeet.venue.dto.response.VenueSearchResponse;
 import kr.codesquad.jazzmeet.venue.service.VenueService;
@@ -67,6 +68,16 @@ public class VenueController {
 		VenueSearchResponse venueResponse = venueService.findVenuesByLocation(lowLatitude, highLatitude,
 			lowLongitude, highLongitude, page);
 		return ResponseEntity.ok(venueResponse);
+	}
+
+	/**
+	 * 공연장 상세 조회 API
+	 */
+	@GetMapping("/api/venues/{venueId}")
+	public ResponseEntity<VenueDetailResponse> findVenue(@PathVariable Long venueId) {
+		VenueDetailResponse venue = venueService.findVenue(venueId);
+
+		return ResponseEntity.ok(venue);
 	}
 
 	@GetMapping("/api/venues/search")
