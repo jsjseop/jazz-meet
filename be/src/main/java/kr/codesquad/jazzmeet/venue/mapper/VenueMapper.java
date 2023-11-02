@@ -7,19 +7,15 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
-import kr.codesquad.jazzmeet.venue.dto.VenueSearch;
 import kr.codesquad.jazzmeet.venue.dto.ShowInfo;
 import kr.codesquad.jazzmeet.venue.dto.VenueSearch;
 import kr.codesquad.jazzmeet.venue.dto.response.NearbyVenueResponse;
 import kr.codesquad.jazzmeet.venue.dto.response.VenueAutocompleteResponse;
 import kr.codesquad.jazzmeet.venue.dto.response.VenuePinsResponse;
-import kr.codesquad.jazzmeet.venue.dto.response.VenuePinsBySearchResponse;
 import kr.codesquad.jazzmeet.venue.dto.response.VenueSearchResponse;
 import kr.codesquad.jazzmeet.venue.entity.Venue;
 import kr.codesquad.jazzmeet.venue.vo.NearbyVenue;
 import kr.codesquad.jazzmeet.venue.vo.VenuePins;
-import kr.codesquad.jazzmeet.venue.vo.VenueSearchData;
-import kr.codesquad.jazzmeet.venue.vo.VenuePinsByWord;
 import kr.codesquad.jazzmeet.venue.vo.VenueSearchData;
 
 @Mapper
@@ -39,20 +35,15 @@ public interface VenueMapper {
 	@Mapping(target = "longitude", source = "location.x")
 	VenuePinsResponse toVenuePinsBySearchResponse(VenuePins venuePinsByWord);
 
-	@Mapping(target = "latitude", source = "location.y")
-	@Mapping(target = "longitude", source = "location.x")
-	VenueSearch toVenueSearch(VenueSearchData venueSearchData);
-	VenuePinsBySearchResponse toVenuePinsBySearchResponse(VenuePinsByWord venuePinsByWord);
-
 	default VenueSearchResponse toVenueSearchResponse(List<VenueSearch> venueSearchList,
-		int venueCount, int currentPage, int maxPage) {
+		long venueCount, int currentPage, long maxPage) {
 		Integer dummy = null;
 		return toVenueSearchResponse(dummy, venueSearchList, venueCount, currentPage, maxPage);
 	}
 
 	@Mapping(target = "venues", source = "venueSearchList")
 	VenueSearchResponse toVenueSearchResponse(Integer dummy, List<VenueSearch> venueSearchList,
-		int venueCount, int currentPage, int maxPage);
+		long venueCount, int currentPage, long maxPage);
 
 	default VenueSearch toVenueSearch(VenueSearchData venueSearchData) {
 		Integer dummy = null;

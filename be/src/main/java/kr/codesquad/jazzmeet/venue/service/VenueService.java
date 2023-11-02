@@ -7,7 +7,6 @@ import org.locationtech.jts.geom.Point;
 import org.locationtech.jts.geom.Polygon;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,9 +28,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Service
 public class VenueService {
-	private static final int PAGE_NUMBER_OFFSET = 1; // 페이지를 1부터 시작하게 하기 위한 offset
-	private static final int PAGE_SIZE = 10;
-
 	private static final int PAGE_NUMBER_OFFSET = 1; // 페이지를 1부터 시작하게 하기 위한 offset
 	private static final int PAGE_SIZE = 10;
 
@@ -122,6 +118,7 @@ public class VenueService {
 		Double highLongitude) {
 		return lowLatitude == null || highLatitude == null || lowLongitude == null || highLongitude == null;
 	}
+
 	@Transactional(readOnly = true)
 	public VenueSearchResponse searchVenueList(String word, int page, LocalDateTime todayStartTime,
 		LocalDateTime todayEndTime) {
@@ -141,16 +138,16 @@ public class VenueService {
 
 	private VenueSearchResponse makeVenueSearchResponse(String word, PageRequest pageRequest,
 		List<VenueSearch> venueSearch) {
-		int venueCount = venueQueryRepository.countSearchVenueList(word).intValue();
-		int currentPage = pageRequest.getPageNumber();
-		int maxPage = calculateMaxPage(venueCount, pageRequest);
+		long venueCount = venueQueryRepository.countSearchVenueList(word);
+		int currentPage = pageRequest.getPageNumber() + 1;
+		long maxPage = calculateMaxPage(venueCount, pageRequest);
 
 		return VenueMapper.INSTANCE.toVenueSearchResponse(venueSearch, venueCount, currentPage, maxPage);
 	}
 
-	private int calculateMaxPage(int venueCount, PageRequest pageRequest) {
+	private long calculateMaxPage(long venueCount, PageRequest pageRequest) {
 		int size = pageRequest.getPageSize();
-		int maxPage = venueCount / size;
+		long maxPage = venueCount / size;
 		if (maxPage == 0 || venueCount % size != 0) {
 			maxPage += 1;
 		}

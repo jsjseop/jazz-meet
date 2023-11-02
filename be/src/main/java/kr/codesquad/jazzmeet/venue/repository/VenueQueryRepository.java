@@ -2,7 +2,6 @@ package kr.codesquad.jazzmeet.venue.repository;
 
 import static com.querydsl.core.group.GroupBy.*;
 import static kr.codesquad.jazzmeet.show.entity.QShow.*;
-import static kr.codesquad.jazzmeet.show.entity.QShow.*;
 import static kr.codesquad.jazzmeet.venue.entity.QVenue.*;
 
 import java.time.LocalDateTime;
@@ -11,9 +10,9 @@ import java.util.List;
 import org.locationtech.jts.geom.Point;
 import org.locationtech.jts.geom.Polygon;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Repository;
 
 import com.querydsl.core.group.GroupBy;
@@ -26,8 +25,6 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import kr.codesquad.jazzmeet.venue.dto.ShowInfo;
 import kr.codesquad.jazzmeet.venue.vo.NearbyVenue;
 import kr.codesquad.jazzmeet.venue.vo.VenuePins;
-import kr.codesquad.jazzmeet.venue.vo.VenueSearchData;
-import kr.codesquad.jazzmeet.venue.vo.VenuePinsByWord;
 import kr.codesquad.jazzmeet.venue.vo.VenueSearchData;
 import lombok.RequiredArgsConstructor;
 
@@ -148,7 +145,7 @@ public class VenueQueryRepository {
 			.on(venue.id.eq(show.venue.id).and(show.startTime.between(todayStartTime, todayEndTime)))
 			.where(venue.name.contains(word).or(venue.roadNameAddress.contains(word)))
 			.limit(pageRequest.getPageSize())
-			.offset(pageRequest.getOffset() - pageRequest.getPageSize())
+			.offset(pageRequest.getOffset())
 			.transform(
 				GroupBy.groupBy(venue.id).list(
 					Projections.fields(VenueSearchData.class,
