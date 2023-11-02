@@ -59,3 +59,24 @@ export type ShowTime = {
   startTime: string;
   endTime: string;
 };
+
+export type VenueDetailData = {
+  id: number;
+  images: {
+    id: number;
+    url: string;
+  }[];
+  name: string;
+  roadNameAddress: string;
+  lotNumberAddress: string;
+  phoneNumber: string;
+  links: {
+    type: string;
+    url: string;
+  }[];
+  venueHours: {
+    day: string;
+    businessHours: string;
+  }[];
+  description: string;
+} & Coordinate;

@@ -2,33 +2,59 @@ import styled from '@emotion/styled';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import { VenueDetailData } from '~/types/api.types';
+import Blog from '~/assets/icons/Blog.svg?react';
 
-export const Header: React.FC = () => {
+type Props = Pick<VenueDetailData, 'name' | 'links'>;
+
+export const Header: React.FC<Props> = ({ name, links }) => {
   return (
     <StyledHeader>
       <StyledTitleContainer>
-        <StyledTitle>올댓재즈</StyledTitle>
-        <StyledSubTitle>All That Jazz</StyledSubTitle>
+        <StyledTitle>{name}</StyledTitle>
+        {/* <StyledSubTitle>All That Jazz</StyledSubTitle> */}
       </StyledTitleContainer>
       <StyledButtons>
+        {links.map(renderButton)}
         <IconButton>
-          <InstagramIcon
-            sx={{ width: '29px', height: '29px', fill: 'white' }}
-          />
-        </IconButton>
-        <IconButton>
-          <HomeOutlinedIcon
-            sx={{ width: '29px', height: '29px', fill: 'white' }}
-          />
-        </IconButton>
-        <IconButton isMoreButton>
           <MoreHorizIcon
-            sx={{ width: '29px', height: '29px', fill: '#6B6B6B' }}
+            style={{ width: '29px', height: '29px', fill: 'white' }}
           />
         </IconButton>
       </StyledButtons>
     </StyledHeader>
   );
+};
+
+const renderButton = (link: VenueDetailData['links'][0]) => {
+  switch (link.type) {
+    case 'naverMap':
+      return <></>;
+    case 'instagram':
+      return (
+        <IconButton key={link.type} onClick={() => open(link.url)}>
+          <InstagramIcon
+            sx={{ width: '29px', height: '29px', fill: 'white' }}
+          />
+        </IconButton>
+      );
+    case 'blog':
+      return (
+        <IconButton key={link.type} onClick={() => open(link.url)}>
+          <Blog style={{ width: '29px', height: '29px', fill: 'white' }} />
+        </IconButton>
+      );
+    case 'official':
+      return (
+        <IconButton key={link.type} onClick={() => open(link.url)}>
+          <HomeOutlinedIcon
+            style={{ width: '29px', height: '29px', fill: 'white' }}
+          />
+        </IconButton>
+      );
+    default:
+      return <></>;
+  }
 };
 
 const StyledHeader = styled.div`
@@ -48,11 +74,11 @@ const StyledTitle = styled.div`
   font-weight: bolder;
 `;
 
-const StyledSubTitle = styled.div`
-  font-size: 26px;
-  font-weight: medium;
-  color: #6f6f6f;
-`;
+// const StyledSubTitle = styled.div`
+//   font-size: 26px;
+//   font-weight: medium;
+//   color: #6f6f6f;
+// `;
 
 const StyledButtons = styled.div`
   display: flex;
