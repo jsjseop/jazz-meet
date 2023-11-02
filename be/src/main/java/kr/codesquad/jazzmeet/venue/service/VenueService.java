@@ -3,9 +3,12 @@ package kr.codesquad.jazzmeet.venue.service;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import kr.codesquad.jazzmeet.global.error.CustomException;
+import kr.codesquad.jazzmeet.global.error.statuscode.ErrorCode;
 import kr.codesquad.jazzmeet.venue.dto.VenueSearch;
 import kr.codesquad.jazzmeet.venue.dto.response.NearbyVenueResponse;
 import kr.codesquad.jazzmeet.venue.dto.response.VenueAutocompleteResponse;
@@ -52,29 +55,43 @@ public class VenueService {
 			.toList();
 	}
 
-	public VenueSearchResponse searchVenueList(String word, Pageable pageable, LocalDateTime todayStartTime,
+	@Transactional(readOnly = true)
+	public VenueSearchResponse searchVenueList(String word, int page, LocalDateTime todayStartTime,
 		LocalDateTime todayEndTime) {
-		// TODO: default page, default size, maxPage 검증하기
-		// querydsl을 사용하여 조회. date는 있을 수도(필터), 없을 수도(필터 초기화) 있기 때문에 동적 쿼리 적용해야 하기 때문.
 		if (word == "" || word == null) {
 			return VenueSearchResponse.emptyVenues();
 		}
-
-		int venueCount = venueQueryRepository.countSearchVenueList(word).intValue();
-		int currentPage = pageable.getPageNumber();
-		int maxPage = calculateMaxPage(venueCount, pageable);
+		PageRequest pageRequest = makePageRequest(page);
 
 		List<VenueSearch> venueSearch = venueQueryRepository
-			.searchVenueList(word, pageable, todayStartTime, todayEndTime)
+			.searchVenueList(word, pageRequest, todayStartTime, todayEndTime)
 			.stream()
 			.map(VenueMapper.INSTANCE::toVenueSearch)
 			.toList();
 
+		return makeVenueSearchResponse(word, pageRequest, venueSearch);
+	}
+
+	private PageRequest makePageRequest(int page) {
+		if (page <= 0) {
+			// TODO: 커스텀 에러코드 만들어서 출력
+			throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR_DB);
+		}
+
+		return PageRequest.of(page, 10);
+	}
+
+	private VenueSearchResponse makeVenueSearchResponse(String word, PageRequest pageRequest,
+		List<VenueSearch> venueSearch) {
+		int venueCount = venueQueryRepository.countSearchVenueList(word).intValue();
+		int currentPage = pageRequest.getPageNumber();
+		int maxPage = calculateMaxPage(venueCount, pageRequest);
+
 		return VenueMapper.INSTANCE.toVenueSearchResponse(venueSearch, venueCount, currentPage, maxPage);
 	}
 
-	private int calculateMaxPage(int venueCount, Pageable pageable) {
-		int size = pageable.getPageSize();
+	private int calculateMaxPage(int venueCount, PageRequest pageRequest) {
+		int size = pageRequest.getPageSize();
 		int maxPage = venueCount / size;
 		if (maxPage == 0 || venueCount % size != 0) {
 			maxPage += 1;

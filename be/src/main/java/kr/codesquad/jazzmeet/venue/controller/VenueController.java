@@ -5,8 +5,6 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -47,11 +45,10 @@ public class VenueController {
 
 	@GetMapping("/api/venues/search")
 	public ResponseEntity<VenueSearchResponse> searchVenueList(
-		@RequestParam String word,
-		@PageableDefault(page = 1) Pageable pageable) {
+		@RequestParam String word, int page) {
 		LocalDateTime todayStartTime = LocalDateTime.of(LocalDate.now(), LocalTime.MIN);
 		LocalDateTime todayEndTime = LocalDateTime.of(LocalDate.now(), LocalTime.MAX);
-		VenueSearchResponse venuesResponse = venueService.searchVenueList(word, pageable, todayStartTime, todayEndTime);
+		VenueSearchResponse venuesResponse = venueService.searchVenueList(word, page, todayStartTime, todayEndTime);
 
 		return ResponseEntity.ok(venuesResponse);
 	}

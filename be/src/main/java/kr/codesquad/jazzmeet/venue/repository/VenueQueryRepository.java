@@ -6,7 +6,7 @@ import static kr.codesquad.jazzmeet.venue.entity.QVenue.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Repository;
 
 import com.querydsl.core.group.GroupBy;
@@ -74,14 +74,14 @@ public class VenueQueryRepository {
 		return venue.roadNameAddress.contains(word);
 	}
 
-	public List<VenueSearchData> searchVenueList(String word, Pageable pageable, LocalDateTime todayStartTime,
+	public List<VenueSearchData> searchVenueList(String word, PageRequest pageRequest, LocalDateTime todayStartTime,
 		LocalDateTime todayEndTime) {
 		return query.select(venue).from(venue)
 			.leftJoin(show)
 			.on(venue.id.eq(show.venue.id).and(show.startTime.between(todayStartTime, todayEndTime)))
 			.where(venue.name.contains(word).or(venue.roadNameAddress.contains(word)))
-			.limit(pageable.getPageSize())
-			.offset(pageable.getOffset() - pageable.getPageSize())
+			.limit(pageRequest.getPageSize())
+			.offset(pageRequest.getOffset() - pageRequest.getPageSize())
 			.transform(
 				GroupBy.groupBy(venue.id).list(
 					Projections.fields(VenueSearchData.class,
