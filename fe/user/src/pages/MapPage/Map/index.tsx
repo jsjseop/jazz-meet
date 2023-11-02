@@ -4,6 +4,7 @@ import { useLocation } from 'react-router-dom';
 import { getVenuePinsBySearch } from '~/apis/venue';
 import { BASIC_COORDINATE } from '~/constants/COORDINATE';
 import { useUserCoordinate } from '~/hooks/useUserCoordinate';
+import { debounce } from '~/utils/debounce';
 import { addPinsOnMap, fitBoundsToPins } from '~/utils/map';
 
 type Props = {
@@ -28,6 +29,10 @@ export const Map: React.FC<Props> = ({ mapRef }) => {
   useEffect(() => {
     const updateView = async () => {
       const map = getInitMap();
+
+      naver.maps.Event.addListener(map, 'bounds_changed', debounce(() => {
+        console.log("bounds_changed");
+      }, 100))
 
       if (!searchQueryString) {
         return;
