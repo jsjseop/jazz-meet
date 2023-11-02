@@ -23,7 +23,9 @@ export const getVenuePinsBySearch = async (word: string): Promise<Pin[]> => {
   return response.json();
 };
 
-export const getVenuePinsByMapBounds = async (bounds: string): Promise<Pin[]> => {
+export const getVenuePinsByMapBounds = async (
+  bounds: string,
+): Promise<Pin[]> => {
   const response = await fetchData(`/api/venues/pins/map${bounds}`);
 
   return response.json();
@@ -54,6 +56,12 @@ export const getVenuesByKeyword = async (
 ): Promise<SearchedVenues> => {
   const queryString = getQueryString(searchParams);
   const response = await fetchData(`/api/venues/search${queryString}`);
+
+  return response.json();
+};
+
+export const getSearchSuggestions = async (word: string) => {
+  const response = await fetchData(`/api/search?word=${word}`);
 
   return response.json();
 };

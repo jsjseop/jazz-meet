@@ -48,3 +48,9 @@ export type ShowTime = {
   startTime: string;
   endTime: string;
 };
+
+export type SearchSuggestion = {
+  id: number;
+  name: string;
+  address: string;
+} & Coordinate;
