@@ -2,9 +2,9 @@ import styled from '@emotion/styled';
 import SearchIcon from '@mui/icons-material/Search';
 import { IconButton, InputBase, Paper } from '@mui/material';
 import { useEffect, useState } from 'react';
+import { getSearchSuggestions } from '~/apis/venue';
 import { SearchSuggestion } from '~/types/api.types';
 import { ResultBox } from './ResultBox';
-import { getSearchSuggestions } from '~/apis/venue';
 
 export const SearchBox: React.FC = () => {
   const [searchText, setSearchText] = useState('');
@@ -13,9 +13,16 @@ export const SearchBox: React.FC = () => {
   >([]);
 
   useEffect(() => {
-    (async () => {
-      const searchResult = await getSearchSuggestions(searchText);
-    })();
+    let timer: ReturnType<typeof setTimeout>;
+
+    if (searchText) {
+      timer = setTimeout(async () => {
+        const suggestions = await getSearchSuggestions(searchText);
+        setSearchSuggestions(suggestions);
+      }, 500);
+    }
+
+    return () => clearTimeout(timer);
   }, [searchText]);
 
   return (
@@ -45,7 +52,7 @@ export const SearchBox: React.FC = () => {
         </IconButton>
       </Paper>
 
-      <ResultBox />
+      <ResultBox suggestions={searchSuggestions} />
     </StyledSearchBox>
   );
 };

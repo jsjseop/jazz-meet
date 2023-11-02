@@ -1,13 +1,18 @@
 import styled from '@emotion/styled';
 import RoomRoundedIcon from '@mui/icons-material/RoomRounded';
+import { SearchSuggestion } from '~/types/api.types';
 
-export const ResultItem: React.FC = () => {
+type Props = {
+  suggestion: SearchSuggestion;
+};
+
+export const ResultItem: React.FC<Props> = ({ suggestion }) => {
   return (
     <StyledResultItem>
       <RoomRoundedIcon />
       <StyledInformation>
-        <h4>재즈바</h4>
-        <p>서울특별시 강남구</p>
+        <h4>{suggestion.name}</h4>
+        <p>{suggestion.address}</p>
       </StyledInformation>
     </StyledResultItem>
   );

@@ -1,13 +1,20 @@
 import styled from '@emotion/styled';
+import { SearchSuggestion } from '~/types/api.types';
 import { ResultItem } from './ResultItem';
 
-export const ResultBox: React.FC = () => {
+type Props = {
+  suggestions: SearchSuggestion[];
+};
+
+export const ResultBox: React.FC<Props> = ({ suggestions }) => {
   return (
     <StyledResultBox>
       <StyledResultList>
-        <ResultItem />
-        <ResultItem />
-        <ResultItem />
+        {
+          suggestions.map((suggestion) => (
+            <ResultItem key={suggestion.id} suggestion={suggestion} />
+          ))
+        }
       </StyledResultList>
     </StyledResultBox>
   );
