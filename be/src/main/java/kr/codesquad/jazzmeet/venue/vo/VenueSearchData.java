@@ -6,8 +6,10 @@ import org.locationtech.jts.geom.Point;
 
 import kr.codesquad.jazzmeet.venue.dto.ShowInfo;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@NoArgsConstructor
 public class VenueSearchData {
 	private Long id;
 	private String thumbnailUrl;
