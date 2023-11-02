@@ -15,10 +15,16 @@ export const UpcomingShowCard: React.FC<Props> = ({ upcomingShow }) => {
     <StyledCard onClick={() => navigate(`/venues/${venueId}/shows/${showId}`)}>
       <CardImage src={posterUrl} alt="poster" />
       <Title>{showName}</Title>
-      <SubTitle>{startTime}</SubTitle>
-      <SubTitle>{endTime}</SubTitle>
+      <SubTitle>{`${formatTime(startTime)} ~ ${formatTime(endTime)}`}</SubTitle>
     </StyledCard>
   );
+};
+
+const formatTime = (date: string) => {
+  return new Date(date).toLocaleTimeString('en-US', {
+    hour: '2-digit',
+    minute: '2-digit',
+  });
 };
 
 const StyledCard = styled.div`
