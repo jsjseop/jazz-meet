@@ -25,6 +25,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Service
 public class VenueService {
+	private static final int PAGE_NUMBER_OFFSET = 1; // 페이지를 1부터 시작하게 하기 위한 offset
+	private static final int PAGE_SIZE = 10;
 
 	private final VenueRepository venueRepository;
 	private final VenueQueryRepository venueQueryRepository;
@@ -80,7 +82,7 @@ public class VenueService {
 		if (word == "" || word == null) {
 			return VenueSearchResponse.emptyVenues();
 		}
-		PageRequest pageRequest = PageRequest.of(page, 10);
+		PageRequest pageRequest = PageRequest.of(page - PAGE_NUMBER_OFFSET, PAGE_SIZE);
 
 		List<VenueSearch> venueSearch = venueQueryRepository
 			.searchVenueList(word, pageRequest, todayStartTime, todayEndTime)
