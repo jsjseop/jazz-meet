@@ -2,6 +2,9 @@ package kr.codesquad.jazzmeet.venue.service;
 
 import static org.assertj.core.api.Assertions.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 import org.junit.jupiter.api.AfterEach;
@@ -12,6 +15,7 @@ import org.locationtech.jts.geom.Point;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import kr.codesquad.jazzmeet.IntegrationTestSupport;
+import kr.codesquad.jazzmeet.venue.dto.VenueSearch;
 import kr.codesquad.jazzmeet.venue.dto.response.NearbyVenueResponse;
 import kr.codesquad.jazzmeet.venue.dto.response.VenueAutocompleteResponse;
 import kr.codesquad.jazzmeet.venue.dto.response.VenuePinsResponse;
@@ -341,6 +345,62 @@ class VenueServiceTest extends IntegrationTestSupport {
 
 		// then
 		assertThat(venuesByLocation.venues()).hasSize(0);
+	}
+
+	@Test
+	@DisplayName("검색어에 해당되는 공연장 주소의 목록과 개수를 반환한다.")
+	void searchVenueListContainsWordInAddress() {
+		// given - 검사 할 공연장 저장
+		Venue venue1 = VenueTestUtil.createVenue("블루밍 재즈바", "서울 강남구 테헤란로19길 21");
+		Venue venue2 = VenueTestUtil.createVenue("플랫나인", "서울 서초구 강남대로65길 10");
+		Venue venue3 = VenueTestUtil.createVenue("entry55", "서울 동작구 동작대로1길");
+
+		venueRepository.saveAll(List.of(venue1, venue2, venue3));
+
+		// when
+		String word = "강남";
+		int page = 1;
+		LocalDateTime todayStartTime = LocalDateTime.of(LocalDate.now(), LocalTime.MIN);
+		LocalDateTime todayEndTime = LocalDateTime.of(LocalDate.now(), LocalTime.MAX);
+
+		VenueSearchResponse venueSearchResponse = venueService.searchVenueList(word, page, todayStartTime,
+			todayEndTime);
+
+		// then
+		assertThat(venueSearchResponse.venueCount()).isEqualTo(2);
+		assertThat(venueSearchResponse.currentPage()).isEqualTo(page);
+		assertThat(venueSearchResponse.venues()).extracting(VenueSearch::address)
+			.doesNotContain(venue3.getRoadNameAddress())
+			.contains(venue1.getRoadNameAddress())
+			.contains(venue2.getRoadNameAddress());
+	}
+
+	@Test
+	@DisplayName("검색어에 해당되는 공연장 이름의 목록과 개수를 반환한다.")
+	void searchVenueListContainsWordInName() {
+		// given - 검사 할 공연장 저장
+		Venue venue1 = VenueTestUtil.createVenue("블루밍 재즈바", "서울 강남구 테헤란로19길 21");
+		Venue venue2 = VenueTestUtil.createVenue("올댓재즈", "서울 용산구 이태원로 216");
+		Venue venue3 = VenueTestUtil.createVenue("entry55", "서울 동작구 동작대로1길");
+
+		venueRepository.saveAll(List.of(venue1, venue2, venue3));
+
+		// when
+		String word = "재즈";
+		int page = 1;
+		LocalDateTime todayStartTime = LocalDateTime.of(LocalDate.now(), LocalTime.MIN);
+		LocalDateTime todayEndTime = LocalDateTime.of(LocalDate.now(), LocalTime.MAX);
+
+		VenueSearchResponse venueSearchResponse = venueService.searchVenueList(word, page, todayStartTime,
+			todayEndTime);
+
+		// then
+		assertThat(venueSearchResponse.venueCount()).isEqualTo(2);
+		assertThat(venueSearchResponse.currentPage()).isEqualTo(page);
+		assertThat(venueSearchResponse.venues()).extracting(VenueSearch::name)
+			.doesNotContain(venue3.getName())
+			.contains(venue1.getName())
+			.contains(venue2.getName());
 	}
 
 }
