@@ -14,7 +14,10 @@ public enum ErrorCode implements StatusCode {
 	INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버 에러입니다."),
 
 	// -- [Venue] -- //
-	NOT_FOUND_VENUE(HttpStatus.NOT_FOUND, "해당하는 공연장이 없습니다.");
+	NOT_FOUND_VENUE(HttpStatus.NOT_FOUND, "해당하는 공연장이 없습니다."),
+
+	// -- [Show] -- //
+	NOT_VALID_DATE_FORMAT(HttpStatus.BAD_REQUEST, "날짜 포맷이 잘못되었습니다. 'yyyyMMdd' 형식으로 입력해주세요");
 
 	private final HttpStatus httpStatus;
 	private final String message;

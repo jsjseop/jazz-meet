@@ -4,6 +4,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
+import kr.codesquad.jazzmeet.show.dto.response.ShowByDateResponse;
 import kr.codesquad.jazzmeet.show.dto.response.UpcomingShowResponse;
 import kr.codesquad.jazzmeet.show.entity.Show;
 
@@ -16,4 +17,7 @@ public interface ShowMapper {
 	@Mapping(target = "posterUrl", source = "poster.url")
 	@Mapping(target = "showName", source = "teamName")
 	UpcomingShowResponse toUpcomingShowResponse(Show show);
+
+	@Mapping(target = "posterUrl", source = "poster.url")
+	ShowByDateResponse toShowByDateResponse(Show show);
 }

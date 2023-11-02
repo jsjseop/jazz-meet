@@ -2,6 +2,7 @@ package kr.codesquad.jazzmeet.show.entity;
 
 import java.time.LocalDateTime;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -34,7 +35,7 @@ public class Show {
 	@Column(nullable = false)
 	private LocalDateTime startTime;
 	private LocalDateTime endTime;
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "venue_id")
 	private Venue venue;
 	@ManyToOne(fetch = FetchType.LAZY)

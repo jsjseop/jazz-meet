@@ -13,9 +13,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import kr.codesquad.jazzmeet.IntegrationTestSupport;
 import kr.codesquad.jazzmeet.fixture.ShowFixture;
+import kr.codesquad.jazzmeet.fixture.VenueFixture;
+import kr.codesquad.jazzmeet.global.error.CustomException;
+import kr.codesquad.jazzmeet.show.dto.response.ShowByDateResponse;
 import kr.codesquad.jazzmeet.show.dto.response.UpcomingShowResponse;
 import kr.codesquad.jazzmeet.show.entity.Show;
 import kr.codesquad.jazzmeet.show.repository.ShowRepository;
+import kr.codesquad.jazzmeet.venue.entity.Venue;
 
 class ShowServiceTest extends IntegrationTestSupport {
 
@@ -112,5 +116,64 @@ class ShowServiceTest extends IntegrationTestSupport {
 		// then
 		// 배열이 비어있는지 확인
 		assertThat(shows).isEmpty();
+	}
+
+	@DisplayName("요청에 날짜가 들어가지 않는다면 빈 배열을 응답한다.")
+	@Test
+	void findEmptyShowsWhenNotDate() throws Exception {
+		//given
+		String date = null;
+		Long venueId = 1L;
+		Show show = ShowFixture.createShow("트리오", LocalDateTime.of(2023, 11, 3, 20, 00),
+			LocalDateTime.of(2023, 11, 3, 22, 00));
+		showRepository.save(show);
+
+		//when
+		List<ShowByDateResponse> shows = showService.getShows(venueId, date);
+
+		//then
+		assertThat(shows).hasSize(0);
+	}
+
+	@DisplayName("날짜와 공연장 Id가 주어지면 해당하는 공연 목록을 응답한다.")
+	@Test
+	void findShows() throws Exception {
+		//given
+		String date = "2023-11-03";
+		Long venueId = 1L;
+
+		Venue venue = VenueFixture.createVenue("부기우기", "경기도 고양시");
+		Show show1 = ShowFixture.createShow("트리오", LocalDateTime.of(2023, 11, 3, 18, 00),
+			LocalDateTime.of(2023, 11, 3, 20, 00), venue);
+		Show show2 = ShowFixture.createShow("퀄텟", LocalDateTime.of(2023, 11, 3, 20, 00),
+			LocalDateTime.of(2023, 11, 3, 22, 00), venue);
+		showRepository.saveAll(List.of(show1, show2));
+
+		//when
+		List<ShowByDateResponse> shows = showService.getShows(venueId, date);
+
+		//then
+		assertThat(shows).hasSize(2)
+			.extracting("teamName")
+			.contains("트리오", "퀄텟");
+	}
+
+	@DisplayName("날짜 형식이 올바르지 않으면 예외가 발생한다.")
+	@Test
+	void findShowsException() throws Exception {
+		//given
+		String date = "2023-11-03";
+		Long venueId = 1L;
+
+		Venue venue = VenueFixture.createVenue("부기우기", "경기도 고양시");
+		Show show1 = ShowFixture.createShow("트리오", LocalDateTime.of(2023, 11, 3, 18, 00),
+			LocalDateTime.of(2023, 11, 3, 20, 00), venue);
+		Show show2 = ShowFixture.createShow("퀄텟", LocalDateTime.of(2023, 11, 3, 20, 00),
+			LocalDateTime.of(2023, 11, 3, 22, 00), venue);
+		showRepository.saveAll(List.of(show1, show2));
+
+		//when//then
+		assertThatThrownBy(() -> showService.getShows(venueId, date))
+			.isInstanceOf(CustomException.class);
 	}
 }
