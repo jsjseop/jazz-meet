@@ -8,6 +8,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -24,4 +25,11 @@ public class Image {
 	private String status;
 	@Column(nullable = false)
 	private LocalDateTime createdAt;
+
+	@Builder
+	public Image(String url, String status, LocalDateTime createdAt) {
+		this.url = url;
+		this.status = status;
+		this.createdAt = createdAt;
+	}
 }

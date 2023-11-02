@@ -9,6 +9,6 @@ import kr.codesquad.jazzmeet.venue.entity.Venue;
 
 @Repository
 public interface VenueRepository extends JpaRepository<Venue, Long> {
-	
+
 	List<Venue> findTop10ByNameContainingOrRoadNameAddressContaining(String nameWord, String roadNameAddressWord);
 }

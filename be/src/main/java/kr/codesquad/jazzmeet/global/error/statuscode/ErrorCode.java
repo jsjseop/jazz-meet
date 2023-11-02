@@ -11,7 +11,10 @@ public enum ErrorCode implements StatusCode {
 	VALIDATION_FAILED(HttpStatus.BAD_REQUEST, "유효하지 않은 형식입니다."),
 	// 500 Internal Server Error
 	INTERNAL_SERVER_ERROR_DB(HttpStatus.INTERNAL_SERVER_ERROR, "데이터베이스 에러입니다."),
-	INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버 에러입니다.");
+	INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버 에러입니다."),
+
+	// -- [Venue] -- //
+	NOT_FOUND_VENUE(HttpStatus.NOT_FOUND, "해당하는 공연장이 없습니다.");
 
 	private final HttpStatus httpStatus;
 	private final String message;

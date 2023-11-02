@@ -1,11 +1,16 @@
 package kr.codesquad.jazzmeet.venue.repository;
 
 import static com.querydsl.core.group.GroupBy.*;
+import static kr.codesquad.jazzmeet.image.entity.QImage.*;
 import static kr.codesquad.jazzmeet.show.entity.QShow.*;
+import static kr.codesquad.jazzmeet.venue.entity.QLink.*;
 import static kr.codesquad.jazzmeet.venue.entity.QVenue.*;
+import static kr.codesquad.jazzmeet.venue.entity.QVenueHour.*;
+import static kr.codesquad.jazzmeet.venue.entity.QVenueImage.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import org.locationtech.jts.geom.Point;
 import org.locationtech.jts.geom.Polygon;
@@ -21,7 +26,12 @@ import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import kr.codesquad.jazzmeet.venue.dto.ShowInfo;
+import kr.codesquad.jazzmeet.venue.entity.Venue;
 import kr.codesquad.jazzmeet.venue.vo.NearbyVenue;
+import kr.codesquad.jazzmeet.venue.vo.VenueDetail;
+import kr.codesquad.jazzmeet.venue.vo.VenueDetailImage;
+import kr.codesquad.jazzmeet.venue.vo.VenueDetailLink;
+import kr.codesquad.jazzmeet.venue.vo.VenueDetailVenueHour;
 import kr.codesquad.jazzmeet.venue.vo.VenuePins;
 import kr.codesquad.jazzmeet.venue.vo.VenueSearchData;
 import lombok.RequiredArgsConstructor;
@@ -198,5 +208,62 @@ public class VenueQueryRepository {
 					)
 				)
 			);
+	}
+
+	public Optional<VenueDetail> findVenue(Long venueId) {
+
+		List<VenueDetailVenueHour> venueHours = getVenueHours(venueId);
+		List<VenueDetailLink> links = getLinks(venueId);
+		List<VenueDetailImage> images = getImages(venueId);
+
+		Venue result = query.select(venue)
+			.from(venue)
+			.where(venue.id.eq(venueId))
+			.fetchOne();
+
+		if (result == null) {
+			return Optional.empty();
+		}
+
+		return Optional.of(VenueDetail.builder()
+			.id(result.getId())
+			.name(result.getName())
+			.roadNameAddress(result.getRoadNameAddress())
+			.lotNumberAddress(result.getLotNumberAddress())
+			.phoneNumber(result.getPhoneNumber())
+			.description(result.getDescription())
+			.location(result.getLocation())
+			.images(images)
+			.links(links)
+			.venueHours(venueHours)
+			.build());
+	}
+
+	private List<VenueDetailImage> getImages(Long venueId) {
+		return query.select(Projections.constructor(VenueDetailImage.class,
+				image.id,
+				image.url))
+			.from(venueImage)
+			.leftJoin(venueImage.image, image)
+			.where(venueImage.venue.id.eq(venueId))
+			.fetch();
+	}
+
+	private List<VenueDetailLink> getLinks(Long venueId) {
+		return query.select(Projections.constructor(VenueDetailLink.class,
+				link.linkType,
+				link.url))
+			.from(link)
+			.where(link.venue.id.eq(venueId))
+			.fetch();
+	}
+
+	private List<VenueDetailVenueHour> getVenueHours(Long venueId) {
+		return query.select(Projections.constructor(VenueDetailVenueHour.class,
+				venueHour.day,
+				venueHour.businessHour))
+			.from(venueHour)
+			.where(venueHour.venue.id.eq(venueId))
+			.fetch();
 	}
 }
