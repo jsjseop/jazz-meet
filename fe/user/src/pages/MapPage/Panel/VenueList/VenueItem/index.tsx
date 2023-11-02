@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import { Description } from './Description';
 import { Thumbnail } from './Thumbnail';
-import { VenueData } from 'types/api.types';
+import { VenueData } from '~/types/api.types';
 
 type Props = VenueData;
 

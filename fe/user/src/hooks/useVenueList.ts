@@ -1,8 +1,11 @@
-import { getVenuesByKeyword } from 'apis/venue';
-import { useCallback, useEffect, useState } from 'react';
-import { SearchedVenues } from 'types/api.types';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useLocation } from 'react-router-dom';
+import { getVenuesByKeyword } from '~/apis/venue';
+import { SearchedVenues } from '~/types/api.types';
 
 export const useVenueList = () => {
+  const { search } = useLocation();
+  const urlSearchParams = useMemo(() => new URLSearchParams(search), [search]);
   const [venueListData, setVenueListData] = useState<SearchedVenues>({
     venues: [],
     venueCount: 0,
@@ -10,11 +13,20 @@ export const useVenueList = () => {
     maxPage: 1,
   });
 
-  const updateVenueList = useCallback(async (page: number = 1) => {
-    const searchedVenues = await getVenuesByKeyword({ page });
+  const updateVenueList = useCallback(
+    async (page?: number) => {
+      const word = urlSearchParams.get('word');
 
-    setVenueListData(searchedVenues);
-  }, []);
+      if (!word) {
+        return;
+      }
+
+      const searchedVenues = await getVenuesByKeyword({ page, word });
+
+      setVenueListData(searchedVenues);
+    },
+    [urlSearchParams],
+  );
 
   useEffect(() => {
     updateVenueList();

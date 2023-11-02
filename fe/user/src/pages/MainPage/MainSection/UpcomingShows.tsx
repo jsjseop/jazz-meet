@@ -2,10 +2,10 @@ import { Cards } from './CardList/Cards';
 import { CardListHeader } from './CardList/CardListHeader';
 import { CardList } from './CardList';
 import { useEffect, useState } from 'react';
-import { UpcomingShow } from 'types/api.types';
-import { getUpcomingShows } from 'apis/show';
 import { SwiperSlide } from 'swiper/react';
 import { UpcomingShowCard } from './CardList/Cards/UpcomingShowCard';
+import { UpcomingShow } from '~/types/api.types';
+import { getUpcomingShows } from '~/apis/show';
 
 export const UpcomingShows: React.FC = () => {
   const [upcomingShows, setUpcomingShows] = useState<UpcomingShow[]>();

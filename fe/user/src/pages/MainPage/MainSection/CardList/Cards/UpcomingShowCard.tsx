@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import { useNavigate } from 'react-router-dom';
-import { UpcomingShow } from 'types/api.types';
+import { UpcomingShow } from '~/types/api.types';
 
 type Props = {
   upcomingShow: UpcomingShow;

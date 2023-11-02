@@ -1,9 +1,9 @@
-import { PaginationBox } from '@components/PaginationBox';
 import styled from '@emotion/styled';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import { Link } from 'react-router-dom';
-import { VenueData } from 'types/api.types';
 import { VenueItem } from './VenueItem';
+import { VenueData } from '~/types/api.types';
+import { PaginationBox } from '~/components/PaginationBox';
 
 export type VenueListProps = {
   venueList: VenueData[];

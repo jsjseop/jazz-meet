@@ -7,6 +7,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import jakarta.validation.ValidationException;
 import kr.codesquad.jazzmeet.global.error.statuscode.ErrorCode;
 import kr.codesquad.jazzmeet.global.error.statuscode.StatusCode;
 import lombok.extern.slf4j.Slf4j;
@@ -43,9 +44,20 @@ public class GlobalExceptionHandler {
 				ex.getMessage() + ", " + NestedExceptionUtils.getMostSpecificCause(ex)));
 	}
 
-	// @Valid 예외 처리
+	// @Valid 예외 처리.
+	// org.springframework.web.bind
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	protected ResponseEntity<ErrorResponse> handleException(MethodArgumentNotValidException ex) {
+		ErrorCode errorCode = ErrorCode.VALIDATION_FAILED;
+		log.warn("MethodArgumentNotValidException handling: {}", ex.getMessage());
+		return ResponseEntity.status(errorCode.getHttpStatus())
+			.body(new ErrorResponse(errorCode.getMessage(),
+				ex.getMessage() + ", " + NestedExceptionUtils.getMostSpecificCause(ex)));
+	}
+
+	// jakarta.validation
+	@ExceptionHandler(ValidationException.class)
+	protected ResponseEntity<ErrorResponse> handleException(ValidationException ex) {
 		ErrorCode errorCode = ErrorCode.VALIDATION_FAILED;
 		log.warn("MethodArgumentNotValidException handling: {}", ex.getMessage());
 		return ResponseEntity.status(errorCode.getHttpStatus())
