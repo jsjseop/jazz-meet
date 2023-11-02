@@ -1,8 +1,12 @@
-import { getQueryString } from '@utils/getQueryString';
-import { fetchData } from 'apis/fetchData';
-import { Pin, SearchParams, SearchedVenues } from 'types/api.types';
-import { AroundVenue } from '../types/api.types';
-import { Coordinate, CoordinateBoundary } from 'types/map.types';
+import {
+  AroundVenue,
+  Pin,
+  SearchParams,
+  SearchedVenues,
+} from '~/types/api.types';
+import { Coordinate, CoordinateBoundary } from '~/types/map.types';
+import { getQueryString } from '~/utils/getQueryString';
+import { fetchData } from './fetchData';
 
 export const getAroundVenues = async (
   coordinate: Coordinate,

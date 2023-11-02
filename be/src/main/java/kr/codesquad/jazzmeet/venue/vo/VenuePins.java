@@ -7,12 +7,12 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class VenuePinsByWord {
+public class VenuePins {
 	private Long id;
 	private String name;
 	private Point location;
 
-	public VenuePinsByWord(Long id, String name, Point location) {
+	public VenuePins(Long id, String name, Point location) {
 		this.id = id;
 		this.name = name;
 		this.location = location;

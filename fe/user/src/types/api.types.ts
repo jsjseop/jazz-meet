@@ -1,4 +1,4 @@
-import { Coordinate } from 'types/map.types';
+import { Coordinate } from './map.types';
 
 export type AroundVenue = {
   id: number;
@@ -22,8 +22,8 @@ export type UpcomingShow = {
 };
 
 export type SearchParams = {
-  word?: string;
-  page?: number;
+  word?: string | null;
+  page?: number | null;
 };
 
 export type SearchedVenues = {

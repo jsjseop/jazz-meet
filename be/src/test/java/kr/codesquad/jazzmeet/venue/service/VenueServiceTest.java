@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import kr.codesquad.jazzmeet.IntegrationTestSupport;
 import kr.codesquad.jazzmeet.venue.dto.response.NearbyVenueResponse;
 import kr.codesquad.jazzmeet.venue.dto.response.VenueAutocompleteResponse;
-import kr.codesquad.jazzmeet.venue.dto.response.VenuePinsBySearchResponse;
+import kr.codesquad.jazzmeet.venue.dto.response.VenuePinsResponse;
 import kr.codesquad.jazzmeet.venue.entity.Venue;
 import kr.codesquad.jazzmeet.venue.repository.VenueRepository;
 import kr.codesquad.jazzmeet.venue.util.VenueTestUtil;
@@ -152,7 +152,7 @@ class VenueServiceTest extends IntegrationTestSupport {
 		venueRepository.saveAll(List.of(venue1, venue2));
 
 		//when
-		List<VenuePinsBySearchResponse> venuePinsList = venueService.findVenuePins(word);
+		List<VenuePinsResponse> venuePinsList = venueService.findVenuePinsBySearch(word);
 
 		//then
 		assertThat(venuePinsList).hasSize(1)
@@ -171,7 +171,7 @@ class VenueServiceTest extends IntegrationTestSupport {
 		venueRepository.saveAll(List.of(venue1, venue2));
 
 		//when
-		List<VenuePinsBySearchResponse> venuePinsList = venueService.findVenuePins(word);
+		List<VenuePinsResponse> venuePinsList = venueService.findVenuePinsBySearch(word);
 
 		//then
 		assertThat(venuePinsList).hasSize(2)
@@ -179,6 +179,108 @@ class VenueServiceTest extends IntegrationTestSupport {
 			.contains(
 				tuple("부기우기", 123.11111, 123.123123),
 				tuple("Entry55", 123.11111, 123.123123));
+	}
+
+	@DisplayName("검색어가 NULL이면 빈 배열을 응답한다.")
+	@Test
+	public void findVenuesByWordIsNull() throws Exception {
+		//given
+		String word = null;
+		Point point = VenueUtil.createPoint(123.11111, 123.123123);
+		Venue venue1 = VenueTestUtil.createVenues("부기우기", "서울 용산구 회나무로 21 2층", point);
+		Venue venue2 = VenueTestUtil.createVenues("Entry55", "서울 동작구 동작대로1길 18 B-102", point);
+		venueRepository.saveAll(List.of(venue1, venue2));
+
+		//when
+		List<VenuePinsResponse> venuePinsList = venueService.findVenuePinsBySearch(word);
+
+		//then
+		assertThat(venuePinsList).hasSize(0);
+	}
+
+	@DisplayName("위치 정보 4개가 주어지면 해당 범위에 속하는 공연장의 위치 정보 목록을 조회한다.")
+	@Test
+	public void findVenuesByLocation() throws Exception {
+	    //given
+		Double lowLatitude = 37.51387497068088 ;
+		Double highLatitude = 37.61077342780979 ;
+		Double lowLongitude = 126.9293615244093 ;
+		Double highLongitude = 127.10246683663273 ;
+
+		Venue venue1 = VenueTestUtil.createVenues("부기우기", "서울 용산구 회나무로 21 2층", VenueUtil.createPoint(37.52387497068088, 126.9294615244093));
+		Venue venue2 = VenueTestUtil.createVenues("Entry55", "서울 동작구 동작대로1길 18 B-102", VenueUtil.createPoint(37.53387497068088, 126.9394615244093));
+		Venue venue3 = VenueTestUtil.createVenues("러스틱 재즈", "서울 마포구 망원로 74 지하", VenueUtil.createPoint(38.0, 128.0)); // 범위 벗어남
+		venueRepository.saveAll(List.of(venue1, venue2, venue3));
+
+	    //when
+		List<VenuePinsResponse> venuePins = venueService.findVenuePinsByLocation(lowLatitude, highLatitude, lowLongitude, highLongitude);
+
+	    //then
+		assertThat(venuePins).hasSize(2)
+			.extracting("name")
+			.contains("부기우기", "Entry55");
+	}
+
+	@DisplayName("위치 정보 4개가 주어지면 해당 범위에 속하지 않는 공연장의 위치 정보 목록은 조회되지 않는다.")
+	@Test
+	public void findVenuesOutsideLocation() throws Exception {
+		//given
+		Double lowLatitude = 37.51387497068088 ;
+		Double highLatitude = 37.61077342780979 ;
+		Double lowLongitude = 126.9293615244093 ;
+		Double highLongitude = 127.10246683663273 ;
+
+		Venue venue1 = VenueTestUtil.createVenues("부기우기", "서울 용산구 회나무로 21 2층", VenueUtil.createPoint(36.5387497068088, 125.9294615244093));
+		Venue venue2 = VenueTestUtil.createVenues("Entry55", "서울 동작구 동작대로1길 18 B-102", VenueUtil.createPoint(38.53387497068088, 128.9394615244093));
+		venueRepository.saveAll(List.of(venue1, venue2));
+
+		//when
+		List<VenuePinsResponse> venuePins = venueService.findVenuePinsByLocation(lowLatitude, highLatitude, lowLongitude, highLongitude);
+
+		//then
+		assertThat(venuePins).hasSize(0);
+	}
+
+	@DisplayName("위치 정보 4개가 주어지면 해당 경계에 위치하는 공연장 위치 정보 목록은 조회되지 않는다.")
+	@Test
+	public void findVenuesSameLocation() throws Exception {
+		//given
+		Double lowLatitude = 37.51387497068088 ;
+		Double highLatitude = 37.61077342780979 ;
+		Double lowLongitude = 126.9293615244093 ;
+		Double highLongitude = 127.10246683663273 ;
+
+		Venue venue1 = VenueTestUtil.createVenues("부기우기", "서울 용산구 회나무로 21 2층", VenueUtil.createPoint(lowLatitude, highLongitude)); // 남동
+		Venue venue2 = VenueTestUtil.createVenues("Entry55", "서울 동작구 동작대로1길 18 B-102", VenueUtil.createPoint(highLatitude, lowLongitude)); // 북서
+		venueRepository.saveAll(List.of(venue1, venue2));
+
+		//when
+		List<VenuePinsResponse> venuePins = venueService.findVenuePinsByLocation(lowLatitude, highLatitude, lowLongitude, highLongitude);
+
+		//then
+		assertThat(venuePins).hasSize(0);
+	}
+
+	@DisplayName("위치 정보 4개 중 하나라도 값이 Null이면 빈 배열을 응답한다.")
+	@Test
+	public void findVenuesWhenLocationNull() throws Exception {
+		//given
+		Double lowLatitude = 37.51387497068088 ;
+		Double highLatitude = 37.61077342780979 ;
+		Double lowLongitude = 126.9293615244093 ;
+		Double highLongitude = null ;
+
+		Venue venue1 = VenueTestUtil.createVenues("부기우기", "서울 용산구 회나무로 21 2층", VenueUtil.createPoint(37.52387497068088, 126.9294615244093));
+		Venue venue2 = VenueTestUtil.createVenues("Entry55", "서울 동작구 동작대로1길 18 B-102", VenueUtil.createPoint(37.53387497068088, 126.9394615244093));
+		Venue venue3 = VenueTestUtil.createVenues("러스틱 재즈", "서울 마포구 망원로 74 지하", VenueUtil.createPoint(38.0, 128.0)); // 범위 벗어남
+		venueRepository.saveAll(List.of(venue1, venue2, venue3));
+
+		//when
+		List<VenuePinsResponse> venuePins = venueService.findVenuePinsByLocation(lowLatitude, highLatitude, lowLongitude, highLongitude);
+
+		//then
+		assertThat(venuePins).hasSize(0)
+			.isInstanceOf(List.class);
 	}
 
 }

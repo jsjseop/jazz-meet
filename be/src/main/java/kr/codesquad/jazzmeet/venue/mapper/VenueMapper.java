@@ -11,10 +11,12 @@ import kr.codesquad.jazzmeet.venue.dto.ShowInfo;
 import kr.codesquad.jazzmeet.venue.dto.VenueSearch;
 import kr.codesquad.jazzmeet.venue.dto.response.NearbyVenueResponse;
 import kr.codesquad.jazzmeet.venue.dto.response.VenueAutocompleteResponse;
+import kr.codesquad.jazzmeet.venue.dto.response.VenuePinsResponse;
 import kr.codesquad.jazzmeet.venue.dto.response.VenuePinsBySearchResponse;
 import kr.codesquad.jazzmeet.venue.dto.response.VenueSearchResponse;
 import kr.codesquad.jazzmeet.venue.entity.Venue;
 import kr.codesquad.jazzmeet.venue.vo.NearbyVenue;
+import kr.codesquad.jazzmeet.venue.vo.VenuePins;
 import kr.codesquad.jazzmeet.venue.vo.VenuePinsByWord;
 import kr.codesquad.jazzmeet.venue.vo.VenueSearchData;
 
@@ -33,6 +35,7 @@ public interface VenueMapper {
 
 	@Mapping(target = "latitude", source = "location.y")
 	@Mapping(target = "longitude", source = "location.x")
+	VenuePinsResponse toVenuePinsBySearchResponse(VenuePins venuePinsByWord);
 	VenuePinsBySearchResponse toVenuePinsBySearchResponse(VenuePinsByWord venuePinsByWord);
 
 	default VenueSearchResponse toVenueSearchResponse(List<VenueSearch> venueSearchList,

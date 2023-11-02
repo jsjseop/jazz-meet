@@ -3,6 +3,7 @@ package kr.codesquad.jazzmeet.venue.service;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.locationtech.jts.geom.Polygon;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,14 +13,16 @@ import kr.codesquad.jazzmeet.global.error.statuscode.ErrorCode;
 import kr.codesquad.jazzmeet.venue.dto.VenueSearch;
 import kr.codesquad.jazzmeet.venue.dto.response.NearbyVenueResponse;
 import kr.codesquad.jazzmeet.venue.dto.response.VenueAutocompleteResponse;
+import kr.codesquad.jazzmeet.venue.dto.response.VenuePinsResponse;
 import kr.codesquad.jazzmeet.venue.dto.response.VenuePinsBySearchResponse;
 import kr.codesquad.jazzmeet.venue.dto.response.VenueSearchResponse;
 import kr.codesquad.jazzmeet.venue.entity.Venue;
 import kr.codesquad.jazzmeet.venue.mapper.VenueMapper;
 import kr.codesquad.jazzmeet.venue.repository.VenueQueryRepository;
 import kr.codesquad.jazzmeet.venue.repository.VenueRepository;
+import kr.codesquad.jazzmeet.venue.util.VenueUtil;
 import kr.codesquad.jazzmeet.venue.vo.NearbyVenue;
-import kr.codesquad.jazzmeet.venue.vo.VenuePinsByWord;
+import kr.codesquad.jazzmeet.venue.vo.VenuePins;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -47,13 +50,33 @@ public class VenueService {
 			.toList();
 	}
 
-	public List<VenuePinsBySearchResponse> findVenuePins(String word) {
-		List<VenuePinsByWord> venues = venueQueryRepository.findVenuePinsByWord(word);
+	public List<VenuePinsResponse> findVenuePinsBySearch(String word) {
+		if (word == null) {
+			return List.of();
+		}
+
+		List<VenuePins> venues = venueQueryRepository.findVenuePinsByWord(word);
 
 		return venues.stream()
 			.map(VenueMapper.INSTANCE::toVenuePinsBySearchResponse)
 			.toList();
 	}
+
+	public List<VenuePinsResponse> findVenuePinsByLocation(Double lowLatitude, Double highLatitude, Double lowLongitude,
+		Double highLongitude) {
+		if (lowLatitude == null || highLatitude == null || lowLongitude == null || highLongitude == null) {
+			return List.of();
+		}
+
+		Polygon range = VenueUtil.createRange(lowLatitude, highLatitude, lowLongitude, highLongitude);
+
+		List<VenuePins> venues = venueQueryRepository.findVenuePinsByLocation(range);
+
+		return venues.stream()
+			.map(VenueMapper.INSTANCE::toVenuePinsBySearchResponse)
+			.toList();
+	}
+
 
 	@Transactional(readOnly = true)
 	public VenueSearchResponse searchVenueList(String word, int page, LocalDateTime todayStartTime,
