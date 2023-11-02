@@ -1,10 +1,10 @@
 import styled from '@emotion/styled';
-import { useCallback, useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { getVenuePinsBySearch } from '~/apis/venue';
-import { BASIC_COORDINATE } from '~/constants/COORDINATE';
+import { useMarkers } from '~/hooks/useMarkers';
 import { useUserCoordinate } from '~/hooks/useUserCoordinate';
-import { addPinsOnMap, fitBoundsToPins } from '~/utils/map';
+import { getInitMap } from '~/utils/map';
+import { MapSearchButton } from './MapSearchButton';
 
 type Props = {
   mapRef: React.RefObject<HTMLDivElement>;
@@ -13,36 +13,48 @@ type Props = {
 export const Map: React.FC<Props> = ({ mapRef }) => {
   const { search: searchQueryString } = useLocation();
   const { userCoordinate } = useUserCoordinate();
-
-  const getInitMap = useCallback(() => {
-    const initCoordinate = userCoordinate ?? BASIC_COORDINATE;
-
-    return new naver.maps.Map('map', {
-      center: new naver.maps.LatLng(
-        initCoordinate.latitude,
-        initCoordinate.longitude,
-      ),
-    });
-  }, [userCoordinate]);
+  const [isShowMapSearchButton, setIsMapShowSearchButton] = useState(false);
+  const showMapSearchButton = () => setIsMapShowSearchButton(true);
+  const hideMapSearchButton = () => setIsMapShowSearchButton(false);
+  const map = useRef<naver.maps.Map>();
+  const { updatePins } = useMarkers({
+    map,
+    searchQueryString,
+    hideMapSearchButton,
+  });
 
   useEffect(() => {
-    const updateView = async () => {
-      const map = getInitMap();
+    map.current = getInitMap(userCoordinate);
 
-      if (!searchQueryString) {
-        return;
-      }
+    const boundsChangeEventListener = naver.maps.Event.addListener(
+      map.current,
+      'zoom_changed',
+      showMapSearchButton,
+    );
+    const dragendEventListener = naver.maps.Event.addListener(
+      map.current,
+      'dragend',
+      showMapSearchButton,
+    );
 
-      const pins = await getVenuePinsBySearch(searchQueryString);
-
-      fitBoundsToPins(pins, map);
-      addPinsOnMap(pins, map, 'pin');
+    return () => {
+      naver.maps.Event.removeListener(boundsChangeEventListener);
+      naver.maps.Event.removeListener(dragendEventListener);
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-    updateView();
-  }, [searchQueryString, userCoordinate, getInitMap]);
+  useEffect(() => { 
+    updatePins();
+  },[updatePins])
 
-  return <StyledMap id="map" ref={mapRef} />;
+  return (
+    <StyledMap id="map" ref={mapRef}>
+      {isShowMapSearchButton && (
+        <MapSearchButton map={map} hideMapSearchButton={hideMapSearchButton} />
+      )}
+    </StyledMap>
+  );
 };
 
 const StyledMap = styled.div`
