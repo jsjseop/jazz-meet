@@ -4,12 +4,14 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
+import kr.codesquad.jazzmeet.venue.dto.VenueSearch;
 import kr.codesquad.jazzmeet.venue.dto.response.NearbyVenueResponse;
 import kr.codesquad.jazzmeet.venue.dto.response.VenueAutocompleteResponse;
 import kr.codesquad.jazzmeet.venue.dto.response.VenuePinsResponse;
 import kr.codesquad.jazzmeet.venue.entity.Venue;
 import kr.codesquad.jazzmeet.venue.vo.NearbyVenue;
 import kr.codesquad.jazzmeet.venue.vo.VenuePins;
+import kr.codesquad.jazzmeet.venue.vo.VenueSearchData;
 
 @Mapper
 public interface VenueMapper {
@@ -27,4 +29,8 @@ public interface VenueMapper {
 	@Mapping(target = "latitude", source = "location.y")
 	@Mapping(target = "longitude", source = "location.x")
 	VenuePinsResponse toVenuePinsBySearchResponse(VenuePins venuePinsByWord);
+
+	@Mapping(target = "latitude", source = "location.y")
+	@Mapping(target = "longitude", source = "location.x")
+	VenueSearch toVenueSearch(VenueSearchData venueSearchData);
 }
