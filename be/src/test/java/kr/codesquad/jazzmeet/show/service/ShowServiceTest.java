@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import kr.codesquad.jazzmeet.IntegrationTestSupport;
+import kr.codesquad.jazzmeet.fixture.ShowFixture;
 import kr.codesquad.jazzmeet.show.dto.response.UpcomingShowResponse;
 import kr.codesquad.jazzmeet.show.entity.Show;
 import kr.codesquad.jazzmeet.show.repository.ShowRepository;
@@ -36,13 +37,13 @@ class ShowServiceTest extends IntegrationTestSupport {
 		LocalDateTime nowTime = LocalDateTime.of(2023, Month.OCTOBER, 29, 17, 0);
 		LocalDateTime show1startTime = LocalDateTime.of(2023, Month.OCTOBER, 28, 18, 0);
 		LocalDateTime show1endTime = LocalDateTime.of(2023, Month.OCTOBER, 28, 19, 0);
-		Show show1 = createShow("팀 이름1", show1startTime, show1endTime);// 지난 공연
+		Show show1 = ShowFixture.createShow("팀 이름1", show1startTime, show1endTime);// 지난 공연
 		LocalDateTime show2startTime = LocalDateTime.of(2023, Month.OCTOBER, 29, 18, 0);
 		LocalDateTime show2endTime = LocalDateTime.of(2023, Month.OCTOBER, 29, 19, 0);
-		Show show2 = createShow("팀 이름2", show2startTime, show2endTime);// 진행 중인 공연
+		Show show2 = ShowFixture.createShow("팀 이름2", show2startTime, show2endTime);// 진행 중인 공연
 		LocalDateTime show3startTime = LocalDateTime.of(2023, Month.OCTOBER, 30, 20, 0);
 		LocalDateTime show3endTime = LocalDateTime.of(2023, Month.OCTOBER, 30, 21, 0);
-		Show show3 = createShow("팀 이름3", show3startTime, show3endTime);// 진행 예정 공연
+		Show show3 = ShowFixture.createShow("팀 이름3", show3startTime, show3endTime);// 진행 예정 공연
 
 		// 공연 3개 저장
 		showRepository.save(show1);
@@ -70,10 +71,10 @@ class ShowServiceTest extends IntegrationTestSupport {
 		LocalDateTime nowTime = LocalDateTime.of(2023, Month.OCTOBER, 29, 17, 0);
 		LocalDateTime show1startTime = LocalDateTime.of(2023, Month.OCTOBER, 30, 20, 0);
 		LocalDateTime show1endTime = LocalDateTime.of(2023, Month.OCTOBER, 30, 21, 0);
-		Show show1 = createShow("팀 이름3", show1startTime, show1endTime);// 진행 예정 공연2
+		Show show1 = ShowFixture.createShow("팀 이름3", show1startTime, show1endTime);// 진행 예정 공연2
 		LocalDateTime show2startTime = LocalDateTime.of(2023, Month.OCTOBER, 29, 20, 0);
 		LocalDateTime show2endTime = LocalDateTime.of(2023, Month.OCTOBER, 29, 21, 0);
-		Show show2 = createShow("팀 이름3", show2startTime, show2endTime);// 진행 예정 공연1
+		Show show2 = ShowFixture.createShow("팀 이름3", show2startTime, show2endTime);// 진행 예정 공연1
 
 		// 공연 2개 저장
 		showRepository.save(show1);
@@ -96,10 +97,10 @@ class ShowServiceTest extends IntegrationTestSupport {
 		LocalDateTime nowTime = LocalDateTime.of(2023, Month.OCTOBER, 29, 17, 0);
 		LocalDateTime show1startTime = LocalDateTime.of(2023, Month.OCTOBER, 27, 20, 0);
 		LocalDateTime show1endTime = LocalDateTime.of(2023, Month.OCTOBER, 27, 21, 0);
-		Show show1 = createShow("팀 이름3", show1startTime, show1endTime);// 진행 예정 공연2
+		Show show1 = ShowFixture.createShow("팀 이름3", show1startTime, show1endTime);// 진행 예정 공연2
 		LocalDateTime show2startTime = LocalDateTime.of(2023, Month.OCTOBER, 28, 20, 0);
 		LocalDateTime show2endTime = LocalDateTime.of(2023, Month.OCTOBER, 28, 21, 0);
-		Show show2 = createShow("팀 이름3", show2startTime, show2endTime);// 진행 예정 공연1
+		Show show2 = ShowFixture.createShow("팀 이름3", show2startTime, show2endTime);// 진행 예정 공연1
 
 		// 공연 2개 저장
 		showRepository.save(show1);
@@ -112,9 +113,4 @@ class ShowServiceTest extends IntegrationTestSupport {
 		// 배열이 비어있는지 확인
 		assertThat(shows).isEmpty();
 	}
-
-	Show createShow(String name, LocalDateTime startTime, LocalDateTime endTime) {
-		return Show.builder().teamName(name).startTime(startTime).endTime(endTime).build();
-	}
-
 }
