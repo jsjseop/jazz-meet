@@ -1,24 +1,33 @@
 import styled from '@emotion/styled';
 import RoomRoundedIcon from '@mui/icons-material/RoomRounded';
+import { useNavigate } from 'react-router-dom';
 import { SearchSuggestion } from '~/types/api.types';
 
 type Props = {
   suggestion: SearchSuggestion;
+  onClose: () => void;
 };
 
-export const ResultItem: React.FC<Props> = ({ suggestion }) => {
+export const SuggestionItem: React.FC<Props> = ({ suggestion, onClose }) => {
+  const navigate = useNavigate();
+
+  const navigateToVenueDetail = () => {
+    navigate(`/map/venues/${suggestion.id}`);
+    onClose();
+  };
+
   return (
-    <StyledResultItem>
+    <StyledSuggestionItem onClick={navigateToVenueDetail}>
       <RoomRoundedIcon />
       <StyledInformation>
         <h4>{suggestion.name}</h4>
         <p>{suggestion.address}</p>
       </StyledInformation>
-    </StyledResultItem>
+    </StyledSuggestionItem>
   );
 };
 
-const StyledResultItem = styled.li`
+const StyledSuggestionItem = styled.li`
   padding: 12px 16px;
   display: flex;
   gap: 8px;

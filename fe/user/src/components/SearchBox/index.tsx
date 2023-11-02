@@ -1,11 +1,11 @@
 import styled from '@emotion/styled';
 import SearchIcon from '@mui/icons-material/Search';
 import { IconButton, InputBase, Paper } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { getSearchSuggestions } from '~/apis/venue';
 import { SearchSuggestion } from '~/types/api.types';
-import { ResultBox } from './ResultBox';
+import { SuggestionBox } from './SuggestionBox';
 
 export const SearchBox: React.FC = () => {
   const navigate = useNavigate();
@@ -14,7 +14,8 @@ export const SearchBox: React.FC = () => {
   const [searchSuggestions, setSearchSuggestions] = useState<
     SearchSuggestion[]
   >([]);
-  const [isResultBoxOpen, setIsResultBoxOpen] = useState(false);
+  const [isSuggestionBoxOpen, setIsSuggestionBoxOpen] = useState(false);
+  const searchBoxRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (searchText.trim().length === 0) {
@@ -33,10 +34,9 @@ export const SearchBox: React.FC = () => {
   }, [searchText]);
 
   useEffect(() => {
-    setIsResultBoxOpen(searchSuggestions.length > 0);
+    setIsSuggestionBoxOpen(searchSuggestions.length > 0);
   }, [searchSuggestions]);
 
-  
   const query = new URLSearchParams(queryString);
   const word = query.get('word');
 
@@ -44,9 +44,9 @@ export const SearchBox: React.FC = () => {
     if (searchText.trim().length === 0) {
       return;
     }
-    setIsResultBoxOpen(true);
+    setIsSuggestionBoxOpen(true);
   };
-  const hideResultBox = () => setIsResultBoxOpen(false);
+  const hideResultBox = () => setIsSuggestionBoxOpen(false);
 
   const onSearchTextSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -58,7 +58,10 @@ export const SearchBox: React.FC = () => {
   };
 
   return (
-    <StyledSearchBox>
+    <StyledSearchBox
+      id="search-box"
+      ref={searchBoxRef}
+    >
       <Paper
         component="form"
         onSubmit={onSearchTextSubmit}
@@ -79,14 +82,18 @@ export const SearchBox: React.FC = () => {
           value={searchText || word || ''}
           onChange={(e) => setSearchText(e.target.value)}
           onFocus={showResultBox}
-          onBlur={hideResultBox}
         />
         <IconButton type="button" sx={{ p: '10px' }} aria-label="search">
           <SearchIcon />
         </IconButton>
       </Paper>
 
-      {isResultBoxOpen && <ResultBox suggestions={searchSuggestions} />}
+      <SuggestionBox
+        suggestions={searchSuggestions}
+        open={isSuggestionBoxOpen}
+        searchBoxRef={searchBoxRef}
+        onClose={hideResultBox}
+      />
     </StyledSearchBox>
   );
 };
