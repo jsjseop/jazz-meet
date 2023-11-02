@@ -8,11 +8,11 @@ type Props = {
 export const CardListHeader: React.FC<Props> = ({ title, onMoreClick }) => {
   return (
     <StyledCardListHeader>
-      <LeftContainer>
-        <Title>{title}</Title>
-      </LeftContainer>
+      <StyledLeftContainer>
+        <StyledTitle>{title}</StyledTitle>
+      </StyledLeftContainer>
 
-      {onMoreClick && <MoreButton>더보기</MoreButton>}
+      {onMoreClick && <StyledMoreButton>더보기</StyledMoreButton>}
     </StyledCardListHeader>
   );
 };
@@ -23,16 +23,18 @@ const StyledCardListHeader = styled.div`
   justify-content: space-between;
 `;
 
-const LeftContainer = styled.div`
+const StyledLeftContainer = styled.div`
   display: flex;
   align-items: center;
 `;
 
-const Title = styled.div`
+const StyledTitle = styled.div`
   font-size: 24px;
+  font-weight: bold;
+  letter-spacing: -4%;
   color: #ff4d00;
 `;
 
-const MoreButton = styled.button`
+const StyledMoreButton = styled.button`
   cursor: pointer;
 `;

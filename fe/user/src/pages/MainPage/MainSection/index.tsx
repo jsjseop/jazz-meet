@@ -14,4 +14,7 @@ export const MainSection: React.FC = () => {
 const StyledMainSection = styled.section`
   max-width: 1200px;
   margin: 0 auto 173px auto;
+  display: flex;
+  flex-direction: column;
+  gap: 60px;
 `;
