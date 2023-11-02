@@ -19,10 +19,12 @@ export const SearchBox: React.FC = () => {
       timer = setTimeout(async () => {
         const suggestions = await getSearchSuggestions(searchText);
         setSearchSuggestions(suggestions);
-      }, 500);
+      }, 300);
     }
 
-    return () => clearTimeout(timer);
+    return () => {
+      clearTimeout(timer);
+    };
   }, [searchText]);
 
   return (
@@ -52,7 +54,9 @@ export const SearchBox: React.FC = () => {
         </IconButton>
       </Paper>
 
-      <ResultBox suggestions={searchSuggestions} />
+      {searchSuggestions.length > 0 && (
+        <ResultBox suggestions={searchSuggestions} />
+      )}
     </StyledSearchBox>
   );
 };

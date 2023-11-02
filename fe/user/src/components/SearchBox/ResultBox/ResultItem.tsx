@@ -25,6 +25,7 @@ const StyledResultItem = styled.li`
 
   &:hover,
   &:focus {
+    cursor: pointer;
     background-color: #f5f5f5;
   }
 `;
