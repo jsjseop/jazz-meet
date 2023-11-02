@@ -8,6 +8,7 @@ import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -66,9 +67,9 @@ public class VenueController {
 		@RequestParam(required = false) Double lowLongitude, @RequestParam(required = false) Double highLongitude,
 		@RequestParam(defaultValue = "1") @Min(value = 1) int page
 	) {
-		VenueSearchResponse venuesByLocation = venueService.findVenuesByLocation(lowLatitude, highLatitude,
+		VenueSearchResponse venueResponse = venueService.findVenuesByLocation(lowLatitude, highLatitude,
 			lowLongitude, highLongitude, page);
-		return ResponseEntity.ok(venuesByLocation);
+		return ResponseEntity.ok(venueResponse);
 	}
 
 	@GetMapping("/api/venues/search")
@@ -79,5 +80,11 @@ public class VenueController {
 		VenueSearchResponse venuesResponse = venueService.searchVenueList(word, page, todayStartTime, todayEndTime);
 
 		return ResponseEntity.ok(venuesResponse);
+	}
+
+	@GetMapping("/api/venues/search/{venueId}")
+	public ResponseEntity<VenueSearchResponse> searchVenueListById(@PathVariable Long venueId) {
+		VenueSearchResponse venueResponse = venueService.findVenueSearchById(venueId);
+		return ResponseEntity.ok(venueResponse);
 	}
 }

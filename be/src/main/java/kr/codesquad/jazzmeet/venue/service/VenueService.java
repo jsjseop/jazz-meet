@@ -1,5 +1,6 @@
 package kr.codesquad.jazzmeet.venue.service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -93,7 +94,8 @@ public class VenueService {
 
 		Polygon range = VenueUtil.createRange(lowLatitude, highLatitude, lowLongitude, highLongitude);
 		PageRequest pageRequest = PageRequest.of(page - PAGE_NUMBER_OFFSET, PAGE_SIZE);
-		Page<VenueSearchData> venuesByLocation = venueQueryRepository.findVenuesByLocation(range, pageRequest);
+		LocalDate curDate = LocalDate.now();
+		Page<VenueSearchData> venuesByLocation = venueQueryRepository.findVenuesByLocation(range, pageRequest, curDate);
 
 		List<VenueSearch> venueSearchList = venuesByLocation.getContent()
 			.stream()
@@ -129,5 +131,16 @@ public class VenueService {
 
 		return VenueMapper.INSTANCE.toVenueSearchResponse(venueSearchList, venueSearchDataList.getTotalElements(),
 			venueSearchDataList.getNumber() + PAGE_NUMBER_OFFSET, venueSearchDataList.getTotalPages());
+	}
+
+	public VenueSearchResponse findVenueSearchById(Long venueId) {
+		LocalDate curDate = LocalDate.now();
+		List<VenueSearchData> venueSearchDataList = venueQueryRepository.findVenueSearchById(venueId, curDate);
+		List<VenueSearch> venueSearchList = venueSearchDataList.stream()
+			.map(VenueMapper.INSTANCE::toVenueSearch)
+			.toList();
+
+		return VenueMapper.INSTANCE.toVenueSearchResponse(venueSearchList, venueSearchList.size(),
+			PAGE_NUMBER_OFFSET, PAGE_NUMBER_OFFSET);
 	}
 }

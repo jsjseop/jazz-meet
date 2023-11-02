@@ -1,11 +1,11 @@
-package kr.codesquad.jazzmeet.venue.util;
+package kr.codesquad.jazzmeet.fixture;
 
 import org.locationtech.jts.geom.Point;
 
 import kr.codesquad.jazzmeet.venue.entity.Venue;
 
-public class VenueTestUtil {
-	public static Venue createVenues(String name, String address, Point point) {
+public class VenueFixture {
+	public static Venue createVenue(String name, String address, Point point) {
 
 		return Venue.builder()
 			.name(name)
