@@ -141,7 +141,7 @@ public class VenueQueryRepository {
 			.leftJoin(show)
 			.on(venue.id.eq(show.venue.id))
 			.on(checkDate(curDate))
-			.where(venue.name.contains(word).or(venue.roadNameAddress.contains(word)))
+			.where(isContainWordInName(word).or(isContainWordInAddress(word)))
 			.limit(pageable.getPageSize())
 			.offset(pageable.getOffset())
 			.transform(
