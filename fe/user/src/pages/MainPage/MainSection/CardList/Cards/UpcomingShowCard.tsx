@@ -13,12 +13,22 @@ export const UpcomingShowCard: React.FC<Props> = ({ upcomingShow }) => {
 
   return (
     <StyledCard onClick={() => navigate(`/venues/${venueId}/shows/${showId}`)}>
-      <CardImage src={posterUrl} alt="poster" />
-      <Title>{showName}</Title>
-      <SubTitle>{startTime}</SubTitle>
-      <SubTitle>{endTime}</SubTitle>
+      <StyledCardImage src={posterUrl} alt="poster" />
+      <StyledTitleContainer>
+        <StyledTitle>{showName}</StyledTitle>
+        <StyledSubTitle>{`${formatTime(startTime)} ~ ${formatTime(
+          endTime,
+        )}`}</StyledSubTitle>
+      </StyledTitleContainer>
     </StyledCard>
   );
+};
+
+const formatTime = (date: string) => {
+  return new Date(date).toLocaleTimeString('en-US', {
+    hour: '2-digit',
+    minute: '2-digit',
+  });
 };
 
 const StyledCard = styled.div`
@@ -27,15 +37,30 @@ const StyledCard = styled.div`
   margin-bottom: 37px;
 `;
 
-const CardImage = styled.img`
+const StyledCardImage = styled.img`
   width: 100%;
   height: 380px;
   object-fit: cover;
   margin-bottom: 24px;
 `;
 
-const Title = styled.div`
-  margin-bottom: 5px;
+const StyledTitleContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 `;
 
-const SubTitle = styled.div``;
+const StyledTitle = styled.div`
+  font-size: 22px;
+  font-weight: bold;
+  line-height: 140%;
+  color: #141313;
+`;
+
+const StyledSubTitle = styled.div`
+  font-size: 22px;
+  font-weight: medium;
+  line-height: 140%;
+  letter-spacing: -1px;
+  color: #686970;
+`;
