@@ -5,7 +5,6 @@ import static kr.codesquad.jazzmeet.show.entity.QShow.*;
 import static kr.codesquad.jazzmeet.venue.entity.QVenue.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 import org.locationtech.jts.geom.Point;
@@ -139,12 +138,12 @@ public class VenueQueryRepository {
 			.where(isLocationWithInRange(range));
 	}
 
-	public Page<VenueSearchData> searchVenueList(String word, Pageable pageable, LocalDateTime todayStartTime,
-		LocalDateTime todayEndTime) {
+	public Page<VenueSearchData> searchVenueList(String word, Pageable pageable, LocalDate curDate) {
 		List<VenueSearchData> venueSearchDataList = query.select(venue).from(venue)
 			.leftJoin(show)
-			.on(venue.id.eq(show.venue.id).and(show.startTime.between(todayStartTime, todayEndTime)))
-			.where(venue.name.contains(word).or(venue.roadNameAddress.contains(word)))
+			.on(venue.id.eq(show.venue.id))
+			.on(isStartTimeEqCurDate(curDate))
+			.where(isContainWordInName(word).or(isContainWordInAddress(word)))
 			.limit(pageable.getPageSize())
 			.offset(pageable.getOffset())
 			.transform(
