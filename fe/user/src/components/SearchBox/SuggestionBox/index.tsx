@@ -17,7 +17,7 @@ export const SuggestionBox: React.FC<Props> = ({
   onClose
 }) => {
   useEffect(() => {
-    const fn = (e: MouseEvent) => {
+    const onSuggestionItemClick = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
 
       if (searchBoxRef.current?.contains(target)) {
@@ -27,10 +27,10 @@ export const SuggestionBox: React.FC<Props> = ({
       onClose();
     };
 
-    document.addEventListener('click', fn);
+    document.addEventListener('click', onSuggestionItemClick);
 
     return () => {
-      document.removeEventListener('click', fn);
+      document.removeEventListener('click', onSuggestionItemClick);
     };
   }, [onClose, searchBoxRef]);
 
