@@ -4,8 +4,20 @@ import BeerBottle from '~/assets/icons/BeerBottle.svg?react';
 import Buildings from '~/assets/icons/Buildings.svg?react';
 import { Tabs } from './Tabs';
 import { Tab } from './Tabs/Tab';
+import { VenueDetailData } from '~/types/api.types';
 
-export const BasicInfo: React.FC = () => {
+type Props = Pick<
+  VenueDetailData,
+  'roadNameAddress' | 'lotNumberAddress' | 'venueHours' | 'phoneNumber'
+> & { naverMapUrl?: string };
+
+export const BasicInfo: React.FC<Props> = ({
+  roadNameAddress,
+  lotNumberAddress,
+  venueHours,
+  phoneNumber,
+  naverMapUrl,
+}) => {
   return (
     <>
       <StyledBasicInfo>
@@ -16,24 +28,30 @@ export const BasicInfo: React.FC = () => {
           <StyledContent>
             <Backpack />
             <StyledBasicInfoAddress>
-              <StyledBasicInfoText>
-                서울 용산구 이태원로 216 2층
-              </StyledBasicInfoText>
-              <StyledBasicInfoText>지번 | 한남동 73-8</StyledBasicInfoText>
+              <StyledBasicInfoText>{roadNameAddress}</StyledBasicInfoText>
+              <StyledBasicInfoText>{`지번 | ${lotNumberAddress}`}</StyledBasicInfoText>
             </StyledBasicInfoAddress>
           </StyledContent>
           <StyledContent>
             <BeerBottle />
-            <StyledBasicInfoText>매일 | 18:00 ~ 24:00</StyledBasicInfoText>
+            <div>
+              {venueHours.map((venueHour) => (
+                <StyledBasicInfoText>{`${venueHour.day} | ${venueHour.businessHours}`}</StyledBasicInfoText>
+              ))}
+            </div>
           </StyledContent>
           <StyledContent>
             <Buildings />
-            <StyledBasicInfoText>02-795-5701</StyledBasicInfoText>
+            <StyledBasicInfoText>{phoneNumber}</StyledBasicInfoText>
           </StyledContent>
         </StyledContentContainer>
       </StyledBasicInfo>
       <StyledButtonWrapper>
-        <StyledButton>네이버 맵으로 가기</StyledButton>
+        {naverMapUrl && (
+          <StyledButton onClick={() => open(naverMapUrl)}>
+            네이버 맵으로 가기
+          </StyledButton>
+        )}
       </StyledButtonWrapper>
     </>
   );
