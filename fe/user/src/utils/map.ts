@@ -1,5 +1,5 @@
 import { BASIC_COORDINATE } from '~/constants/COORDINATE';
-import { MARKER_SVG, MARKER_SVG2 } from '~/constants/MAP';
+import { MARKER_SVG } from '~/constants/MAP';
 import { Pin } from '~/types/api.types';
 import { Coordinate } from '~/types/map.types';
 
@@ -56,8 +56,10 @@ export const addPinsOnMap = (
       anchor: new naver.maps.Point(3, 48),
     },
     pin: {
-      content: MARKER_SVG2,
-      anchor: new naver.maps.Point(4.5, 7),
+      // content: MARKER_SVG2,
+      // anchor: new naver.maps.Point(4.5, 7),
+      content: MARKER_SVG,
+      anchor: new naver.maps.Point(3, 48),
     },
   };
 
