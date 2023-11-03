@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import { Link } from 'react-router-dom';
-import { SearchBar } from '~/components/SearchBar';
+import { SearchBox } from '~/components/SearchBox';
 
 export const Header: React.FC = () => {
   return (
@@ -15,7 +15,7 @@ export const Header: React.FC = () => {
         </StyledButtons>
       </StyledLeftContainer>
 
-      <SearchBar />
+      <SearchBox />
     </StyledHeader>
   );
 };

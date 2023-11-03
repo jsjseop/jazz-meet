@@ -60,6 +60,12 @@ export type ShowTime = {
   endTime: string;
 };
 
+export type SearchSuggestion = {
+  id: number;
+  name: string;
+  address: string;
+} & Coordinate;
+
 export type VenueDetailData = {
   id: number;
   images: {

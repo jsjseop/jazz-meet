@@ -61,6 +61,12 @@ export const getVenuesByKeyword = async (
   return response.json();
 };
 
+export const getSearchSuggestions = async (word: string) => {
+  const response = await fetchData(`/api/search?word=${word}`);
+
+  return response.json();
+}
+
 export const getVenueDetail = async (
   venueId: string,
 ): Promise<VenueDetailData> => {
