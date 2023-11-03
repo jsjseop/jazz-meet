@@ -37,6 +37,14 @@ export type SearchParams = {
   page?: number | null;
 };
 
+export type SearchBoundsParams = {
+  lowLatitude?: number | null;
+  highLatitude?: number | null;
+  lowLongitude?: number | null;
+  highLongitude?: number | null;
+  page?: number | null;
+};
+
 export type SearchedVenues = {
   venues: VenueData[];
   venueCount: number;

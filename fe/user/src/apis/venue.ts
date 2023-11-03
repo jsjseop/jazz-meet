@@ -1,6 +1,7 @@
 import {
   AroundVenue,
   Pin,
+  SearchBoundsParams,
   SearchParams,
   SearchedVenues,
   VenueDetailData,
@@ -57,6 +58,15 @@ export const getVenuesByKeyword = async (
 ): Promise<SearchedVenues> => {
   const queryString = getQueryString(searchParams);
   const response = await fetchData(`/api/venues/search${queryString}`);
+
+  return response.json();
+};
+
+export const getVenuesByMapBounds = async (
+  searchBoundsParams: SearchBoundsParams = {}
+) => {
+  const queryString = getQueryString(searchBoundsParams);
+  const response = await fetchData(`/api/venues/map${queryString}`);
 
   return response.json();
 };

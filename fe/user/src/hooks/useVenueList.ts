@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { getVenuesByKeyword } from '~/apis/venue';
+import { getVenuesByKeyword, getVenuesByMapBounds } from '~/apis/venue';
 import { SearchedVenues } from '~/types/api.types';
 
 export const useVenueList = () => {
@@ -16,12 +16,16 @@ export const useVenueList = () => {
   const updateVenueList = useCallback(
     async (page?: number) => {
       const word = urlSearchParams.get('word');
+      const coordinateBoundary = {
+        lowLatitude: Number(urlSearchParams.get('lowLatitude')!),
+        highLatitude: Number(urlSearchParams.get('highLatitude')!),
+        lowLongitude: Number(urlSearchParams.get('lowLongitude')!),
+        highLongitude: Number(urlSearchParams.get('highLongitude')!),
+      };
 
-      if (!word) {
-        return;
-      }
-
-      const searchedVenues = await getVenuesByKeyword({ page, word });
+      const searchedVenues = word
+        ? await getVenuesByKeyword({ page, word })
+        : await getVenuesByMapBounds({ page, ...coordinateBoundary });
 
       setVenueListData(searchedVenues);
     },
@@ -30,7 +34,7 @@ export const useVenueList = () => {
 
   useEffect(() => {
     updateVenueList();
-  }, []);
+  }, [updateVenueList]);
 
   return {
     venueList: venueListData.venues,
