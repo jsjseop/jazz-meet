@@ -4,6 +4,7 @@ import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { VenueDetailData } from '~/types/api.types';
 import Blog from '~/assets/icons/Blog.svg?react';
+import React from 'react';
 
 type Props = Pick<VenueDetailData, 'name' | 'links'>;
 
@@ -15,7 +16,9 @@ export const Header: React.FC<Props> = ({ name, links }) => {
         {/* <StyledSubTitle>All That Jazz</StyledSubTitle> */}
       </StyledTitleContainer>
       <StyledButtons>
-        {links.map(renderButton)}
+        {links.map((link) => (
+          <React.Fragment key={link.type}>{renderButton(link)}</React.Fragment>
+        ))}
         <IconButton>
           <MoreHorizIcon
             style={{ width: '29px', height: '29px', fill: 'white' }}
@@ -32,7 +35,7 @@ const renderButton = (link: VenueDetailData['links'][0]) => {
       return <></>;
     case 'instagram':
       return (
-        <IconButton key={link.type} onClick={() => open(link.url)}>
+        <IconButton onClick={() => open(link.url)}>
           <InstagramIcon
             sx={{ width: '29px', height: '29px', fill: 'white' }}
           />
@@ -40,13 +43,13 @@ const renderButton = (link: VenueDetailData['links'][0]) => {
       );
     case 'blog':
       return (
-        <IconButton key={link.type} onClick={() => open(link.url)}>
+        <IconButton onClick={() => open(link.url)}>
           <Blog style={{ width: '29px', height: '29px', fill: 'white' }} />
         </IconButton>
       );
     case 'official':
       return (
-        <IconButton key={link.type} onClick={() => open(link.url)}>
+        <IconButton onClick={() => open(link.url)}>
           <HomeOutlinedIcon
             style={{ width: '29px', height: '29px', fill: 'white' }}
           />

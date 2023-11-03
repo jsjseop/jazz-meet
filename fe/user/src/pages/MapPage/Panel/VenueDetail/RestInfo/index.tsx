@@ -3,7 +3,7 @@ import { Tabs } from '../Tabs';
 import { Tab } from '../Tabs/Tab';
 import LocalCafeOutlinedIcon from '@mui/icons-material/LocalCafeOutlined';
 import { VenueDetailData } from '~/types/api.types';
-// import { ShowInfo } from './ShowInfo';
+import { ShowInfo } from './ShowInfo';
 
 type Props = Pick<VenueDetailData, 'description'>;
 
@@ -16,7 +16,9 @@ export const RestInfo: React.FC<Props> = ({ description }) => {
         <Tab>공연장정보</Tab>
       </Tabs>
 
-      <StyledRestInfoContent>{/* <ShowInfo /> */}</StyledRestInfoContent>
+      <StyledRestInfoContent>
+        <ShowInfo />
+      </StyledRestInfoContent>
 
       <Tabs>
         <Tab isSelected>공연장정보</Tab>

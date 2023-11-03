@@ -35,8 +35,10 @@ export const BasicInfo: React.FC<Props> = ({
           <StyledContent>
             <BeerBottle />
             <div>
-              {venueHours.map((venueHour) => (
-                <StyledBasicInfoText>{`${venueHour.day} | ${venueHour.businessHours}`}</StyledBasicInfoText>
+              {venueHours.map((venueHour, index) => (
+                <StyledBasicInfoText
+                  key={index}
+                >{`${venueHour.day} | ${venueHour.businessHours}`}</StyledBasicInfoText>
               ))}
             </div>
           </StyledContent>
