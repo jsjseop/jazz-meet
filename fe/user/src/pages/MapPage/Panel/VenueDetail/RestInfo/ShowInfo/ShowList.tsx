@@ -45,13 +45,26 @@ export const ShowList: React.FC<Props> = ({
                 {String(index + 1).padStart(2, '0')}
               </StyledShowListItemIndex>
               <StyledShowListItemName>{show.teamName}</StyledShowListItemName>
-              <StyledShowListItemTime>{show.startTime}</StyledShowListItemTime>
-              <StyledShowListItemTime>{show.endTime}</StyledShowListItemTime>
+              <StyledShowListItemTime>
+                {formatTime(show.startTime)}
+              </StyledShowListItemTime>
+              <StyledShowListItemTime>
+                {formatTime(show.endTime)}
+              </StyledShowListItemTime>
             </StyledShowListItem>
           ))}
       </StyledShowListContent>
     </StyledShowList>
   );
+};
+
+const formatTime = (time: string) => {
+  const date = new Date(time);
+
+  return `${date.getHours().toString().padStart(2, '0')}:${date
+    .getMinutes()
+    .toString()
+    .padStart(2, '0')}`;
 };
 
 const StyledShowList = styled.div`
