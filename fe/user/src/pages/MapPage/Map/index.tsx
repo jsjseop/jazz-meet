@@ -41,12 +41,12 @@ export const Map: React.FC<Props> = ({ mapRef }) => {
       naver.maps.Event.removeListener(boundsChangeEventListener);
       naver.maps.Event.removeListener(dragendEventListener);
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => { 
+  useEffect(() => {
     updatePins();
-  },[updatePins])
+  }, [updatePins]);
 
   return (
     <StyledMap id="map" ref={mapRef}>
