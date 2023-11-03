@@ -40,20 +40,20 @@ export const SearchBox: React.FC = () => {
   const query = new URLSearchParams(queryString);
   const word = query.get('word');
 
-  const showResultBox = () => {
+  const showSuggestionBox = () => {
     if (searchText.trim().length === 0) {
       return;
     }
     setIsSuggestionBoxOpen(true);
   };
-  const hideResultBox = () => setIsSuggestionBoxOpen(false);
+  const hideSuggestionBox = () => setIsSuggestionBoxOpen(false);
 
   const onSearchTextSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (searchText.trim().length > 0) {
       navigate(`/map?word=${searchText}`);
-      hideResultBox();
+      hideSuggestionBox();
     }
   };
 
@@ -81,7 +81,7 @@ export const SearchBox: React.FC = () => {
           autoComplete="off"
           value={searchText || word || ''}
           onChange={(e) => setSearchText(e.target.value)}
-          onFocus={showResultBox}
+          onFocus={showSuggestionBox}
         />
         <IconButton type="button" sx={{ p: '10px' }} aria-label="search">
           <SearchIcon />
@@ -92,7 +92,7 @@ export const SearchBox: React.FC = () => {
         suggestions={searchSuggestions}
         open={isSuggestionBoxOpen}
         searchBoxRef={searchBoxRef}
-        onClose={hideResultBox}
+        onClose={hideSuggestionBox}
       />
     </StyledSearchBox>
   );
