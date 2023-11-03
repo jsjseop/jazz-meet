@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import kr.codesquad.jazzmeet.show.dto.response.ExistShowCalendarResponse;
 import kr.codesquad.jazzmeet.show.dto.response.ShowByDateResponse;
 import kr.codesquad.jazzmeet.show.dto.response.UpcomingShowResponse;
 import kr.codesquad.jazzmeet.show.service.ShowService;
@@ -39,4 +40,13 @@ public class ShowController {
 		return ResponseEntity.ok(shows);
 	}
 
+	/**
+	 * 공연장 상세, 월간 공연 일정 유무 조회 API
+	 */
+	@GetMapping("/api/venues/{venueId}/shows/calendar")
+	public ResponseEntity<?> getExistShowCalendar(@PathVariable Long venueId, @RequestParam String date) {
+		ExistShowCalendarResponse existShows = showService.getExistShows(venueId, date);
+
+		return ResponseEntity.ok(existShows);
+	}
 }
