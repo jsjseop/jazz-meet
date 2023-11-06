@@ -3,14 +3,15 @@ import { useEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useMarkers } from '~/hooks/useMarkers';
 import { useUserCoordinate } from '~/hooks/useUserCoordinate';
-import { getInitMap } from '~/utils/map';
+import { addPinsOnMap, getInitMap } from '~/utils/map';
 import { MapSearchButton } from './MapSearchButton';
+import { VenueListData } from '~/hooks/useVenueList';
 
 type Props = {
   mapRef: React.RefObject<HTMLDivElement>;
-};
+} & Pick<VenueListData, 'venueList'>;
 
-export const Map: React.FC<Props> = ({ mapRef }) => {
+export const Map: React.FC<Props> = ({ mapRef, venueList }) => {
   const { search: searchQueryString } = useLocation();
   const { userCoordinate } = useUserCoordinate();
   const [isShowMapSearchButton, setIsMapShowSearchButton] = useState(false);
@@ -47,6 +48,21 @@ export const Map: React.FC<Props> = ({ mapRef }) => {
   useEffect(() => {
     updatePins();
   }, [updatePins]);
+
+  useEffect(() => {
+    if (!map.current) return;
+
+    addPinsOnMap(
+      venueList.map((venue) => ({
+        id: venue.id,
+        name: venue.name,
+        latitude: venue.latitude,
+        longitude: venue.longitude,
+      })),
+      map.current,
+      'marker',
+    );
+  }, [venueList]);
 
   return (
     <StyledMap id="map" ref={mapRef}>

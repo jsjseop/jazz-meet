@@ -1,10 +1,11 @@
 import styled from '@emotion/styled';
-import { VenueList, VenueListProps } from './VenueList';
+import { VenueList } from './VenueList';
 import { Outlet } from 'react-router-dom';
+import { VenueListData } from '~/hooks/useVenueList';
 
 type Props = {
   mapRef: React.RefObject<HTMLDivElement>;
-} & VenueListProps;
+} & VenueListData;
 
 export const Panel: React.FC<Props> = ({ mapRef, ...venueListData }) => {
   return (

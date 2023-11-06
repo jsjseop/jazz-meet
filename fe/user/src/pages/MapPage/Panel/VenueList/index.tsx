@@ -2,18 +2,10 @@ import styled from '@emotion/styled';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import { Link } from 'react-router-dom';
 import { VenueItem } from './VenueItem';
-import { VenueData } from '~/types/api.types';
 import { PaginationBox } from '~/components/PaginationBox';
+import { VenueListData } from '~/hooks/useVenueList';
 
-export type VenueListProps = {
-  venueList: VenueData[];
-  venueCount: number;
-  currentPage: number;
-  maxPage: number;
-  updateVenueList: (page: number) => void;
-};
-
-export const VenueList: React.FC<VenueListProps> = ({
+export const VenueList: React.FC<VenueListData> = ({
   venueList,
   venueCount,
   currentPage,

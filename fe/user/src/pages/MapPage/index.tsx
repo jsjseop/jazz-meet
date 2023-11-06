@@ -10,7 +10,7 @@ export const MapPage: React.FC = () => {
 
   return (
     <StyledMapPage>
-      <Map mapRef={mapRef} />
+      <Map mapRef={mapRef} venueList={venueListData.venueList} />
       <Panel mapRef={mapRef} {...venueListData} />
     </StyledMapPage>
   );
