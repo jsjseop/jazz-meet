@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import kr.codesquad.jazzmeet.image.dto.response.ImageIdsResponse;
 import kr.codesquad.jazzmeet.image.entity.Image;
+import kr.codesquad.jazzmeet.image.entity.Status;
 import kr.codesquad.jazzmeet.image.mapper.ImageMapper;
 import kr.codesquad.jazzmeet.image.repository.ImageRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,15 +16,13 @@ import lombok.RequiredArgsConstructor;
 @Service
 public class ImageService {
 
-	private static final String UNREGISTERED = "unregistered";
-
 	private final ImageRepository imageRepository;
 
 	public ImageIdsResponse saveImages(List<String> imageUrls) {
 		List<Image> images = imageUrls.stream()
 			.map(url -> {
 				LocalDateTime now = LocalDateTime.now();
-				return ImageMapper.INSTANCE.toImage(url, UNREGISTERED, now);
+				return ImageMapper.INSTANCE.toImage(url, Status.UNREGISTERED, now);
 			})
 			.toList();
 

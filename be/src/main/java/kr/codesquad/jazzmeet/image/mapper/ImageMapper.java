@@ -6,11 +6,12 @@ import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
 import kr.codesquad.jazzmeet.image.entity.Image;
+import kr.codesquad.jazzmeet.image.entity.Status;
 
 @Mapper
 public interface ImageMapper {
 
 	ImageMapper INSTANCE = Mappers.getMapper(ImageMapper.class);
 
-	Image toImage(String url, String status, LocalDateTime createdAt);
+	Image toImage(String url, Status status, LocalDateTime createdAt);
 }
