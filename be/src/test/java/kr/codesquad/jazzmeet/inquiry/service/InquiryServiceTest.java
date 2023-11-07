@@ -108,5 +108,4 @@ class InquiryServiceTest extends IntegrationTestSupport {
 			.contains(inquiry1.getNickname())
 			.contains(inquiry4.getNickname());
 	}
-
 }
