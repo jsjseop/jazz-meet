@@ -14,7 +14,8 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
-import kr.codesquad.jazzmeet.inquiry.vo.InquirySearch;
+import kr.codesquad.jazzmeet.inquiry.util.InquiryCategory;
+import kr.codesquad.jazzmeet.inquiry.vo.InquirySearchData;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -23,9 +24,9 @@ public class InquiryQueryRepository {
 
 	private final JPAQueryFactory query;
 
-	public Page<InquirySearch> searchInquiries(String word, String category, Pageable pageable) {
-		List<InquirySearch> inquiries = query.select(
-				Projections.fields(InquirySearch.class,
+	public Page<InquirySearchData> searchInquiries(String word, InquiryCategory category, Pageable pageable) {
+		List<InquirySearchData> inquiries = query.select(
+				Projections.fields(InquirySearchData.class,
 					inquiry.id,
 					inquiry.status,
 					inquiry.content,
@@ -56,7 +57,7 @@ public class InquiryQueryRepository {
 		return inquiry.content.contains(word);
 	}
 
-	private BooleanExpression isEqualsCategory(String category) {
+	private BooleanExpression isEqualsCategory(InquiryCategory category) {
 		if (category == null || category.equals("")) {
 			return null;
 		}

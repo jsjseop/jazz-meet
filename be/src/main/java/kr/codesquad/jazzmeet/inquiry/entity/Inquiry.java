@@ -4,9 +4,13 @@ import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import kr.codesquad.jazzmeet.inquiry.util.InquiryCategory;
+import kr.codesquad.jazzmeet.inquiry.util.InquiryStatus;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -23,10 +27,12 @@ public class Inquiry {
 	private String password;
 	@Column(nullable = false, length = 500)
 	private String content;
+	@Enumerated(value = EnumType.STRING)
 	@Column(nullable = false, length = 10)
-	private String category;
+	private InquiryCategory category;
+	@Enumerated(value = EnumType.STRING)
 	@Column(nullable = false, length = 10)
-	private String status;
+	private InquiryStatus status;
 	@Column(nullable = false)
 	private LocalDateTime createdAt;
 }

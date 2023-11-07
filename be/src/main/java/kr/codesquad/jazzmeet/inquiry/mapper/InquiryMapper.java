@@ -6,8 +6,9 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
+import kr.codesquad.jazzmeet.inquiry.dto.response.InquirySearch;
 import kr.codesquad.jazzmeet.inquiry.dto.response.InquirySearchResponse;
-import kr.codesquad.jazzmeet.inquiry.vo.InquirySearch;
+import kr.codesquad.jazzmeet.inquiry.vo.InquirySearchData;
 
 @Mapper
 public interface InquiryMapper {
@@ -25,4 +26,7 @@ public interface InquiryMapper {
 	@Mapping(target = "maxPage", source = "maxPage")
 	InquirySearchResponse toInquirySearchResponse(Integer dummy, List<InquirySearch> inquiries,
 		long totalCount, int currentPage, int maxPage);
+
+	@Mapping(target = "status", source = "status.koName")
+	InquirySearch toInquirySearch(InquirySearchData inquirySearchData);
 }
