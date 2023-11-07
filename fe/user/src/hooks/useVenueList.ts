@@ -1,6 +1,10 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { getVenuesByKeyword, getVenuesByMapBounds } from '~/apis/venue';
+import {
+  getSingleVenue,
+  getVenuesByKeyword,
+  getVenuesByMapBounds,
+} from '~/apis/venue';
 import { SearchedVenues, VenueData } from '~/types/api.types';
 
 export type VenueListData = {
@@ -30,9 +34,12 @@ export const useVenueList = () => {
         lowLongitude: Number(urlSearchParams.get('lowLongitude')!),
         highLongitude: Number(urlSearchParams.get('highLongitude')!),
       };
+      const venueId = urlSearchParams.get('venueId');
 
       const searchedVenues = word
         ? await getVenuesByKeyword({ page, word })
+        : venueId
+        ? await getSingleVenue(Number(venueId))
         : await getVenuesByMapBounds({ page, ...coordinateBoundary });
 
       setVenueListData(searchedVenues);

@@ -36,7 +36,7 @@ export const useMarkers = ({
         searchQueryString.includes('highLongitude')
       ) {
         pins.current = await getVenuePinsByMapBounds(searchQueryString);
-      } else {
+      } else if (!searchQueryString.includes('venueId')) {
         const bounds = map.current.getBounds();
 
         if (!(bounds instanceof naver.maps.LatLngBounds)) {
@@ -82,6 +82,10 @@ export const useMarkers = ({
       markersOnMap.current = addPinsOnMap(venueList, map.current, 'marker');
 
       fitBoundsToCoordinateBoundary(searchQueryString, map.current);
+    } else if (searchQueryString.includes('venueId')) {
+      markersOnMap.current = addPinsOnMap(venueList, map.current, 'marker');
+
+      fitBoundsToPins(venueList, map.current);
     } else {
       pinsOnMap.current = addPinsOnMap(filteredPins, map.current, 'pin');
       markersOnMap.current = addPinsOnMap(venueList, map.current, 'marker');

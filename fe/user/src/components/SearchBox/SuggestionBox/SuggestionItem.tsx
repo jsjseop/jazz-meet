@@ -12,7 +12,7 @@ export const SuggestionItem: React.FC<Props> = ({ suggestion, onClose }) => {
   const navigate = useNavigate();
 
   const navigateToVenueDetail = () => {
-    navigate(`/map/venues/${suggestion.id}`);
+    navigate(`/map?venueId=${suggestion.id}`);
     onClose();
   };
 
