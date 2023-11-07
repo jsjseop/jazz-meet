@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import kr.codesquad.jazzmeet.global.error.CustomException;
-import kr.codesquad.jazzmeet.global.error.statuscode.ErrorCode;
+import kr.codesquad.jazzmeet.global.error.statuscode.ShowErrorCode;
 import kr.codesquad.jazzmeet.show.dto.response.ExistShowCalendarResponse;
 import kr.codesquad.jazzmeet.show.dto.response.ShowByDateResponse;
 import kr.codesquad.jazzmeet.show.dto.response.ShowCalendarResponse;
@@ -58,7 +58,7 @@ public class ShowService {
 			LocalDate formattedDate = LocalDate.parse(date, formatter);
 			return formattedDate;
 		} catch (DateTimeParseException e) {
-			throw new CustomException(ErrorCode.NOT_VALID_DATE_FORMAT);
+			throw new CustomException(ShowErrorCode.NOT_VALID_DATE_FORMAT);
 		}
 	}
 

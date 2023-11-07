@@ -2,12 +2,12 @@ package kr.codesquad.jazzmeet.global.error.statuscode;
 
 import org.springframework.http.HttpStatus;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
-@AllArgsConstructor
-public enum LocationErrorCode implements StatusCode {
+@RequiredArgsConstructor
+public enum ShowErrorCode implements StatusCode {
 
-	INVALID_LOCATION_ERROR(HttpStatus.BAD_REQUEST, "잘못된 위치 정보입니다.");
+	NOT_VALID_DATE_FORMAT(HttpStatus.BAD_REQUEST, "날짜 포맷이 잘못되었습니다. 'yyyyMMdd' 형식으로 입력해주세요");
 
 	private final HttpStatus httpStatus;
 	private final String message;
