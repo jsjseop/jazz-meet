@@ -16,6 +16,9 @@ public class InquiryController {
 
 	private final InquiryService inquiryService;
 
+	/**
+	 *문의 글 목록 조회 API
+	 */
 	@GetMapping("/api/inquiries")
 	public ResponseEntity<InquirySearchResponse> getInquiries(@RequestParam String category,
 		@RequestParam(required = false) String word,
