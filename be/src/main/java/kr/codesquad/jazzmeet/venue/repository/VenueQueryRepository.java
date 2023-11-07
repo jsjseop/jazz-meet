@@ -182,7 +182,7 @@ public class VenueQueryRepository {
 	private JPAQuery<Long> countSearchVenueList(String word) {
 		return query.select(venue.count())
 			.from(venue)
-			.where(venue.name.contains(word).or(venue.roadNameAddress.contains(word)));
+			.where(isContainWordInName(word).or(isContainWordInAddress(word)));
 	}
 
 	public List<VenueSearchData> findVenueSearchById(Long venueId, LocalDate curDate) {
