@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import kr.codesquad.jazzmeet.global.error.CustomException;
-import kr.codesquad.jazzmeet.global.error.statuscode.ErrorCode;
+import kr.codesquad.jazzmeet.global.error.statuscode.VenueErrorCode;
 import kr.codesquad.jazzmeet.venue.dto.VenueSearch;
 import kr.codesquad.jazzmeet.venue.dto.response.NearbyVenueResponse;
 import kr.codesquad.jazzmeet.venue.dto.response.VenueAutocompleteResponse;
@@ -121,7 +121,7 @@ public class VenueService {
 
 	public VenueDetailResponse findVenue(Long venueId) {
 		VenueDetail venueDetail = venueQueryRepository.findVenue(venueId)
-			.orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_VENUE));
+			.orElseThrow(() -> new CustomException(VenueErrorCode.NOT_FOUND_VENUE));
 
 		return VenueMapper.INSTANCE.toVenueDetailResponse(venueDetail);
 
