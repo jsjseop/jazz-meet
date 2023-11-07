@@ -1,5 +1,7 @@
 package kr.codesquad.jazzmeet.inquiry.util;
 
+import java.util.Arrays;
+
 import kr.codesquad.jazzmeet.global.error.CustomException;
 import kr.codesquad.jazzmeet.global.error.statuscode.InquiryErrorCode;
 import lombok.Getter;
@@ -14,12 +16,10 @@ public enum InquiryStatus {
 	private final String koName;
 
 	public static InquiryStatus toInquiryStatus(String koName) {
-		for (InquiryStatus inquiryStatus : values()) {
-			if (inquiryStatus.getKoName().equals(koName)) {
-				return inquiryStatus;
-			}
-		}
-		throw new CustomException(InquiryErrorCode.NO_MATCH_VALUE);
+		return Arrays.stream(values())
+			.filter(status -> status.getKoName().equals(koName))
+			.findFirst()
+			.orElseThrow(() -> new CustomException(InquiryErrorCode.NO_MATCH_VALUE));
 	}
 
 }
