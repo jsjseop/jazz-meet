@@ -15,7 +15,7 @@ import kr.codesquad.jazzmeet.IntegrationTestSupport;
 import kr.codesquad.jazzmeet.fixture.ShowFixture;
 import kr.codesquad.jazzmeet.fixture.VenueFixture;
 import kr.codesquad.jazzmeet.global.error.CustomException;
-import kr.codesquad.jazzmeet.show.dto.response.ShowByDateResponse;
+import kr.codesquad.jazzmeet.show.dto.response.ShowByDateAndVenueResponse;
 import kr.codesquad.jazzmeet.show.dto.response.ShowCalendarResponse;
 import kr.codesquad.jazzmeet.show.dto.response.UpcomingShowResponse;
 import kr.codesquad.jazzmeet.show.entity.Show;
@@ -130,7 +130,7 @@ class ShowServiceTest extends IntegrationTestSupport {
 		showRepository.save(show);
 
 		//when
-		List<ShowByDateResponse> shows = showService.getShows(venueId, date);
+		List<ShowByDateAndVenueResponse> shows = showService.getShows(venueId, date);
 
 		//then
 		assertThat(shows).hasSize(0);
@@ -151,7 +151,7 @@ class ShowServiceTest extends IntegrationTestSupport {
 		showRepository.saveAll(List.of(show1, show2));
 
 		//when
-		List<ShowByDateResponse> shows = showService.getShows(venueId, date);
+		List<ShowByDateAndVenueResponse> shows = showService.getShows(venueId, date);
 
 		//then
 		assertThat(shows).hasSize(2)
@@ -181,7 +181,7 @@ class ShowServiceTest extends IntegrationTestSupport {
 	@DisplayName("date가 주어지면 해당하는 달의 공연이 있는 날짜를 조회한다.")
 	@Test
 	void getShowCalendar() throws Exception {
-	    //given
+		//given
 		String date = "202311";
 
 		Venue venue1 = VenueFixture.createVenue("부기우기", "경기도 고양시");
@@ -195,7 +195,7 @@ class ShowServiceTest extends IntegrationTestSupport {
 			LocalDateTime.of(2023, 11, 3, 20, 00), venue2);
 		showRepository.saveAll(List.of(show1, show2, show3));
 
-	    //when
+		//when
 		ShowCalendarResponse showCalendar = showService.getShowCalendar(date);
 
 		//then
@@ -207,7 +207,7 @@ class ShowServiceTest extends IntegrationTestSupport {
 	@DisplayName("date의 형식이 다르면 예외가 발생한다.")
 	@Test
 	void getShowCalendarException() throws Exception {
-	    //given
+		//given
 		String date = "2023-11";
 
 		Venue venue1 = VenueFixture.createVenue("부기우기", "경기도 고양시");
@@ -221,7 +221,7 @@ class ShowServiceTest extends IntegrationTestSupport {
 			LocalDateTime.of(2023, 11, 3, 20, 00), venue2);
 		showRepository.saveAll(List.of(show1, show2, show3));
 
-	    //when //then
+		//when //then
 		assertThatThrownBy(() -> showService.getShowCalendar(date))
 			.isInstanceOf(CustomException.class);
 	}

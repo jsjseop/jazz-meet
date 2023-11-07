@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import kr.codesquad.jazzmeet.global.error.CustomException;
 import kr.codesquad.jazzmeet.global.error.statuscode.ShowErrorCode;
 import kr.codesquad.jazzmeet.show.dto.response.ExistShowCalendarResponse;
-import kr.codesquad.jazzmeet.show.dto.response.ShowByDateResponse;
+import kr.codesquad.jazzmeet.show.dto.response.ShowByDateAndVenueResponse;
 import kr.codesquad.jazzmeet.show.dto.response.ShowCalendarResponse;
 import kr.codesquad.jazzmeet.show.dto.response.UpcomingShowResponse;
 import kr.codesquad.jazzmeet.show.entity.Show;
@@ -40,7 +40,7 @@ public class ShowService {
 		return shows.stream().map(ShowMapper.INSTANCE::toUpcomingShowResponse).toList();
 	}
 
-	public List<ShowByDateResponse> getShows(Long venueId, String date) {
+	public List<ShowByDateAndVenueResponse> getShows(Long venueId, String date) {
 		if (isDate(date)) {
 			return List.of();
 		}
