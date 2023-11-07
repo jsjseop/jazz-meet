@@ -28,4 +28,14 @@ public class ShowQueryRepository {
 			.fetch();
 	}
 
+	public List<Integer> getShowCalendar(LocalDate date) {
+		return query.select(
+				show.startTime.dayOfMonth()
+			)
+			.from(show)
+			.where(show.startTime.year().eq(date.getYear())
+				.and(show.startTime.month().eq(date.getMonthValue())))
+			.groupBy(show.startTime.dayOfMonth())
+			.fetch();
+	}
 }
