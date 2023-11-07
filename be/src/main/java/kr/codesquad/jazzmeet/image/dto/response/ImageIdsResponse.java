@@ -10,4 +10,8 @@ import lombok.NoArgsConstructor;
 public class ImageIdsResponse {
 
 	private List<Long> ids;
+
+	public ImageIdsResponse(List<Long> ids) {
+		this.ids = ids;
+	}
 }

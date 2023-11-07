@@ -32,6 +32,6 @@ public class ImageService {
 			.map(Image::getId)
 			.toList();
 
-		return ImageMapper.INSTANCE.toImageIdsResponse(ids);
+		return new ImageIdsResponse(ids);
 	}
 }
