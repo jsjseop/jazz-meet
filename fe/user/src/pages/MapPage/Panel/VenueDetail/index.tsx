@@ -25,7 +25,6 @@ export const VenueDetail: React.FC = () => {
   }));
 
   useEffect(() => {
-    setRender(true);
     return () => setPreviousPath(currentLocation.pathname);
   }, []);
 
@@ -41,6 +40,14 @@ export const VenueDetail: React.FC = () => {
 
     updateDate();
   }, [venueId]);
+
+  useEffect(() => {
+    if (!data) {
+      return;
+    }
+
+    setRender(true);
+  }, [data]);
 
   return (
     <>
@@ -67,6 +74,7 @@ export const VenueDetail: React.FC = () => {
 };
 
 const StyledVenueDetail = styled.div<{ isRender: boolean }>`
+  box-sizing: border-box;
   width: 100%;
   height: 100%;
   overflow-y: auto;

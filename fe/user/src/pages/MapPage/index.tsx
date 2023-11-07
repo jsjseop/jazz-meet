@@ -1,8 +1,8 @@
 import styled from '@emotion/styled';
 import { useRef } from 'react';
+import { useVenueList } from '~/hooks/useVenueList';
 import { Map } from './Map';
 import { Panel } from './Panel';
-import { useVenueList } from '~/hooks/useVenueList';
 
 export const MapPage: React.FC = () => {
   const venueListData = useVenueList();
@@ -17,6 +17,7 @@ export const MapPage: React.FC = () => {
 };
 
 const StyledMapPage = styled.div`
+  overflow: hidden;
   height: calc(100vh - 73px);
   display: flex;
 `;
