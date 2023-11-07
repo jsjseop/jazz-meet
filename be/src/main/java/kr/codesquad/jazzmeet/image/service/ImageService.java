@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import kr.codesquad.jazzmeet.global.error.CustomException;
+import kr.codesquad.jazzmeet.global.error.statuscode.ImageErrorCode;
 import kr.codesquad.jazzmeet.image.dto.response.ImageIdsResponse;
 import kr.codesquad.jazzmeet.image.entity.Image;
 import kr.codesquad.jazzmeet.image.entity.Status;
@@ -32,5 +34,12 @@ public class ImageService {
 			.toList();
 
 		return new ImageIdsResponse(ids);
+	}
+
+	public void deleteImage(Long imageId) {
+		Image image = imageRepository.findById(imageId)
+			.orElseThrow(() -> new CustomException(ImageErrorCode.NOT_FOUND_IMAGE));
+
+		imageRepository.delete(image);
 	}
 }

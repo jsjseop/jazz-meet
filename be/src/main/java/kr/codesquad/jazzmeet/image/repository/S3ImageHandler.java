@@ -15,7 +15,7 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 
 import kr.codesquad.jazzmeet.global.error.CustomException;
-import kr.codesquad.jazzmeet.global.error.statuscode.ErrorCode;
+import kr.codesquad.jazzmeet.global.error.statuscode.ImageErrorCode;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -50,7 +50,7 @@ public class S3ImageHandler {
 					.withCannedAcl(CannedAccessControlList.PublicRead));	// PublicRead 권한으로 업로드
 			return amazonS3Client.getUrl(bucket + dir, fileName).toString();
 		} catch (IOException e) {
-			throw new CustomException(ErrorCode.IMAGE_UPLOAD_ERROR);
+			throw new CustomException(ImageErrorCode.IMAGE_UPLOAD_ERROR);
 		}
 	}
 }
