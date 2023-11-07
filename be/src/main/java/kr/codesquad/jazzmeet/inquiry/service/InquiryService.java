@@ -25,17 +25,24 @@ public class InquiryService {
 	public InquirySearchResponse getInquiries(String category, String word, int page) {
 		// request는 한글, DB 저장은 영어로 되어있기 때문에 변환 필요.
 		InquiryCategory inquiryCategory = InquiryCategory.toInquiryCategory(category);
+		// word가 없으면 공백 문자를 넣어 category에 해당하는 모든 문의를 반환한다.
+		word = isNullInsertBlank(word);
 		PageRequest pageRequest = PageRequest.of(page - PAGE_NUMBER_OFFSET, PAGE_SIZE);
-		Page<InquirySearchData> inquirySearchData = inquiryQueryRepository.searchInquiries(
-			word, inquiryCategory,
+
+		Page<InquirySearchData> inquirySearchData = inquiryQueryRepository.searchInquiries(word, inquiryCategory,
 			pageRequest);
 		List<InquirySearch> inquirySearches = inquirySearchData.getContent()
 			.stream()
 			.map(InquiryMapper.INSTANCE::toInquirySearch).toList();
 
-		return InquiryMapper.INSTANCE.toInquirySearchResponse(inquirySearches,
-			inquirySearchData.getTotalElements(), inquirySearchData.getNumber() + PAGE_NUMBER_OFFSET,
-			inquirySearchData.getTotalPages());
+		return InquiryMapper.INSTANCE.toInquirySearchResponse(inquirySearches, inquirySearchData.getTotalElements(),
+			inquirySearchData.getNumber() + PAGE_NUMBER_OFFSET, inquirySearchData.getTotalPages());
+	}
 
+	private String isNullInsertBlank(String word) {
+		if (word == null) {
+			return "";
+		}
+		return word;
 	}
 }
