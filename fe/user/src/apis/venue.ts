@@ -3,6 +3,7 @@ import {
   Pin,
   SearchBoundsParams,
   SearchParams,
+  SearchSuggestion,
   SearchedVenues,
   VenueDetailData,
 } from '~/types/api.types';
@@ -71,7 +72,15 @@ export const getVenuesByMapBounds = async (
   return response.json();
 };
 
-export const getSearchSuggestions = async (word: string) => {
+
+export const getSingleVenue = async (venueId: number): Promise<SearchedVenues> => {
+  const response = await fetchData(`/api/venues/search/${venueId}`);
+
+  return response.json();
+}
+
+
+export const getSearchSuggestions = async (word: string): Promise<SearchSuggestion[]> => {
   const response = await fetchData(`/api/search?word=${word}`);
 
   return response.json();
