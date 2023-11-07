@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -40,7 +41,7 @@ public class S3ImageHandler {
 
 	public String uploadImage(MultipartFile file, String dir) {
 		try (InputStream inputStream = file.getInputStream()) {
-			String fileName = file.getOriginalFilename();
+			String fileName = createFileName(file.getOriginalFilename());
 			ObjectMetadata objectMetadata = new ObjectMetadata();
 			objectMetadata.setContentLength(file.getSize());
 			objectMetadata.setContentType(file.getContentType());
@@ -52,5 +53,36 @@ public class S3ImageHandler {
 		} catch (IOException e) {
 			throw new CustomException(ImageErrorCode.IMAGE_UPLOAD_ERROR);
 		}
+	}
+
+	// 파일명 중복 방지
+	private String createFileName(String fileName) {
+		validateFileName(fileName);
+		return UUID.randomUUID() + fileName;
+	}
+
+	// 파일 확장자 유효성 검사
+	private void validateFileName(String fileName) {
+		if (isExistFileName(fileName)) {
+			throw new CustomException(ImageErrorCode.NOT_FOUND_IMAGE);
+		}
+
+		String extension = getFileExtension(fileName);
+		List<String> allowedExtension = List.of("png", "jpg", "jpeg");
+		if (!allowedExtension.contains(extension)) {
+			throw new CustomException(ImageErrorCode.WRONG_IMAGE_FORMAT);
+		}
+	}
+
+	private boolean isExistFileName(String fileName) {
+		return fileName == null || fileName.equals("");
+	}
+
+	private String getFileExtension(String fileName) {
+		int lastDotIndex = fileName.lastIndexOf('.');
+		if (lastDotIndex == -1) {
+			throw new CustomException(ImageErrorCode.WRONG_IMAGE_FORMAT);
+		}
+		return fileName.substring(lastDotIndex + 1).toLowerCase();
 	}
 }
