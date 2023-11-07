@@ -1,5 +1,5 @@
 import { BASIC_COORDINATE } from '~/constants/COORDINATE';
-import { MARKER_SVG, MARKER_SVG2 } from '~/constants/MAP';
+import { generatorMarkerContent, MARKER_SVG2 } from '~/constants/MAP';
 import { Pin } from '~/types/api.types';
 import { Coordinate } from '~/types/map.types';
 
@@ -45,28 +45,30 @@ export const fitBoundsToCoordinateBoundary = (
   map.fitBounds(bounds);
 };
 
-export const addPinsOnMap = (
-  pins: Pin[],
-  map: naver.maps.Map,
-  icon: 'marker' | 'pin',
-) => {
-  const obj = {
-    marker: {
-      content: MARKER_SVG,
-      anchor: new naver.maps.Point(3, 48),
-    },
-    pin: {
-      content: MARKER_SVG2,
-      anchor: new naver.maps.Point(4.5, 7),
-    },
-  };
-
+export const addMarkersOnMap = (pins: Pin[], map: naver.maps.Map) => {
   return pins.map(
     (pin) =>
       new naver.maps.Marker({
         position: new naver.maps.LatLng(pin.latitude, pin.longitude),
         map: map,
-        icon: obj[icon],
+        icon: {
+          content: generatorMarkerContent(pin.name),
+          anchor: new naver.maps.Point(3, 48),
+        },
+      }),
+  );
+};
+
+export const addPinsOnMap = (pins: Pin[], map: naver.maps.Map) => {
+  return pins.map(
+    (pin) =>
+      new naver.maps.Marker({
+        position: new naver.maps.LatLng(pin.latitude, pin.longitude),
+        map: map,
+        icon: {
+          content: MARKER_SVG2,
+          anchor: new naver.maps.Point(4.5, 7),
+        },
       }),
   );
 };

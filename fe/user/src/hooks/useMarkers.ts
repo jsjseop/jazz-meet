@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef } from 'react';
 import { getVenuePinsByMapBounds, getVenuePinsBySearch } from '~/apis/venue';
 import { Pin, VenueData } from '~/types/api.types';
 import {
+  addMarkersOnMap,
   addPinsOnMap,
   fitBoundsToCoordinateBoundary,
   fitBoundsToPins,
@@ -68,8 +69,8 @@ export const useMarkers = ({
     );
 
     if (searchQueryString.includes('word')) {
-      pinsOnMap.current = addPinsOnMap(filteredPins, map.current, 'pin');
-      markersOnMap.current = addPinsOnMap(venueList, map.current, 'marker');
+      pinsOnMap.current = addPinsOnMap(filteredPins, map.current);
+      markersOnMap.current = addMarkersOnMap(venueList, map.current);
 
       fitBoundsToPins(pins.current, map.current);
     } else if (
@@ -78,13 +79,13 @@ export const useMarkers = ({
       searchQueryString.includes('highLatitude') &&
       searchQueryString.includes('highLongitude')
     ) {
-      pinsOnMap.current = addPinsOnMap(filteredPins, map.current, 'pin');
-      markersOnMap.current = addPinsOnMap(venueList, map.current, 'marker');
+      pinsOnMap.current = addPinsOnMap(filteredPins, map.current);
+      markersOnMap.current = addMarkersOnMap(venueList, map.current);
 
       fitBoundsToCoordinateBoundary(searchQueryString, map.current);
     } else {
-      pinsOnMap.current = addPinsOnMap(filteredPins, map.current, 'pin');
-      markersOnMap.current = addPinsOnMap(venueList, map.current, 'marker');
+      pinsOnMap.current = addPinsOnMap(filteredPins, map.current);
+      markersOnMap.current = addMarkersOnMap(venueList, map.current);
     }
 
     hideMapSearchButton();
