@@ -8,7 +8,7 @@ import lombok.Builder;
 @Builder
 public record VenueSearchResponse(
 	List<VenueSearch> venues,
-	long venueCount,
+	long totalCount,
 	int currentPage,
 	long maxPage) {
 	public static VenueSearchResponse emptyVenues() {

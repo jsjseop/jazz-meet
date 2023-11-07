@@ -38,14 +38,14 @@ public interface VenueMapper {
 	VenuePinsResponse toVenuePinsBySearchResponse(VenuePins venuePinsByWord);
 
 	default VenueSearchResponse toVenueSearchResponse(List<VenueSearch> venueSearchList,
-		long venueCount, int currentPage, long maxPage) {
+		long totalCount, int currentPage, long maxPage) {
 		Integer dummy = null;
-		return toVenueSearchResponse(dummy, venueSearchList, venueCount, currentPage, maxPage);
+		return toVenueSearchResponse(dummy, venueSearchList, totalCount, currentPage, maxPage);
 	}
 
 	@Mapping(target = "venues", source = "venueSearchList")
 	VenueSearchResponse toVenueSearchResponse(Integer dummy, List<VenueSearch> venueSearchList,
-		long venueCount, int currentPage, long maxPage);
+		long totalCount, int currentPage, long maxPage);
 
 	default VenueSearch toVenueSearch(VenueSearchData venueSearchData) {
 		Integer dummy = null;
