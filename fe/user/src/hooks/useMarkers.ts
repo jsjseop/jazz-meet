@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { getVenuePinsByMapBounds, getVenuePinsBySearch } from '~/apis/venue';
 import { Pin, VenueData } from '~/types/api.types';
 import {
@@ -23,6 +24,11 @@ export const useMarkers = ({
 
   const pinsOnMap = useRef<naver.maps.Marker[]>([]);
   const markersOnMap = useRef<naver.maps.Marker[]>([]);
+
+  const navigate = useNavigate();
+  const goToVenueDetail = (venueId: number) => {
+    navigate(`venues/${venueId}`);
+  };
 
   useEffect(() => {
     const getPins = async () => {
@@ -69,8 +75,16 @@ export const useMarkers = ({
     );
 
     if (searchQueryString.includes('word')) {
-      pinsOnMap.current = addPinsOnMap(filteredPins, map.current);
-      markersOnMap.current = addMarkersOnMap(venueList, map.current);
+      pinsOnMap.current = addPinsOnMap(
+        filteredPins,
+        map.current,
+        goToVenueDetail,
+      );
+      markersOnMap.current = addMarkersOnMap(
+        venueList,
+        map.current,
+        goToVenueDetail,
+      );
 
       fitBoundsToPins(pins.current, map.current);
     } else if (
@@ -79,13 +93,29 @@ export const useMarkers = ({
       searchQueryString.includes('highLatitude') &&
       searchQueryString.includes('highLongitude')
     ) {
-      pinsOnMap.current = addPinsOnMap(filteredPins, map.current);
-      markersOnMap.current = addMarkersOnMap(venueList, map.current);
+      pinsOnMap.current = addPinsOnMap(
+        filteredPins,
+        map.current,
+        goToVenueDetail,
+      );
+      markersOnMap.current = addMarkersOnMap(
+        venueList,
+        map.current,
+        goToVenueDetail,
+      );
 
       fitBoundsToCoordinateBoundary(searchQueryString, map.current);
     } else {
-      pinsOnMap.current = addPinsOnMap(filteredPins, map.current);
-      markersOnMap.current = addMarkersOnMap(venueList, map.current);
+      pinsOnMap.current = addPinsOnMap(
+        filteredPins,
+        map.current,
+        goToVenueDetail,
+      );
+      markersOnMap.current = addMarkersOnMap(
+        venueList,
+        map.current,
+        goToVenueDetail,
+      );
     }
 
     hideMapSearchButton();

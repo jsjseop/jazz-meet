@@ -45,32 +45,53 @@ export const fitBoundsToCoordinateBoundary = (
   map.fitBounds(bounds);
 };
 
-export const addMarkersOnMap = (pins: Pin[], map: naver.maps.Map) => {
-  return pins.map(
-    (pin) =>
-      new naver.maps.Marker({
-        position: new naver.maps.LatLng(pin.latitude, pin.longitude),
-        map: map,
-        icon: {
-          content: generatorMarkerContent(pin.name),
-          anchor: new naver.maps.Point(3, 48),
-        },
-      }),
-  );
+export const addMarkersOnMap = (
+  pins: Pin[],
+  map: naver.maps.Map,
+  goToVenueDetail: (venueId: number) => void,
+) => {
+  return pins.map((pin) => {
+    const marker = new naver.maps.Marker({
+      position: new naver.maps.LatLng(pin.latitude, pin.longitude),
+      map: map,
+      icon: {
+        content: generatorMarkerContent(pin.name),
+        anchor: new naver.maps.Point(3, 48),
+      },
+    });
+
+    addMarkerClickEvent(marker, () => goToVenueDetail(pin.id));
+
+    return marker;
+  });
 };
 
-export const addPinsOnMap = (pins: Pin[], map: naver.maps.Map) => {
-  return pins.map(
-    (pin) =>
-      new naver.maps.Marker({
-        position: new naver.maps.LatLng(pin.latitude, pin.longitude),
-        map: map,
-        icon: {
-          content: MARKER_SVG2,
-          anchor: new naver.maps.Point(4.5, 7),
-        },
-      }),
-  );
+export const addPinsOnMap = (
+  pins: Pin[],
+  map: naver.maps.Map,
+  goToVenueDetail: (venueId: number) => void,
+) => {
+  return pins.map((pin) => {
+    const marker = new naver.maps.Marker({
+      position: new naver.maps.LatLng(pin.latitude, pin.longitude),
+      map: map,
+      icon: {
+        content: MARKER_SVG2,
+        anchor: new naver.maps.Point(4.5, 7),
+      },
+    });
+
+    addMarkerClickEvent(marker, () => goToVenueDetail(pin.id));
+
+    return marker;
+  });
+};
+
+const addMarkerClickEvent = (
+  marker: naver.maps.Marker,
+  callBack: () => void,
+) => {
+  naver.maps.Event.addListener(marker, 'click', callBack);
 };
 
 export const getInitMap = (userCoordinate: Coordinate | null) => {
