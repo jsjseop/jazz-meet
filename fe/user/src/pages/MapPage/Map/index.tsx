@@ -3,14 +3,15 @@ import { useEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useMarkers } from '~/hooks/useMarkers';
 import { useUserCoordinate } from '~/hooks/useUserCoordinate';
+import { VenueListData } from '~/hooks/useVenueList';
 import { getInitMap } from '~/utils/map';
 import { MapSearchButton } from './MapSearchButton';
 
 type Props = {
   mapRef: React.RefObject<HTMLDivElement>;
-};
+} & Pick<VenueListData, 'venueList'>;
 
-export const Map: React.FC<Props> = ({ mapRef }) => {
+export const Map: React.FC<Props> = ({ mapRef, venueList }) => {
   const { search: searchQueryString } = useLocation();
   const { userCoordinate } = useUserCoordinate();
   const [isShowMapSearchButton, setIsMapShowSearchButton] = useState(false);
@@ -21,6 +22,7 @@ export const Map: React.FC<Props> = ({ mapRef }) => {
     map,
     searchQueryString,
     hideMapSearchButton,
+    venueList,
   });
 
   useEffect(() => {
