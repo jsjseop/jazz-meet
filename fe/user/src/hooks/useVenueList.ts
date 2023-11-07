@@ -1,7 +1,15 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { getVenuesByKeyword, getVenuesByMapBounds } from '~/apis/venue';
-import { SearchedVenues } from '~/types/api.types';
+import { SearchedVenues, VenueData } from '~/types/api.types';
+
+export type VenueListData = {
+  venueList: VenueData[];
+  venueCount: number;
+  currentPage: number;
+  maxPage: number;
+  updateVenueList: (page: number) => void;
+};
 
 export const useVenueList = () => {
   const { search } = useLocation();

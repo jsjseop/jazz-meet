@@ -1,5 +1,6 @@
-import { useCallback, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { getVenuePinsByMapBounds, getVenuePinsBySearch } from '~/apis/venue';
+import { Pin, VenueData } from '~/types/api.types';
 import {
   addPinsOnMap,
   fitBoundsToCoordinateBoundary,
@@ -10,51 +11,85 @@ export const useMarkers = ({
   map,
   searchQueryString,
   hideMapSearchButton,
+  venueList,
 }: {
   map: React.MutableRefObject<naver.maps.Map | undefined>;
   searchQueryString: string;
   hideMapSearchButton: () => void;
+  venueList: VenueData[];
 }) => {
-  const markers = useRef<naver.maps.Marker[]>();
+  const pins = useRef<Pin[]>([]);
+
+  const pinsOnMap = useRef<naver.maps.Marker[]>([]);
+  const markersOnMap = useRef<naver.maps.Marker[]>([]);
+
+  useEffect(() => {
+    const getPins = async () => {
+      if (!map.current) return;
+
+      if (searchQueryString.includes('word')) {
+        pins.current = await getVenuePinsBySearch(searchQueryString);
+      } else if (
+        searchQueryString.includes('lowLatitude') &&
+        searchQueryString.includes('lowLongitude') &&
+        searchQueryString.includes('highLatitude') &&
+        searchQueryString.includes('highLongitude')
+      ) {
+        pins.current = await getVenuePinsByMapBounds(searchQueryString);
+      } else {
+        const bounds = map.current.getBounds();
+
+        if (!(bounds instanceof naver.maps.LatLngBounds)) {
+          return;
+        }
+
+        const boundsQueryString = `?lowLatitude=${bounds.south()}&highLatitude=${bounds.north()}&lowLongitude=${bounds.west()}&highLongitude=${bounds.east()}`;
+
+        pins.current = await getVenuePinsByMapBounds(boundsQueryString);
+      }
+    };
+
+    getPins();
+  }, [map, searchQueryString]);
 
   const updatePins = useCallback(async () => {
     if (!map.current) return;
 
-    if (markers.current) {
-      markers.current.forEach((marker) => marker.setMap(null));
+    if (pinsOnMap.current) {
+      pinsOnMap.current.forEach((marker) => marker.setMap(null));
     }
 
-    if (searchQueryString.includes('word')) {
-      const pins = await getVenuePinsBySearch(searchQueryString);
-      markers.current = addPinsOnMap(pins, map.current, 'pin');
+    if (markersOnMap.current) {
+      markersOnMap.current.forEach((marker) => marker.setMap(null));
+    }
 
-      fitBoundsToPins(pins, map.current);
+    const filteredPins = pins.current.filter((pin) =>
+      venueList.every((venue) => venue.id !== pin.id),
+    );
+
+    if (searchQueryString.includes('word')) {
+      pinsOnMap.current = addPinsOnMap(filteredPins, map.current, 'pin');
+      markersOnMap.current = addPinsOnMap(venueList, map.current, 'marker');
+
+      fitBoundsToPins(pins.current, map.current);
     } else if (
       searchQueryString.includes('lowLatitude') &&
       searchQueryString.includes('lowLongitude') &&
       searchQueryString.includes('highLatitude') &&
       searchQueryString.includes('highLongitude')
     ) {
-      const pins = await getVenuePinsByMapBounds(searchQueryString);
-      markers.current = addPinsOnMap(pins, map.current, 'pin');
+      pinsOnMap.current = addPinsOnMap(filteredPins, map.current, 'pin');
+      markersOnMap.current = addPinsOnMap(venueList, map.current, 'marker');
 
       fitBoundsToCoordinateBoundary(searchQueryString, map.current);
     } else {
-      const bounds = map.current.getBounds();
-
-      if (!(bounds instanceof naver.maps.LatLngBounds)) {
-        return;
-      }
-
-      const boundsQueryString = `?lowLatitude=${bounds.south()}&highLatitude=${bounds.north()}&lowLongitude=${bounds.west()}&highLongitude=${bounds.east()}`;
-
-      const pins = await getVenuePinsByMapBounds(boundsQueryString);
-      markers.current = addPinsOnMap(pins, map.current, 'pin');
+      pinsOnMap.current = addPinsOnMap(filteredPins, map.current, 'pin');
+      markersOnMap.current = addPinsOnMap(venueList, map.current, 'marker');
     }
 
     hideMapSearchButton();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [map, markers, searchQueryString]);
+  }, [map, searchQueryString, venueList, pinsOnMap, markersOnMap]);
 
-  return { markers, updatePins };
+  return { pinsOnMap, updatePins };
 };
