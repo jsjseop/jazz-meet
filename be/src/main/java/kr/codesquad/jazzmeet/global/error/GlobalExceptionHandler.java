@@ -4,6 +4,7 @@ import org.springframework.core.NestedExceptionUtils;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -44,10 +45,10 @@ public class GlobalExceptionHandler {
 				ex.getMessage() + ", " + NestedExceptionUtils.getMostSpecificCause(ex)));
 	}
 
-	// @Valid 예외 처리.
-	// org.springframework.web.bind
-	@ExceptionHandler(MethodArgumentNotValidException.class)
-	protected ResponseEntity<ErrorResponse> handleException(MethodArgumentNotValidException ex) {
+	// validation, 잘못된 request 예외 처리.
+	@ExceptionHandler({MethodArgumentNotValidException.class, ValidationException.class,
+		MissingServletRequestParameterException.class})
+	protected ResponseEntity<ErrorResponse> handleValidateException(Exception ex) {
 		ErrorCode errorCode = ErrorCode.VALIDATION_FAILED;
 		log.warn("MethodArgumentNotValidException handling: {}", ex.getMessage());
 		return ResponseEntity.status(errorCode.getHttpStatus())
@@ -55,13 +56,4 @@ public class GlobalExceptionHandler {
 				ex.getMessage() + ", " + NestedExceptionUtils.getMostSpecificCause(ex)));
 	}
 
-	// jakarta.validation
-	@ExceptionHandler(ValidationException.class)
-	protected ResponseEntity<ErrorResponse> handleException(ValidationException ex) {
-		ErrorCode errorCode = ErrorCode.VALIDATION_FAILED;
-		log.warn("MethodArgumentNotValidException handling: {}", ex.getMessage());
-		return ResponseEntity.status(errorCode.getHttpStatus())
-			.body(new ErrorResponse(errorCode.getMessage(),
-				ex.getMessage() + ", " + NestedExceptionUtils.getMostSpecificCause(ex)));
-	}
 }
