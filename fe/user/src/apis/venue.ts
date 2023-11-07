@@ -64,7 +64,7 @@ export const getVenuesByKeyword = async (
 
 export const getVenuesByMapBounds = async (
   searchBoundsParams: SearchBoundsParams = {}
-) => {
+): Promise<SearchedVenues> => {
   const queryString = getQueryString(searchBoundsParams);
   const response = await fetchData(`/api/venues/map${queryString}`);
 

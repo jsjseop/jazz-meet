@@ -1,13 +1,13 @@
 import styled from '@emotion/styled';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import { Link } from 'react-router-dom';
-import { VenueItem } from './VenueItem';
 import { PaginationBox } from '~/components/PaginationBox';
 import { VenueListData } from '~/hooks/useVenueList';
+import { VenueItem } from './VenueItem';
 
 export const VenueList: React.FC<VenueListData> = ({
   venueList,
-  venueCount,
+  totalCount,
   currentPage,
   maxPage,
   updateVenueList,
@@ -20,7 +20,7 @@ export const VenueList: React.FC<VenueListData> = ({
     <StyledVenueList>
       <StyledTotalCount>
         <h2>전체</h2>
-        <span>{venueCount}</span>
+        <span>{totalCount}</span>
       </StyledTotalCount>
 
       {venueList.length > 0 ? (

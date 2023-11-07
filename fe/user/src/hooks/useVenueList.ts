@@ -5,7 +5,7 @@ import { SearchedVenues, VenueData } from '~/types/api.types';
 
 export type VenueListData = {
   venueList: VenueData[];
-  venueCount: number;
+  totalCount: number;
   currentPage: number;
   maxPage: number;
   updateVenueList: (page: number) => void;
@@ -16,7 +16,7 @@ export const useVenueList = () => {
   const urlSearchParams = useMemo(() => new URLSearchParams(search), [search]);
   const [venueListData, setVenueListData] = useState<SearchedVenues>({
     venues: [],
-    venueCount: 0,
+    totalCount: 0,
     currentPage: 1,
     maxPage: 1,
   });
@@ -46,7 +46,7 @@ export const useVenueList = () => {
 
   return {
     venueList: venueListData.venues,
-    venueCount: venueListData.venueCount,
+    totalCount: venueListData.totalCount,
     currentPage: venueListData.currentPage,
     maxPage: venueListData.maxPage,
     updateVenueList,

@@ -47,7 +47,7 @@ export type SearchBoundsParams = {
 
 export type SearchedVenues = {
   venues: VenueData[];
-  venueCount: number;
+  totalCount: number;
   currentPage: number;
   maxPage: number;
 };
