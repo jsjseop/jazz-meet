@@ -27,6 +27,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import kr.codesquad.jazzmeet.venue.dto.ShowInfo;
 import kr.codesquad.jazzmeet.venue.entity.Venue;
+import kr.codesquad.jazzmeet.venue.mapper.VenueMapper;
 import kr.codesquad.jazzmeet.venue.vo.NearbyVenue;
 import kr.codesquad.jazzmeet.venue.vo.VenueDetail;
 import kr.codesquad.jazzmeet.venue.vo.VenueDetailImage;
@@ -182,7 +183,7 @@ public class VenueQueryRepository {
 	private JPAQuery<Long> countSearchVenueList(String word) {
 		return query.select(venue.count())
 			.from(venue)
-			.where(venue.name.contains(word).or(venue.roadNameAddress.contains(word)));
+			.where(isContainWordInName(word).or(isContainWordInAddress(word)));
 	}
 
 	public List<VenueSearchData> findVenueSearchById(Long venueId, LocalDate curDate) {
@@ -224,19 +225,8 @@ public class VenueQueryRepository {
 		if (result == null) {
 			return Optional.empty();
 		}
-
-		return Optional.of(VenueDetail.builder()
-			.id(result.getId())
-			.name(result.getName())
-			.roadNameAddress(result.getRoadNameAddress())
-			.lotNumberAddress(result.getLotNumberAddress())
-			.phoneNumber(result.getPhoneNumber())
-			.description(result.getDescription())
-			.location(result.getLocation())
-			.images(images)
-			.links(links)
-			.venueHours(venueHours)
-			.build());
+		
+		return Optional.of(VenueMapper.INSTANCE.toVenueDetail(result, images, links, venueHours));
 	}
 
 	private List<VenueDetailImage> getImages(Long venueId) {
