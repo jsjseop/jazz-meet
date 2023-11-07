@@ -16,6 +16,7 @@ import kr.codesquad.jazzmeet.fixture.ShowFixture;
 import kr.codesquad.jazzmeet.fixture.VenueFixture;
 import kr.codesquad.jazzmeet.global.error.CustomException;
 import kr.codesquad.jazzmeet.show.dto.response.ShowByDateResponse;
+import kr.codesquad.jazzmeet.show.dto.response.ShowCalendarResponse;
 import kr.codesquad.jazzmeet.show.dto.response.UpcomingShowResponse;
 import kr.codesquad.jazzmeet.show.entity.Show;
 import kr.codesquad.jazzmeet.show.repository.ShowRepository;
@@ -139,7 +140,7 @@ class ShowServiceTest extends IntegrationTestSupport {
 	@Test
 	void findShows() throws Exception {
 		//given
-		String date = "2023-11-03";
+		String date = "20231103";
 		Long venueId = 1L;
 
 		Venue venue = VenueFixture.createVenue("부기우기", "경기도 고양시");
@@ -174,6 +175,54 @@ class ShowServiceTest extends IntegrationTestSupport {
 
 		//when//then
 		assertThatThrownBy(() -> showService.getShows(venueId, date))
+			.isInstanceOf(CustomException.class);
+	}
+
+	@DisplayName("date가 주어지면 해당하는 달의 공연이 있는 날짜를 조회한다.")
+	@Test
+	void getShowCalendar() throws Exception {
+	    //given
+		String date = "202311";
+
+		Venue venue1 = VenueFixture.createVenue("부기우기", "경기도 고양시");
+		Venue venue2 = VenueFixture.createVenue("클럽에반스", "경기도 고양시");
+
+		Show show1 = ShowFixture.createShow("트리오", LocalDateTime.of(2023, 11, 1, 18, 00),
+			LocalDateTime.of(2023, 11, 1, 20, 00), venue1);
+		Show show2 = ShowFixture.createShow("트리오", LocalDateTime.of(2023, 11, 2, 18, 00),
+			LocalDateTime.of(2023, 11, 2, 20, 00), venue1);
+		Show show3 = ShowFixture.createShow("트리오", LocalDateTime.of(2023, 11, 3, 18, 00),
+			LocalDateTime.of(2023, 11, 3, 20, 00), venue2);
+		showRepository.saveAll(List.of(show1, show2, show3));
+
+	    //when
+		ShowCalendarResponse showCalendar = showService.getShowCalendar(date);
+
+		//then
+		assertThat(showCalendar)
+			.extracting("hasShow")
+			.isEqualTo(List.of(1, 2, 3));
+	}
+
+	@DisplayName("date의 형식이 다르면 예외가 발생한다.")
+	@Test
+	void getShowCalendarException() throws Exception {
+	    //given
+		String date = "2023-11";
+
+		Venue venue1 = VenueFixture.createVenue("부기우기", "경기도 고양시");
+		Venue venue2 = VenueFixture.createVenue("클럽에반스", "경기도 고양시");
+
+		Show show1 = ShowFixture.createShow("트리오", LocalDateTime.of(2023, 11, 1, 18, 00),
+			LocalDateTime.of(2023, 11, 1, 20, 00), venue1);
+		Show show2 = ShowFixture.createShow("트리오", LocalDateTime.of(2023, 11, 2, 18, 00),
+			LocalDateTime.of(2023, 11, 2, 20, 00), venue1);
+		Show show3 = ShowFixture.createShow("트리오", LocalDateTime.of(2023, 11, 3, 18, 00),
+			LocalDateTime.of(2023, 11, 3, 20, 00), venue2);
+		showRepository.saveAll(List.of(show1, show2, show3));
+
+	    //when //then
+		assertThatThrownBy(() -> showService.getShowCalendar(date))
 			.isInstanceOf(CustomException.class);
 	}
 }

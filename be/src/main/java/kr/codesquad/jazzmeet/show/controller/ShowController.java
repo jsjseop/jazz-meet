@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import kr.codesquad.jazzmeet.show.dto.response.ExistShowCalendarResponse;
 import kr.codesquad.jazzmeet.show.dto.response.ShowByDateResponse;
+import kr.codesquad.jazzmeet.show.dto.response.ShowCalendarResponse;
 import kr.codesquad.jazzmeet.show.dto.response.UpcomingShowResponse;
 import kr.codesquad.jazzmeet.show.service.ShowService;
 import lombok.RequiredArgsConstructor;
@@ -49,4 +50,15 @@ public class ShowController {
 
 		return ResponseEntity.ok(existShows);
 	}
+
+	/**
+	 * 월간 공연 일정 유무 조회 API
+	 */
+	@GetMapping("/api/shows/calendar")
+	public ResponseEntity<ShowCalendarResponse> getShowCalendar(@RequestParam String date) {
+		ShowCalendarResponse showCalendar = showService.getShowCalendar(date);
+
+		return ResponseEntity.ok(showCalendar);
+	}
+
 }

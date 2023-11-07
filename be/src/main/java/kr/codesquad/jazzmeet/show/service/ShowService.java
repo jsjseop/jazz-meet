@@ -13,6 +13,7 @@ import kr.codesquad.jazzmeet.global.error.CustomException;
 import kr.codesquad.jazzmeet.global.error.statuscode.ErrorCode;
 import kr.codesquad.jazzmeet.show.dto.response.ExistShowCalendarResponse;
 import kr.codesquad.jazzmeet.show.dto.response.ShowByDateResponse;
+import kr.codesquad.jazzmeet.show.dto.response.ShowCalendarResponse;
 import kr.codesquad.jazzmeet.show.dto.response.UpcomingShowResponse;
 import kr.codesquad.jazzmeet.show.entity.Show;
 import kr.codesquad.jazzmeet.show.mapper.ShowMapper;
@@ -70,5 +71,12 @@ public class ShowService {
 		List<Integer> existShowsByMonth = showQueryRepository.getExistShowsByMonth(venueId, localDate);
 
 		return new ExistShowCalendarResponse(existShowsByMonth);
+	}
+
+	public ShowCalendarResponse getShowCalendar(String date) {
+		LocalDate localDate = getLocalDate(date + FIRST_DAY_OF_MONTH);
+		List<Integer> showCalendar = showQueryRepository.getShowCalendar(localDate);
+
+		return new ShowCalendarResponse(showCalendar);
 	}
 }
