@@ -405,7 +405,7 @@ class VenueServiceTest extends IntegrationTestSupport {
 		VenueSearchResponse venueSearchResponse = venueService.searchVenueList(word, page);
 
 		// then
-		assertThat(venueSearchResponse.venueCount()).isEqualTo(2);
+		assertThat(venueSearchResponse.totalCount()).isEqualTo(2);
 		assertThat(venueSearchResponse.currentPage()).isEqualTo(page);
 		assertThat(venueSearchResponse.venues()).extracting(VenueSearch::address)
 			.doesNotContain(venue3.getRoadNameAddress())
@@ -430,7 +430,7 @@ class VenueServiceTest extends IntegrationTestSupport {
 		VenueSearchResponse venueSearchResponse = venueService.searchVenueList(word, page);
 
 		// then
-		assertThat(venueSearchResponse.venueCount()).isEqualTo(2);
+		assertThat(venueSearchResponse.totalCount()).isEqualTo(2);
 		assertThat(venueSearchResponse.currentPage()).isEqualTo(page);
 		assertThat(venueSearchResponse.venues()).extracting(VenueSearch::name)
 			.doesNotContain(venue3.getName())

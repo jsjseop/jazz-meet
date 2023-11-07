@@ -15,8 +15,8 @@ import kr.codesquad.jazzmeet.IntegrationTestSupport;
 import kr.codesquad.jazzmeet.fixture.ShowFixture;
 import kr.codesquad.jazzmeet.fixture.VenueFixture;
 import kr.codesquad.jazzmeet.global.error.CustomException;
+import kr.codesquad.jazzmeet.show.dto.response.ExistShowCalendarResponse;
 import kr.codesquad.jazzmeet.show.dto.response.ShowByDateAndVenueResponse;
-import kr.codesquad.jazzmeet.show.dto.response.ShowCalendarResponse;
 import kr.codesquad.jazzmeet.show.dto.response.UpcomingShowResponse;
 import kr.codesquad.jazzmeet.show.entity.Show;
 import kr.codesquad.jazzmeet.show.repository.ShowRepository;
@@ -196,7 +196,7 @@ class ShowServiceTest extends IntegrationTestSupport {
 		showRepository.saveAll(List.of(show1, show2, show3));
 
 		//when
-		ShowCalendarResponse showCalendar = showService.getShowCalendar(date);
+		ExistShowCalendarResponse showCalendar = showService.getShowCalendar(date);
 
 		//then
 		assertThat(showCalendar)
