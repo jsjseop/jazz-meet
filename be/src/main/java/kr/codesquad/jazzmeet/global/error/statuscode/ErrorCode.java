@@ -17,7 +17,13 @@ public enum ErrorCode implements StatusCode {
 	NOT_FOUND_VENUE(HttpStatus.NOT_FOUND, "해당하는 공연장이 없습니다."),
 
 	// -- [Show] -- //
-	NOT_VALID_DATE_FORMAT(HttpStatus.BAD_REQUEST, "날짜 포맷이 잘못되었습니다. 'yyyyMMdd' 형식으로 입력해주세요");
+	NOT_VALID_DATE_FORMAT(HttpStatus.BAD_REQUEST, "날짜 포맷이 잘못되었습니다. 'yyyyMMdd' 형식으로 입력해주세요"),
+
+	// -- [Location] -- //
+	INVALID_LOCATION_ERROR(HttpStatus.BAD_REQUEST, "잘못된 위치 정보입니다."),
+
+	// -- [Image] -- //
+	IMAGE_UPLOAD_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "이미지 업로드에 실패했습니다.");
 
 	private final HttpStatus httpStatus;
 	private final String message;
