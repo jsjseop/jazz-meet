@@ -1,7 +1,7 @@
 package kr.codesquad.jazzmeet.inquiry.util;
 
 import kr.codesquad.jazzmeet.global.error.CustomException;
-import kr.codesquad.jazzmeet.global.error.statuscode.EnumErrorCode;
+import kr.codesquad.jazzmeet.global.error.statuscode.InquiryErrorCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -19,7 +19,7 @@ public enum InquiryStatus {
 				return inquiryStatus;
 			}
 		}
-		throw new CustomException(EnumErrorCode.NO_MATCH_VALUE);
+		throw new CustomException(InquiryErrorCode.NO_MATCH_VALUE);
 	}
 
 }
