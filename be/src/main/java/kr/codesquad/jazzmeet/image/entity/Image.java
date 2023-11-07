@@ -41,4 +41,8 @@ public class Image {
 	public String getUrl() {
 		return url;
 	}
+
+	public void updateStatus(Status status) {
+		this.status = status;
+	}
 }

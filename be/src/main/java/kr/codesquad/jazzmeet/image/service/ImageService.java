@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import kr.codesquad.jazzmeet.global.error.CustomException;
 import kr.codesquad.jazzmeet.global.error.statuscode.ImageErrorCode;
@@ -14,12 +15,14 @@ import kr.codesquad.jazzmeet.image.mapper.ImageMapper;
 import kr.codesquad.jazzmeet.image.repository.ImageRepository;
 import lombok.RequiredArgsConstructor;
 
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 @Service
 public class ImageService {
 
 	private final ImageRepository imageRepository;
 
+	@Transactional
 	public ImageIdsResponse saveImages(List<String> imageUrls) {
 		List<Image> images = imageUrls.stream()
 			.map(url -> {
@@ -36,10 +39,11 @@ public class ImageService {
 		return new ImageIdsResponse(ids);
 	}
 
+	@Transactional
 	public void deleteImage(Long imageId) {
 		Image image = imageRepository.findById(imageId)
 			.orElseThrow(() -> new CustomException(ImageErrorCode.NOT_FOUND_IMAGE));
 
-		imageRepository.delete(image);
+		image.updateStatus(Status.DELETED);
 	}
 }
