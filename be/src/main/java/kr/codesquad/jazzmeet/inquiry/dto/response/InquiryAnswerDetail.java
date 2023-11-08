@@ -1,4 +1,4 @@
-package kr.codesquad.jazzmeet.inquiry.vo;
+package kr.codesquad.jazzmeet.inquiry.dto.response;
 
 import java.time.LocalDateTime;
 

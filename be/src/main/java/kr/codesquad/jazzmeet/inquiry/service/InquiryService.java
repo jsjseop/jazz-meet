@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import kr.codesquad.jazzmeet.global.error.CustomException;
 import kr.codesquad.jazzmeet.global.error.statuscode.InquiryErrorCode;
+import kr.codesquad.jazzmeet.inquiry.dto.response.InquiryAnswerDetail;
 import kr.codesquad.jazzmeet.inquiry.dto.response.InquiryDetailResponse;
 import kr.codesquad.jazzmeet.inquiry.dto.response.InquirySearch;
 import kr.codesquad.jazzmeet.inquiry.dto.response.InquirySearchResponse;
@@ -15,7 +16,6 @@ import kr.codesquad.jazzmeet.inquiry.mapper.InquiryMapper;
 import kr.codesquad.jazzmeet.inquiry.repository.InquiryQueryRepository;
 import kr.codesquad.jazzmeet.inquiry.repository.InquiryRepository;
 import kr.codesquad.jazzmeet.inquiry.util.InquiryCategory;
-import kr.codesquad.jazzmeet.inquiry.vo.InquiryAnswerDetail;
 import kr.codesquad.jazzmeet.inquiry.vo.InquiryDetail;
 import kr.codesquad.jazzmeet.inquiry.vo.InquirySearchData;
 import lombok.RequiredArgsConstructor;
