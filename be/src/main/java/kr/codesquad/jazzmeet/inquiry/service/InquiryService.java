@@ -56,7 +56,7 @@ public class InquiryService {
 
 	public InquiryDetailResponse getInquiryDetail(Long inquiryId) {
 		InquiryDetail inquiry = inquiryQueryRepository.findInquiryAndAnswerByInquiryId(inquiryId)
-			.orElseThrow(() -> new CustomException(InquiryErrorCode.INQUIRY_NOT_FOUND));
+			.orElseThrow(() -> new CustomException(InquiryErrorCode.NOT_FOUND_INQUIRY));
 		InquiryAnswerDetail inquiryAnswer = InquiryMapper.INSTANCE.toInquiryAnswerDetail(inquiry);
 
 		return InquiryMapper.INSTANCE.toInquiryDetailResponse(inquiry.getInquiryId(), inquiry.getInquiryContent(),
