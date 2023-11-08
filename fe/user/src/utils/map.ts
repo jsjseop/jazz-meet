@@ -1,5 +1,5 @@
 import { BASIC_COORDINATE } from '~/constants/COORDINATE';
-import { generatorMarkerContent, MARKER_SVG2 } from '~/constants/MAP';
+import { TIED_EIGHTH_NOTES_SVG, PIN_SVG } from '~/constants/MAP';
 import { Pin } from '~/types/api.types';
 import { Coordinate } from '~/types/map.types';
 
@@ -45,6 +45,9 @@ export const fitBoundsToCoordinateBoundary = (
   map.fitBounds(bounds);
 };
 
+const generatorMarkerContent = (text: string) =>
+  `<div class="marker-container"><div class="marker-icon-container">${TIED_EIGHTH_NOTES_SVG}</div><div class="marker-text">${text}</div></div>`;
+
 export const addMarkersOnMap = (
   pins: Pin[],
   map: naver.maps.Map,
@@ -76,7 +79,7 @@ export const addPinsOnMap = (
       position: new naver.maps.LatLng(pin.latitude, pin.longitude),
       map: map,
       icon: {
-        content: MARKER_SVG2,
+        content: PIN_SVG,
         anchor: new naver.maps.Point(4.5, 7),
       },
     });
