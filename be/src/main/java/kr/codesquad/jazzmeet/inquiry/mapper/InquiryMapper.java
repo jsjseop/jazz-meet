@@ -35,7 +35,9 @@ public interface InquiryMapper {
 
 	InquiryAnswerDetail toInquiryAnswerDetail(InquiryDetail inquiry);
 
+	@Mapping(target = "id", source = "inquiryId")
+	@Mapping(target = "content", source = "inquiryContent")
 	@Mapping(target = "answer", source = "answer")
-	InquiryDetailResponse toInquiryDetailResponse(Long id, String content,
+	InquiryDetailResponse toInquiryDetailResponse(Long inquiryId, String inquiryContent,
 		InquiryAnswerDetail answer);
 }
