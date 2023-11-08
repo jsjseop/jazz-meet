@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import kr.codesquad.jazzmeet.IntegrationTestSupport;
 import kr.codesquad.jazzmeet.fixture.InquiryFixture;
 import kr.codesquad.jazzmeet.global.error.CustomException;
+import kr.codesquad.jazzmeet.global.error.statuscode.InquiryErrorCode;
 import kr.codesquad.jazzmeet.inquiry.dto.response.InquiryDetailResponse;
 import kr.codesquad.jazzmeet.inquiry.dto.response.InquirySearch;
 import kr.codesquad.jazzmeet.inquiry.dto.response.InquirySearchResponse;
@@ -145,6 +146,6 @@ class InquiryServiceTest extends IntegrationTestSupport {
 		//when //then
 		Long wrongInquiryId = 0L;
 		assertThatThrownBy(() -> inquiryService.getInquiryDetail(wrongInquiryId))
-			.isInstanceOf(CustomException.class);
+			.isInstanceOf(CustomException.class).hasMessage(InquiryErrorCode.NOT_FOUND_INQUIRY.getMessage());
 	}
 }
