@@ -134,7 +134,7 @@ class InquiryServiceTest extends IntegrationTestSupport {
 	}
 
 	@Test
-	@DisplayName("없는 문의의 상세 정보는 조회되지 않는다.")
+	@DisplayName("존재하지 않는 문의의 상세 정보는 조회되지 않는다.")
 	void getInquiryDetailError() {
 		// given
 		Inquiry inquiry = InquiryFixture.createInquiry();
