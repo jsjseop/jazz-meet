@@ -40,7 +40,7 @@ class ImageServiceTest extends IntegrationTestSupport {
 		ImageIdsResponse imageIdsResponse = imageService.saveImages(imageUrls);
 
 		// then
-		assertThat(imageIdsResponse.getIds()).hasSize(imageUrls.size())
+		assertThat(imageIdsResponse.ids()).hasSize(imageUrls.size())
 			.containsExactly(1L, 2L, 3L);
 	}
 

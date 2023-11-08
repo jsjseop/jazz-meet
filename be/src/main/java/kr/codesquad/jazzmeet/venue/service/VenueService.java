@@ -155,4 +155,8 @@ public class VenueService {
 		return VenueMapper.INSTANCE.toVenueSearchResponse(venueSearchList, venueSearchList.size(),
 			PAGE_NUMBER_OFFSET, PAGE_NUMBER_OFFSET);
 	}
+
+	public Venue save(Venue venue) {
+		return venueRepository.save(venue);
+	}
 }

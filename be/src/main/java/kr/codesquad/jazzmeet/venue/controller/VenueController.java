@@ -2,19 +2,25 @@ package kr.codesquad.jazzmeet.venue.controller;
 
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.constraints.Min;
+import kr.codesquad.jazzmeet.venue.dto.request.VenueCreateRequest;
 import kr.codesquad.jazzmeet.venue.dto.response.NearbyVenueResponse;
 import kr.codesquad.jazzmeet.venue.dto.response.VenueAutocompleteResponse;
+import kr.codesquad.jazzmeet.venue.dto.response.VenueCreateResponse;
 import kr.codesquad.jazzmeet.venue.dto.response.VenueDetailResponse;
 import kr.codesquad.jazzmeet.venue.dto.response.VenuePinsResponse;
 import kr.codesquad.jazzmeet.venue.dto.response.VenueSearchResponse;
+import kr.codesquad.jazzmeet.venue.service.VenueCreateFacade;
 import kr.codesquad.jazzmeet.venue.service.VenueService;
 import lombok.RequiredArgsConstructor;
 
@@ -24,6 +30,7 @@ import lombok.RequiredArgsConstructor;
 public class VenueController {
 
 	private final VenueService venueService;
+	private final VenueCreateFacade venueCreateFacade;
 
 	/**
 	 * 검색어 자동완성 목록 조회 API
@@ -104,5 +111,14 @@ public class VenueController {
 	public ResponseEntity<VenueSearchResponse> searchVenueListById(@PathVariable Long venueId) {
 		VenueSearchResponse venueResponse = venueService.findVenueSearchById(venueId);
 		return ResponseEntity.ok(venueResponse);
+	}
+
+	/**
+	 * 공연장 등록 API
+	 */
+	@PostMapping("/api/venues")
+	public ResponseEntity<VenueCreateResponse> createVenue(@RequestBody VenueCreateRequest venueCreateRequest) {
+		VenueCreateResponse venueCreateResponse = venueCreateFacade.createVenue(venueCreateRequest);
+		return ResponseEntity.status(HttpStatus.CREATED).body(venueCreateResponse);
 	}
 }

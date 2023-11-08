@@ -5,7 +5,8 @@ import java.util.List;
 public record VenueCreateRequest(
 	String name,
 	List<Long> imageIds,
-	String address,
+	String roadNameAddress,
+	String lotNumberAddress,
 	String phoneNumber,
 	String description,
 	List<VenueCreateLink> links,
