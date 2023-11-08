@@ -25,12 +25,18 @@ public class VenueController {
 
 	private final VenueService venueService;
 
+	/**
+	 * 검색어 자동완성 목록 조회 API
+	 */
 	@GetMapping("/api/search")
 	public ResponseEntity<List<VenueAutocompleteResponse>> searchAutocompleteList(@RequestParam String word) {
 		List<VenueAutocompleteResponse> venues = venueService.searchAutocompleteList(word);
 		return ResponseEntity.ok(venues);
 	}
 
+	/**
+	 * 주변 공연장 목록 조회 API
+	 */
 	@GetMapping("/api/venues/around-venues")
 	public ResponseEntity<List<NearbyVenueResponse>> findNearbyVenues(
 		@RequestParam(required = false) Double latitude,
@@ -59,6 +65,9 @@ public class VenueController {
 		return ResponseEntity.ok(venuePins);
 	}
 
+	/**
+	 * 공연장 목록 조회 - 지도 기반 API
+	 */
 	@GetMapping("/api/venues/map")
 	public ResponseEntity<VenueSearchResponse> findVenuesByLocation(
 		@RequestParam(required = false) Double lowLatitude, @RequestParam(required = false) Double highLatitude,
@@ -88,6 +97,9 @@ public class VenueController {
 		return ResponseEntity.ok(venuesResponse);
 	}
 
+	/**
+	 * 공연장 목록 조회 - 공연장 하나만 검색 API
+	 */
 	@GetMapping("/api/venues/search/{venueId}")
 	public ResponseEntity<VenueSearchResponse> searchVenueListById(@PathVariable Long venueId) {
 		VenueSearchResponse venueResponse = venueService.findVenueSearchById(venueId);
