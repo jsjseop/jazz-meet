@@ -1,11 +1,15 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { getVenuesByKeyword, getVenuesByMapBounds } from '~/apis/venue';
+import {
+  getSingleVenue,
+  getVenuesByKeyword,
+  getVenuesByMapBounds,
+} from '~/apis/venue';
 import { SearchedVenues, VenueData } from '~/types/api.types';
 
 export type VenueListData = {
   venueList: VenueData[];
-  venueCount: number;
+  totalCount: number;
   currentPage: number;
   maxPage: number;
   updateVenueList: (page: number) => void;
@@ -16,7 +20,7 @@ export const useVenueList = () => {
   const urlSearchParams = useMemo(() => new URLSearchParams(search), [search]);
   const [venueListData, setVenueListData] = useState<SearchedVenues>({
     venues: [],
-    venueCount: 0,
+    totalCount: 0,
     currentPage: 1,
     maxPage: 1,
   });
@@ -30,9 +34,12 @@ export const useVenueList = () => {
         lowLongitude: Number(urlSearchParams.get('lowLongitude')!),
         highLongitude: Number(urlSearchParams.get('highLongitude')!),
       };
+      const venueId = urlSearchParams.get('venueId');
 
       const searchedVenues = word
         ? await getVenuesByKeyword({ page, word })
+        : venueId
+        ? await getSingleVenue(Number(venueId))
         : await getVenuesByMapBounds({ page, ...coordinateBoundary });
 
       setVenueListData(searchedVenues);
@@ -46,7 +53,7 @@ export const useVenueList = () => {
 
   return {
     venueList: venueListData.venues,
-    venueCount: venueListData.venueCount,
+    totalCount: venueListData.totalCount,
     currentPage: venueListData.currentPage,
     maxPage: venueListData.maxPage,
     updateVenueList,
