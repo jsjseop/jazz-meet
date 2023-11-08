@@ -6,8 +6,11 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
+import kr.codesquad.jazzmeet.inquiry.dto.response.InquiryDetailResponse;
 import kr.codesquad.jazzmeet.inquiry.dto.response.InquirySearch;
 import kr.codesquad.jazzmeet.inquiry.dto.response.InquirySearchResponse;
+import kr.codesquad.jazzmeet.inquiry.vo.InquiryAnswerDetail;
+import kr.codesquad.jazzmeet.inquiry.vo.InquiryDetail;
 import kr.codesquad.jazzmeet.inquiry.vo.InquirySearchData;
 
 @Mapper
@@ -29,4 +32,10 @@ public interface InquiryMapper {
 
 	@Mapping(target = "status", source = "status.koName")
 	InquirySearch toInquirySearch(InquirySearchData inquirySearchData);
+
+	InquiryAnswerDetail toInquiryAnswerDetail(InquiryDetail inquiry);
+
+	@Mapping(target = "answer", source = "answer")
+	InquiryDetailResponse toInquiryDetailResponse(Long id, String content,
+		InquiryAnswerDetail answer);
 }

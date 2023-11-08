@@ -6,7 +6,8 @@ import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 public enum InquiryErrorCode implements StatusCode {
-	NO_MATCH_VALUE(HttpStatus.NOT_FOUND, "해당하는 종류가 없습니다.");
+	NO_MATCH_VALUE(HttpStatus.NOT_FOUND, "해당하는 종류가 없습니다."),
+	INQUIRY_NOT_FOUND(HttpStatus.NOT_FOUND, "해당하는 문의가 없습니다.");
 
 	private final HttpStatus httpStatus;
 	private final String message;

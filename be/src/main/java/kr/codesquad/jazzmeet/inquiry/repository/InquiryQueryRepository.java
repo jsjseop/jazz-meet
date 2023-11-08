@@ -1,8 +1,10 @@
 package kr.codesquad.jazzmeet.inquiry.repository;
 
+import static kr.codesquad.jazzmeet.inquiry.entity.QAnswer.*;
 import static kr.codesquad.jazzmeet.inquiry.entity.QInquiry.*;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,6 +17,7 @@ import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import kr.codesquad.jazzmeet.inquiry.util.InquiryCategory;
+import kr.codesquad.jazzmeet.inquiry.vo.InquiryDetail;
 import kr.codesquad.jazzmeet.inquiry.vo.InquirySearchData;
 import lombok.RequiredArgsConstructor;
 
@@ -62,6 +65,22 @@ public class InquiryQueryRepository {
 			return null;
 		}
 		return inquiry.category.eq(category);
+	}
+
+	public Optional<InquiryDetail> findInquiryAndAnswerByInquiryId(Long inquiryId) {
+		InquiryDetail inquiryDetail = query.select(Projections.fields(InquiryDetail.class,
+				inquiry.id.as("inquiryId"),
+				inquiry.content.as("inquiryContent"),
+				answer.id,
+				answer.content,
+				answer.createdAt,
+				answer.modifiedAt
+			))
+			.from(inquiry)
+			.leftJoin(answer).on(answer.inquiry.id.eq(inquiryId))
+			.where(inquiry.id.eq(inquiryId)).fetchOne();
+
+		return Optional.ofNullable(inquiryDetail);
 	}
 
 }
