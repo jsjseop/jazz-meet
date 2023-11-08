@@ -1,21 +1,31 @@
 import styled from '@emotion/styled';
-import { Header } from './Header';
-import { BasicInfo } from './BasicInfo';
-import { RestInfo } from './RestInfo';
 import { useEffect, useState } from 'react';
-import { Outlet, useOutletContext, useParams } from 'react-router-dom';
-import { Images } from './Images';
-import { VenueDetailData } from '~/types/api.types';
+import {
+  Outlet,
+  useLocation,
+  useOutletContext,
+  useParams,
+} from 'react-router-dom';
 import { getVenueDetail } from '~/apis/venue';
+import { usePathHistoryStore } from '~/stores/usePathHistoryStore';
+import { VenueDetailData } from '~/types/api.types';
+import { BasicInfo } from './BasicInfo';
+import { Header } from './Header';
+import { Images } from './Images';
+import { RestInfo } from './RestInfo';
 
 export const VenueDetail: React.FC = () => {
   const { venueId } = useParams();
+  const currentLocation = useLocation();
   const mapRef = useOutletContext<React.RefObject<HTMLDivElement>>();
   const [isRender, setRender] = useState(false);
   const [data, setData] = useState<VenueDetailData>();
+  const { setPreviousPath } = usePathHistoryStore((state) => ({
+    setPreviousPath: state.setPreviousPath,
+  }));
 
   useEffect(() => {
-    setRender(true);
+    return () => setPreviousPath(currentLocation.pathname);
   }, []);
 
   useEffect(() => {
@@ -30,6 +40,14 @@ export const VenueDetail: React.FC = () => {
 
     updateDate();
   }, [venueId]);
+
+  useEffect(() => {
+    if (!data) {
+      return;
+    }
+
+    setRender(true);
+  }, [data]);
 
   return (
     <>
@@ -56,6 +74,7 @@ export const VenueDetail: React.FC = () => {
 };
 
 const StyledVenueDetail = styled.div<{ isRender: boolean }>`
+  box-sizing: border-box;
   width: 100%;
   height: 100%;
   overflow-y: auto;

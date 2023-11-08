@@ -7,15 +7,11 @@ type Props = {
 };
 
 export const AroundVenueCard: React.FC<Props> = ({ aroundVenue }) => {
-  const { id, thumbnailUrl, name, address, latitude, longitude } = aroundVenue;
+  const { id, thumbnailUrl, name, address } = aroundVenue;
   const navigate = useNavigate();
 
   return (
-    <StyledCard
-      onClick={() =>
-        navigate(`/map/venues/${id}`, { state: { latitude, longitude } })
-      }
-    >
+    <StyledCard onClick={() => navigate(`/map?venueId=${id}`)}>
       <StyledCardImage src={thumbnailUrl} alt="around-venue" />
       <StyledTitleContainer>
         <StyledTitle>{name}</StyledTitle>

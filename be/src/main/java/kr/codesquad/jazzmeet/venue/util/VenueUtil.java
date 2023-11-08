@@ -6,7 +6,7 @@ import org.locationtech.jts.geom.Point;
 import org.locationtech.jts.geom.Polygon;
 
 import kr.codesquad.jazzmeet.global.error.CustomException;
-import kr.codesquad.jazzmeet.global.error.statuscode.LocationErrorCode;
+import kr.codesquad.jazzmeet.global.error.statuscode.VenueErrorCode;
 
 public final class VenueUtil {
 
@@ -19,7 +19,7 @@ public final class VenueUtil {
 		try {
 			return geometryFactory.createPoint(new Coordinate(longitude, latitude));
 		} catch (Exception e) {
-			throw new CustomException(LocationErrorCode.INVALID_LOCATION_ERROR);
+			throw new CustomException(VenueErrorCode.INVALID_LOCATION_ERROR);
 		}
 	}
 
