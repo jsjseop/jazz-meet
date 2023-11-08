@@ -52,6 +52,9 @@ dependencies {
     // hibernate-spatial
     implementation 'org.hibernate:hibernate-spatial:6.2.5.Final'
 
+    // aws s3
+    implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+
 }
 
 // Querydsl: 설정부
