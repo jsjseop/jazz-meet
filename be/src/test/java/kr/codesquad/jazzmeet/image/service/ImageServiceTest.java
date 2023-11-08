@@ -14,7 +14,7 @@ import kr.codesquad.jazzmeet.fixture.ImageFixture;
 import kr.codesquad.jazzmeet.global.error.CustomException;
 import kr.codesquad.jazzmeet.image.dto.response.ImageIdsResponse;
 import kr.codesquad.jazzmeet.image.entity.Image;
-import kr.codesquad.jazzmeet.image.entity.Status;
+import kr.codesquad.jazzmeet.image.entity.ImageStatus;
 import kr.codesquad.jazzmeet.image.repository.ImageRepository;
 
 class ImageServiceTest extends IntegrationTestSupport {
@@ -56,7 +56,7 @@ class ImageServiceTest extends IntegrationTestSupport {
 
 	    // then
 		Image deletedImage = imageRepository.findById(savedImage.getId()).get();
-		assertThat(deletedImage).extracting("status").isEqualTo(Status.DELETED);
+		assertThat(deletedImage).extracting("status").isEqualTo(ImageStatus.DELETED);
 	}
 
 	@Test

@@ -10,7 +10,7 @@ import kr.codesquad.jazzmeet.global.error.CustomException;
 import kr.codesquad.jazzmeet.global.error.statuscode.ImageErrorCode;
 import kr.codesquad.jazzmeet.image.dto.response.ImageIdsResponse;
 import kr.codesquad.jazzmeet.image.entity.Image;
-import kr.codesquad.jazzmeet.image.entity.Status;
+import kr.codesquad.jazzmeet.image.entity.ImageStatus;
 import kr.codesquad.jazzmeet.image.mapper.ImageMapper;
 import kr.codesquad.jazzmeet.image.repository.ImageRepository;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +27,7 @@ public class ImageService {
 		List<Image> images = imageUrls.stream()
 			.map(url -> {
 				LocalDateTime now = LocalDateTime.now();
-				return ImageMapper.INSTANCE.toImage(url, Status.UNREGISTERED, now);
+				return ImageMapper.INSTANCE.toImage(url, ImageStatus.UNREGISTERED, now);
 			})
 			.toList();
 
@@ -44,6 +44,6 @@ public class ImageService {
 		Image image = imageRepository.findById(imageId)
 			.orElseThrow(() -> new CustomException(ImageErrorCode.NOT_FOUND_IMAGE));
 
-		image.updateStatus(Status.DELETED);
+		image.updateStatus(ImageStatus.DELETED);
 	}
 }

@@ -23,12 +23,12 @@ public class Image {
 	private String url;
 	@Enumerated(value = EnumType.STRING)
 	@Column(nullable = false, length = 12)
-	private Status status;
+	private ImageStatus status;
 	@Column(nullable = false)
 	private LocalDateTime createdAt;
 
 	@Builder
-	public Image(String url, Status status, LocalDateTime createdAt) {
+	public Image(String url, ImageStatus status, LocalDateTime createdAt) {
 		this.url = url;
 		this.status = status;
 		this.createdAt = createdAt;
@@ -42,7 +42,7 @@ public class Image {
 		return url;
 	}
 
-	public void updateStatus(Status status) {
+	public void updateStatus(ImageStatus status) {
 		this.status = status;
 	}
 }

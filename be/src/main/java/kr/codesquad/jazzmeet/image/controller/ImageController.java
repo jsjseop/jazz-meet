@@ -2,6 +2,7 @@ package kr.codesquad.jazzmeet.image.controller;
 
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,7 +28,7 @@ public class ImageController {
 		List<String> imageUrls = cloudService.uploadImages(multipartFiles);
 		ImageIdsResponse imageIdsResponse = imageService.saveImages(imageUrls);
 
-		return ResponseEntity.ok(imageIdsResponse);
+		return ResponseEntity.status(HttpStatus.CREATED).body(imageIdsResponse);
 	}
 
 	@DeleteMapping("/api/images/{imageId}")

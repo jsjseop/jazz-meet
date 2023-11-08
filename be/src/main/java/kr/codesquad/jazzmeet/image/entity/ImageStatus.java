@@ -1,5 +1,5 @@
 package kr.codesquad.jazzmeet.image.entity;
 
-public enum Status {
+public enum ImageStatus {
 	UNREGISTERED, REGISTERED, DELETED
 }
