@@ -9,9 +9,14 @@ import { MapSearchButton } from './MapSearchButton';
 
 type Props = {
   mapRef: React.RefObject<HTMLDivElement>;
+  onMapInitialized: (map: naver.maps.Map) => void;
 } & Pick<VenueListData, 'venueList'>;
 
-export const Map: React.FC<Props> = ({ mapRef, venueList }) => {
+export const Map: React.FC<Props> = ({
+  mapRef,
+  onMapInitialized,
+  venueList,
+}) => {
   const { search: searchQueryString } = useLocation();
   const { userCoordinate } = useUserCoordinate();
   const [isShowMapSearchButton, setIsMapShowSearchButton] = useState(false);
@@ -27,6 +32,7 @@ export const Map: React.FC<Props> = ({ mapRef, venueList }) => {
 
   useEffect(() => {
     map.current = getInitMap(userCoordinate);
+    onMapInitialized(map.current);
 
     const boundsChangeEventListener = naver.maps.Event.addListener(
       map.current,
