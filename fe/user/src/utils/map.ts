@@ -45,7 +45,7 @@ export const fitBoundsToCoordinateBoundary = (
   map.fitBounds(bounds);
 };
 
-const generatorMarkerContent = (text: string) =>
+const generateMarkerContent = (text: string) =>
   `<div class="marker-container"><div class="marker-icon-container">${TIED_EIGHTH_NOTES_SVG}</div><div class="marker-text">${text}</div></div>`;
 
 export const addMarkersOnMap = (
@@ -58,7 +58,7 @@ export const addMarkersOnMap = (
       position: new naver.maps.LatLng(pin.latitude, pin.longitude),
       map: map,
       icon: {
-        content: generatorMarkerContent(pin.name),
+        content: generateMarkerContent(pin.name),
         anchor: new naver.maps.Point(3, 48),
       },
     });
