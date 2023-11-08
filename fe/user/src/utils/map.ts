@@ -51,7 +51,7 @@ const generatorMarkerContent = (text: string) =>
 export const addMarkersOnMap = (
   pins: Pin[],
   map: naver.maps.Map,
-  goToVenueDetail: (venueId: number) => void,
+  onMarkerClick: (venueId: number) => void,
 ) => {
   return pins.map((pin) => {
     const marker = new naver.maps.Marker({
@@ -63,7 +63,7 @@ export const addMarkersOnMap = (
       },
     });
 
-    addMarkerClickEvent(marker, () => goToVenueDetail(pin.id));
+    addMarkerClickEvent(marker, () => onMarkerClick(pin.id));
 
     return marker;
   });
@@ -72,7 +72,7 @@ export const addMarkersOnMap = (
 export const addPinsOnMap = (
   pins: Pin[],
   map: naver.maps.Map,
-  goToVenueDetail: (venueId: number) => void,
+  onPinClick: (venueId: number) => void,
 ) => {
   return pins.map((pin) => {
     const marker = new naver.maps.Marker({
@@ -84,7 +84,7 @@ export const addPinsOnMap = (
       },
     });
 
-    addMarkerClickEvent(marker, () => goToVenueDetail(pin.id));
+    addMarkerClickEvent(marker, () => onPinClick(pin.id));
 
     return marker;
   });
