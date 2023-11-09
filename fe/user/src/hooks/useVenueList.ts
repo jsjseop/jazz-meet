@@ -6,6 +6,7 @@ import {
   getVenuesByMapBounds,
 } from '~/apis/venue';
 import { SearchedVenues, VenueData } from '~/types/api.types';
+import { CoordinateBoundary } from '~/types/map.types';
 
 export type VenueListData = {
   venueList: VenueData[];
@@ -26,19 +27,11 @@ export const useVenueList = (mapObj: naver.maps.Map | undefined) => {
   });
 
   const updateVenueList = useCallback(
-    async (
-      getMapBounds: () => {
-        lowLatitude: number | null;
-        highLatitude: number | null;
-        lowLongitude: number | null;
-        highLongitude: number | null;
-      },
-      page?: number,
-    ) => {
+    async (initialMapBounds: CoordinateBoundary, page?: number) => {
       if ([...urlSearchParams.keys()].length === 0) {
         const searchedVenues = await getVenuesByMapBounds({
           page,
-          ...getMapBounds(),
+          ...initialMapBounds,
         });
 
         setVenueListData(searchedVenues);
@@ -68,27 +61,20 @@ export const useVenueList = (mapObj: naver.maps.Map | undefined) => {
   useEffect(() => {
     if (!mapObj) return;
 
-    const getMapBounds = () => {
-      const bounds = mapObj.getBounds();
+    const bounds = mapObj.getBounds();
 
-      if (!(bounds instanceof naver.maps.LatLngBounds)) {
-        return {
-          lowLatitude: null,
-          highLatitude: null,
-          lowLongitude: null,
-          highLongitude: null,
-        };
-      }
+    if (!(bounds instanceof naver.maps.LatLngBounds)) {
+      return;
+    }
 
-      return {
-        lowLatitude: bounds.south(),
-        highLatitude: bounds.north(),
-        lowLongitude: bounds.west(),
-        highLongitude: bounds.east(),
-      };
+    const initialMapBounds = {
+      lowLatitude: bounds.south(),
+      highLatitude: bounds.north(),
+      lowLongitude: bounds.west(),
+      highLongitude: bounds.east(),
     };
 
-    updateVenueList(getMapBounds);
+    updateVenueList(initialMapBounds);
   }, [updateVenueList, mapObj]);
 
   return {
