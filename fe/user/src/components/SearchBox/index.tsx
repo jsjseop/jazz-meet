@@ -15,6 +15,8 @@ export const SearchBox: React.FC = () => {
     SearchSuggestion[]
   >([]);
   const [isSuggestionBoxOpen, setIsSuggestionBoxOpen] = useState(false);
+  const [activeSuggestionIndex, setActiveSuggestionIndex] =
+    useState<number>(-1);
   const searchBoxRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -57,11 +59,23 @@ export const SearchBox: React.FC = () => {
     }
   };
 
+  const onArrowKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'ArrowDown') {
+      setActiveSuggestionIndex((asi) =>
+        asi === searchSuggestions.length - 1 ? -1 : asi + 1,
+      );
+      return;
+    }
+
+    if (e.key === 'ArrowUp') {
+      setActiveSuggestionIndex((asi) =>
+        asi === -1 ? searchSuggestions.length - 1 : asi - 1,
+      );
+    }
+  };
+
   return (
-    <StyledSearchBox
-      id="search-box"
-      ref={searchBoxRef}
-    >
+    <StyledSearchBox id="search-box" ref={searchBoxRef}>
       <Paper
         component="form"
         onSubmit={onSearchTextSubmit}
@@ -81,6 +95,7 @@ export const SearchBox: React.FC = () => {
           autoComplete="off"
           value={searchText || word || ''}
           onChange={(e) => setSearchText(e.target.value)}
+          onKeyDown={onArrowKeyDown}
           onFocus={showSuggestionBox}
         />
         <IconButton type="button" sx={{ p: '10px' }} aria-label="search">
@@ -92,6 +107,7 @@ export const SearchBox: React.FC = () => {
         suggestions={searchSuggestions}
         open={isSuggestionBoxOpen}
         searchBoxRef={searchBoxRef}
+        activeIndex={activeSuggestionIndex}
         onClose={hideSuggestionBox}
       />
     </StyledSearchBox>
