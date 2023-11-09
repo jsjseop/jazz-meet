@@ -25,27 +25,26 @@ export const useVenueList = (mapObj: naver.maps.Map | undefined) => {
     maxPage: 1,
   });
 
-  const getMapBounds = useCallback(() => {
-    if (!mapObj) {
-      return;
-    }
-
-    const bounds = mapObj.getBounds();
-
-    if (!(bounds instanceof naver.maps.LatLngBounds)) {
-      return;
-    }
-
-    return {
-      lowLatitude: bounds.south(),
-      highLatitude: bounds.north(),
-      lowLongitude: bounds.west(),
-      highLongitude: bounds.east(),
-    };
-  }, [mapObj]);
-
   const updateVenueList = useCallback(
-    async (page?: number) => {
+    async (
+      getMapBounds: () => {
+        lowLatitude: number | null;
+        highLatitude: number | null;
+        lowLongitude: number | null;
+        highLongitude: number | null;
+      },
+      page?: number,
+    ) => {
+      if ([...urlSearchParams.keys()].length === 0) {
+        const searchedVenues = await getVenuesByMapBounds({
+          page,
+          ...getMapBounds(),
+        });
+
+        setVenueListData(searchedVenues);
+        return;
+      }
+
       const word = urlSearchParams.get('word');
       const coordinateBoundary = {
         lowLatitude: parseInt(urlSearchParams.get('lowLatitude')!),
@@ -55,26 +54,42 @@ export const useVenueList = (mapObj: naver.maps.Map | undefined) => {
       };
       const venueId = urlSearchParams.get('venueId');
 
-      const isCoordinateBoundaryValid = Object.values(coordinateBoundary).every(
-        (coordinate) => !isNaN(coordinate),
-      );
-
       const searchedVenues = word
         ? await getVenuesByKeyword({ page, word })
         : venueId
         ? await getSingleVenue(Number(venueId))
-        : isCoordinateBoundaryValid
-        ? await getVenuesByMapBounds({ page, ...coordinateBoundary })
-        : await getVenuesByMapBounds({ page, ...getMapBounds() });
+        : await getVenuesByMapBounds({ page, ...coordinateBoundary });
 
       setVenueListData(searchedVenues);
     },
-    [urlSearchParams, getMapBounds],
+    [urlSearchParams],
   );
 
   useEffect(() => {
-    updateVenueList();
-  }, [updateVenueList]);
+    if (!mapObj) return;
+
+    const getMapBounds = () => {
+      const bounds = mapObj.getBounds();
+
+      if (!(bounds instanceof naver.maps.LatLngBounds)) {
+        return {
+          lowLatitude: null,
+          highLatitude: null,
+          lowLongitude: null,
+          highLongitude: null,
+        };
+      }
+
+      return {
+        lowLatitude: bounds.south(),
+        highLatitude: bounds.north(),
+        lowLongitude: bounds.west(),
+        highLongitude: bounds.east(),
+      };
+    };
+
+    updateVenueList(getMapBounds);
+  }, [updateVenueList, mapObj]);
 
   return {
     venueList: venueListData.venues,
