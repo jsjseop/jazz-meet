@@ -7,6 +7,7 @@ import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 import kr.codesquad.jazzmeet.IntegrationTestSupport;
 import kr.codesquad.jazzmeet.fixture.ImageFixture;
@@ -20,6 +21,7 @@ import kr.codesquad.jazzmeet.venue.dto.response.VenueCreateResponse;
 import kr.codesquad.jazzmeet.venue.entity.LinkType;
 import kr.codesquad.jazzmeet.venue.repository.LinkTypeRepository;
 
+@Transactional
 class VenueFacadeTest extends IntegrationTestSupport {
 
 	@Autowired
