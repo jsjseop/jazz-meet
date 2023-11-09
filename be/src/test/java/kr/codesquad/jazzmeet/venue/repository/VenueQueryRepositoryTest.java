@@ -209,23 +209,20 @@ class VenueQueryRepositoryTest extends IntegrationTestSupport {
 	@Test
 	void findVenueById() throws Exception {
 		//given
-		Long venueId = 1L;
-		// 공연장 생성
 		Venue venue = VenueFixture.createVenue("부기우기", "서울 용산구 회나무로 21 2층",
 			VenueUtil.createPoint(37.52387497068088, 126.9294615244093));
 
-		// 이미지 생성
 		Image image1 = ImageFixture.createImage("image1.url");
 		Image image2 = ImageFixture.createImage("image2.url");
 
-		// 공연장_이미지 생성
 		VenueImage venueImage1 = VenueFixture.createVenueImage(venue, image1, 1L);
 		VenueImage venueImage2 = VenueFixture.createVenueImage(venue, image2, 2L);
 
-		// 공연장_이미지 저장
 		venueImage1.add(venue, image1);
 		venueImage2.add(venue, image2);
 		venueImageRepository.saveAll(List.of(venueImage1, venueImage2));
+
+		Long venueId = venue.getId();
 
 		//when
 		VenueDetail venueDetail = venueQueryRepository.findVenue(venueId).get();

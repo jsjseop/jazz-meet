@@ -17,6 +17,7 @@ import kr.codesquad.jazzmeet.fixture.VenueFixture;
 import kr.codesquad.jazzmeet.show.entity.Show;
 import kr.codesquad.jazzmeet.show.vo.ShowWithVenue;
 import kr.codesquad.jazzmeet.venue.entity.Venue;
+import kr.codesquad.jazzmeet.venue.repository.VenueRepository;
 
 @Transactional
 class ShowRepositoryTest extends IntegrationTestSupport {
@@ -27,19 +28,22 @@ class ShowRepositoryTest extends IntegrationTestSupport {
 	@Autowired
 	ShowQueryRepository showQueryRepository;
 
+	@Autowired
+	VenueRepository venueRepository;
+
 	@DisplayName("공연장의 id와 날짜가 주어지면 해당하는 공연 목록을 응답한다.")
 	@Test
 	void findShowsByVenueIdAndDate() throws Exception {
 		//given
 		LocalDate date = LocalDate.of(2023, 11, 3);
-		Long venueId = 1L;
-
 		Venue venue = VenueFixture.createVenue("부기우기", "경기도 고양시");
 		Show show1 = ShowFixture.createShow("트리오", LocalDateTime.of(2023, 11, 3, 18, 00),
 			LocalDateTime.of(2023, 11, 3, 20, 00), venue);
 		Show show2 = ShowFixture.createShow("퀄텟", LocalDateTime.of(2023, 11, 3, 20, 00),
 			LocalDateTime.of(2023, 11, 3, 22, 00), venue);
 		showRepository.saveAll(List.of(show1, show2));
+
+		Long venueId = venue.getId();
 
 		//when
 		List<Show> shows = showRepository.findByVenueIdAndDate(venueId, date);

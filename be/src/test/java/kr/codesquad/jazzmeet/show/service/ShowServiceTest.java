@@ -146,12 +146,13 @@ class ShowServiceTest extends IntegrationTestSupport {
 	void findShows() throws Exception {
 		//given
 		String date = "20231101";
-		Long venueId = 1L;
 
 		Venue venue = VenueFixture.createVenue("부기우기", "경기도 고양시");
 		Show show1 = ShowFixture.createShow("부기우기 트리오1", LocalDateTime.of(2023, 11, 1, 18, 00), venue);
 		Show show2 = ShowFixture.createShow("부기우기 트리오2", LocalDateTime.of(2023, 11, 1, 20, 00), venue);
 		showRepository.saveAll(List.of(show1, show2));
+
+		Long venueId = venue.getId();
 
 		//when
 		List<ShowByDateAndVenueResponse> shows = showService.getShows(venueId, date);
@@ -189,8 +190,8 @@ class ShowServiceTest extends IntegrationTestSupport {
 		Venue venue2 = VenueFixture.createVenue("클럽에반스", "경기도 고양시");
 
 		Show show1 = ShowFixture.createShow("부기우기 트리오1", LocalDateTime.of(2023, 11, 1, 18, 00), venue1);
-		Show show2 = ShowFixture.createShow("부기우기 트리오2", LocalDateTime.of(2023, 11, 1, 20, 00), venue1);
-		Show show3 = ShowFixture.createShow("Entry55 트리오1", LocalDateTime.of(2023, 11, 1, 18, 00), venue2);
+		Show show2 = ShowFixture.createShow("부기우기 트리오2", LocalDateTime.of(2023, 11, 2, 20, 00), venue1);
+		Show show3 = ShowFixture.createShow("Entry55 트리오1", LocalDateTime.of(2023, 11, 3, 18, 00), venue2);
 		showRepository.saveAll(List.of(show1, show2, show3));
 
 		//when
