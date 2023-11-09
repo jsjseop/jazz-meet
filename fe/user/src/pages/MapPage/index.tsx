@@ -5,16 +5,17 @@ import { Map } from './Map';
 import { Panel } from './Panel';
 
 export const MapPage: React.FC = () => {
-  const [mapObj, setMapObj] = useState<naver.maps.Map>();
   const mapRef = useRef<HTMLDivElement>(null);
-  const venueListData = useVenueList(mapObj);
+  const [map, setMap] = useState<naver.maps.Map>();
+  const venueListData = useVenueList(map);
 
   return (
     <StyledMapPage>
       <Map
         mapRef={mapRef}
+        map={map}
         venueList={venueListData.venueList}
-        onMapInitialized={(map: naver.maps.Map) => setMapObj(map)}
+        onMapInitialized={(map: naver.maps.Map) => setMap(map)}
       />
       <Panel mapRef={mapRef} {...venueListData} />
     </StyledMapPage>

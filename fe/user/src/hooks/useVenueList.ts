@@ -15,7 +15,7 @@ export type VenueListData = {
   updateVenueList: (page: number) => void;
 };
 
-export const useVenueList = (mapObj: naver.maps.Map | undefined) => {
+export const useVenueList = (map?: naver.maps.Map) => {
   const { search } = useLocation();
   const urlSearchParams = useMemo(() => new URLSearchParams(search), [search]);
   const [venueListData, setVenueListData] = useState<SearchedVenues>({
@@ -26,9 +26,9 @@ export const useVenueList = (mapObj: naver.maps.Map | undefined) => {
   });
 
   const getInitialMapBounds = useCallback(() => {
-    if (!mapObj) return;
+    if (!map) return;
 
-    const bounds = mapObj.getBounds();
+    const bounds = map.getBounds();
 
     if (!(bounds instanceof naver.maps.LatLngBounds)) {
       return;
@@ -40,7 +40,7 @@ export const useVenueList = (mapObj: naver.maps.Map | undefined) => {
       lowLongitude: bounds.west(),
       highLongitude: bounds.east(),
     };
-  }, [mapObj]);
+  }, [map]);
 
   const updateVenueList = useCallback(
     async (page?: number) => {

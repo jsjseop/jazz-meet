@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useMarkers } from '~/hooks/useMarkers';
 import { useUserCoordinate } from '~/hooks/useUserCoordinate';
@@ -9,11 +9,13 @@ import { MapSearchButton } from './MapSearchButton';
 
 type Props = {
   mapRef: React.RefObject<HTMLDivElement>;
+  map?: naver.maps.Map;
   onMapInitialized: (map: naver.maps.Map) => void;
 } & Pick<VenueListData, 'venueList'>;
 
 export const Map: React.FC<Props> = ({
   mapRef,
+  map,
   onMapInitialized,
   venueList,
 }) => {
@@ -22,7 +24,6 @@ export const Map: React.FC<Props> = ({
   const [isShowMapSearchButton, setIsMapShowSearchButton] = useState(false);
   const showMapSearchButton = () => setIsMapShowSearchButton(true);
   const hideMapSearchButton = () => setIsMapShowSearchButton(false);
-  const map = useRef<naver.maps.Map>();
   const { updatePins } = useMarkers({
     map,
     searchQueryString,
@@ -31,16 +32,16 @@ export const Map: React.FC<Props> = ({
   });
 
   useEffect(() => {
-    map.current = getInitMap(userCoordinate);
-    onMapInitialized(map.current);
+    const map = getInitMap(userCoordinate);
+    onMapInitialized(map);
 
     const boundsChangeEventListener = naver.maps.Event.addListener(
-      map.current,
+      map,
       'zoom_changed',
       showMapSearchButton,
     );
     const dragendEventListener = naver.maps.Event.addListener(
-      map.current,
+      map,
       'dragend',
       showMapSearchButton,
     );
