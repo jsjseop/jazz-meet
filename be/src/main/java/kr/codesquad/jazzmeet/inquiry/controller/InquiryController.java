@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import kr.codesquad.jazzmeet.inquiry.dto.request.InquirySaveRequest;
 import kr.codesquad.jazzmeet.inquiry.dto.response.InquiryDetailResponse;
@@ -49,7 +50,7 @@ public class InquiryController {
 	 * 문의 글 등록 API
 	 */
 	@PostMapping("/api/inquiries")
-	public ResponseEntity<InquirySaveResponse> save(@RequestBody InquirySaveRequest inquirySaveRequest) {
+	public ResponseEntity<InquirySaveResponse> save(@RequestBody @Valid InquirySaveRequest inquirySaveRequest) {
 		InquirySaveResponse inquiry = inquiryService.save(inquirySaveRequest);
 
 		return ResponseEntity.status(HttpStatus.CREATED).body(inquiry);

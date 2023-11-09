@@ -70,7 +70,6 @@ public class InquiryService {
 
 	@Transactional
 	public InquirySaveResponse save(InquirySaveRequest inquirySaveRequest) {
-		// TODO: request validate 하기
 		// TODO: 비밀번호 암호화 하기
 		InquiryCategory inquiryCategory = InquiryCategory.toInquiryCategory(inquirySaveRequest.category());
 		Inquiry inquiry = InquiryMapper.INSTANCE.toInquiry(inquirySaveRequest, inquiryCategory);
