@@ -3,20 +3,22 @@ import RefreshIcon from '@mui/icons-material/Refresh';
 import { useNavigate } from 'react-router-dom';
 
 type Props = {
-  map: React.MutableRefObject<naver.maps.Map | undefined>;
+  map?: naver.maps.Map;
   hideMapSearchButton: () => void;
 };
 
-export const MapSearchButton: React.FC<Props> = ({ map, hideMapSearchButton }) => {
+export const MapSearchButton: React.FC<Props> = ({
+  map,
+  hideMapSearchButton,
+}) => {
   const navigate = useNavigate();
 
-
-   const onMapSearchButtonClick = () => {
-    if (!map.current) {
+  const onMapSearchButtonClick = () => {
+    if (!map) {
       throw new Error('map is not initialized');
     }
 
-    const bounds = map.current.getBounds();
+    const bounds = map.getBounds();
 
     if (!(bounds instanceof naver.maps.LatLngBounds)) {
       return;
@@ -30,7 +32,7 @@ export const MapSearchButton: React.FC<Props> = ({ map, hideMapSearchButton }) =
   };
 
   return (
-    <StyledMapSearchButton onClick={onMapSearchButtonClick} >
+    <StyledMapSearchButton onClick={onMapSearchButtonClick}>
       <RefreshIcon />
       <span>현 지도에서 검색</span>
     </StyledMapSearchButton>

@@ -15,7 +15,7 @@ export type VenueListData = {
   updateVenueList: (page: number) => void;
 };
 
-export const useVenueList = () => {
+export const useVenueList = (map?: naver.maps.Map) => {
   const { search } = useLocation();
   const urlSearchParams = useMemo(() => new URLSearchParams(search), [search]);
   const [venueListData, setVenueListData] = useState<SearchedVenues>({
@@ -25,14 +25,45 @@ export const useVenueList = () => {
     maxPage: 1,
   });
 
+  const getInitialMapBounds = useCallback(() => {
+    if (!map) return;
+
+    const bounds = map.getBounds();
+
+    if (!(bounds instanceof naver.maps.LatLngBounds)) {
+      return;
+    }
+
+    return {
+      lowLatitude: bounds.south(),
+      highLatitude: bounds.north(),
+      lowLongitude: bounds.west(),
+      highLongitude: bounds.east(),
+    };
+  }, [map]);
+
   const updateVenueList = useCallback(
     async (page?: number) => {
+      if ([...urlSearchParams.keys()].length === 0) {
+        const initialMapBounds = getInitialMapBounds();
+
+        if (!initialMapBounds) return;
+
+        const searchedVenues = await getVenuesByMapBounds({
+          page,
+          ...initialMapBounds,
+        });
+
+        setVenueListData(searchedVenues);
+        return;
+      }
+
       const word = urlSearchParams.get('word');
       const coordinateBoundary = {
-        lowLatitude: Number(urlSearchParams.get('lowLatitude')!),
-        highLatitude: Number(urlSearchParams.get('highLatitude')!),
-        lowLongitude: Number(urlSearchParams.get('lowLongitude')!),
-        highLongitude: Number(urlSearchParams.get('highLongitude')!),
+        lowLatitude: parseInt(urlSearchParams.get('lowLatitude')!),
+        highLatitude: parseInt(urlSearchParams.get('highLatitude')!),
+        lowLongitude: parseInt(urlSearchParams.get('lowLongitude')!),
+        highLongitude: parseInt(urlSearchParams.get('highLongitude')!),
       };
       const venueId = urlSearchParams.get('venueId');
 
@@ -44,7 +75,7 @@ export const useVenueList = () => {
 
       setVenueListData(searchedVenues);
     },
-    [urlSearchParams],
+    [urlSearchParams, getInitialMapBounds],
   );
 
   useEffect(() => {
