@@ -59,16 +59,19 @@ public class Venue {
 		this.thumbnailUrl = thumbnailUrl;
 	}
 
-	// 연관관계 메서드
+	// 연관관계 편의 메서드
 	public void addVenueImage(VenueImage venueImage) {
 		images.add(venueImage);
+		venueImage.addVenue(this);
 	}
 
 	public void addLink(Link link) {
 		links.add(link);
+		link.addVenue(this);
 	}
 
 	public void addVenueHour(VenueHour venueHour) {
 		venueHours.add(venueHour);
+		venueHour.addVenue(this);
 	}
 }

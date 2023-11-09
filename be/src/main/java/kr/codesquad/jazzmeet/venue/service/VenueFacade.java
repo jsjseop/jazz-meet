@@ -70,7 +70,6 @@ public class VenueFacade {
 			Image image = imageService.findById(imageId);
 			VenueImage venueImage = VenueImage.builder()
 				.imageOrder(imageOrder.incrementAndGet())
-				.venue(venue)
 				.image(image)
 				.build();
 			venue.addVenueImage(venueImage);
@@ -84,7 +83,6 @@ public class VenueFacade {
 			Link link = Link.builder()
 				.url(venueCreateLink.url())
 				.linkType(linkType)
-				.venue(venue)
 				.build();
 			venue.addLink(link);
 		});
@@ -95,7 +93,6 @@ public class VenueFacade {
 			VenueHour venueHour = VenueHour.builder()
 				.day(DayOfWeek.toDayOfWeek(venueCreateHour.day()))
 				.businessHour(venueCreateHour.businessHours())
-				.venue(venue)
 				.build();
 			venue.addVenueHour(venueHour);
 		});

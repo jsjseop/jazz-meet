@@ -35,4 +35,9 @@ public class Link {
 		this.linkType = linkType;
 		this.venue = venue;
 	}
+
+	// 연관 관계 편의 메소드
+	public void addVenue(Venue venue) {
+		this.venue = venue;
+	}
 }

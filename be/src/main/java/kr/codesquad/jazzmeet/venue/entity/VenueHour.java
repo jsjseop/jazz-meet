@@ -44,4 +44,8 @@ public class VenueHour {
 		this.venue = venue;
 		venue.getVenueHours().add(this);
 	}
+
+	public void addVenue(Venue venue) {
+		this.venue = venue;
+	}
 }

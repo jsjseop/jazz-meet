@@ -45,4 +45,8 @@ public class VenueImage {
 		this.image = image;
 		venue.getImages().add(this);
 	}
+
+	public void addVenue(Venue venue) {
+		this.venue = venue;
+	}
 }
