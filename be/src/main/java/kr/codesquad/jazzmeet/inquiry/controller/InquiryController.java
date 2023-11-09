@@ -34,7 +34,7 @@ public class InquiryController {
 	 * 문의 글 상세 조회 API
 	 */
 	@GetMapping("/api/inquiries/{inquiryId}")
-	public ResponseEntity<?> getInquiryDetail(@PathVariable Long inquiryId) {
+	public ResponseEntity<InquiryDetailResponse> getInquiryDetail(@PathVariable Long inquiryId) {
 		InquiryDetailResponse inquiry = inquiryService.getInquiryDetail(inquiryId);
 
 		return ResponseEntity.ok(inquiry);
