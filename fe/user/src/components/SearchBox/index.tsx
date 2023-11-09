@@ -61,6 +61,8 @@ export const SearchBox: React.FC = () => {
 
   const onArrowKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'ArrowDown') {
+      e.preventDefault();
+
       setActiveSuggestionIndex((asi) =>
         asi === searchSuggestions.length - 1 ? -1 : asi + 1,
       );
@@ -68,6 +70,8 @@ export const SearchBox: React.FC = () => {
     }
 
     if (e.key === 'ArrowUp') {
+      e.preventDefault();
+
       setActiveSuggestionIndex((asi) =>
         asi === -1 ? searchSuggestions.length - 1 : asi - 1,
       );
