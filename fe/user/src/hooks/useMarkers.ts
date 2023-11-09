@@ -15,7 +15,7 @@ export const useMarkers = ({
   hideMapSearchButton,
   venueList,
 }: {
-  map: React.MutableRefObject<naver.maps.Map | undefined>;
+  map?: naver.maps.Map;
   searchQueryString: string;
   hideMapSearchButton: () => void;
   venueList: VenueData[];
@@ -32,7 +32,7 @@ export const useMarkers = ({
 
   useEffect(() => {
     const getPins = async () => {
-      if (!map.current) return;
+      if (!map) return;
 
       if (searchQueryString.includes('word')) {
         pins.current = await getVenuePinsBySearch(searchQueryString);
@@ -44,7 +44,7 @@ export const useMarkers = ({
       ) {
         pins.current = await getVenuePinsByMapBounds(searchQueryString);
       } else if (!searchQueryString.includes('venueId')) {
-        const bounds = map.current.getBounds();
+        const bounds = map.getBounds();
 
         if (!(bounds instanceof naver.maps.LatLngBounds)) {
           return;
@@ -60,7 +60,7 @@ export const useMarkers = ({
   }, [map, searchQueryString]);
 
   const updatePins = useCallback(async () => {
-    if (!map.current) return;
+    if (!map) return;
 
     if (pinsOnMap.current) {
       pinsOnMap.current.forEach((marker) => marker.setMap(null));
@@ -77,16 +77,16 @@ export const useMarkers = ({
     if (searchQueryString.includes('word')) {
       pinsOnMap.current = addPinsOnMap(
         filteredPins,
-        map.current,
+        map,
         goToVenueDetail,
       );
       markersOnMap.current = addMarkersOnMap(
         venueList,
-        map.current,
+        map,
         goToVenueDetail,
       );
 
-      fitBoundsToPins(pins.current, map.current);
+      fitBoundsToPins(pins.current, map);
     } else if (
       searchQueryString.includes('lowLatitude') &&
       searchQueryString.includes('lowLongitude') &&
@@ -95,29 +95,33 @@ export const useMarkers = ({
     ) {
       pinsOnMap.current = addPinsOnMap(
         filteredPins,
-        map.current,
+        map,
         goToVenueDetail,
       );
       markersOnMap.current = addMarkersOnMap(
         venueList,
-        map.current,
+        map,
         goToVenueDetail,
       );
 
-      fitBoundsToCoordinateBoundary(searchQueryString, map.current);
+      fitBoundsToCoordinateBoundary(searchQueryString, map);
     } else if (searchQueryString.includes('venueId')) {
-      markersOnMap.current = addPinsOnMap(venueList, map.current, 'marker');
+      markersOnMap.current = addPinsOnMap(
+        venueList,
+        map,
+        goToVenueDetail,
+      );
 
-      fitBoundsToPins(venueList, map.current);
+      fitBoundsToPins(venueList, map);
     } else {
       pinsOnMap.current = addPinsOnMap(
         filteredPins,
-        map.current,
+        map,
         goToVenueDetail,
       );
       markersOnMap.current = addMarkersOnMap(
         venueList,
-        map.current,
+        map,
         goToVenueDetail,
       );
     }
