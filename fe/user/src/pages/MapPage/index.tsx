@@ -1,23 +1,45 @@
 import styled from '@emotion/styled';
-import { useRef, useState } from 'react';
-import { useVenueList } from '~/hooks/useVenueList';
+import { useEffect, useRef, useState } from 'react';
 import { Map } from './Map';
 import { Panel } from './Panel';
+import { getVenuePinsByMapBounds, getVenuesByMapBounds } from '~/apis/venue';
+import { Pin, SearchedVenues } from '~/types/api.types';
+import { getMapBounds } from '~/utils/map';
 
 export const MapPage: React.FC = () => {
-  const mapRef = useRef<HTMLDivElement>(null);
+  const mapElement = useRef<HTMLDivElement>(null);
   const [map, setMap] = useState<naver.maps.Map>();
-  const venueListData = useVenueList(map);
+
+  const [pins, setPins] = useState<Pin[]>();
+  const [venueList, setVenueList] = useState<SearchedVenues>();
+
+  // 지도가 첫 렌더링 될 때
+  useEffect(() => {
+    if (!map) {
+      return;
+    }
+
+    const bounds = getMapBounds(map);
+
+    (async () => {
+      const [pins, venueList] = await Promise.all([
+        getVenuePinsByMapBounds(bounds),
+        getVenuesByMapBounds(bounds),
+      ]);
+
+      setPins(pins);
+      setVenueList(venueList);
+    })();
+  }, [map]);
 
   return (
     <StyledMapPage>
       <Map
-        mapRef={mapRef}
+        mapElement={mapElement}
         map={map}
-        venueList={venueListData.venueList}
         onMapInitialized={(map: naver.maps.Map) => setMap(map)}
       />
-      <Panel mapRef={mapRef} {...venueListData} />
+      <Panel mapElement={mapElement} />
     </StyledMapPage>
   );
 };

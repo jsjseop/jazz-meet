@@ -107,3 +107,18 @@ export const getInitMap = (userCoordinate: Coordinate | null) => {
     ),
   });
 };
+
+export const getMapBounds = (map: naver.maps.Map) => {
+  const bounds = map.getBounds();
+
+  if (!(bounds instanceof naver.maps.LatLngBounds)) {
+    return;
+  }
+
+  return {
+    lowLatitude: bounds.south(),
+    highLatitude: bounds.north(),
+    lowLongitude: bounds.west(),
+    highLongitude: bounds.east(),
+  };
+};

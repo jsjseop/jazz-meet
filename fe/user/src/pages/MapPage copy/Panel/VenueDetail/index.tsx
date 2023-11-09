@@ -17,7 +17,7 @@ import { RestInfo } from './RestInfo';
 export const VenueDetail: React.FC = () => {
   const { venueId } = useParams();
   const currentLocation = useLocation();
-  const mapElement = useOutletContext<React.RefObject<HTMLDivElement>>();
+  const mapRef = useOutletContext<React.RefObject<HTMLDivElement>>();
   const [isRender, setRender] = useState(false);
   const [data, setData] = useState<VenueDetailData>();
   const { setPreviousPath } = usePathHistoryStore((state) => ({
@@ -65,7 +65,7 @@ export const VenueDetail: React.FC = () => {
             }
           />
           <RestInfo description={data.description} />
-          <Outlet context={mapElement} />
+          <Outlet context={mapRef} />
           {/* {showInfoDetail && createPortal(<Images />)} */}
         </StyledVenueDetail>
       )}

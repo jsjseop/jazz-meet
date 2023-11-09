@@ -8,7 +8,7 @@ import CloseIcon from '@mui/icons-material/Close';
 
 export const ShowDetail: React.FC = () => {
   // const { id: showId } = useParams();
-  const mapElement = useOutletContext<React.RefObject<HTMLDivElement>>();
+  const mapRef = useOutletContext<React.RefObject<HTMLDivElement>>();
   const [src, setSrc] = useState('');
 
   useEffect(() => {
@@ -48,7 +48,7 @@ export const ShowDetail: React.FC = () => {
             />
           </StyledShowDetailBody>
         </StyledShowDetail>,
-        mapElement.current ?? document.body,
+        mapRef.current ?? document.body,
       )}
     </>
   );

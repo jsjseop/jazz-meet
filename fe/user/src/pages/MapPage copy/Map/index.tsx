@@ -1,21 +1,38 @@
 import styled from '@emotion/styled';
 import { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
+import { useMarkers } from '~/hooks/useMarkers';
+import { useUserCoordinate } from '~/hooks/useUserCoordinate';
+import { VenueListData } from '~/hooks/useVenueList';
 import { getInitMap } from '~/utils/map';
 import { MapSearchButton } from './MapSearchButton';
 
 type Props = {
-  mapElement: React.RefObject<HTMLDivElement>;
+  mapRef: React.RefObject<HTMLDivElement>;
   map?: naver.maps.Map;
   onMapInitialized: (map: naver.maps.Map) => void;
-};
+} & Pick<VenueListData, 'venueList'>;
 
-export const Map: React.FC<Props> = ({ mapElement, map, onMapInitialized }) => {
+export const Map: React.FC<Props> = ({
+  mapRef,
+  map,
+  onMapInitialized,
+  venueList,
+}) => {
+  const { search: searchQueryString } = useLocation();
+  const { userCoordinate } = useUserCoordinate();
   const [isShowMapSearchButton, setIsMapShowSearchButton] = useState(false);
   const showMapSearchButton = () => setIsMapShowSearchButton(true);
   const hideMapSearchButton = () => setIsMapShowSearchButton(false);
+  const { updatePins } = useMarkers({
+    map,
+    searchQueryString,
+    hideMapSearchButton,
+    venueList,
+  });
 
   useEffect(() => {
-    const map = getInitMap(null);
+    const map = getInitMap(userCoordinate);
     onMapInitialized(map);
 
     const boundsChangeEventListener = naver.maps.Event.addListener(
@@ -36,8 +53,12 @@ export const Map: React.FC<Props> = ({ mapElement, map, onMapInitialized }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  useEffect(() => {
+    updatePins();
+  }, [updatePins]);
+
   return (
-    <StyledMap id="map" ref={mapElement}>
+    <StyledMap id="map" ref={mapRef}>
       {isShowMapSearchButton && (
         <MapSearchButton map={map} hideMapSearchButton={hideMapSearchButton} />
       )}
