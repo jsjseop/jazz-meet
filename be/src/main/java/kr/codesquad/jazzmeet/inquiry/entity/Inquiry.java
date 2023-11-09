@@ -2,6 +2,8 @@ package kr.codesquad.jazzmeet.inquiry.entity;
 
 import java.time.LocalDateTime;
 
+import org.hibernate.annotations.CreationTimestamp;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -38,6 +40,7 @@ public class Inquiry {
 	@Enumerated(value = EnumType.STRING)
 	@Column(nullable = false, length = 10)
 	private InquiryStatus status;
+	@CreationTimestamp
 	@Column(nullable = false)
 	private LocalDateTime createdAt;
 
