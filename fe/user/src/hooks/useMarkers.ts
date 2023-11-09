@@ -106,7 +106,11 @@ export const useMarkers = ({
 
       fitBoundsToCoordinateBoundary(searchQueryString, map.current);
     } else if (searchQueryString.includes('venueId')) {
-      markersOnMap.current = addPinsOnMap(venueList, map.current, 'marker');
+      markersOnMap.current = addPinsOnMap(
+        venueList,
+        map.current,
+        goToVenueDetail,
+      );
 
       fitBoundsToPins(venueList, map.current);
     } else {
