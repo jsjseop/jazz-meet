@@ -33,9 +33,7 @@ public class InquiryService {
 	private static final int PAGE_SIZE = 10;
 
 	private final InquiryQueryRepository inquiryQueryRepository;
-
 	private final InquiryRepository inquiryRepository;
-
 	private final Encrypt encrypt;
 
 	public InquirySearchResponse getInquiries(String category, String word, int page) {
@@ -73,7 +71,6 @@ public class InquiryService {
 
 	@Transactional
 	public InquirySaveResponse save(InquirySaveRequest inquirySaveRequest) {
-		// TODO: 비밀번호 암호화 하기
 		String encryptedPwd = encrypt.getEncrypted(inquirySaveRequest.password());
 		InquiryCategory inquiryCategory = InquiryCategory.toInquiryCategory(inquirySaveRequest.category());
 		Inquiry inquiry = InquiryMapper.INSTANCE.toInquiry(inquirySaveRequest, inquiryCategory, encryptedPwd);
