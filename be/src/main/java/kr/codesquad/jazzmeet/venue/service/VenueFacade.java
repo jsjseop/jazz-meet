@@ -60,7 +60,7 @@ public class VenueFacade {
 
 	private void validateImagesCount(List<Long> imageIds) {
 		if (imageIds.size() > 10) {
-			throw new CustomException(ImageErrorCode.NOT_FOUND_IMAGE);
+			throw new CustomException(ImageErrorCode.IMAGE_LIMIT_EXCEEDED);
 		}
 	}
 

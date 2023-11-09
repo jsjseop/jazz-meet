@@ -2,6 +2,9 @@ package kr.codesquad.jazzmeet.venue.dto.request;
 
 import java.util.List;
 
+import lombok.Builder;
+
+@Builder
 public record VenueCreateRequest(
 	String name,
 	List<Long> imageIds,
