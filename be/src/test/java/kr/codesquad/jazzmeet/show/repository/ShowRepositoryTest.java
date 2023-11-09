@@ -84,7 +84,7 @@ class ShowRepositoryTest extends IntegrationTestSupport {
 	void getShowsWithVenueByDate() throws Exception {
 		//given
 		LocalDate date = LocalDate.of(2023, 11, 1);
-		Venue venue1 = VenueFixture.createVenue("부기우기", "고양 덕양구 마포로2");
+		Venue venue1 = VenueFixture.createVenue("부기우기", "경기 고양시 덕양구 마포로2");
 		Venue venue2 = VenueFixture.createVenue("Entry55", "서울 마포구 마포로2");
 		Venue venue3 = VenueFixture.createVenue("클럽에반스", "서울 마포구 마포로2");
 
@@ -104,7 +104,7 @@ class ShowRepositoryTest extends IntegrationTestSupport {
 			.extracting("name", "cityAndDistrict")
 			.containsExactly(
 				tuple("Entry55", "서울 마포구"),
-				tuple("부기우기", "고양 덕양구"),
+				tuple("부기우기", "경기 고양시 덕양구"),
 				tuple("클럽에반스", "서울 마포구"));
 
 		assertThat(shows.get(0).getShows()).hasSize(2)

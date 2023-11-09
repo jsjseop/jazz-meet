@@ -78,7 +78,9 @@ public class ShowQueryRepository {
 	}
 
 	private StringTemplate getAddressQuery() {
-		return Expressions.stringTemplate("function('substring_index', {0}, ' ', 2)",
-			venue.roadNameAddress);
+		return Expressions.stringTemplate(
+			"CASE WHEN {0} LIKE '%시 %' THEN function('substring_index', {0}, ' ', 3) ELSE function('substring_index', {0}, ' ', 2) END",
+			venue.roadNameAddress
+		);
 	}
 }

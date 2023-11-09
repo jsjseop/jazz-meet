@@ -228,7 +228,7 @@ class ShowServiceTest extends IntegrationTestSupport {
 		//given
 		String date = "20231101";
 
-		Venue venue1 = VenueFixture.createVenue("부기우기", "경기 고양시");
+		Venue venue1 = VenueFixture.createVenue("부기우기", "경기 고양시 덕양구");
 		Venue venue2 = VenueFixture.createVenue("Entry55", "서울 마포구");
 		Venue venue3 = VenueFixture.createVenue("클럽에반스", "서울 마포구");
 
@@ -246,7 +246,7 @@ class ShowServiceTest extends IntegrationTestSupport {
 		//then
 		assertThat(shows).hasSize(2)
 			.extracting("region")
-			.containsExactly("경기 고양시", "서울 마포구");
+			.containsExactly("경기 고양시 덕양구", "서울 마포구");
 
 		assertThat(shows.get(0).venues()).hasSize(1)
 			.extracting("name")
