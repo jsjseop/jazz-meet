@@ -5,8 +5,9 @@ import org.springframework.http.HttpStatus;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
-public enum EnumErrorCode implements StatusCode {
-	NO_MATCH_VALUE(HttpStatus.NOT_FOUND, "해당하는 카테고리 종류가 없습니다.");
+public enum InquiryErrorCode implements StatusCode {
+	NO_MATCH_VALUE(HttpStatus.NOT_FOUND, "해당하는 종류가 없습니다."),
+	NOT_FOUND_INQUIRY(HttpStatus.NOT_FOUND, "해당하는 문의가 없습니다.");
 
 	private final HttpStatus httpStatus;
 	private final String message;

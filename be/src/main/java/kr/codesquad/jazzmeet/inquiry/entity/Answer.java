@@ -12,6 +12,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -19,6 +21,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "inquiry_answer")
 public class Answer {
 
+	@Getter
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -33,4 +36,13 @@ public class Answer {
 	private LocalDateTime createdAt;
 	@Column(nullable = false)
 	private LocalDateTime modifiedAt;
+
+	@Builder
+	public Answer(String content, Inquiry inquiry, Long adminId, LocalDateTime createdAt, LocalDateTime modifiedAt) {
+		this.content = content;
+		this.inquiry = inquiry;
+		this.adminId = adminId;
+		this.createdAt = createdAt;
+		this.modifiedAt = modifiedAt;
+	}
 }

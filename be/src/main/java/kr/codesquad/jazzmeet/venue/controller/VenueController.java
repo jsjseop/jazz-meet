@@ -28,6 +28,7 @@ public class VenueController {
 	@GetMapping("/api/search")
 	public ResponseEntity<List<VenueAutocompleteResponse>> searchAutocompleteList(@RequestParam String word) {
 		List<VenueAutocompleteResponse> venues = venueService.searchAutocompleteList(word);
+
 		return ResponseEntity.ok(venues);
 	}
 
@@ -36,6 +37,7 @@ public class VenueController {
 		@RequestParam(required = false) Double latitude,
 		@RequestParam(required = false) Double longitude) {
 		List<NearbyVenueResponse> nearByVenues = venueService.findNearByVenues(latitude, longitude);
+
 		return ResponseEntity.ok(nearByVenues);
 	}
 
@@ -45,6 +47,7 @@ public class VenueController {
 	@GetMapping("/api/venues/pins/search")
 	public ResponseEntity<List<VenuePinsResponse>> findVenuePinsBySearch(@RequestParam(required = false) String word) {
 		List<VenuePinsResponse> venuePins = venueService.findVenuePinsBySearch(word);
+
 		return ResponseEntity.ok(venuePins);
 	}
 
@@ -56,6 +59,7 @@ public class VenueController {
 		@RequestParam Double highLatitude, @RequestParam Double lowLongitude, @RequestParam Double highLongitude) {
 		List<VenuePinsResponse> venuePins = venueService.findVenuePinsByLocation(lowLatitude, highLatitude,
 			lowLongitude, highLongitude);
+
 		return ResponseEntity.ok(venuePins);
 	}
 
@@ -67,6 +71,7 @@ public class VenueController {
 	) {
 		VenueSearchResponse venueResponse = venueService.findVenuesByLocation(lowLatitude, highLatitude,
 			lowLongitude, highLongitude, page);
+
 		return ResponseEntity.ok(venueResponse);
 	}
 
@@ -91,6 +96,7 @@ public class VenueController {
 	@GetMapping("/api/venues/search/{venueId}")
 	public ResponseEntity<VenueSearchResponse> searchVenueListById(@PathVariable Long venueId) {
 		VenueSearchResponse venueResponse = venueService.findVenueSearchById(venueId);
+
 		return ResponseEntity.ok(venueResponse);
 	}
 }

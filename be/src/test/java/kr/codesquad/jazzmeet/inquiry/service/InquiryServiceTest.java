@@ -9,9 +9,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import kr.codesquad.jazzmeet.IntegrationTestSupport;
 import kr.codesquad.jazzmeet.fixture.InquiryFixture;
+import kr.codesquad.jazzmeet.global.error.CustomException;
+import kr.codesquad.jazzmeet.global.error.statuscode.InquiryErrorCode;
+import kr.codesquad.jazzmeet.inquiry.dto.response.InquiryDetailResponse;
 import kr.codesquad.jazzmeet.inquiry.dto.response.InquirySearch;
 import kr.codesquad.jazzmeet.inquiry.dto.response.InquirySearchResponse;
+import kr.codesquad.jazzmeet.inquiry.entity.Answer;
 import kr.codesquad.jazzmeet.inquiry.entity.Inquiry;
+import kr.codesquad.jazzmeet.inquiry.repository.InquiryAnswerRepository;
 import kr.codesquad.jazzmeet.inquiry.repository.InquiryRepository;
 import kr.codesquad.jazzmeet.inquiry.util.InquiryCategory;
 
@@ -21,9 +26,12 @@ class InquiryServiceTest extends IntegrationTestSupport {
 	InquiryService inquiryService;
 	@Autowired
 	InquiryRepository inquiryRepository;
+	@Autowired
+	InquiryAnswerRepository inquiryAnswerRepository;
 
 	@AfterEach
 	void dbClean() {
+		inquiryAnswerRepository.deleteAllInBatch();
 		inquiryRepository.deleteAllInBatch();
 	}
 
@@ -109,4 +117,35 @@ class InquiryServiceTest extends IntegrationTestSupport {
 			.contains(inquiry4.getNickname());
 	}
 
+	@Test
+	@DisplayName("문의의 상세 정보를 조회한다.")
+	void getInquiryDetail() {
+		// given
+		Inquiry inquiry = InquiryFixture.createInquiry();
+		Long inquiryId = inquiryRepository.save(inquiry).getId();
+		Answer inquiryAnswer = InquiryFixture.createInquiryAnswer(inquiry);
+		Long answerId = inquiryAnswerRepository.save(inquiryAnswer).getId();
+
+		// when
+		InquiryDetailResponse inquiryDetail = inquiryService.getInquiryDetail(inquiryId);
+
+		// then
+		assertThat(inquiryDetail).isNotNull().extracting("id").isEqualTo(inquiryId);
+		assertThat(inquiryDetail.answer()).extracting("id").isEqualTo(answerId);
+	}
+
+	@Test
+	@DisplayName("존재하지 않는 문의의 상세 정보는 조회되지 않는다.")
+	void getInquiryDetailError() {
+		// given
+		Inquiry inquiry = InquiryFixture.createInquiry();
+		inquiryRepository.save(inquiry);
+		Answer inquiryAnswer = InquiryFixture.createInquiryAnswer(inquiry);
+		inquiryAnswerRepository.save(inquiryAnswer);
+
+		//when //then
+		Long wrongInquiryId = 0L;
+		assertThatThrownBy(() -> inquiryService.getInquiryDetail(wrongInquiryId))
+			.isInstanceOf(CustomException.class).hasMessage(InquiryErrorCode.NOT_FOUND_INQUIRY.getMessage());
+	}
 }

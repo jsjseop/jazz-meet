@@ -20,6 +20,7 @@ import lombok.NoArgsConstructor;
 @Entity
 public class Inquiry {
 
+	@Getter
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
