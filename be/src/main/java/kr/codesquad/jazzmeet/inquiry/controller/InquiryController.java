@@ -26,6 +26,7 @@ public class InquiryController {
 		@RequestParam(required = false) String word,
 		@RequestParam @Min(value = 1) int page) {
 		InquirySearchResponse inquiries = inquiryService.getInquiries(category, word, page);
+
 		return ResponseEntity.ok(inquiries);
 	}
 
@@ -35,6 +36,7 @@ public class InquiryController {
 	@GetMapping("/api/inquiries/{inquiryId}")
 	public ResponseEntity<?> getInquiryDetail(@PathVariable Long inquiryId) {
 		InquiryDetailResponse inquiry = inquiryService.getInquiryDetail(inquiryId);
+
 		return ResponseEntity.ok(inquiry);
 	}
 }
