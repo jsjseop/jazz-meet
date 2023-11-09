@@ -35,9 +35,9 @@ class ShowRepositoryTest extends IntegrationTestSupport {
 
 		Venue venue = VenueFixture.createVenue("부기우기", "경기도 고양시");
 		Show show1 = ShowFixture.createShow("트리오", LocalDateTime.of(2023, 11, 3, 18, 00),
-			LocalDateTime.of(2023, 11, 3, 20, 0), venue);
+			LocalDateTime.of(2023, 11, 3, 20, 00), venue);
 		Show show2 = ShowFixture.createShow("퀄텟", LocalDateTime.of(2023, 11, 3, 20, 00),
-			LocalDateTime.of(2023, 11, 3, 22, 0), venue);
+			LocalDateTime.of(2023, 11, 3, 22, 00), venue);
 		showRepository.saveAll(List.of(show1, show2));
 
 		//when
@@ -59,11 +59,11 @@ class ShowRepositoryTest extends IntegrationTestSupport {
 		Venue venue2 = VenueFixture.createVenue("클럽에반스", "경기도 고양시");
 
 		Show show1 = ShowFixture.createShow("트리오", LocalDateTime.of(2023, 11, 1, 18, 00),
-			LocalDateTime.of(2023, 11, 1, 20, 0), venue1);
+			LocalDateTime.of(2023, 11, 1, 20, 00), venue1);
 		Show show2 = ShowFixture.createShow("트리오", LocalDateTime.of(2023, 11, 10, 18, 00),
-			LocalDateTime.of(2023, 11, 10, 20, 0), venue1);
+			LocalDateTime.of(2023, 11, 10, 20, 00), venue1);
 		Show show3 = ShowFixture.createShow("트리오", LocalDateTime.of(2023, 11, 20, 18, 00),
-			LocalDateTime.of(2023, 11, 20, 20, 0), venue2);
+			LocalDateTime.of(2023, 11, 20, 20, 00), venue2);
 		showRepository.saveAll(List.of(show1, show2, show3));
 
 	    //when
