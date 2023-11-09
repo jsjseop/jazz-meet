@@ -4,14 +4,20 @@ import { Map } from './Map';
 import { Panel } from './Panel';
 import { getVenuePinsByMapBounds, getVenuesByMapBounds } from '~/apis/venue';
 import { Pin, SearchedVenues } from '~/types/api.types';
-import { getMapBounds } from '~/utils/map';
+import { addMarkersOnMap, addPinsOnMap, getMapBounds } from '~/utils/map';
+import { useNavigate } from 'react-router-dom';
 
 export const MapPage: React.FC = () => {
   const mapElement = useRef<HTMLDivElement>(null);
   const [map, setMap] = useState<naver.maps.Map>();
 
   const [pins, setPins] = useState<Pin[]>();
-  const [venueList, setVenueList] = useState<SearchedVenues>();
+  const [searchedVenus, setSearchedVenues] = useState<SearchedVenues>();
+
+  const pinsOnMap = useRef<naver.maps.Marker[]>();
+  const markersOnMap = useRef<naver.maps.Marker[]>();
+
+  const navigate = useNavigate();
 
   // 지도가 첫 렌더링 될 때
   useEffect(() => {
@@ -28,9 +34,36 @@ export const MapPage: React.FC = () => {
       ]);
 
       setPins(pins);
-      setVenueList(venueList);
+      setSearchedVenues(venueList);
     })();
   }, [map]);
+
+  // pins, searchedVenues가 변경될 때 렌더링 한다.
+  useEffect(() => {
+    if (!map || !pins || !searchedVenus) {
+      return;
+    }
+
+    if (pinsOnMap.current) {
+      pinsOnMap.current.forEach((marker) => marker.setMap(null));
+    }
+
+    if (markersOnMap.current) {
+      markersOnMap.current.forEach((marker) => marker.setMap(null));
+    }
+
+    const filteredPins = pins.filter((pin) =>
+      searchedVenus.venues.every((venue) => venue.id !== pin.id),
+    );
+
+    const goToVenueDetail = (venueId: number) => {
+      navigate(`venues/${venueId}`);
+    };
+
+    addPinsOnMap(filteredPins, map, goToVenueDetail);
+    addMarkersOnMap(searchedVenus.venues, map, goToVenueDetail);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [map, pins, searchedVenus]);
 
   return (
     <StyledMapPage>
