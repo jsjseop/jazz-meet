@@ -39,6 +39,12 @@ export const SearchBox: React.FC = () => {
     setIsSuggestionBoxOpen(searchSuggestions.length > 0);
   }, [searchSuggestions]);
 
+  useEffect(() => {
+    if (isSuggestionBoxOpen === false) {
+      setActiveSuggestionIndex(-1);
+    }
+  }, [isSuggestionBoxOpen])
+
   const query = new URLSearchParams(queryString);
   const word = query.get('word');
 
@@ -53,13 +59,20 @@ export const SearchBox: React.FC = () => {
   const onSearchTextSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    if (activeSuggestionIndex !== -1) {
+      const { id } = searchSuggestions[activeSuggestionIndex];
+      navigate(`/map?venueId=${id}`);
+      hideSuggestionBox();
+      return;
+    }
+
     if (searchText.trim().length > 0) {
       navigate(`/map?word=${searchText}`);
       hideSuggestionBox();
     }
   };
 
-  const onArrowKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const changeActiveSuggstion = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'ArrowDown') {
       e.preventDefault();
 
@@ -99,7 +112,7 @@ export const SearchBox: React.FC = () => {
           autoComplete="off"
           value={searchText || word || ''}
           onChange={(e) => setSearchText(e.target.value)}
-          onKeyDown={onArrowKeyDown}
+          onKeyDown={changeActiveSuggstion}
           onFocus={showSuggestionBox}
         />
         <IconButton type="button" sx={{ p: '10px' }} aria-label="search">
