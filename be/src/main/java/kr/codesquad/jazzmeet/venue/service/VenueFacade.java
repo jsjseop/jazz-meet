@@ -23,10 +23,10 @@ import kr.codesquad.jazzmeet.venue.mapper.VenueMapper;
 import kr.codesquad.jazzmeet.venue.util.VenueUtil;
 import lombok.RequiredArgsConstructor;
 
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 @Service
-public class VenueCreateFacade {
+public class VenueFacade {
 
 	private static final int THUMBNAIL_IMAGE_INDEX = 0;
 
@@ -34,6 +34,7 @@ public class VenueCreateFacade {
 	private final ImageService imageService;
 	private final LinkTypeService linkTypeService;
 
+	@Transactional
 	public VenueCreateResponse createVenue(VenueCreateRequest venueCreateRequest) {
 		Point location = VenueUtil.createPoint(venueCreateRequest.latitude(), venueCreateRequest.longitude());
 
@@ -42,7 +43,20 @@ public class VenueCreateFacade {
 
 		Venue venue = VenueMapper.INSTANCE.toVenue(venueCreateRequest, location, thumbnailImage.getUrl());
 
-		AtomicLong imageOrder = new AtomicLong(0L);
+		addVenueImages(venue, imageIds);
+
+		List<VenueCreateLink> links = venueCreateRequest.links();
+		addVenueLinks(venue, links);
+
+		List<VenueCreateHour> venueHours = venueCreateRequest.venueHours();
+		addVenueHours(venue, venueHours);
+
+		Venue savedVenue = venueService.save(venue);
+		return new VenueCreateResponse(savedVenue.getId());
+	}
+
+	private void addVenueImages(Venue venue, List<Long> imageIds) {
+		AtomicLong imageOrder = new AtomicLong();
 		imageIds.forEach(imageId -> {
 			Image image = imageService.findById(imageId);
 			VenueImage venueImage = VenueImage.builder()
@@ -52,8 +66,9 @@ public class VenueCreateFacade {
 				.build();
 			venue.addVenueImage(venueImage);
 		});
+	}
 
-		List<VenueCreateLink> links = venueCreateRequest.links();
+	private void addVenueLinks(Venue venue, List<VenueCreateLink> links) {
 		links.forEach(venueCreateLink -> {
 			String type = venueCreateLink.type();
 			LinkType linkType = linkTypeService.findByName(type);
@@ -64,8 +79,9 @@ public class VenueCreateFacade {
 				.build();
 			venue.addLink(link);
 		});
+	}
 
-		List<VenueCreateHour> venueHours = venueCreateRequest.venueHours();
+	private void addVenueHours(Venue venue, List<VenueCreateHour> venueHours) {
 		venueHours.forEach(venueCreateHour -> {
 			VenueHour venueHour = VenueHour.builder()
 				.day(DayOfWeek.toDayOfWeek(venueCreateHour.day()))
@@ -74,8 +90,5 @@ public class VenueCreateFacade {
 				.build();
 			venue.addVenueHour(venueHour);
 		});
-
-		Venue savedVenue = venueService.save(venue);
-		return new VenueCreateResponse(savedVenue.getId());
 	}
 }

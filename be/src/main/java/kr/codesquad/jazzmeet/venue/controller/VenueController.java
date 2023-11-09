@@ -20,7 +20,7 @@ import kr.codesquad.jazzmeet.venue.dto.response.VenueCreateResponse;
 import kr.codesquad.jazzmeet.venue.dto.response.VenueDetailResponse;
 import kr.codesquad.jazzmeet.venue.dto.response.VenuePinsResponse;
 import kr.codesquad.jazzmeet.venue.dto.response.VenueSearchResponse;
-import kr.codesquad.jazzmeet.venue.service.VenueCreateFacade;
+import kr.codesquad.jazzmeet.venue.service.VenueFacade;
 import kr.codesquad.jazzmeet.venue.service.VenueService;
 import lombok.RequiredArgsConstructor;
 
@@ -30,7 +30,7 @@ import lombok.RequiredArgsConstructor;
 public class VenueController {
 
 	private final VenueService venueService;
-	private final VenueCreateFacade venueCreateFacade;
+	private final VenueFacade venueFacade;
 
 	/**
 	 * 검색어 자동완성 목록 조회 API
@@ -118,7 +118,8 @@ public class VenueController {
 	 */
 	@PostMapping("/api/venues")
 	public ResponseEntity<VenueCreateResponse> createVenue(@RequestBody VenueCreateRequest venueCreateRequest) {
-		VenueCreateResponse venueCreateResponse = venueCreateFacade.createVenue(venueCreateRequest);
+		VenueCreateResponse venueCreateResponse = venueFacade.createVenue(venueCreateRequest);
+
 		return ResponseEntity.status(HttpStatus.CREATED).body(venueCreateResponse);
 	}
 }
