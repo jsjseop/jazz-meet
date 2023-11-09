@@ -19,6 +19,7 @@ import kr.codesquad.jazzmeet.inquiry.entity.Inquiry;
 import kr.codesquad.jazzmeet.inquiry.mapper.InquiryMapper;
 import kr.codesquad.jazzmeet.inquiry.repository.InquiryQueryRepository;
 import kr.codesquad.jazzmeet.inquiry.repository.InquiryRepository;
+import kr.codesquad.jazzmeet.inquiry.util.Encrypt;
 import kr.codesquad.jazzmeet.inquiry.util.InquiryCategory;
 import kr.codesquad.jazzmeet.inquiry.vo.InquiryDetail;
 import kr.codesquad.jazzmeet.inquiry.vo.InquirySearchData;
@@ -34,6 +35,8 @@ public class InquiryService {
 	private final InquiryQueryRepository inquiryQueryRepository;
 
 	private final InquiryRepository inquiryRepository;
+
+	private final Encrypt encrypt;
 
 	public InquirySearchResponse getInquiries(String category, String word, int page) {
 		// request는 한글, DB 저장은 영어로 되어있기 때문에 변환 필요.
@@ -71,10 +74,12 @@ public class InquiryService {
 	@Transactional
 	public InquirySaveResponse save(InquirySaveRequest inquirySaveRequest) {
 		// TODO: 비밀번호 암호화 하기
+		String encryptedPwd = encrypt.getEncrypted(inquirySaveRequest.password());
 		InquiryCategory inquiryCategory = InquiryCategory.toInquiryCategory(inquirySaveRequest.category());
-		Inquiry inquiry = InquiryMapper.INSTANCE.toInquiry(inquirySaveRequest, inquiryCategory);
+		Inquiry inquiry = InquiryMapper.INSTANCE.toInquiry(inquirySaveRequest, inquiryCategory, encryptedPwd);
 		Inquiry savedInquiry = inquiryRepository.save(inquiry);
 
 		return InquiryMapper.INSTANCE.toInquirySaveResponse(savedInquiry);
 	}
+
 }
