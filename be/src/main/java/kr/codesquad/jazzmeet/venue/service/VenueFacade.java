@@ -7,6 +7,8 @@ import org.locationtech.jts.geom.Point;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import kr.codesquad.jazzmeet.global.error.CustomException;
+import kr.codesquad.jazzmeet.global.error.statuscode.ImageErrorCode;
 import kr.codesquad.jazzmeet.image.entity.Image;
 import kr.codesquad.jazzmeet.image.service.ImageService;
 import kr.codesquad.jazzmeet.venue.dto.request.VenueCreateHour;
@@ -39,6 +41,7 @@ public class VenueFacade {
 		Point location = VenueUtil.createPoint(venueCreateRequest.latitude(), venueCreateRequest.longitude());
 
 		List<Long> imageIds = venueCreateRequest.imageIds();
+		validateImagesCount(imageIds);
 		Image thumbnailImage = imageService.findById(imageIds.get(THUMBNAIL_IMAGE_INDEX));
 
 		Venue venue = VenueMapper.INSTANCE.toVenue(venueCreateRequest, location, thumbnailImage.getUrl());
@@ -53,6 +56,12 @@ public class VenueFacade {
 
 		Venue savedVenue = venueService.save(venue);
 		return new VenueCreateResponse(savedVenue.getId());
+	}
+
+	private void validateImagesCount(List<Long> imageIds) {
+		if (imageIds.size() > 10) {
+			throw new CustomException(ImageErrorCode.NOT_FOUND_IMAGE);
+		}
 	}
 
 	private void addVenueImages(Venue venue, List<Long> imageIds) {
