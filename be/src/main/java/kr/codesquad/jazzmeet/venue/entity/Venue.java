@@ -12,6 +12,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import kr.codesquad.jazzmeet.show.entity.Show;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -46,6 +47,8 @@ public class Venue {
 	private List<Link> links = new ArrayList<>();
 	@OneToMany(mappedBy = "venue", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<VenueHour> venueHours = new ArrayList<>();
+	@OneToMany(mappedBy = "venue", cascade = CascadeType.REMOVE, orphanRemoval = true)
+	private List<Show> shows = new ArrayList<>();
 
 	@Builder
 	public Venue(String name, String roadNameAddress, String lotNumberAddress, String phoneNumber, String description,

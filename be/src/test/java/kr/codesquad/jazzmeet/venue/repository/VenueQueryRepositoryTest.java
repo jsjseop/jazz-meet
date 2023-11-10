@@ -23,6 +23,7 @@ import kr.codesquad.jazzmeet.fixture.ImageFixture;
 import kr.codesquad.jazzmeet.fixture.ShowFixture;
 import kr.codesquad.jazzmeet.fixture.VenueFixture;
 import kr.codesquad.jazzmeet.image.entity.Image;
+import kr.codesquad.jazzmeet.image.repository.ImageRepository;
 import kr.codesquad.jazzmeet.show.entity.Show;
 import kr.codesquad.jazzmeet.show.repository.ShowRepository;
 import kr.codesquad.jazzmeet.venue.entity.Venue;
@@ -46,6 +47,9 @@ class VenueQueryRepositoryTest extends IntegrationTestSupport {
 
 	@Autowired
 	VenueImageRepository venueImageRepository;
+
+	@Autowired
+	ImageRepository imageRepository;
 
 	@AfterEach
 	void dbClean() {
@@ -214,23 +218,23 @@ class VenueQueryRepositoryTest extends IntegrationTestSupport {
 	@Test
 	void findVenueById() throws Exception {
 		//given
-		Long venueId = 1L;
-		// 공연장 생성
 		Venue venue = VenueFixture.createVenue("부기우기", "서울 용산구 회나무로 21 2층",
 			VenueUtil.createPoint(37.52387497068088, 126.9294615244093));
 
-		// 이미지 생성
 		Image image1 = ImageFixture.createImage("image1.url");
 		Image image2 = ImageFixture.createImage("image2.url");
 
-		// 공연장_이미지 생성
+		imageRepository.saveAll(List.of(image1, image2));
+
 		VenueImage venueImage1 = VenueFixture.createVenueImage(venue, image1, 1L);
 		VenueImage venueImage2 = VenueFixture.createVenueImage(venue, image2, 2L);
 
-		// 공연장_이미지 저장
-		venueImage1.add(venue, image1);
-		venueImage2.add(venue, image2);
-		venueImageRepository.saveAll(List.of(venueImage1, venueImage2));
+		venue.addVenueImage(venueImage1);
+		venue.addVenueImage(venueImage2);
+
+		venueRepository.save(venue);
+
+		Long venueId = venue.getId();
 
 		//when
 		VenueDetail venueDetail = venueQueryRepository.findVenue(venueId).get();

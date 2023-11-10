@@ -38,16 +38,17 @@ public class Show {
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "venue_id")
 	private Venue venue;
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "poster_id")
 	private Image poster;
 	private Long adminId;
 
 	@Builder
-	public Show(String teamName, LocalDateTime startTime, LocalDateTime endTime, Venue venue) {
+	public Show(String teamName, LocalDateTime startTime, LocalDateTime endTime, Venue venue, Image poster) {
 		this.teamName = teamName;
 		this.startTime = startTime;
 		this.endTime = endTime;
 		this.venue = venue;
+		this.poster = poster;
 	}
 }
