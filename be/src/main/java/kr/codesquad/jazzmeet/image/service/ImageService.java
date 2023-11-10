@@ -39,6 +39,10 @@ public class ImageService {
 		return new ImageIdsResponse(ids);
 	}
 
+	public void registerImage(Image image) {
+		image.updateStatus(ImageStatus.REGISTERED);
+	}
+
 	@Transactional
 	public void deleteImage(Long imageId) {
 		Image image = imageRepository.findById(imageId)
