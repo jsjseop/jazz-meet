@@ -7,14 +7,14 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class ShowInfoByDate {
+public class ShowSummary {
 	private Long id;
 	private String posterUrl;
 	private String teamName;
 	private LocalDateTime startTime;
 	private LocalDateTime endTime;
 
-	public ShowInfoByDate(Long id, String posterUrl, String teamName, LocalDateTime startTime,
+	public ShowSummary(Long id, String posterUrl, String teamName, LocalDateTime startTime,
 		LocalDateTime endTime) {
 		this.id = id;
 		this.posterUrl = posterUrl;
