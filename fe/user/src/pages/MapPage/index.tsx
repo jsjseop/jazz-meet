@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Map } from './Map';
 import { Panel } from './Panel';
 import { getVenuePinsByMapBounds, getVenuesByMapBounds } from '~/apis/venue';
@@ -19,8 +19,7 @@ export const MapPage: React.FC = () => {
 
   const navigate = useNavigate();
 
-  // 지도가 첫 렌더링 될 때
-  useEffect(() => {
+  const updateMapDataBasedOnBounds = useCallback(() => {
     if (!map) {
       return;
     }
@@ -37,6 +36,11 @@ export const MapPage: React.FC = () => {
       setSearchedVenues(venueList);
     })();
   }, [map]);
+
+  // 지도가 첫 렌더링 될 때
+  useEffect(() => {
+    updateMapDataBasedOnBounds();
+  }, [updateMapDataBasedOnBounds]);
 
   // pins, searchedVenues가 변경될 때 렌더링 한다.
   useEffect(() => {
@@ -60,8 +64,12 @@ export const MapPage: React.FC = () => {
       navigate(`venues/${venueId}`);
     };
 
-    addPinsOnMap(filteredPins, map, goToVenueDetail);
-    addMarkersOnMap(searchedVenus.venues, map, goToVenueDetail);
+    pinsOnMap.current = addPinsOnMap(filteredPins, map, goToVenueDetail);
+    markersOnMap.current = addMarkersOnMap(
+      searchedVenus.venues,
+      map,
+      goToVenueDetail,
+    );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [map, pins, searchedVenus]);
 
@@ -71,6 +79,7 @@ export const MapPage: React.FC = () => {
         mapElement={mapElement}
         map={map}
         onMapInitialized={(map: naver.maps.Map) => setMap(map)}
+        onCurrentViewSearchClick={updateMapDataBasedOnBounds}
       />
       <Panel mapElement={mapElement} />
     </StyledMapPage>

@@ -7,9 +7,15 @@ type Props = {
   mapElement: React.RefObject<HTMLDivElement>;
   map?: naver.maps.Map;
   onMapInitialized: (map: naver.maps.Map) => void;
+  onCurrentViewSearchClick: () => void;
 };
 
-export const Map: React.FC<Props> = ({ mapElement, map, onMapInitialized }) => {
+export const Map: React.FC<Props> = ({
+  mapElement,
+  map,
+  onMapInitialized,
+  onCurrentViewSearchClick,
+}) => {
   const [isShowMapSearchButton, setIsMapShowSearchButton] = useState(false);
   const showMapSearchButton = () => setIsMapShowSearchButton(true);
   const hideMapSearchButton = () => setIsMapShowSearchButton(false);
@@ -39,7 +45,11 @@ export const Map: React.FC<Props> = ({ mapElement, map, onMapInitialized }) => {
   return (
     <StyledMap id="map" ref={mapElement}>
       {isShowMapSearchButton && (
-        <MapSearchButton map={map} hideMapSearchButton={hideMapSearchButton} />
+        <MapSearchButton
+          map={map}
+          hideMapSearchButton={hideMapSearchButton}
+          onCurrentViewSearchClick={onCurrentViewSearchClick}
+        />
       )}
     </StyledMap>
   );

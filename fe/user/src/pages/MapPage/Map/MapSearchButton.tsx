@@ -4,11 +4,16 @@ import RefreshIcon from '@mui/icons-material/Refresh';
 type Props = {
   map?: naver.maps.Map;
   hideMapSearchButton: () => void;
+  onCurrentViewSearchClick: () => void;
 };
 
-export const MapSearchButton: React.FC<Props> = ({ hideMapSearchButton }) => {
+export const MapSearchButton: React.FC<Props> = ({
+  hideMapSearchButton,
+  onCurrentViewSearchClick,
+}) => {
   const onMapSearchButtonClick = () => {
     hideMapSearchButton();
+    onCurrentViewSearchClick();
   };
 
   return (
