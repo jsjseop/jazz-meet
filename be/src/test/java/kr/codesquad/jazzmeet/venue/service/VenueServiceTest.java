@@ -450,13 +450,15 @@ class VenueServiceTest extends IntegrationTestSupport {
 		Image image1 = ImageFixture.createImage("image1.url");
 		Image image2 = ImageFixture.createImage("image2.url");
 
+		imageRepository.saveAll(List.of(image1, image2));
+
 		VenueImage venueImage1 = VenueFixture.createVenueImage(venue, image1, 1L);
 		VenueImage venueImage2 = VenueFixture.createVenueImage(venue, image2, 2L);
 
-		venueImage1.add(venue, image1);
-		venueImage2.add(venue, image2);
+		venue.addVenueImage(venueImage1);
+		venue.addVenueImage(venueImage2);
 
-		venueImageRepository.saveAll(List.of(venueImage1, venueImage2));
+		venueRepository.save(venue);
 
 		Long venueId = venue.getId();
 
@@ -480,13 +482,15 @@ class VenueServiceTest extends IntegrationTestSupport {
 		Image image1 = ImageFixture.createImage("image1.url");
 		Image image2 = ImageFixture.createImage("image2.url");
 
+		imageRepository.saveAll(List.of(image1, image2));
+
 		VenueImage venueImage1 = VenueFixture.createVenueImage(venue, image1, 1L);
 		VenueImage venueImage2 = VenueFixture.createVenueImage(venue, image2, 2L);
 
-		venueImage1.add(venue, image1);
-		venueImage2.add(venue, image2);
+		venue.addVenueImage(venueImage1);
+		venue.addVenueImage(venueImage2);
 
-		venueImageRepository.saveAll(List.of(venueImage1, venueImage2));
+		venueRepository.save(venue);
 
 		//when //then
 		assertThatThrownBy(() -> venueService.findVenue(venueId))
