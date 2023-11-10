@@ -15,10 +15,60 @@ export const SearchBox: React.FC = () => {
     SearchSuggestion[]
   >([]);
   const [isSuggestionBoxOpen, setIsSuggestionBoxOpen] = useState(false);
+  const [activeSuggestionIndex, setActiveSuggestionIndex] =
+    useState<number>(-1);
   const searchBoxRef = useRef<HTMLDivElement>(null);
 
+  const query = new URLSearchParams(queryString);
+  const word = query.get('word');
+  const isSearchTextEmpty = searchText.trim().length === 0;
+
+  const showSuggestionBox = () => setIsSuggestionBoxOpen(true);
+  const hideSuggestionBox = () => setIsSuggestionBoxOpen(false);
+
+  const onInputBaseFocus = () => {
+    if (!isSearchTextEmpty) {
+      showSuggestionBox();
+    }
+  };
+
+  const onSearchTextSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (activeSuggestionIndex !== -1) {
+      const { id } = searchSuggestions[activeSuggestionIndex];
+      navigate(`/map?venueId=${id}`);
+      hideSuggestionBox();
+      return;
+    }
+
+    if (!isSearchTextEmpty) {
+      navigate(`/map?word=${searchText}`);
+      hideSuggestionBox();
+    }
+  };
+
+  const changeActiveSuggstion = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+
+      setActiveSuggestionIndex((asi) =>
+        asi === searchSuggestions.length - 1 ? -1 : asi + 1,
+      );
+      return;
+    }
+
+    if (e.key === 'ArrowUp') {
+      e.preventDefault();
+
+      setActiveSuggestionIndex((asi) =>
+        asi === -1 ? searchSuggestions.length - 1 : asi - 1,
+      );
+    }
+  };
+
   useEffect(() => {
-    if (searchText.trim().length === 0) {
+    if (isSearchTextEmpty) {
       setSearchSuggestions([]);
       return;
     }
@@ -31,37 +81,20 @@ export const SearchBox: React.FC = () => {
     return () => {
       clearTimeout(timer);
     };
-  }, [searchText]);
+  }, [searchText, isSearchTextEmpty]);
 
   useEffect(() => {
     setIsSuggestionBoxOpen(searchSuggestions.length > 0);
   }, [searchSuggestions]);
 
-  const query = new URLSearchParams(queryString);
-  const word = query.get('word');
-
-  const showSuggestionBox = () => {
-    if (searchText.trim().length === 0) {
-      return;
+  useEffect(() => {
+    if (isSuggestionBoxOpen === false) {
+      setActiveSuggestionIndex(-1);
     }
-    setIsSuggestionBoxOpen(true);
-  };
-  const hideSuggestionBox = () => setIsSuggestionBoxOpen(false);
-
-  const onSearchTextSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    if (searchText.trim().length > 0) {
-      navigate(`/map?word=${searchText}`);
-      hideSuggestionBox();
-    }
-  };
+  }, [isSuggestionBoxOpen]);
 
   return (
-    <StyledSearchBox
-      id="search-box"
-      ref={searchBoxRef}
-    >
+    <StyledSearchBox id="search-box" ref={searchBoxRef}>
       <Paper
         component="form"
         onSubmit={onSearchTextSubmit}
@@ -81,7 +114,8 @@ export const SearchBox: React.FC = () => {
           autoComplete="off"
           value={searchText || word || ''}
           onChange={(e) => setSearchText(e.target.value)}
-          onFocus={showSuggestionBox}
+          onKeyDown={changeActiveSuggstion}
+          onFocus={onInputBaseFocus}
         />
         <IconButton type="button" sx={{ p: '10px' }} aria-label="search">
           <SearchIcon />
@@ -92,6 +126,7 @@ export const SearchBox: React.FC = () => {
         suggestions={searchSuggestions}
         open={isSuggestionBoxOpen}
         searchBoxRef={searchBoxRef}
+        activeIndex={activeSuggestionIndex}
         onClose={hideSuggestionBox}
       />
     </StyledSearchBox>
