@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -46,8 +47,12 @@ class VenueQueryRepositoryTest extends IntegrationTestSupport {
 	@Autowired
 	VenueImageRepository venueImageRepository;
 
-	@Autowired
-	VenueHourRepository venueHourRepository;
+	@AfterEach
+	void dbClean() {
+		venueImageRepository.deleteAllInBatch();
+		showRepository.deleteAllInBatch();
+		venueRepository.deleteAllInBatch();
+	}
 
 	@DisplayName("이름에 검색어가 포함되어 있는 공연장 정보 리스트를 조회한다.")
 	@Test

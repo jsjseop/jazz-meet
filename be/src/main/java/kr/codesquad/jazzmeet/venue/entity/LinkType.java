@@ -19,4 +19,8 @@ public class LinkType {
 	private Long id;
 	@Column(nullable = false, length = 20)
 	private String name;
+
+	public LinkType(String name) {
+		this.name = name;
+	}
 }

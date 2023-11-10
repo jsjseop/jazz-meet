@@ -40,11 +40,11 @@ public class Venue {
 	private Long adminId;
 	@Column(length = 500)
 	private String thumbnailUrl;
-	@OneToMany(mappedBy = "venue", cascade = CascadeType.REMOVE, orphanRemoval = true)
+	@OneToMany(mappedBy = "venue", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<VenueImage> images = new ArrayList<>();
-	@OneToMany(mappedBy = "venue", cascade = CascadeType.REMOVE, orphanRemoval = true)
+	@OneToMany(mappedBy = "venue", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Link> links = new ArrayList<>();
-	@OneToMany(mappedBy = "venue", cascade = CascadeType.REMOVE, orphanRemoval = true)
+	@OneToMany(mappedBy = "venue", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<VenueHour> venueHours = new ArrayList<>();
 
 	@Builder
@@ -57,5 +57,21 @@ public class Venue {
 		this.description = description;
 		this.location = location;
 		this.thumbnailUrl = thumbnailUrl;
+	}
+
+	// 연관관계 편의 메서드
+	public void addVenueImage(VenueImage venueImage) {
+		images.add(venueImage);
+		venueImage.addVenue(this);
+	}
+
+	public void addLink(Link link) {
+		links.add(link);
+		link.addVenue(this);
+	}
+
+	public void addVenueHour(VenueHour venueHour) {
+		venueHours.add(venueHour);
+		venueHour.addVenue(this);
 	}
 }

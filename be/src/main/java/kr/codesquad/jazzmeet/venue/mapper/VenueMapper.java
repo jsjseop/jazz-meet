@@ -3,12 +3,14 @@ package kr.codesquad.jazzmeet.venue.mapper;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.locationtech.jts.geom.Point;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
 import kr.codesquad.jazzmeet.venue.dto.ShowInfo;
 import kr.codesquad.jazzmeet.venue.dto.VenueSearch;
+import kr.codesquad.jazzmeet.venue.dto.request.VenueCreateRequest;
 import kr.codesquad.jazzmeet.venue.dto.response.NearbyVenueResponse;
 import kr.codesquad.jazzmeet.venue.dto.response.VenueAutocompleteResponse;
 import kr.codesquad.jazzmeet.venue.dto.response.VenueDetailResponse;
@@ -79,4 +81,6 @@ public interface VenueMapper {
 	@Mapping(target = "venueHours", source = "venueHours")
 	VenueDetail toVenueDatail(Integer dummy, Venue venue,
 		List<VenueDetailImage> images, List<VenueDetailLink> links, List<VenueDetailVenueHour> venueHours);
+
+	Venue toVenue(VenueCreateRequest venueCreateRequest, Point location, String thumbnailUrl);
 }

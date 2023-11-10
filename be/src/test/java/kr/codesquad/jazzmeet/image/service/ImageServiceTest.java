@@ -40,8 +40,7 @@ class ImageServiceTest extends IntegrationTestSupport {
 		ImageIdsResponse imageIdsResponse = imageService.saveImages(imageUrls);
 
 		// then
-		assertThat(imageIdsResponse.getIds()).hasSize(imageUrls.size())
-			.containsExactly(1L, 2L, 3L);
+		assertThat(imageIdsResponse.ids()).hasSize(imageUrls.size());
 	}
 
 	@Test
@@ -63,7 +62,7 @@ class ImageServiceTest extends IntegrationTestSupport {
 	@DisplayName("존재하지 않는 아이디로 이미지를 삭제하려 하면 삭제되지 않는다")
 	void deleteImageWrongId() {
 		// given
-		Long wrongId = 3L;
+		Long wrongId = -1L;
 
 		// when then
 		assertThatThrownBy(() -> imageService.deleteImage(wrongId))

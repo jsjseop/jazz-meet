@@ -48,6 +48,7 @@ class VenueServiceTest extends IntegrationTestSupport {
 
 	@AfterEach
 	void dbClean() {
+		venueImageRepository.deleteAllInBatch();
 		venueRepository.deleteAllInBatch();
 	}
 

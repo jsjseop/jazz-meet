@@ -23,6 +23,9 @@ public class ImageController {
 	private final CloudService cloudService;
 	private final ImageService imageService;
 
+	/**
+	 * 이미지 업로드 API
+	 */
 	@PostMapping("/api/images")
 	public ResponseEntity<ImageIdsResponse> uploadImages(@RequestPart("image") List<MultipartFile> multipartFiles) {
 		List<String> imageUrls = cloudService.uploadImages(multipartFiles);
@@ -31,6 +34,9 @@ public class ImageController {
 		return ResponseEntity.status(HttpStatus.CREATED).body(imageIdsResponse);
 	}
 
+	/**
+	 * 이미지 삭제 API
+	 */
 	@DeleteMapping("/api/images/{imageId}")
 	public ResponseEntity<Void> deleteImage(@PathVariable Long imageId) {
 		imageService.deleteImage(imageId);

@@ -9,6 +9,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -26,4 +27,17 @@ public class Link {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "venue_id")
 	private Venue venue;
+
+	@Builder
+	public Link(Long id, String url, LinkType linkType, Venue venue) {
+		this.id = id;
+		this.url = url;
+		this.linkType = linkType;
+		this.venue = venue;
+	}
+
+	// 연관 관계 편의 메소드
+	public void addVenue(Venue venue) {
+		this.venue = venue;
+	}
 }
