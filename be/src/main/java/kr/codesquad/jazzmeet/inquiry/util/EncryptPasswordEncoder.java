@@ -12,12 +12,12 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Component
-public class Encrypt {
+public class EncryptPasswordEncoder {
 
 	@Value("${encrypt.secret.salt}")
 	private String salt;
 
-	public String getEncrypted(String pwd) {
+	public String encode(String pwd) {
 		String result = null;
 		try {
 			// 1. SHA256 알고리즘 객체 생성
