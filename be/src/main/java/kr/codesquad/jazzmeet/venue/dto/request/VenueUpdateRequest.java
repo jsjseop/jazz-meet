@@ -5,7 +5,7 @@ import java.util.List;
 import lombok.Builder;
 
 @Builder
-public record VenueCreateRequest(
+public record VenueUpdateRequest(
 	String name,
 	List<Long> imageIds,
 	String roadNameAddress,

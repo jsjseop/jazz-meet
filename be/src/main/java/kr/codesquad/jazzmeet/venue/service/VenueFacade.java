@@ -11,8 +11,8 @@ import kr.codesquad.jazzmeet.global.error.CustomException;
 import kr.codesquad.jazzmeet.global.error.statuscode.ImageErrorCode;
 import kr.codesquad.jazzmeet.image.entity.Image;
 import kr.codesquad.jazzmeet.image.service.ImageService;
-import kr.codesquad.jazzmeet.venue.dto.request.VenueCreateHour;
-import kr.codesquad.jazzmeet.venue.dto.request.VenueCreateLink;
+import kr.codesquad.jazzmeet.venue.dto.request.VenueHourRequest;
+import kr.codesquad.jazzmeet.venue.dto.request.VenueLinkRequest;
 import kr.codesquad.jazzmeet.venue.dto.request.VenueCreateRequest;
 import kr.codesquad.jazzmeet.venue.dto.response.VenueCreateResponse;
 import kr.codesquad.jazzmeet.venue.entity.DayOfWeek;
@@ -48,10 +48,10 @@ public class VenueFacade {
 
 		addVenueImages(venue, imageIds);
 
-		List<VenueCreateLink> links = venueCreateRequest.links();
+		List<VenueLinkRequest> links = venueCreateRequest.links();
 		addVenueLinks(venue, links);
 
-		List<VenueCreateHour> venueHours = venueCreateRequest.venueHours();
+		List<VenueHourRequest> venueHours = venueCreateRequest.venueHours();
 		addVenueHours(venue, venueHours);
 
 		Venue savedVenue = venueService.save(venue);
@@ -76,23 +76,23 @@ public class VenueFacade {
 		});
 	}
 
-	private void addVenueLinks(Venue venue, List<VenueCreateLink> links) {
-		links.forEach(venueCreateLink -> {
-			String type = venueCreateLink.type();
+	private void addVenueLinks(Venue venue, List<VenueLinkRequest> links) {
+		links.forEach(venueLinkRequest -> {
+			String type = venueLinkRequest.type();
 			LinkType linkType = linkTypeService.findByName(type);
 			Link link = Link.builder()
-				.url(venueCreateLink.url())
+				.url(venueLinkRequest.url())
 				.linkType(linkType)
 				.build();
 			venue.addLink(link);
 		});
 	}
 
-	private void addVenueHours(Venue venue, List<VenueCreateHour> venueHours) {
-		venueHours.forEach(venueCreateHour -> {
+	private void addVenueHours(Venue venue, List<VenueHourRequest> venueHours) {
+		venueHours.forEach(venueHourRequest -> {
 			VenueHour venueHour = VenueHour.builder()
-				.day(DayOfWeek.toDayOfWeek(venueCreateHour.day()))
-				.businessHour(venueCreateHour.businessHours())
+				.day(DayOfWeek.toDayOfWeek(venueHourRequest.day()))
+				.businessHour(venueHourRequest.businessHours())
 				.build();
 			venue.addVenueHour(venueHour);
 		});

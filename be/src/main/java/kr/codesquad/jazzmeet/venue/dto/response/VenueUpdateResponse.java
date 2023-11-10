@@ -8,16 +8,16 @@ import kr.codesquad.jazzmeet.venue.vo.VenueDetailVenueHour;
 import lombok.Builder;
 
 @Builder
-public record VenueDetailResponse(
+public record VenueUpdateResponse(
 	long id,
-	List<VenueDetailImage> images,
 	String name,
+	List<VenueDetailImage> images,
 	String roadNameAddress,
 	String lotNumberAddress,
 	String phoneNumber,
+	String description,
 	List<VenueDetailLink> links,
 	List<VenueDetailVenueHour> venueHours,
-	String description,
 	double latitude,
 	double longitude
 ) {

@@ -14,8 +14,8 @@ import kr.codesquad.jazzmeet.fixture.ImageFixture;
 import kr.codesquad.jazzmeet.global.error.CustomException;
 import kr.codesquad.jazzmeet.image.entity.Image;
 import kr.codesquad.jazzmeet.image.repository.ImageRepository;
-import kr.codesquad.jazzmeet.venue.dto.request.VenueCreateHour;
-import kr.codesquad.jazzmeet.venue.dto.request.VenueCreateLink;
+import kr.codesquad.jazzmeet.venue.dto.request.VenueHourRequest;
+import kr.codesquad.jazzmeet.venue.dto.request.VenueLinkRequest;
 import kr.codesquad.jazzmeet.venue.dto.request.VenueCreateRequest;
 import kr.codesquad.jazzmeet.venue.dto.response.VenueCreateResponse;
 import kr.codesquad.jazzmeet.venue.entity.LinkType;
@@ -54,12 +54,12 @@ class VenueFacadeTest extends IntegrationTestSupport {
 		LinkType instagramLinkType = new LinkType("instagram");
 		linkTypeRepository.saveAll(List.of(naverMapLinkType, instagramLinkType));
 
-		VenueCreateLink link1 = new VenueCreateLink("naverMap", "www.naverMap.com");
-		VenueCreateLink link2 = new VenueCreateLink("instagram", "www.instagram.com");
+		VenueLinkRequest link1 = new VenueLinkRequest("naverMap", "www.naverMap.com");
+		VenueLinkRequest link2 = new VenueLinkRequest("instagram", "www.instagram.com");
 
-		VenueCreateHour venueHour1 = new VenueCreateHour("월요일", "휴무");
-		VenueCreateHour venueHour2 = new VenueCreateHour("화요일", "휴무");
-		VenueCreateHour venueHour3 = new VenueCreateHour("수요일", "휴무");
+		VenueHourRequest venueHour1 = new VenueHourRequest("월요일", "휴무");
+		VenueHourRequest venueHour2 = new VenueHourRequest("화요일", "휴무");
+		VenueHourRequest venueHour3 = new VenueHourRequest("수요일", "휴무");
 
 		VenueCreateRequest venueCreateRequest = VenueCreateRequest.builder()
 			.name("공연장")
