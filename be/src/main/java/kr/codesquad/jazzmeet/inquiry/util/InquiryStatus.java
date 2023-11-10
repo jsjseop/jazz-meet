@@ -11,7 +11,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum InquiryStatus {
 	WAITING("검토중"),
-	REPLIED("답변완료");
+	REPLIED("답변완료"),
+	DELETED("삭제됨");
 
 	private final String koName;
 
