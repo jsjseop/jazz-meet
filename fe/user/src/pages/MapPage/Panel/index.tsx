@@ -6,19 +6,19 @@ import { VenueList } from './VenueList';
 type Props = {
   mapElement: React.RefObject<HTMLDivElement>;
   searchedVenus?: SearchedVenues;
-  changeVenueListPage: (page: number) => void;
+  handleChangeVenueListPage: (page: number) => void;
 };
 
 export const Panel: React.FC<Props> = ({
   mapElement,
   searchedVenus,
-  changeVenueListPage,
+  handleChangeVenueListPage,
 }) => {
   return (
     <StyledPanel>
       <VenueList
         searchedVenus={searchedVenus}
-        changeVenueListPage={changeVenueListPage}
+        handleChangeVenueListPage={handleChangeVenueListPage}
       />
       <Outlet context={mapElement} />
     </StyledPanel>

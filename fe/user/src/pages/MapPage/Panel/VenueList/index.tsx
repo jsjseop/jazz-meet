@@ -7,18 +7,18 @@ import { SearchedVenues } from '~/types/api.types';
 
 type Props = {
   searchedVenus?: SearchedVenues;
-  changeVenueListPage: (page: number) => void;
+  handleChangeVenueListPage: (page: number) => void;
 };
 
 export const VenueList: React.FC<Props> = ({
   searchedVenus,
-  changeVenueListPage,
+  handleChangeVenueListPage,
 }) => {
   const onVenueListPageChange = (
     _: React.ChangeEvent<unknown>,
     value: number,
   ) => {
-    changeVenueListPage(value);
+    handleChangeVenueListPage(value);
   };
 
   return (
