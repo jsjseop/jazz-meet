@@ -1,5 +1,8 @@
 import styled from '@emotion/styled';
 import RefreshIcon from '@mui/icons-material/Refresh';
+import { useNavigate } from 'react-router-dom';
+import { getQueryString } from '~/utils/getQueryString';
+import { getMapBounds } from '~/utils/map';
 
 type Props = {
   map?: naver.maps.Map;
@@ -8,10 +11,26 @@ type Props = {
 };
 
 export const MapSearchButton: React.FC<Props> = ({
+  map,
   hideMapSearchButton,
   onCurrentViewSearchClick,
 }) => {
+  const navigate = useNavigate();
+
   const onMapSearchButtonClick = () => {
+    if (!map) {
+      return;
+    }
+
+    const bounds = getMapBounds(map);
+
+    if (!bounds) {
+      return;
+    }
+
+    const queryString = getQueryString(bounds);
+
+    navigate(`/map?bounds=${queryString}`);
     hideMapSearchButton();
     onCurrentViewSearchClick();
   };
