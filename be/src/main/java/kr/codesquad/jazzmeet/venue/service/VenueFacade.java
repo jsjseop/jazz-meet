@@ -7,14 +7,14 @@ import org.locationtech.jts.geom.Point;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import kr.codesquad.jazzmeet.global.error.CustomException;
-import kr.codesquad.jazzmeet.global.error.statuscode.ImageErrorCode;
 import kr.codesquad.jazzmeet.image.entity.Image;
 import kr.codesquad.jazzmeet.image.service.ImageService;
+import kr.codesquad.jazzmeet.venue.dto.request.VenueCreateRequest;
 import kr.codesquad.jazzmeet.venue.dto.request.VenueHourRequest;
 import kr.codesquad.jazzmeet.venue.dto.request.VenueLinkRequest;
-import kr.codesquad.jazzmeet.venue.dto.request.VenueCreateRequest;
+import kr.codesquad.jazzmeet.venue.dto.request.VenueUpdateRequest;
 import kr.codesquad.jazzmeet.venue.dto.response.VenueCreateResponse;
+import kr.codesquad.jazzmeet.venue.dto.response.VenueDetailResponse;
 import kr.codesquad.jazzmeet.venue.entity.DayOfWeek;
 import kr.codesquad.jazzmeet.venue.entity.Link;
 import kr.codesquad.jazzmeet.venue.entity.LinkType;
@@ -41,7 +41,6 @@ public class VenueFacade {
 		Point location = VenueUtil.createPoint(venueCreateRequest.latitude(), venueCreateRequest.longitude());
 
 		List<Long> imageIds = venueCreateRequest.imageIds();
-		validateImagesCount(imageIds);
 		Image thumbnailImage = imageService.findById(imageIds.get(THUMBNAIL_IMAGE_INDEX));
 
 		Venue venue = VenueMapper.INSTANCE.toVenue(venueCreateRequest, location, thumbnailImage.getUrl());
@@ -58,10 +57,39 @@ public class VenueFacade {
 		return new VenueCreateResponse(savedVenue.getId());
 	}
 
-	private void validateImagesCount(List<Long> imageIds) {
-		if (imageIds.size() > 10) {
-			throw new CustomException(ImageErrorCode.IMAGE_LIMIT_EXCEEDED);
-		}
+	@Transactional
+	public VenueDetailResponse updateVenue(VenueUpdateRequest venueUpdateRequest, Long venueId) {
+		Venue venue = venueService.findById(venueId);
+		updateVenueFromRequest(venue, venueUpdateRequest);
+
+		List<Long> imageIds = venueUpdateRequest.imageIds();
+		addVenueImages(venue, imageIds);
+
+		List<VenueLinkRequest> links = venueUpdateRequest.links();
+		addVenueLinks(venue, links);
+
+		List<VenueHourRequest> venueHours = venueUpdateRequest.venueHours();
+		addVenueHours(venue, venueHours);
+
+		Venue savedVenue = venueService.save(venue);
+		return venueService.findVenue(savedVenue.getId());
+	}
+
+	private void updateVenueFromRequest(Venue venue, VenueUpdateRequest venueUpdateRequest) {
+		Point point = VenueUtil.createPoint(venueUpdateRequest.latitude(), venueUpdateRequest.longitude());
+
+		List<Long> imageIds = venueUpdateRequest.imageIds();
+		Image thumbnailImage = imageService.findById(imageIds.get(THUMBNAIL_IMAGE_INDEX));
+
+		venue.updateVenue(
+			venueUpdateRequest.name(),
+			venueUpdateRequest.roadNameAddress(),
+			venueUpdateRequest.lotNumberAddress(),
+			venueUpdateRequest.phoneNumber(),
+			venueUpdateRequest.description(),
+			point,
+			thumbnailImage.getUrl()
+		);
 	}
 
 	private void addVenueImages(Venue venue, List<Long> imageIds) {

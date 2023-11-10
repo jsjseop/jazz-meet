@@ -9,7 +9,7 @@ import lombok.Builder;
 
 @Builder
 public record VenueDetailResponse(
-	long id,
+	Long id,
 	List<VenueDetailImage> images,
 	String name,
 	String roadNameAddress,
@@ -18,7 +18,7 @@ public record VenueDetailResponse(
 	List<VenueDetailLink> links,
 	List<VenueDetailVenueHour> venueHours,
 	String description,
-	double latitude,
-	double longitude
+	Double latitude,
+	Double longitude
 ) {
 }

@@ -119,12 +119,16 @@ public class VenueService {
 
 	}
 
+	public Venue findById(Long venueId) {
+		return venueRepository.findById(venueId)
+			.orElseThrow(() -> new CustomException(VenueErrorCode.NOT_FOUND_VENUE));
+	}
+
 	public VenueDetailResponse findVenue(Long venueId) {
 		VenueDetail venueDetail = venueQueryRepository.findVenue(venueId)
 			.orElseThrow(() -> new CustomException(VenueErrorCode.NOT_FOUND_VENUE));
 
 		return VenueMapper.INSTANCE.toVenueDetailResponse(venueDetail);
-
 	}
 
 	public VenueSearchResponse searchVenueList(String word, int page) {
