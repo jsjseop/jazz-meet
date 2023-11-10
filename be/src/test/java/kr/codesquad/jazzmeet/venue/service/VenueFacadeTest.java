@@ -12,7 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import kr.codesquad.jazzmeet.IntegrationTestSupport;
 import kr.codesquad.jazzmeet.fixture.ImageFixture;
+import kr.codesquad.jazzmeet.fixture.VenueFixture;
 import kr.codesquad.jazzmeet.image.entity.Image;
+import kr.codesquad.jazzmeet.image.entity.ImageStatus;
 import kr.codesquad.jazzmeet.image.repository.ImageRepository;
 import kr.codesquad.jazzmeet.venue.dto.request.VenueCreateRequest;
 import kr.codesquad.jazzmeet.venue.dto.request.VenueHourRequest;
@@ -21,6 +23,8 @@ import kr.codesquad.jazzmeet.venue.dto.request.VenueUpdateRequest;
 import kr.codesquad.jazzmeet.venue.dto.response.VenueCreateResponse;
 import kr.codesquad.jazzmeet.venue.dto.response.VenueDetailResponse;
 import kr.codesquad.jazzmeet.venue.entity.LinkType;
+import kr.codesquad.jazzmeet.venue.entity.Venue;
+import kr.codesquad.jazzmeet.venue.entity.VenueImage;
 import kr.codesquad.jazzmeet.venue.repository.LinkTypeRepository;
 import kr.codesquad.jazzmeet.venue.repository.VenueRepository;
 
@@ -169,5 +173,34 @@ class VenueFacadeTest extends IntegrationTestSupport {
 		);
 
 		venueRepository.deleteById(response.id());
+	}
+
+	@Test
+	@DisplayName("공연장을 삭제하면 이미지의 상태가 삭제 상태로 변경된다")
+	void deleteVenue() {
+	    // given
+		Venue venue = VenueFixture.createVenue("공연장", "공연장 주소");
+
+		Image image1 = ImageFixture.createImage("url1");
+		Image image2 = ImageFixture.createImage("url2");
+
+		List<Image> images = imageRepository.saveAll(List.of(image1, image2));
+
+		VenueImage venueImage1 = VenueFixture.createVenueImage(venue, image1, 1);
+		VenueImage venueImage2 = VenueFixture.createVenueImage(venue, image2, 2);
+
+		venue.addVenueImage(venueImage1);
+		venue.addVenueImage(venueImage2);
+
+		Venue savedVenue = venueRepository.save(venue);
+
+		// when
+		venueFacade.deleteVenue(savedVenue.getId());
+
+	    // then
+		Image deletedImage1 = imageRepository.findById(images.get(0).getId()).get();
+		Image deletedImage2 = imageRepository.findById(images.get(1).getId()).get();
+		assertThat(deletedImage1).extracting("status").isEqualTo(ImageStatus.DELETED);
+		assertThat(deletedImage2).extracting("status").isEqualTo(ImageStatus.DELETED);
 	}
 }

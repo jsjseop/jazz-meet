@@ -39,6 +39,7 @@ public class ImageService {
 		return new ImageIdsResponse(ids);
 	}
 
+	@Transactional
 	public void registerImage(Image image) {
 		image.updateStatus(ImageStatus.REGISTERED);
 	}
