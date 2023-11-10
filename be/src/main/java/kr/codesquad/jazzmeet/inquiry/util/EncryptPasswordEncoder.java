@@ -8,9 +8,7 @@ import org.springframework.stereotype.Component;
 
 import kr.codesquad.jazzmeet.global.error.CustomException;
 import kr.codesquad.jazzmeet.global.error.statuscode.InquiryErrorCode;
-import lombok.RequiredArgsConstructor;
 
-@RequiredArgsConstructor
 @Component
 public class EncryptPasswordEncoder {
 
