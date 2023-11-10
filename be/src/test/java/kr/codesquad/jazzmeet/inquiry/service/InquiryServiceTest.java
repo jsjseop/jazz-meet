@@ -11,14 +11,18 @@ import kr.codesquad.jazzmeet.IntegrationTestSupport;
 import kr.codesquad.jazzmeet.fixture.InquiryFixture;
 import kr.codesquad.jazzmeet.global.error.CustomException;
 import kr.codesquad.jazzmeet.global.error.statuscode.InquiryErrorCode;
+import kr.codesquad.jazzmeet.inquiry.dto.request.InquirySaveRequest;
 import kr.codesquad.jazzmeet.inquiry.dto.response.InquiryDetailResponse;
+import kr.codesquad.jazzmeet.inquiry.dto.response.InquirySaveResponse;
 import kr.codesquad.jazzmeet.inquiry.dto.response.InquirySearch;
 import kr.codesquad.jazzmeet.inquiry.dto.response.InquirySearchResponse;
 import kr.codesquad.jazzmeet.inquiry.entity.Answer;
 import kr.codesquad.jazzmeet.inquiry.entity.Inquiry;
 import kr.codesquad.jazzmeet.inquiry.repository.InquiryAnswerRepository;
 import kr.codesquad.jazzmeet.inquiry.repository.InquiryRepository;
+import kr.codesquad.jazzmeet.inquiry.util.EncryptPasswordEncoder;
 import kr.codesquad.jazzmeet.inquiry.util.InquiryCategory;
+import kr.codesquad.jazzmeet.inquiry.util.InquiryStatus;
 
 class InquiryServiceTest extends IntegrationTestSupport {
 
@@ -28,6 +32,8 @@ class InquiryServiceTest extends IntegrationTestSupport {
 	InquiryRepository inquiryRepository;
 	@Autowired
 	InquiryAnswerRepository inquiryAnswerRepository;
+	@Autowired
+	EncryptPasswordEncoder encryptPasswordEncoder;
 
 	@AfterEach
 	void dbClean() {
@@ -147,5 +153,63 @@ class InquiryServiceTest extends IntegrationTestSupport {
 		Long wrongInquiryId = 0L;
 		assertThatThrownBy(() -> inquiryService.getInquiryDetail(wrongInquiryId))
 			.isInstanceOf(CustomException.class).hasMessage(InquiryErrorCode.NOT_FOUND_INQUIRY.getMessage());
+	}
+
+	@Test
+	@DisplayName("문의를 등록하면 해당 문의 정보를 반환한다.")
+	void saveInquiry() {
+		// given
+		String category = "서비스";
+		String nickname = "지안";
+		String password = "1234";
+		String content = "문의 내용";
+		InquirySaveRequest inquirySaveRequest = InquiryFixture.createInquiryRequest(category, nickname, password,
+			content);
+
+		// when
+		InquirySaveResponse saved = inquiryService.save(inquirySaveRequest);
+
+		// then
+		assertThat(saved)
+			.extracting("nickname", "content", "status")
+			.containsExactly(nickname, content, InquiryStatus.WAITING.getKoName());
+	}
+
+	@Test
+	@DisplayName("문의를 등록하면 비밀번호는 암호화되어 저장된다.")
+	void saveInquiryValidRequest() {
+		// given
+		String category = "서비스";
+		String nickname = "지안";
+		String password = "비밀번호";
+		String content = "문의 내용";
+		InquirySaveRequest inquirySaveRequest = InquiryFixture.createInquiryRequest(category, nickname, password,
+			content);
+
+		String encryptedPwd = encryptPasswordEncoder.encode(password);
+
+		// when
+		InquirySaveResponse saved = inquiryService.save(inquirySaveRequest);
+		String savedEncryptedPwd = inquiryRepository.findById(saved.id()).get().getPassword();
+
+		// then
+		assertThat(savedEncryptedPwd).isEqualTo(encryptedPwd);
+	}
+
+	@Test
+	@DisplayName("해당하는 카테고리가 없는 문의를 등록하면 문의가 등록되지 않는다.")
+	void saveInquiryValidCategory() {
+		// given
+		String category = "없는 카테고리";
+		String nickname = "지안";
+		String password = "비밀번호";
+		String content = "문의 내용";
+		InquirySaveRequest inquirySaveRequest = InquiryFixture.createInquiryRequest(category, nickname, password,
+			content);
+
+		// when // then
+		assertThatThrownBy(() -> inquiryService.save(inquirySaveRequest))
+			.isInstanceOf(CustomException.class)
+			.hasMessage(InquiryErrorCode.NO_MATCH_VALUE.getMessage());
 	}
 }
