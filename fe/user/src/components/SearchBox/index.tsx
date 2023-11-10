@@ -19,44 +19,17 @@ export const SearchBox: React.FC = () => {
     useState<number>(-1);
   const searchBoxRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    if (searchText.trim().length === 0) {
-      setSearchSuggestions([]);
-      return;
-    }
-
-    const timer = setTimeout(async () => {
-      const suggestions = await getSearchSuggestions(searchText);
-      setSearchSuggestions(suggestions);
-    }, 120);
-
-    return () => {
-      clearTimeout(timer);
-    };
-  }, [searchText]);
-
-  useEffect(() => {
-    setIsSuggestionBoxOpen(searchSuggestions.length > 0);
-  }, [searchSuggestions]);
-
-  useEffect(() => {
-    if (isSuggestionBoxOpen === false) {
-      setActiveSuggestionIndex(-1);
-    }
-  }, [isSuggestionBoxOpen]);
-
   const query = new URLSearchParams(queryString);
   const word = query.get('word');
+  const isSearchTextEmpty = searchText.trim().length === 0;
 
   const showSuggestionBox = () => setIsSuggestionBoxOpen(true);
   const hideSuggestionBox = () => setIsSuggestionBoxOpen(false);
 
   const onInputBaseFocus = () => {
-    if (searchText.trim().length === 0) {
-      return;
+    if (!isSearchTextEmpty) {
+      showSuggestionBox();
     }
-
-    showSuggestionBox();
   };
 
   const onSearchTextSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -69,7 +42,7 @@ export const SearchBox: React.FC = () => {
       return;
     }
 
-    if (searchText.trim().length > 0) {
+    if (!isSearchTextEmpty) {
       navigate(`/map?word=${searchText}`);
       hideSuggestionBox();
     }
@@ -93,6 +66,32 @@ export const SearchBox: React.FC = () => {
       );
     }
   };
+
+  useEffect(() => {
+    if (isSearchTextEmpty) {
+      setSearchSuggestions([]);
+      return;
+    }
+
+    const timer = setTimeout(async () => {
+      const suggestions = await getSearchSuggestions(searchText);
+      setSearchSuggestions(suggestions);
+    }, 120);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [searchText, isSearchTextEmpty]);
+
+  useEffect(() => {
+    setIsSuggestionBoxOpen(searchSuggestions.length > 0);
+  }, [searchSuggestions]);
+
+  useEffect(() => {
+    if (isSuggestionBoxOpen === false) {
+      setActiveSuggestionIndex(-1);
+    }
+  }, [isSuggestionBoxOpen]);
 
   return (
     <StyledSearchBox id="search-box" ref={searchBoxRef}>
