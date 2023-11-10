@@ -1,34 +1,38 @@
 import styled from '@emotion/styled';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import { useNavigate } from 'react-router-dom';
+import { getQueryString } from '~/utils/getQueryString';
+import { getMapBounds } from '~/utils/map';
 
 type Props = {
   map?: naver.maps.Map;
   hideMapSearchButton: () => void;
+  onCurrentViewSearchClick: () => void;
 };
 
 export const MapSearchButton: React.FC<Props> = ({
   map,
   hideMapSearchButton,
+  onCurrentViewSearchClick,
 }) => {
   const navigate = useNavigate();
 
   const onMapSearchButtonClick = () => {
     if (!map) {
-      throw new Error('map is not initialized');
-    }
-
-    const bounds = map.getBounds();
-
-    if (!(bounds instanceof naver.maps.LatLngBounds)) {
       return;
     }
 
-    navigate(
-      `/map?lowLatitude=${bounds.south()}&highLatitude=${bounds.north()}&lowLongitude=${bounds.west()}&highLongitude=${bounds.east()}`,
-    );
+    const bounds = getMapBounds(map);
 
+    if (!bounds) {
+      return;
+    }
+
+    const queryString = getQueryString(bounds);
+
+    navigate(`/map?bounds=${queryString}`);
     hideMapSearchButton();
+    onCurrentViewSearchClick();
   };
 
   return (
