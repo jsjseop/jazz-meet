@@ -32,7 +32,7 @@ export const SuggestionItem: React.FC<Props> = ({
   );
 };
 
-const StyledSuggestionItem = styled.li<{ $active: boolean}>`
+const StyledSuggestionItem = styled.li<{ $active: boolean }>`
   padding: 12px 16px;
   display: flex;
   gap: 8px;

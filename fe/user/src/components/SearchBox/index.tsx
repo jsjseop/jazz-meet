@@ -43,18 +43,21 @@ export const SearchBox: React.FC = () => {
     if (isSuggestionBoxOpen === false) {
       setActiveSuggestionIndex(-1);
     }
-  }, [isSuggestionBoxOpen])
+  }, [isSuggestionBoxOpen]);
 
   const query = new URLSearchParams(queryString);
   const word = query.get('word');
 
-  const showSuggestionBox = () => {
+  const showSuggestionBox = () => setIsSuggestionBoxOpen(true);
+  const hideSuggestionBox = () => setIsSuggestionBoxOpen(false);
+
+  const onInputBaseFocus = () => {
     if (searchText.trim().length === 0) {
       return;
     }
-    setIsSuggestionBoxOpen(true);
+
+    showSuggestionBox();
   };
-  const hideSuggestionBox = () => setIsSuggestionBoxOpen(false);
 
   const onSearchTextSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -113,7 +116,7 @@ export const SearchBox: React.FC = () => {
           value={searchText || word || ''}
           onChange={(e) => setSearchText(e.target.value)}
           onKeyDown={changeActiveSuggstion}
-          onFocus={showSuggestionBox}
+          onFocus={onInputBaseFocus}
         />
         <IconButton type="button" sx={{ p: '10px' }} aria-label="search">
           <SearchIcon />
