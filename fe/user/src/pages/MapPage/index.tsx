@@ -26,6 +26,10 @@ export const MapPage: React.FC = () => {
 
     const bounds = getMapBounds(map);
 
+    if (!bounds) {
+      return;
+    }
+
     (async () => {
       const [pins, venueList] = await Promise.all([
         getVenuePinsByMapBounds(bounds),
