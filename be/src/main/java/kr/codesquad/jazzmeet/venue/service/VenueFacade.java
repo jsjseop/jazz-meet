@@ -75,6 +75,19 @@ public class VenueFacade {
 		return venueService.findVenue(savedVenue.getId());
 	}
 
+	@Transactional
+	public void deleteVenue(Long venueId) {
+		Venue venue = venueService.findById(venueId);
+		List<Long> imageIds = venue.getImages().stream()
+			.map(venueImage -> venueImage.getImage().getId())
+			.toList();
+
+		// 공연장 삭제
+		venueService.deleteById(venueId);
+		// 이미지 soft delete
+		imageIds.forEach(imageService::deleteImage);
+	}
+
 	private void updateVenueFromRequest(Venue venue, VenueUpdateRequest venueUpdateRequest) {
 		Point point = VenueUtil.createPoint(venueUpdateRequest.latitude(), venueUpdateRequest.longitude());
 

@@ -160,7 +160,13 @@ public class VenueService {
 			PAGE_NUMBER_OFFSET, PAGE_NUMBER_OFFSET);
 	}
 
+	@Transactional
 	public Venue save(Venue venue) {
 		return venueRepository.save(venue);
+	}
+
+	@Transactional
+	public void deleteById(Long venueId) {
+		venueRepository.deleteById(venueId);
 	}
 }
