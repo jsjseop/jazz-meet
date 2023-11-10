@@ -4,10 +4,10 @@ import static org.assertj.core.api.Assertions.*;
 
 import java.util.List;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 
 import kr.codesquad.jazzmeet.IntegrationTestSupport;
 import kr.codesquad.jazzmeet.fixture.ImageFixture;
@@ -20,8 +20,8 @@ import kr.codesquad.jazzmeet.venue.dto.request.VenueCreateRequest;
 import kr.codesquad.jazzmeet.venue.dto.response.VenueCreateResponse;
 import kr.codesquad.jazzmeet.venue.entity.LinkType;
 import kr.codesquad.jazzmeet.venue.repository.LinkTypeRepository;
+import kr.codesquad.jazzmeet.venue.repository.VenueRepository;
 
-@Transactional
 class VenueFacadeTest extends IntegrationTestSupport {
 
 	@Autowired
@@ -32,6 +32,15 @@ class VenueFacadeTest extends IntegrationTestSupport {
 
 	@Autowired
 	LinkTypeRepository linkTypeRepository;
+
+	@Autowired
+	VenueRepository venueRepository;
+
+	@AfterEach
+	void dbClean() {
+		imageRepository.deleteAllInBatch();
+		linkTypeRepository.deleteAllInBatch();
+	}
 
 	@Test
 	@DisplayName("공연장 데이터를 입력 받아서 공연장을 생성한다")
@@ -70,6 +79,8 @@ class VenueFacadeTest extends IntegrationTestSupport {
 
 		// then
 		assertThat(response).extracting("id").isNotNull();
+
+		venueRepository.deleteById(response.id());
 	}
 
 	@Test
