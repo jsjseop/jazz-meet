@@ -38,13 +38,6 @@ public class VenueImage {
 		this.image = image;
 	}
 
-	// 연관관계 편의 메서드
-	public void add(Venue venue, Image image) {
-		this.venue = venue;
-		this.image = image;
-		venue.getImages().add(this);
-	}
-
 	public void addVenue(Venue venue) {
 		this.venue = venue;
 	}
