@@ -46,4 +46,9 @@ public class ImageService {
 
 		image.updateStatus(ImageStatus.DELETED);
 	}
+
+	public Image findById(Long imageId) {
+		return imageRepository.findById(imageId)
+			.orElseThrow(() -> new CustomException(ImageErrorCode.NOT_FOUND_IMAGE));
+	}
 }
