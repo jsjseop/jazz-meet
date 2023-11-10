@@ -41,6 +41,23 @@ export const MapPage: React.FC = () => {
     })();
   }, [map]);
 
+  const changeVenueListPage = (page: number) => {
+    if (!map) {
+      return;
+    }
+
+    const bounds = getMapBounds(map);
+
+    if (!bounds) {
+      return;
+    }
+
+    (async () => {
+      const venueList = await getVenuesByMapBounds({ ...bounds, page });
+      setSearchedVenues(venueList);
+    })();
+  };
+
   // 지도가 첫 렌더링 될 때
   useEffect(() => {
     updateMapDataBasedOnBounds();
@@ -85,7 +102,11 @@ export const MapPage: React.FC = () => {
         onMapInitialized={(map: naver.maps.Map) => setMap(map)}
         onCurrentViewSearchClick={updateMapDataBasedOnBounds}
       />
-      <Panel mapElement={mapElement} />
+      <Panel
+        mapElement={mapElement}
+        searchedVenus={searchedVenus}
+        changeVenueListPage={changeVenueListPage}
+      />
     </StyledMapPage>
   );
 };

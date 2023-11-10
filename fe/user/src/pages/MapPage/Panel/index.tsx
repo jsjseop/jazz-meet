@@ -1,14 +1,25 @@
 import styled from '@emotion/styled';
 import { Outlet } from 'react-router-dom';
+import { SearchedVenues } from '~/types/api.types';
+import { VenueList } from './VenueList';
 
 type Props = {
   mapElement: React.RefObject<HTMLDivElement>;
+  searchedVenus?: SearchedVenues;
+  changeVenueListPage: (page: number) => void;
 };
 
-export const Panel: React.FC<Props> = ({ mapElement }) => {
+export const Panel: React.FC<Props> = ({
+  mapElement,
+  searchedVenus,
+  changeVenueListPage,
+}) => {
   return (
     <StyledPanel>
-      {/* <VenueList {...venueListData} /> */}
+      <VenueList
+        searchedVenus={searchedVenus}
+        changeVenueListPage={changeVenueListPage}
+      />
       <Outlet context={mapElement} />
     </StyledPanel>
   );
