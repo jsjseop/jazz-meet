@@ -1,7 +1,7 @@
 import { BASIC_COORDINATE } from '~/constants/COORDINATE';
-import { TIED_EIGHTH_NOTES_SVG, PIN_SVG } from '~/constants/MAP';
+import { PIN_SVG, TIED_EIGHTH_NOTES_SVG } from '~/constants/MAP';
 import { Pin } from '~/types/api.types';
-import { Coordinate } from '~/types/map.types';
+import { Coordinate, CoordinateBoundary } from '~/types/map.types';
 
 export const fitBoundsToPins = (pins: Pin[], map: naver.maps.Map) => {
   if (pins.length === 0) {
@@ -108,7 +108,9 @@ export const getInitMap = (userCoordinate: Coordinate | null) => {
   });
 };
 
-export const getMapBounds = (map: naver.maps.Map) => {
+export const getMapBounds = (
+  map: naver.maps.Map,
+): CoordinateBoundary | undefined => {
   const bounds = map.getBounds();
 
   if (!(bounds instanceof naver.maps.LatLngBounds)) {

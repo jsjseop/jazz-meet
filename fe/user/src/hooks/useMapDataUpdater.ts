@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   getVenuePinsByMapBounds,
@@ -7,7 +7,12 @@ import {
   getVenuesByMapBounds,
 } from '~/apis/venue';
 import { Pin, SearchedVenues } from '~/types/api.types';
-import { addMarkersOnMap, addPinsOnMap, getMapBounds } from '~/utils/map';
+import {
+  addMarkersOnMap,
+  addPinsOnMap,
+  fitBoundsToPins,
+  getMapBounds,
+} from '~/utils/map';
 
 export const useMapDataUpdater = (map?: naver.maps.Map) => {
   const [pins, setPins] = useState<Pin[]>();
@@ -18,7 +23,7 @@ export const useMapDataUpdater = (map?: naver.maps.Map) => {
 
   const navigate = useNavigate();
 
-  const updateMapDataBasedOnBounds = useCallback(() => {
+  const updateMapDataBasedOnBounds = () => {
     if (!map) {
       return;
     }
@@ -38,7 +43,7 @@ export const useMapDataUpdater = (map?: naver.maps.Map) => {
       setPins(pins);
       setSearchedVenues(venueList);
     })();
-  }, [map]);
+  };
 
   const updateMapDataBySearch = async (word: string) => {
     const [pins, venueList] = await Promise.all([
@@ -95,6 +100,8 @@ export const useMapDataUpdater = (map?: naver.maps.Map) => {
       map,
       goToVenueDetail,
     );
+
+    fitBoundsToPins(pins, map);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [map, pins, searchedVenus]);
 

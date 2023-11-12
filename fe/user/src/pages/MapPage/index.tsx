@@ -22,8 +22,10 @@ export const MapPage: React.FC = () => {
   useEffect(() => {
     if (word) {
       updateMapDataBySearch(word);
+
       return;
     }
+
     updateMapDataBasedOnBounds();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
