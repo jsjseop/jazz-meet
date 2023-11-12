@@ -3,6 +3,7 @@ package kr.codesquad.jazzmeet.inquiry.service;
 import static org.assertj.core.api.Assertions.*;
 
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import kr.codesquad.jazzmeet.IntegrationTestSupport;
 import kr.codesquad.jazzmeet.fixture.InquiryFixture;
 import kr.codesquad.jazzmeet.global.error.CustomException;
 import kr.codesquad.jazzmeet.global.error.statuscode.InquiryErrorCode;
+import kr.codesquad.jazzmeet.inquiry.dto.request.InquiryDeleteRequest;
 import kr.codesquad.jazzmeet.inquiry.dto.request.InquirySaveRequest;
 import kr.codesquad.jazzmeet.inquiry.dto.response.InquiryDetailResponse;
 import kr.codesquad.jazzmeet.inquiry.dto.response.InquirySaveResponse;
@@ -209,5 +211,75 @@ class InquiryServiceTest extends IntegrationTestSupport {
 		assertThatThrownBy(() -> inquiryService.save(inquirySaveRequest))
 			.isInstanceOf(CustomException.class)
 			.hasMessage(InquiryErrorCode.NO_MATCH_VALUE.getMessage());
+	}
+
+	@Test
+	@DisplayName("비밀번호가 일치하면 문의가 삭제된다.")
+	void delete() {
+		// given
+		String password = "비밀번호 테스트";
+		Inquiry inquiry = InquiryFixture.createInquiry(bCryptPasswordEncoder.encode(password));
+		Long inquiryId = inquiryRepository.save(inquiry).getId();
+		InquiryDeleteRequest inquiryDeleteRequest = InquiryFixture.createInquiryDeleteRequest(password);
+
+		// when
+		inquiryService.delete(inquiryId, inquiryDeleteRequest);
+		Inquiry savedInquiry = inquiryRepository.findById(inquiryId).get();
+
+		// then
+		Assertions.assertAll(
+			() -> assertThat(savedInquiry.getStatus())
+				.isEqualTo(InquiryStatus.DELETED),
+			() -> assertThat(bCryptPasswordEncoder.matches(password, savedInquiry.getPassword()))
+				.isTrue()
+		);
+	}
+
+	@Test
+	@DisplayName("존재하지 않는 문의는 삭제할 수 없다.")
+	void deleteNotFoundException() {
+		// given
+		String password = "비밀번호 테스트";
+		Long inquiryId = 0L;
+		InquiryDeleteRequest inquiryDeleteRequest = InquiryFixture.createInquiryDeleteRequest(password);
+
+		// when // then
+		assertThatThrownBy(() -> inquiryService.delete(inquiryId, inquiryDeleteRequest))
+			.isInstanceOf(CustomException.class)
+			.hasMessage(InquiryErrorCode.NOT_FOUND_INQUIRY.getMessage());
+
+	}
+
+	@Test
+	@DisplayName("이미 삭제 된 문의는 삭제할 수 없다.")
+	void deleteAlreadyDeletedException() {
+		// given
+		String password = "비밀번호 테스트";
+		InquiryStatus status = InquiryStatus.DELETED;
+		Inquiry inquiry = InquiryFixture.createInquiry(bCryptPasswordEncoder.encode(password), status);
+		Long inquiryId = inquiryRepository.save(inquiry).getId();
+		InquiryDeleteRequest inquiryDeleteRequest = InquiryFixture.createInquiryDeleteRequest(password);
+
+		// when // then
+		assertThatThrownBy(() -> inquiryService.delete(inquiryId, inquiryDeleteRequest))
+			.isInstanceOf(CustomException.class)
+			.hasMessage(InquiryErrorCode.ALREADY_DELETED.getMessage());
+
+	}
+
+	@Test
+	@DisplayName("비밀번호가 일치하지 않는 문의는 삭제할 수 없다.")
+	void deleteNotMatchedPasswordException() {
+		// given
+		String password = "비밀번호 테스트";
+		Inquiry inquiry = InquiryFixture.createInquiry(bCryptPasswordEncoder.encode(password));
+		Long inquiryId = inquiryRepository.save(inquiry).getId();
+		String wrongPassword = "잘못 된 비밀번호";
+		InquiryDeleteRequest inquiryDeleteRequest = InquiryFixture.createInquiryDeleteRequest(wrongPassword);
+
+		// when // then
+		assertThatThrownBy(() -> inquiryService.delete(inquiryId, inquiryDeleteRequest))
+			.isInstanceOf(CustomException.class)
+			.hasMessage(InquiryErrorCode.NOT_MATCH_PASSWORD.getMessage());
 	}
 }
