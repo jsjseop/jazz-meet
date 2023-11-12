@@ -2,6 +2,7 @@ package kr.codesquad.jazzmeet.inquiry.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
+import kr.codesquad.jazzmeet.inquiry.dto.request.InquiryDeleteRequest;
 import kr.codesquad.jazzmeet.inquiry.dto.request.InquirySaveRequest;
 import kr.codesquad.jazzmeet.inquiry.dto.response.InquiryDetailResponse;
 import kr.codesquad.jazzmeet.inquiry.dto.response.InquirySaveResponse;
@@ -54,5 +56,16 @@ public class InquiryController {
 		InquirySaveResponse inquiry = inquiryService.save(inquirySaveRequest);
 
 		return ResponseEntity.status(HttpStatus.CREATED).body(inquiry);
+	}
+
+	/**
+	 * 문의 글 삭제 API
+	 */
+	@DeleteMapping("/api/inquiries/{inquiryId}")
+	public ResponseEntity<?> delete(@PathVariable Long inquiryId,
+		@RequestBody InquiryDeleteRequest inquiryDeleteRequest) {
+		inquiryService.updateStatusToDeleted(inquiryId, inquiryDeleteRequest);
+
+		return ResponseEntity.noContent().build();
 	}
 }

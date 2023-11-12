@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import kr.codesquad.jazzmeet.global.error.CustomException;
 import kr.codesquad.jazzmeet.global.error.statuscode.InquiryErrorCode;
+import kr.codesquad.jazzmeet.inquiry.dto.request.InquiryDeleteRequest;
 import kr.codesquad.jazzmeet.inquiry.dto.request.InquirySaveRequest;
 import kr.codesquad.jazzmeet.inquiry.dto.response.InquiryAnswerDetail;
 import kr.codesquad.jazzmeet.inquiry.dto.response.InquiryDetailResponse;
@@ -79,4 +80,19 @@ public class InquiryService {
 		return InquiryMapper.INSTANCE.toInquirySaveResponse(savedInquiry);
 	}
 
+	@Transactional
+	public void updateStatusToDeleted(Long inquiryId, InquiryDeleteRequest request) {
+		Inquiry inquiry = inquiryRepository.findById(inquiryId)
+			.orElseThrow(() -> new CustomException(InquiryErrorCode.NOT_FOUND_INQUIRY));
+		inspectPassword(request.password(), inquiry.getPassword());
+
+		inquiry.updateStatusToDeleted();
+	}
+
+	private void inspectPassword(String rawPassword, String encodedPassword) {
+		String encode = encryptPasswordEncoder.encode(rawPassword);
+		if (!encode.equals(encodedPassword)) {
+			throw new CustomException(InquiryErrorCode.NOT_MATCH_PASSWORD);
+		}
+	}
 }
