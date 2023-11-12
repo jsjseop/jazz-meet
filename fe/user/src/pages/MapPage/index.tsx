@@ -1,8 +1,9 @@
 import styled from '@emotion/styled';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { useLocation } from 'react-router-dom';
+import { useMapDataUpdater } from '~/hooks/useMapDataUpdater';
 import { Map } from './Map';
 import { Panel } from './Panel';
-import { useMapDataUpdater } from '~/hooks/useMapDataUpdater';
 
 export const MapPage: React.FC = () => {
   const mapElement = useRef<HTMLDivElement>(null);
@@ -10,8 +11,22 @@ export const MapPage: React.FC = () => {
   const {
     searchedVenus,
     updateMapDataBasedOnBounds,
+    updateMapDataBySearch,
     handleChangeVenueListPage,
   } = useMapDataUpdater(map);
+
+  const { search } = useLocation();
+  const word = new URLSearchParams(search).get('word');
+
+  // 지도가 첫 렌더링 될 때
+  useEffect(() => {
+    if (word) {
+      updateMapDataBySearch(word);
+      return;
+    }
+    updateMapDataBasedOnBounds();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <StyledMapPage>

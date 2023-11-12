@@ -1,6 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getVenuePinsByMapBounds, getVenuesByMapBounds } from '~/apis/venue';
+import {
+  getVenuePinsByMapBounds,
+  getVenuePinsBySearch,
+  getVenuesByKeyword,
+  getVenuesByMapBounds,
+} from '~/apis/venue';
 import { Pin, SearchedVenues } from '~/types/api.types';
 import { addMarkersOnMap, addPinsOnMap, getMapBounds } from '~/utils/map';
 
@@ -35,6 +40,16 @@ export const useMapDataUpdater = (map?: naver.maps.Map) => {
     })();
   }, [map]);
 
+  const updateMapDataBySearch = async (word: string) => {
+    const [pins, venueList] = await Promise.all([
+      getVenuePinsBySearch(word),
+      getVenuesByKeyword({ word }),
+    ]);
+
+    setPins(pins);
+    setSearchedVenues(venueList);
+  };
+
   const handleChangeVenueListPage = (page: number) => {
     if (!map) {
       return;
@@ -51,11 +66,6 @@ export const useMapDataUpdater = (map?: naver.maps.Map) => {
       setSearchedVenues(venueList);
     })();
   };
-
-  // 지도가 첫 렌더링 될 때
-  useEffect(() => {
-    updateMapDataBasedOnBounds();
-  }, [updateMapDataBasedOnBounds]);
 
   // pins, searchedVenues가 변경될 때 렌더링 한다.
   useEffect(() => {
@@ -91,6 +101,7 @@ export const useMapDataUpdater = (map?: naver.maps.Map) => {
   return {
     searchedVenus,
     updateMapDataBasedOnBounds,
+    updateMapDataBySearch,
     handleChangeVenueListPage,
   };
 };
