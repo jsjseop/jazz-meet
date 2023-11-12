@@ -82,7 +82,7 @@ public class InquiryService {
 	}
 
 	@Transactional
-	public void updateStatusToDeleted(Long inquiryId, InquiryDeleteRequest request) {
+	public void delete(Long inquiryId, InquiryDeleteRequest request) {
 		Inquiry inquiry = inquiryRepository.findById(inquiryId)
 			.orElseThrow(() -> new CustomException(InquiryErrorCode.NOT_FOUND_INQUIRY));
 		inspectDeletedInquiry(inquiry);

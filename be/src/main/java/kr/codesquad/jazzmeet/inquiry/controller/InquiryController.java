@@ -64,7 +64,7 @@ public class InquiryController {
 	@DeleteMapping("/api/inquiries/{inquiryId}")
 	public ResponseEntity<?> delete(@PathVariable Long inquiryId,
 		@RequestBody InquiryDeleteRequest inquiryDeleteRequest) {
-		inquiryService.updateStatusToDeleted(inquiryId, inquiryDeleteRequest);
+		inquiryService.delete(inquiryId, inquiryDeleteRequest);
 
 		return ResponseEntity.noContent().build();
 	}
