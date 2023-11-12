@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,7 +21,6 @@ import kr.codesquad.jazzmeet.inquiry.entity.Inquiry;
 import kr.codesquad.jazzmeet.inquiry.mapper.InquiryMapper;
 import kr.codesquad.jazzmeet.inquiry.repository.InquiryQueryRepository;
 import kr.codesquad.jazzmeet.inquiry.repository.InquiryRepository;
-import kr.codesquad.jazzmeet.inquiry.util.EncryptPasswordEncoder;
 import kr.codesquad.jazzmeet.inquiry.util.InquiryCategory;
 import kr.codesquad.jazzmeet.inquiry.vo.InquiryDetail;
 import kr.codesquad.jazzmeet.inquiry.vo.InquirySearchData;
@@ -35,7 +35,7 @@ public class InquiryService {
 
 	private final InquiryQueryRepository inquiryQueryRepository;
 	private final InquiryRepository inquiryRepository;
-	private final EncryptPasswordEncoder encryptPasswordEncoder;
+	private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
 	public InquirySearchResponse getInquiries(String category, String word, int page) {
 		// request는 한글, DB 저장은 영어로 되어있기 때문에 변환 필요.
@@ -72,7 +72,7 @@ public class InquiryService {
 
 	@Transactional
 	public InquirySaveResponse save(InquirySaveRequest inquirySaveRequest) {
-		String encryptedPwd = encryptPasswordEncoder.encode(inquirySaveRequest.password());
+		String encryptedPwd = bCryptPasswordEncoder.encode(inquirySaveRequest.password());
 		InquiryCategory inquiryCategory = InquiryCategory.toInquiryCategory(inquirySaveRequest.category());
 		Inquiry inquiry = InquiryMapper.INSTANCE.toInquiry(inquirySaveRequest, inquiryCategory, encryptedPwd);
 		Inquiry savedInquiry = inquiryRepository.save(inquiry);
@@ -84,14 +84,14 @@ public class InquiryService {
 	public void updateStatusToDeleted(Long inquiryId, InquiryDeleteRequest request) {
 		Inquiry inquiry = inquiryRepository.findById(inquiryId)
 			.orElseThrow(() -> new CustomException(InquiryErrorCode.NOT_FOUND_INQUIRY));
-		inspectPassword(request.password(), inquiry.getPassword());
+		matchesPassword(request.password(), inquiry.getPassword());
 
 		inquiry.updateStatusToDeleted();
 	}
 
-	private void inspectPassword(String rawPassword, String encodedPassword) {
-		String encode = encryptPasswordEncoder.encode(rawPassword);
-		if (!encode.equals(encodedPassword)) {
+	private void matchesPassword(String rawPassword, String encodedPassword) {
+		boolean isMatched = bCryptPasswordEncoder.matches(rawPassword, encodedPassword);
+		if (!isMatched) {
 			throw new CustomException(InquiryErrorCode.NOT_MATCH_PASSWORD);
 		}
 	}

@@ -6,6 +6,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import kr.codesquad.jazzmeet.IntegrationTestSupport;
 import kr.codesquad.jazzmeet.fixture.InquiryFixture;
@@ -20,7 +21,6 @@ import kr.codesquad.jazzmeet.inquiry.entity.Answer;
 import kr.codesquad.jazzmeet.inquiry.entity.Inquiry;
 import kr.codesquad.jazzmeet.inquiry.repository.InquiryAnswerRepository;
 import kr.codesquad.jazzmeet.inquiry.repository.InquiryRepository;
-import kr.codesquad.jazzmeet.inquiry.util.EncryptPasswordEncoder;
 import kr.codesquad.jazzmeet.inquiry.util.InquiryCategory;
 import kr.codesquad.jazzmeet.inquiry.util.InquiryStatus;
 
@@ -33,7 +33,7 @@ class InquiryServiceTest extends IntegrationTestSupport {
 	@Autowired
 	InquiryAnswerRepository inquiryAnswerRepository;
 	@Autowired
-	EncryptPasswordEncoder encryptPasswordEncoder;
+	BCryptPasswordEncoder bCryptPasswordEncoder;
 
 	@AfterEach
 	void dbClean() {
@@ -186,14 +186,12 @@ class InquiryServiceTest extends IntegrationTestSupport {
 		InquirySaveRequest inquirySaveRequest = InquiryFixture.createInquiryRequest(category, nickname, password,
 			content);
 
-		String encryptedPwd = encryptPasswordEncoder.encode(password);
-
 		// when
 		InquirySaveResponse saved = inquiryService.save(inquirySaveRequest);
-		String savedEncryptedPwd = inquiryRepository.findById(saved.id()).get().getPassword();
+		String encodedPassword = inquiryRepository.findById(saved.id()).get().getPassword();
 
 		// then
-		assertThat(savedEncryptedPwd).isEqualTo(encryptedPwd);
+		assertThat(bCryptPasswordEncoder.matches(password, encodedPassword)).isTrue();
 	}
 
 	@Test
