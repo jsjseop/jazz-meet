@@ -1,11 +1,11 @@
 import { CalendarDate } from './CalendarDate';
-import { ScheduleGroup } from './ScheduleGroup';
+import { ShowContainer } from './ShowContainer';
 
 export const ShowPage: React.FC = () => {
   return (
     <>
       <CalendarDate />
-      <ScheduleGroup />
+      <ShowContainer />
     </>
   );
 };

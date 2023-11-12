@@ -1,21 +1,36 @@
 import styled from '@emotion/styled';
 import CaretRight from '~/assets/icons/CaretRight.svg?react';
 
-export const VenueCard: React.FC = () => {
+type Props = {
+  name: string;
+  shows: {
+    id: number;
+    posterUrl: string;
+    teamName: string;
+    startTime: string;
+    endTime: string;
+  }[];
+};
+
+export const VenueCard: React.FC<Props> = ({ name, shows }) => {
   return (
     <StyledVenueCard>
       <StyledCardHeader>
-        <span>공연장이름</span>
+        <span>{name}</span>
         <CaretRight />
       </StyledCardHeader>
-      <StyledShowInfo>
-        <span>20:30 - 22:30</span>
-        <span>ooo oooo 트리오</span>
-      </StyledShowInfo>
-      <StyledShowInfo>
-        <span>20:30 - 22:30</span>
-        <span>ooo oooo 트리오</span>
-      </StyledShowInfo>
+      {shows.map((show) => {
+        const showTime = `${show.startTime.slice(
+          11,
+          16,
+        )} - ${show.endTime.slice(11, 16)}`;
+        return (
+          <StyledShowInfo key={show.id}>
+            <span>{showTime}</span>
+            <span>{show.teamName}</span>
+          </StyledShowInfo>
+        );
+      })}
     </StyledVenueCard>
   );
 };
@@ -45,6 +60,7 @@ const StyledShowInfo = styled.div`
   font-weight: 500;
 
   > span:first-of-type {
+    white-space: nowrap;
     color: #47484e;
   }
 
