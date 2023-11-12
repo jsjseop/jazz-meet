@@ -280,6 +280,6 @@ class InquiryServiceTest extends IntegrationTestSupport {
 		// when // then
 		assertThatThrownBy(() -> inquiryService.delete(inquiryId, inquiryDeleteRequest))
 			.isInstanceOf(CustomException.class)
-			.hasMessage(InquiryErrorCode.NOT_MATCH_PASSWORD.getMessage());
+			.hasMessage(InquiryErrorCode.WRONG_PASSWORD.getMessage());
 	}
 }

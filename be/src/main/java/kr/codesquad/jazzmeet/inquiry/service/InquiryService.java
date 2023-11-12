@@ -94,7 +94,7 @@ public class InquiryService {
 	private void matchesPassword(String rawPassword, String encodedPassword) {
 		boolean isMatched = bCryptPasswordEncoder.matches(rawPassword, encodedPassword);
 		if (!isMatched) {
-			throw new CustomException(InquiryErrorCode.NOT_MATCH_PASSWORD);
+			throw new CustomException(InquiryErrorCode.WRONG_PASSWORD);
 		}
 	}
 
