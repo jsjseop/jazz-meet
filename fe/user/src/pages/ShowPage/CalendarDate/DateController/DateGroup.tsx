@@ -59,7 +59,7 @@ export const DateGroup: React.FC = () => {
   return (
     <StyledDateGroup>
       {dates.map(({ day, date }) => (
-        <StyledDate>
+        <StyledDate key={date}>
           <p>{day}</p>
           <p>{date}</p>
         </StyledDate>
