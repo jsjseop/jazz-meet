@@ -17,7 +17,6 @@ export const MapPage: React.FC = () => {
     <StyledMapPage>
       <Map
         mapElement={mapElement}
-        map={map}
         onMapInitialized={(map: naver.maps.Map) => setMap(map)}
         onCurrentViewSearchClick={updateMapDataBasedOnBounds}
       />
