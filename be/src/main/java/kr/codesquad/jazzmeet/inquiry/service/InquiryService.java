@@ -22,6 +22,7 @@ import kr.codesquad.jazzmeet.inquiry.mapper.InquiryMapper;
 import kr.codesquad.jazzmeet.inquiry.repository.InquiryQueryRepository;
 import kr.codesquad.jazzmeet.inquiry.repository.InquiryRepository;
 import kr.codesquad.jazzmeet.inquiry.util.InquiryCategory;
+import kr.codesquad.jazzmeet.inquiry.util.InquiryStatus;
 import kr.codesquad.jazzmeet.inquiry.vo.InquiryDetail;
 import kr.codesquad.jazzmeet.inquiry.vo.InquirySearchData;
 import lombok.RequiredArgsConstructor;
@@ -84,6 +85,7 @@ public class InquiryService {
 	public void updateStatusToDeleted(Long inquiryId, InquiryDeleteRequest request) {
 		Inquiry inquiry = inquiryRepository.findById(inquiryId)
 			.orElseThrow(() -> new CustomException(InquiryErrorCode.NOT_FOUND_INQUIRY));
+		inspectDeletedInquiry(inquiry);
 		matchesPassword(request.password(), inquiry.getPassword());
 
 		inquiry.updateStatusToDeleted();
@@ -93,6 +95,13 @@ public class InquiryService {
 		boolean isMatched = bCryptPasswordEncoder.matches(rawPassword, encodedPassword);
 		if (!isMatched) {
 			throw new CustomException(InquiryErrorCode.NOT_MATCH_PASSWORD);
+		}
+	}
+
+	private void inspectDeletedInquiry(Inquiry inquiry) {
+		InquiryStatus status = inquiry.getStatus();
+		if (status.equals(InquiryStatus.DELETED)) {
+			throw new CustomException(InquiryErrorCode.ALREADY_DELETED);
 		}
 	}
 }
