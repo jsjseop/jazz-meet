@@ -71,8 +71,7 @@ public class VenueFacade {
 		List<VenueHourRequest> venueHours = venueUpdateRequest.venueHours();
 		addVenueHours(venue, venueHours);
 
-		Venue savedVenue = venueService.save(venue);
-		return venueService.findVenue(savedVenue.getId());
+		return venueService.findVenue(venueId);
 	}
 
 	@Transactional
