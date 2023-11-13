@@ -12,8 +12,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
+import kr.codesquad.jazzmeet.inquiry.dto.request.InquiryAnswerSaveRequest;
 import kr.codesquad.jazzmeet.inquiry.dto.request.InquiryDeleteRequest;
 import kr.codesquad.jazzmeet.inquiry.dto.request.InquirySaveRequest;
+import kr.codesquad.jazzmeet.inquiry.dto.response.InquiryAnswerSaveResponse;
 import kr.codesquad.jazzmeet.inquiry.dto.response.InquiryDetailResponse;
 import kr.codesquad.jazzmeet.inquiry.dto.response.InquirySaveResponse;
 import kr.codesquad.jazzmeet.inquiry.dto.response.InquirySearchResponse;
@@ -68,5 +70,15 @@ public class InquiryController {
 		inquiryService.delete(inquiryId, inquiryDeleteRequest);
 
 		return ResponseEntity.noContent().build();
+	}
+
+	/**
+	 * 문의 답변 등록 API
+	 */
+	@PostMapping("/api/inquiries/answers")
+	public ResponseEntity<InquiryAnswerSaveResponse> saveAnswer(@RequestBody InquiryAnswerSaveRequest request) {
+		InquiryAnswerSaveResponse answer = inquiryService.saveAnswer(request);
+
+		return ResponseEntity.status(HttpStatus.CREATED).body(answer);
 	}
 }
