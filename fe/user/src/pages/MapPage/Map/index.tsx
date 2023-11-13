@@ -5,14 +5,12 @@ import { MapSearchButton } from './MapSearchButton';
 
 type Props = {
   mapElement: React.RefObject<HTMLDivElement>;
-  map?: naver.maps.Map;
   onMapInitialized: (map: naver.maps.Map) => void;
   onCurrentViewSearchClick: () => void;
 };
 
 export const Map: React.FC<Props> = ({
   mapElement,
-  map,
   onMapInitialized,
   onCurrentViewSearchClick,
 }) => {
@@ -46,7 +44,6 @@ export const Map: React.FC<Props> = ({
     <StyledMap id="map" ref={mapElement}>
       {isShowMapSearchButton && (
         <MapSearchButton
-          map={map}
           hideMapSearchButton={hideMapSearchButton}
           onCurrentViewSearchClick={onCurrentViewSearchClick}
         />
