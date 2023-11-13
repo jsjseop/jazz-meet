@@ -1,6 +1,7 @@
 package kr.codesquad.jazzmeet.show.controller;
 
 import static org.hamcrest.Matchers.*;
+import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
@@ -16,10 +17,12 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import kr.codesquad.jazzmeet.show.dto.ShowResponse;
 import kr.codesquad.jazzmeet.show.dto.response.ExistShowCalendarResponse;
 import kr.codesquad.jazzmeet.show.dto.response.ShowByDateResponse;
+import kr.codesquad.jazzmeet.show.dto.response.ShowDetailResponse;
+import kr.codesquad.jazzmeet.show.dto.response.ShowResponse;
 import kr.codesquad.jazzmeet.show.service.ShowService;
+import kr.codesquad.jazzmeet.show.vo.ShowPoster;
 
 @WebMvcTest(controllers = ShowController.class)
 class ShowControllerTest {
@@ -107,5 +110,26 @@ class ShowControllerTest {
 			.andExpect(jsonPath("$.currentPage").value(1))
 			.andExpect(jsonPath("$.maxPage").value(3))
 			.andExpect(jsonPath("$.totalCount").value(30));
+	}
+
+	@DisplayName("관리자가 공연의 id로 공연을 상세 조회한다.")
+	@Test
+	void getShowDetail() throws Exception {
+		//given
+		Long showId = 1L;
+		when(showService.getShowDetail(any())).thenReturn(
+			ShowDetailResponse.builder().id(showId).poster(new ShowPoster(1L, "url")).showName("퀄텟").build());
+
+		//when //then
+		mockMvc.perform(
+				get("/api/shows/{showId}", showId)
+					.contentType(MediaType.APPLICATION_JSON)
+			)
+			.andDo(print())
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.id").value(1L))
+			.andExpect(jsonPath("$.poster.id").value(1L))
+			.andExpect(jsonPath("$.poster.url").value("url"))
+			.andExpect(jsonPath("$.showName").value("퀄텟"));
 	}
 }

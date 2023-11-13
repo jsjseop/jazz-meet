@@ -8,18 +8,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import kr.codesquad.jazzmeet.IntegrationTestSupport;
+import kr.codesquad.jazzmeet.fixture.ImageFixture;
 import kr.codesquad.jazzmeet.fixture.ShowFixture;
 import kr.codesquad.jazzmeet.fixture.VenueFixture;
 import kr.codesquad.jazzmeet.global.error.CustomException;
-import kr.codesquad.jazzmeet.show.dto.ShowResponse;
+import kr.codesquad.jazzmeet.global.error.statuscode.ShowErrorCode;
+import kr.codesquad.jazzmeet.image.entity.Image;
 import kr.codesquad.jazzmeet.show.dto.response.ExistShowCalendarResponse;
 import kr.codesquad.jazzmeet.show.dto.response.ShowByDateAndVenueResponse;
 import kr.codesquad.jazzmeet.show.dto.response.ShowByDateResponse;
+import kr.codesquad.jazzmeet.show.dto.response.ShowDetailResponse;
+import kr.codesquad.jazzmeet.show.dto.response.ShowResponse;
 import kr.codesquad.jazzmeet.show.dto.response.UpcomingShowResponse;
 import kr.codesquad.jazzmeet.show.entity.Show;
 import kr.codesquad.jazzmeet.show.repository.ShowRepository;
@@ -361,5 +366,49 @@ class ShowServiceTest extends IntegrationTestSupport {
 		assertThat(showResponse)
 			.extracting("totalCount", "currentPage", "maxPage")
 			.containsExactly(22L, 1, 3);
+	}
+
+	@DisplayName("관리자가 id로 공연을 조회한다.")
+	@Test
+	void getShowById() throws Exception {
+		//given
+		Image image = ImageFixture.createImage("url");
+		Venue venue = VenueFixture.createVenue("부기우기", "경기 고양시 덕양구");
+		Show show = ShowFixture.createShow("Entry55 퀄텟1", LocalDateTime.of(2023, 11, 1, 20, 00), venue, image);
+		showRepository.save(show);
+
+		Long id = show.getId();
+
+		//when
+		ShowDetailResponse showDetail = showService.getShowDetail(id);
+
+		//then
+		Assertions.assertAll(
+			() -> assertThat(showDetail)
+				.extracting("id", "showName", "venueName", "startTime", "endTime")
+				.contains(show.getId(), "Entry55 퀄텟1", "부기우기", LocalDateTime.of(2023, 11, 1, 20, 00),
+					LocalDateTime.of(2023, 11, 1, 20, 00)),
+
+			() -> assertThat(showDetail.poster())
+				.extracting("id", "url")
+				.contains(image.getId(), "url")
+		);
+	}
+
+	@DisplayName("존재하지 않는 공연을 조회하려고 하는 경우 예외가 발생한다.")
+	@Test
+	void getShowByNotExistId() throws Exception {
+		//given
+		Image image = ImageFixture.createImage("url");
+		Venue venue = VenueFixture.createVenue("부기우기", "경기 고양시 덕양구");
+		Show show = ShowFixture.createShow("Entry55 퀄텟1", LocalDateTime.of(2023, 11, 1, 20, 00), venue, image);
+		showRepository.save(show);
+
+		Long id = 0L;
+
+		//when //then
+		assertThatThrownBy(() -> showService.getShowDetail(id))
+			.isInstanceOf(CustomException.class)
+			.hasMessage(ShowErrorCode.NOT_FOUND_SHOW.getMessage());
 	}
 }

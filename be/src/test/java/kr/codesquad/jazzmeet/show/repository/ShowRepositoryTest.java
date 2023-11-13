@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +16,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
 
 import kr.codesquad.jazzmeet.IntegrationTestSupport;
+import kr.codesquad.jazzmeet.fixture.ImageFixture;
 import kr.codesquad.jazzmeet.fixture.ShowFixture;
 import kr.codesquad.jazzmeet.fixture.VenueFixture;
+import kr.codesquad.jazzmeet.image.entity.Image;
 import kr.codesquad.jazzmeet.show.entity.Show;
 import kr.codesquad.jazzmeet.show.vo.ShowSummaryWithVenue;
 import kr.codesquad.jazzmeet.show.vo.ShowWithVenue;
@@ -199,5 +202,36 @@ class ShowRepositoryTest extends IntegrationTestSupport {
 		assertThat(response.getContent()).hasSize(2)
 			.extracting("teamName")
 			.contains("Entry55 퀄텟1", "Entry55 퀄텟2");
+	}
+
+	@DisplayName("공연의 id로 공연을 조회한다.")
+	@Test
+	void getShowById() throws Exception {
+		//given
+		LocalDateTime time = LocalDateTime.of(2023, 11, 1, 20, 00);
+		Image image = ImageFixture.createImage("url");
+		Venue venue = VenueFixture.createVenue("부기우기", "경기 고양시 덕양구");
+		Show show = ShowFixture.createShow("Entry55 퀄텟1", time, venue, image);
+		showRepository.save(show);
+
+		Long id = show.getId();
+
+		//when
+		Show findShow = showRepository.findEntireShowById(id).get();
+
+		//then
+		Assertions.assertAll(
+			() -> assertThat(findShow)
+				.extracting("teamName", "startTime", "endTime")
+				.contains("Entry55 퀄텟1", time, time),
+
+			() -> assertThat(findShow.getPoster())
+				.extracting("id", "url")
+				.contains(image.getId(), "url"),
+
+			() -> assertThat(findShow.getVenue())
+				.extracting("name")
+				.isEqualTo("부기우기")
+		);
 	}
 }
