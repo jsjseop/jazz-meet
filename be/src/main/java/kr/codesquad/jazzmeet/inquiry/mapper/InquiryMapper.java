@@ -54,6 +54,7 @@ public interface InquiryMapper {
 	@Mapping(target = "status", source = "status.koName")
 	InquirySaveResponse toInquirySaveResponse(Inquiry savedInquiry);
 
+	@Mapping(target = "content", source = "content")
 	@Mapping(target = "inquiry", source = "inquiry")
 	Answer toAnswer(String content, Inquiry inquiry, Long adminId);
 
