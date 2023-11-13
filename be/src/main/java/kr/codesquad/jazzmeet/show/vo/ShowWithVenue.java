@@ -14,9 +14,9 @@ public class ShowWithVenue {
 	private String name;
 	@JsonIgnore
 	private String cityAndDistrict;
-	private List<ShowInfoByDate> shows;
+	private List<ShowSummary> shows;
 
-	public ShowWithVenue(Long id, String name, String cityAndDistrict, List<ShowInfoByDate> shows) {
+	public ShowWithVenue(Long id, String name, String cityAndDistrict, List<ShowSummary> shows) {
 		this.id = id;
 		this.name = name;
 		this.cityAndDistrict = cityAndDistrict;
