@@ -1,23 +1,28 @@
 import styled from '@emotion/styled';
-import { DateData } from '.';
+import { equalDates, getKoreanWeekdayName, isToday } from '~/utils/dateUtils';
 
 type Props = {
-  dates: DateData[];
+  dates: Date[];
   selectedDate: Date;
 };
 
 export const DateGroup: React.FC<Props> = ({ dates, selectedDate }) => {
-  const today = new Date().getDate();
-  const selectedDateInMonth = selectedDate.getDate();
-
   return (
     <StyledDateGroup>
-      {dates.map(({ day, date }) => (
-        <StyledDateInfo key={date} $active={selectedDateInMonth === date}>
-          <StyledDay>{date === today ? '오늘' : day}</StyledDay>
-          <StyledDate>{date}</StyledDate>
-        </StyledDateInfo>
-      ))}
+      {dates.map((date: Date) => {
+        const day = getKoreanWeekdayName(date.getDay());
+        const dateNumber = date.getDate();
+
+        return (
+          <StyledDateInfo
+            key={dateNumber}
+            $active={equalDates(date, selectedDate)}
+          >
+            <StyledDay>{isToday(date) ? '오늘' : day}</StyledDay>
+            <StyledDate>{dateNumber}</StyledDate>
+          </StyledDateInfo>
+        );
+      })}
     </StyledDateGroup>
   );
 };

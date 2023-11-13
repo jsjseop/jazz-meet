@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 import { useEffect, useState } from 'react';
 import CaretLeft from '~/assets/icons/CaretLeft.svg?react';
 import CaretRight from '~/assets/icons/CaretRight.svg?react';
-import { getFirstDay, getLastDate, getMonthDates } from '~/utils/dateUtils';
+import { getMonthDates } from '~/utils/dateUtils';
 import { DateGroup } from './DateGroup';
 
 export type DateData = {
@@ -21,10 +21,8 @@ export const DateController: React.FC<Props> = ({
   selectedDate,
   selectDate,
 }) => {
-  const [datesInMonth, setDatesInMonth] = useState<DateData[]>([]);
-  const [centerDateIndex, setCenterDateIndex] = useState(
-    selectedDate.getDate() - 1,
-  );
+  const [datesInMonth, setDatesInMonth] = useState<Date[]>([]);
+  const [centerDateIndex, setCenterDateIndex] = useState(0);
 
   const currentDateGroup = getCurrentDateGroup(datesInMonth, centerDateIndex);
 
@@ -34,16 +32,9 @@ export const DateController: React.FC<Props> = ({
     setCenterDateIndex((p) => getCenterDateIndex(p + 9));
 
   useEffect(() => {
-    const currentYear = calendarDate.getFullYear();
-    const currentMonth = calendarDate.getMonth() + 1;
-
-    const firstDay = getFirstDay(currentYear, currentMonth);
-    const lastDate = getLastDate(currentYear, currentMonth);
-
-    const dates = getMonthDates(firstDay, lastDate);
-
-    setDatesInMonth(dates);
-  }, [calendarDate]);
+    setDatesInMonth(getMonthDates(calendarDate));
+    setCenterDateIndex(selectedDate.getDate() - 1);
+  }, [calendarDate, selectedDate]);
 
   return (
     <StyledDateContainer>
@@ -58,7 +49,7 @@ export const DateController: React.FC<Props> = ({
   );
 };
 
-const getCurrentDateGroup = (datesInMonth: DateData[], dateIndex: number) => {
+const getCurrentDateGroup = (datesInMonth: Date[], dateIndex: number) => {
   if (dateIndex < 7) {
     return datesInMonth.slice(0, 13);
   }
