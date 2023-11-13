@@ -26,8 +26,8 @@ export const VenueCard: React.FC<Props> = ({ name, shows }) => {
         )} - ${show.endTime.slice(11, 16)}`;
         return (
           <StyledShowInfo key={show.id}>
-            <span>{showTime}</span>
-            <span>{show.teamName}</span>
+            <StyledShowTime>{showTime}</StyledShowTime>
+            <StyledShowTeam>{show.teamName}</StyledShowTeam>
           </StyledShowInfo>
         );
       })}
@@ -58,16 +58,16 @@ const StyledShowInfo = styled.div`
   padding: 7px 20px;
   font-size: 20px;
   font-weight: 500;
+`;
 
-  > span:first-of-type {
-    white-space: nowrap;
-    color: #47484e;
-  }
+const StyledShowTime = styled.span`
+  white-space: nowrap;
+  color: #47484e;
+`;
 
-  > span:last-of-type {
-    color: #686970;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
-  }
+const StyledShowTeam = styled.span`
+  color: #686970;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 `;

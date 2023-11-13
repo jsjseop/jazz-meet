@@ -59,10 +59,10 @@ export const DateGroup: React.FC = () => {
   return (
     <StyledDateGroup>
       {dates.map(({ day, date }) => (
-        <StyledDate key={date}>
-          <p>{day}</p>
-          <p>{date}</p>
-        </StyledDate>
+        <StyledDateInfo key={date}>
+          <StyledDay>{day}</StyledDay>
+          <StyledDate>{date}</StyledDate>
+        </StyledDateInfo>
       ))}
     </StyledDateGroup>
   );
@@ -74,26 +74,24 @@ const StyledDateGroup = styled.div`
   justify-content: space-around;
 `;
 
-const StyledDate = styled.div`
+const StyledDateInfo = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   min-width: 24px;
+`;
 
-  > p {
-    padding: 6px 0;
-  }
+const StyledDay = styled.p`
+  padding: 6px 0;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 1.4;
+  color: #a3a4a9;
+`;
 
-  > p:first-of-type {
-    font-size: 18px;
-    font-weight: 500;
-    line-height: 1.4;
-    color: #a3a4a9;
-  }
-
-  > p:last-of-type {
-    font-size: 28px;
-    font-weight: 700;
-    color: #686970;
-  }
+const StyledDate = styled.p`
+  padding: 6px 0;
+  font-size: 28px;
+  font-weight: 700;
+  color: #686970;
 `;
