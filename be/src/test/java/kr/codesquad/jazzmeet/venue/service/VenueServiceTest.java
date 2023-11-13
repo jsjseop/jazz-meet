@@ -16,6 +16,7 @@ import kr.codesquad.jazzmeet.fixture.ImageFixture;
 import kr.codesquad.jazzmeet.fixture.VenueFixture;
 import kr.codesquad.jazzmeet.global.error.CustomException;
 import kr.codesquad.jazzmeet.image.entity.Image;
+import kr.codesquad.jazzmeet.image.repository.ImageRepository;
 import kr.codesquad.jazzmeet.venue.dto.VenueSearch;
 import kr.codesquad.jazzmeet.venue.dto.response.NearbyVenueResponse;
 import kr.codesquad.jazzmeet.venue.dto.response.VenueAutocompleteResponse;
@@ -25,7 +26,6 @@ import kr.codesquad.jazzmeet.venue.dto.response.VenueSearchResponse;
 import kr.codesquad.jazzmeet.venue.entity.Venue;
 import kr.codesquad.jazzmeet.venue.entity.VenueImage;
 import kr.codesquad.jazzmeet.venue.repository.VenueImageRepository;
-import kr.codesquad.jazzmeet.venue.repository.VenueQueryRepository;
 import kr.codesquad.jazzmeet.venue.repository.VenueRepository;
 import kr.codesquad.jazzmeet.venue.util.VenueUtil;
 
@@ -35,20 +35,22 @@ class VenueServiceTest extends IntegrationTestSupport {
 	private static final Point DEFAULT_POINT = VenueUtil.createPoint(37.56671605441306, 126.97849382312168);
 
 	@Autowired
-	private VenueService venueService;
+	VenueService venueService;
 
 	@Autowired
-	private VenueRepository venueRepository;
+	VenueRepository venueRepository;
 
 	@Autowired
-	private VenueQueryRepository venueQueryRepository;
+	VenueImageRepository venueImageRepository;
 
 	@Autowired
-	private VenueImageRepository venueImageRepository;
+	ImageRepository imageRepository;
 
 	@AfterEach
 	void dbClean() {
+		venueImageRepository.deleteAllInBatch();
 		venueRepository.deleteAllInBatch();
+		imageRepository.deleteAllInBatch();
 	}
 
 	@Test
@@ -442,20 +444,23 @@ class VenueServiceTest extends IntegrationTestSupport {
 	@Test
 	void findVenue() throws Exception {
 		//given
-		Long venueId = 1L;
 		Venue venue = VenueFixture.createVenue("부기우기", "서울 용산구 회나무로 21 2층",
 			VenueUtil.createPoint(37.52387497068088, 126.9294615244093));
 
 		Image image1 = ImageFixture.createImage("image1.url");
 		Image image2 = ImageFixture.createImage("image2.url");
 
+		imageRepository.saveAll(List.of(image1, image2));
+
 		VenueImage venueImage1 = VenueFixture.createVenueImage(venue, image1, 1L);
 		VenueImage venueImage2 = VenueFixture.createVenueImage(venue, image2, 2L);
 
-		venueImage1.add(venue, image1);
-		venueImage2.add(venue, image2);
+		venue.addVenueImage(venueImage1);
+		venue.addVenueImage(venueImage2);
 
-		venueImageRepository.saveAll(List.of(venueImage1, venueImage2));
+		venueRepository.save(venue);
+
+		Long venueId = venue.getId();
 
 		//when
 		VenueDetailResponse venueResponse = venueService.findVenue(venueId);
@@ -470,20 +475,22 @@ class VenueServiceTest extends IntegrationTestSupport {
 	@Test
 	void findVenueWhenNotExistVenue() throws Exception {
 		//given
-		Long venueId = 2L;
+		Long venueId = -1L;
 		Venue venue = VenueFixture.createVenue("부기우기", "서울 용산구 회나무로 21 2층",
 			VenueUtil.createPoint(37.52387497068088, 126.9294615244093));
 
 		Image image1 = ImageFixture.createImage("image1.url");
 		Image image2 = ImageFixture.createImage("image2.url");
 
+		imageRepository.saveAll(List.of(image1, image2));
+
 		VenueImage venueImage1 = VenueFixture.createVenueImage(venue, image1, 1L);
 		VenueImage venueImage2 = VenueFixture.createVenueImage(venue, image2, 2L);
 
-		venueImage1.add(venue, image1);
-		venueImage2.add(venue, image2);
+		venue.addVenueImage(venueImage1);
+		venue.addVenueImage(venueImage2);
 
-		venueImageRepository.saveAll(List.of(venueImage1, venueImage2));
+		venueRepository.save(venue);
 
 		//when //then
 		assertThatThrownBy(() -> venueService.findVenue(venueId))

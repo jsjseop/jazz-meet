@@ -3,10 +3,13 @@ package kr.codesquad.jazzmeet.show.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
+import org.springframework.data.domain.Page;
 
+import kr.codesquad.jazzmeet.show.dto.ShowResponse;
 import kr.codesquad.jazzmeet.show.dto.response.ShowByDateAndVenueResponse;
 import kr.codesquad.jazzmeet.show.dto.response.UpcomingShowResponse;
 import kr.codesquad.jazzmeet.show.entity.Show;
+import kr.codesquad.jazzmeet.show.vo.ShowSummaryWithVenue;
 
 @Mapper
 public interface ShowMapper {
@@ -20,4 +23,10 @@ public interface ShowMapper {
 
 	@Mapping(target = "posterUrl", source = "poster.url")
 	ShowByDateAndVenueResponse toShowByDateResponse(Show show);
+
+	@Mapping(target = "totalCount", source = "totalElements")
+	@Mapping(target = "maxPage", expression = "java(page.getTotalPages())")
+	@Mapping(target = "currentPage", expression = "java(page.getNumber() + 1)")
+	@Mapping(target = "shows", source = "content")
+	ShowResponse toShowResponse(Page<ShowSummaryWithVenue> page);
 }

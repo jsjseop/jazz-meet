@@ -1,6 +1,5 @@
 package kr.codesquad.jazzmeet.venue.entity;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -28,7 +27,7 @@ public class VenueHour {
 	private DayOfWeek day;
 	@Column(nullable = false, length = 20)
 	private String businessHour;
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "venue_id")
 	private Venue venue;
 
@@ -39,9 +38,7 @@ public class VenueHour {
 		this.venue = venue;
 	}
 
-	// 연관 관계 편의 메서드
-	public void add(Venue venue) {
+	public void addVenue(Venue venue) {
 		this.venue = venue;
-		venue.getVenueHours().add(this);
 	}
 }

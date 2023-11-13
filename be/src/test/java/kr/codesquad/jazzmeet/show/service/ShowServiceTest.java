@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.*;
 
 import java.time.LocalDateTime;
 import java.time.Month;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.AfterEach;
@@ -15,12 +16,15 @@ import kr.codesquad.jazzmeet.IntegrationTestSupport;
 import kr.codesquad.jazzmeet.fixture.ShowFixture;
 import kr.codesquad.jazzmeet.fixture.VenueFixture;
 import kr.codesquad.jazzmeet.global.error.CustomException;
+import kr.codesquad.jazzmeet.show.dto.ShowResponse;
 import kr.codesquad.jazzmeet.show.dto.response.ExistShowCalendarResponse;
 import kr.codesquad.jazzmeet.show.dto.response.ShowByDateAndVenueResponse;
+import kr.codesquad.jazzmeet.show.dto.response.ShowByDateResponse;
 import kr.codesquad.jazzmeet.show.dto.response.UpcomingShowResponse;
 import kr.codesquad.jazzmeet.show.entity.Show;
 import kr.codesquad.jazzmeet.show.repository.ShowRepository;
 import kr.codesquad.jazzmeet.venue.entity.Venue;
+import kr.codesquad.jazzmeet.venue.repository.VenueRepository;
 
 class ShowServiceTest extends IntegrationTestSupport {
 
@@ -28,10 +32,13 @@ class ShowServiceTest extends IntegrationTestSupport {
 	ShowService showService;
 	@Autowired
 	ShowRepository showRepository;
+	@Autowired
+	VenueRepository venueRepository;
 
 	@AfterEach
 	void dbClean() {
 		showRepository.deleteAllInBatch();
+		venueRepository.deleteAllInBatch();
 	}
 
 	@Test
@@ -125,12 +132,12 @@ class ShowServiceTest extends IntegrationTestSupport {
 		//given
 		String date = null;
 		Long venueId = 1L;
-		Show show = ShowFixture.createShow("트리오", LocalDateTime.of(2023, 11, 3, 20, 00),
-			LocalDateTime.of(2023, 11, 3, 22, 00));
+		Venue venue = VenueFixture.createVenue("부기우기", "경기도 고양시");
+		Show show = ShowFixture.createShow("부기우기 트리오1", LocalDateTime.of(2023, 11, 1, 18, 00), venue);
 		showRepository.save(show);
 
 		//when
-		List<ShowByDateAndVenueResponse> shows = showService.getShows(venueId, date);
+		List<ShowByDateAndVenueResponse> shows = showService.getShowsByDate(venueId, date);
 
 		//then
 		assertThat(shows).hasSize(0);
@@ -140,23 +147,22 @@ class ShowServiceTest extends IntegrationTestSupport {
 	@Test
 	void findShows() throws Exception {
 		//given
-		String date = "20231103";
-		Long venueId = 1L;
+		String date = "20231101";
 
 		Venue venue = VenueFixture.createVenue("부기우기", "경기도 고양시");
-		Show show1 = ShowFixture.createShow("트리오", LocalDateTime.of(2023, 11, 3, 18, 00),
-			LocalDateTime.of(2023, 11, 3, 20, 00), venue);
-		Show show2 = ShowFixture.createShow("퀄텟", LocalDateTime.of(2023, 11, 3, 20, 00),
-			LocalDateTime.of(2023, 11, 3, 22, 00), venue);
+		Show show1 = ShowFixture.createShow("부기우기 트리오1", LocalDateTime.of(2023, 11, 1, 18, 00), venue);
+		Show show2 = ShowFixture.createShow("부기우기 트리오2", LocalDateTime.of(2023, 11, 1, 20, 00), venue);
 		showRepository.saveAll(List.of(show1, show2));
 
+		Long venueId = venue.getId();
+
 		//when
-		List<ShowByDateAndVenueResponse> shows = showService.getShows(venueId, date);
+		List<ShowByDateAndVenueResponse> shows = showService.getShowsByDate(venueId, date);
 
 		//then
 		assertThat(shows).hasSize(2)
 			.extracting("teamName")
-			.contains("트리오", "퀄텟");
+			.contains("부기우기 트리오1", "부기우기 트리오2");
 	}
 
 	@DisplayName("날짜 형식이 올바르지 않으면 예외가 발생한다.")
@@ -167,14 +173,12 @@ class ShowServiceTest extends IntegrationTestSupport {
 		Long venueId = 1L;
 
 		Venue venue = VenueFixture.createVenue("부기우기", "경기도 고양시");
-		Show show1 = ShowFixture.createShow("트리오", LocalDateTime.of(2023, 11, 3, 18, 00),
-			LocalDateTime.of(2023, 11, 3, 20, 00), venue);
-		Show show2 = ShowFixture.createShow("퀄텟", LocalDateTime.of(2023, 11, 3, 20, 00),
-			LocalDateTime.of(2023, 11, 3, 22, 00), venue);
+		Show show1 = ShowFixture.createShow("부기우기 트리오1", LocalDateTime.of(2023, 11, 1, 18, 00), venue);
+		Show show2 = ShowFixture.createShow("부기우기 트리오2", LocalDateTime.of(2023, 11, 1, 20, 00), venue);
 		showRepository.saveAll(List.of(show1, show2));
 
 		//when//then
-		assertThatThrownBy(() -> showService.getShows(venueId, date))
+		assertThatThrownBy(() -> showService.getShowsByDate(venueId, date))
 			.isInstanceOf(CustomException.class);
 	}
 
@@ -187,12 +191,9 @@ class ShowServiceTest extends IntegrationTestSupport {
 		Venue venue1 = VenueFixture.createVenue("부기우기", "경기도 고양시");
 		Venue venue2 = VenueFixture.createVenue("클럽에반스", "경기도 고양시");
 
-		Show show1 = ShowFixture.createShow("트리오", LocalDateTime.of(2023, 11, 1, 18, 00),
-			LocalDateTime.of(2023, 11, 1, 20, 00), venue1);
-		Show show2 = ShowFixture.createShow("트리오", LocalDateTime.of(2023, 11, 2, 18, 00),
-			LocalDateTime.of(2023, 11, 2, 20, 00), venue1);
-		Show show3 = ShowFixture.createShow("트리오", LocalDateTime.of(2023, 11, 3, 18, 00),
-			LocalDateTime.of(2023, 11, 3, 20, 00), venue2);
+		Show show1 = ShowFixture.createShow("부기우기 트리오1", LocalDateTime.of(2023, 11, 1, 18, 00), venue1);
+		Show show2 = ShowFixture.createShow("부기우기 트리오2", LocalDateTime.of(2023, 11, 2, 20, 00), venue1);
+		Show show3 = ShowFixture.createShow("Entry55 트리오1", LocalDateTime.of(2023, 11, 3, 18, 00), venue2);
 		showRepository.saveAll(List.of(show1, show2, show3));
 
 		//when
@@ -213,16 +214,152 @@ class ShowServiceTest extends IntegrationTestSupport {
 		Venue venue1 = VenueFixture.createVenue("부기우기", "경기도 고양시");
 		Venue venue2 = VenueFixture.createVenue("클럽에반스", "경기도 고양시");
 
-		Show show1 = ShowFixture.createShow("트리오", LocalDateTime.of(2023, 11, 1, 18, 00),
-			LocalDateTime.of(2023, 11, 1, 20, 00), venue1);
-		Show show2 = ShowFixture.createShow("트리오", LocalDateTime.of(2023, 11, 2, 18, 00),
-			LocalDateTime.of(2023, 11, 2, 20, 00), venue1);
-		Show show3 = ShowFixture.createShow("트리오", LocalDateTime.of(2023, 11, 3, 18, 00),
-			LocalDateTime.of(2023, 11, 3, 20, 00), venue2);
+		Show show1 = ShowFixture.createShow("부기우기 트리오1", LocalDateTime.of(2023, 11, 1, 18, 00), venue1);
+		Show show2 = ShowFixture.createShow("부기우기 트리오2", LocalDateTime.of(2023, 11, 1, 20, 00), venue1);
+		Show show3 = ShowFixture.createShow("Entry55 트리오1", LocalDateTime.of(2023, 11, 1, 18, 00), venue2);
 		showRepository.saveAll(List.of(show1, show2, show3));
 
 		//when //then
 		assertThatThrownBy(() -> showService.getShowCalendar(date))
 			.isInstanceOf(CustomException.class);
+	}
+
+	@DisplayName("요청 날짜에 해당하는 공연 목록과 공연장을 시/구 주소로 감싸서 조회한다.")
+	@Test
+	void getShowsByDate() throws Exception {
+		//given
+		String date = "20231101";
+
+		Venue venue1 = VenueFixture.createVenue("부기우기", "경기 고양시 덕양구");
+		Venue venue2 = VenueFixture.createVenue("Entry55", "서울 마포구");
+		Venue venue3 = VenueFixture.createVenue("클럽에반스", "서울 마포구");
+
+		Show show1 = ShowFixture.createShow("부기우기 트리오1", LocalDateTime.of(2023, 11, 1, 20, 00), venue1);
+		Show show2 = ShowFixture.createShow("부기우기 트리오2", LocalDateTime.of(2023, 11, 1, 18, 00), venue1);
+		Show show3 = ShowFixture.createShow("Entry55 트리오1", LocalDateTime.of(2023, 11, 1, 20, 00), venue2);
+		Show show4 = ShowFixture.createShow("Entry55 트리오2", LocalDateTime.of(2023, 11, 1, 18, 00), venue2);
+		Show show5 = ShowFixture.createShow("클럽에반스 퀄텟", LocalDateTime.of(2023, 11, 1, 16, 00), venue3);
+
+		showRepository.saveAll(List.of(show1, show2, show3, show4, show5));
+
+		//when
+		List<ShowByDateResponse> shows = showService.getShowsByDate(date);
+
+		//then
+		assertThat(shows).hasSize(2)
+			.extracting("region")
+			.containsExactly("경기 고양시 덕양구", "서울 마포구");
+
+		assertThat(shows.get(0).venues()).hasSize(1)
+			.extracting("name")
+			.contains("부기우기");
+
+		assertThat(shows.get(1).venues()).hasSize(2)
+			.extracting("name")
+			.containsExactly("Entry55", "클럽에반스");
+
+		assertThat(shows.get(0).venues().get(0).getShows()).hasSize(2)
+			.extracting("teamName", "startTime")
+			.containsExactly(
+				tuple("부기우기 트리오2", LocalDateTime.of(2023, 11, 1, 18, 00)),
+				tuple("부기우기 트리오1", LocalDateTime.of(2023, 11, 1, 20, 00))
+			);
+	}
+
+	@DisplayName("관리자가 검색어와 현재 페이지 숫자로 검색어에 해당하는 공연장의 공연 목록을 조회한다.")
+	@Test
+	void getShows() throws Exception {
+		//given
+		String word = "부기우기";
+		int page = 2;
+
+		Venue venue1 = VenueFixture.createVenue("부기우기", "경기 고양시 덕양구");
+		Venue venue2 = VenueFixture.createVenue("Entry55", "서울 마포구");
+
+		List<Show> shows = new ArrayList<>();
+		for (int i = 1; i <= 20; i++) {
+			shows.add(ShowFixture.createShow("부 트리오" + i, LocalDateTime.of(2023, 11, 1, 20, 00), venue1));
+		}
+		shows.add(ShowFixture.createShow("E 트리오1", LocalDateTime.of(2023, 11, 1, 20, 00), venue2));
+		shows.add(ShowFixture.createShow("E 트리오2", LocalDateTime.of(2023, 11, 1, 18, 00), venue2));
+
+		showRepository.saveAll(shows);
+
+		//when
+		ShowResponse showResponse = showService.getShows(word, page);
+
+		//then
+		List<String> results = new ArrayList<>();
+		for (int i = 11; i <= 20; i++) {
+			results.add("부 트리오" + i);
+		}
+
+		assertThat(showResponse)
+			.extracting("totalCount", "currentPage", "maxPage")
+			.containsExactly(20L, 2, 2);
+
+		assertThat(showResponse.shows()).hasSize(10)
+			.extracting("teamName")
+			.containsAll(results);
+	}
+
+	@DisplayName("관리자가 검색어와 현재 페이지 숫자로 검색어에 해당하는 공연 이름을 가진 공연 목록을 조회한다.")
+	@Test
+	void getShowsByTeamName() throws Exception {
+		//given
+		String word = "퀄텟";
+		int page = 1;
+
+		Venue venue1 = VenueFixture.createVenue("부기우기", "경기 고양시 덕양구");
+		Venue venue2 = VenueFixture.createVenue("Entry55", "서울 마포구");
+
+		List<Show> shows = new ArrayList<>();
+		for (int i = 1; i <= 20; i++) {
+			shows.add(ShowFixture.createShow("부기우기 트리오" + i, LocalDateTime.of(2023, 11, 1, 20, 00), venue1));
+		}
+		shows.add(ShowFixture.createShow("Entry55 퀄텟1", LocalDateTime.of(2023, 11, 1, 20, 00), venue2));
+		shows.add(ShowFixture.createShow("Entry55 퀄텟2", LocalDateTime.of(2023, 11, 1, 18, 00), venue2));
+
+		showRepository.saveAll(shows);
+
+		//when
+		ShowResponse showResponse = showService.getShows(word, page);
+
+		//then
+		assertThat(showResponse)
+			.extracting("totalCount", "currentPage", "maxPage")
+			.containsExactly(2L, 1, 1);
+
+		assertThat(showResponse.shows()).hasSize(2)
+			.extracting("teamName")
+			.contains("Entry55 퀄텟1", "Entry55 퀄텟2");
+	}
+
+	@DisplayName("관리자가 검색어를 입력하지 않으면 전체 공연 목록을 조회한다.")
+	@Test
+	void getShowsWhenWordNotExist() throws Exception {
+		//given
+		String word = null;
+		int page = 1;
+
+		Venue venue1 = VenueFixture.createVenue("부기우기", "경기 고양시 덕양구");
+		Venue venue2 = VenueFixture.createVenue("Entry55", "서울 마포구");
+
+		List<Show> shows = new ArrayList<>();
+		for (int i = 1; i <= 20; i++) {
+			shows.add(ShowFixture.createShow("부기우기 트리오" + i, LocalDateTime.of(2023, 11, 1, 20, 00), venue1));
+		}
+		shows.add(ShowFixture.createShow("Entry55 퀄텟1", LocalDateTime.of(2023, 11, 1, 20, 00), venue2));
+		shows.add(ShowFixture.createShow("Entry55 퀄텟2", LocalDateTime.of(2023, 11, 1, 18, 00), venue2));
+
+		showRepository.saveAll(shows);
+
+		//when
+		ShowResponse showResponse = showService.getShows(word, page);
+
+		//then
+		assertThat(showResponse)
+			.extracting("totalCount", "currentPage", "maxPage")
+			.containsExactly(22L, 1, 3);
 	}
 }

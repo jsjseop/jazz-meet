@@ -17,6 +17,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import kr.codesquad.jazzmeet.venue.dto.response.VenueDetailResponse;
+import kr.codesquad.jazzmeet.venue.service.VenueFacade;
 import kr.codesquad.jazzmeet.venue.service.VenueService;
 
 @WebMvcTest(controllers = VenueController.class)
@@ -27,6 +28,9 @@ class VenueControllerTest {
 
 	@MockBean
 	VenueService venueService;
+
+	@MockBean
+	VenueFacade venueFacade;
 
 	@DisplayName("검색어에 해당하는 공연장의 위치 정보 목록을 조회한다.")
 	@Test

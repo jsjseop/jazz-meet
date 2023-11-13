@@ -7,6 +7,7 @@ type Props = {
   suggestions: SearchSuggestion[];
   open: boolean;
   searchBoxRef: React.RefObject<HTMLDivElement>;
+  activeIndex: number;
   onClose: () => void;
 };
 
@@ -14,6 +15,7 @@ export const SuggestionBox: React.FC<Props> = ({
   suggestions,
   open,
   searchBoxRef,
+  activeIndex,
   onClose
 }) => {
   useEffect(() => {
@@ -37,8 +39,8 @@ export const SuggestionBox: React.FC<Props> = ({
   return (
     <StyledSuggestionBox $open={open}>
       <StyledSuggestionList>
-        {suggestions.map((suggestion) => (
-          <SuggestionItem key={suggestion.id} suggestion={suggestion} onClose={onClose} />
+        {suggestions.map((suggestion, index) => (
+          <SuggestionItem key={suggestion.id} suggestion={suggestion} onClose={onClose} active={index === activeIndex} />
         ))}
       </StyledSuggestionList>
     </StyledSuggestionBox>
