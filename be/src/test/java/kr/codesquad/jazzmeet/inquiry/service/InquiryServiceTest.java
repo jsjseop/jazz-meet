@@ -13,8 +13,10 @@ import kr.codesquad.jazzmeet.IntegrationTestSupport;
 import kr.codesquad.jazzmeet.fixture.InquiryFixture;
 import kr.codesquad.jazzmeet.global.error.CustomException;
 import kr.codesquad.jazzmeet.global.error.statuscode.InquiryErrorCode;
+import kr.codesquad.jazzmeet.inquiry.dto.request.InquiryAnswerSaveRequest;
 import kr.codesquad.jazzmeet.inquiry.dto.request.InquiryDeleteRequest;
 import kr.codesquad.jazzmeet.inquiry.dto.request.InquirySaveRequest;
+import kr.codesquad.jazzmeet.inquiry.dto.response.InquiryAnswerSaveResponse;
 import kr.codesquad.jazzmeet.inquiry.dto.response.InquiryDetailResponse;
 import kr.codesquad.jazzmeet.inquiry.dto.response.InquirySaveResponse;
 import kr.codesquad.jazzmeet.inquiry.dto.response.InquirySearch;
@@ -281,5 +283,60 @@ class InquiryServiceTest extends IntegrationTestSupport {
 		assertThatThrownBy(() -> inquiryService.delete(inquiryId, inquiryDeleteRequest))
 			.isInstanceOf(CustomException.class)
 			.hasMessage(InquiryErrorCode.WRONG_PASSWORD.getMessage());
+	}
+
+	@Test
+	@DisplayName("관리자는 문의에 답변을 등록할 수 있다.")
+	void saveAnswer() {
+		// given
+		Long inquiryId = inquiryRepository.save(InquiryFixture.createInquiry()).getId();
+		String content = "문의 답변 내용";
+		InquiryAnswerSaveRequest request = InquiryFixture.createInquiryAnswerSaveRequest(inquiryId, content);
+
+		// when
+		InquiryAnswerSaveResponse response = inquiryService.saveAnswer(request);
+
+		Inquiry inquiry = inquiryRepository.findById(inquiryId).get();
+		Answer answer = inquiryAnswerRepository.findById(response.id()).get();
+
+		// then
+		Assertions.assertAll(
+			() -> assertThat(inquiry.getAnswer())
+				.usingRecursiveComparison()
+				.ignoringFields("inquiry")
+				.isEqualTo(answer),
+			() -> assertThat(inquiry.getStatus()).isEqualTo(InquiryStatus.REPLIED),
+			() -> assertThat(response.content()).isEqualTo(content),
+			() -> assertThat(response.createdAt()).isNotNull()
+		);
+	}
+
+	@Test
+	@DisplayName("존재하지 않는 문의에 대한 답변은 등록할 수 없다.")
+	void saveAnswerNotExistInquiryException() {
+		// given
+		Long inquiryId = 0L;
+		String content = "문의 답변 내용";
+		InquiryAnswerSaveRequest request = InquiryFixture.createInquiryAnswerSaveRequest(inquiryId, content);
+
+		// when // then
+		assertThatThrownBy(() -> inquiryService.saveAnswer(request))
+			.isInstanceOf(CustomException.class)
+			.hasMessage(InquiryErrorCode.NOT_FOUND_INQUIRY.getMessage());
+	}
+
+	@Test
+	@DisplayName("이미 답변 완료 된 문의에 대한 답변은 등록할 수 없다.")
+	void saveAnswerAlreadyRepliedException() {
+		// given
+		InquiryStatus status = InquiryStatus.REPLIED;
+		Long inquiryId = inquiryRepository.save(InquiryFixture.createInquiry(status)).getId();
+		String content = "문의 답변 내용";
+		InquiryAnswerSaveRequest request = InquiryFixture.createInquiryAnswerSaveRequest(inquiryId, content);
+
+		// when // then
+		assertThatThrownBy(() -> inquiryService.saveAnswer(request))
+			.isInstanceOf(CustomException.class)
+			.hasMessage(InquiryErrorCode.ALREADY_REPLIED.getMessage());
 	}
 }

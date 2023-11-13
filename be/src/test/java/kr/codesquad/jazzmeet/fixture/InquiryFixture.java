@@ -2,6 +2,7 @@ package kr.codesquad.jazzmeet.fixture;
 
 import java.time.LocalDateTime;
 
+import kr.codesquad.jazzmeet.inquiry.dto.request.InquiryAnswerSaveRequest;
 import kr.codesquad.jazzmeet.inquiry.dto.request.InquiryDeleteRequest;
 import kr.codesquad.jazzmeet.inquiry.dto.request.InquirySaveRequest;
 import kr.codesquad.jazzmeet.inquiry.entity.Answer;
@@ -77,6 +78,17 @@ public class InquiryFixture {
 			.build();
 	}
 
+	public static Inquiry createInquiry(InquiryStatus status) {
+		return Inquiry.builder()
+			.nickname("닉네임")
+			.password("비밀번호")
+			.content("문의 내용")
+			.category(InquiryCategory.SERVICE)
+			.status(status)
+			.createdAt(LocalDateTime.now())
+			.build();
+	}
+
 	public static Answer createInquiryAnswer(Inquiry inquiry) {
 		return Answer.builder()
 			.adminId(1L)
@@ -101,4 +113,7 @@ public class InquiryFixture {
 		return new InquiryDeleteRequest(password);
 	}
 
+	public static InquiryAnswerSaveRequest createInquiryAnswerSaveRequest(Long inquiryId, String content) {
+		return new InquiryAnswerSaveRequest(inquiryId, content);
+	}
 }
