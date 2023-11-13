@@ -1,10 +1,10 @@
 import styled from '@emotion/styled';
 import React, { useMemo, useState } from 'react';
+import { PaginationBox } from '~/components/PaginationBox';
 import { InquiryEditor } from './Editor';
 import { InquiryPageHeader } from './Header';
 import { InquiryData, InquiryList } from './InquiryList';
 import { InquiryTab, TypeFilter } from './TabList';
-import { PaginationBox } from '~/components/PaginationBox';
 
 export const InquiryPage: React.FC = () => {
   const maxPage = useMemo(() => 25, []);
@@ -72,7 +72,7 @@ export const InquiryPage: React.FC = () => {
     <StyledDiv>
       <InquiryPageHeader />
 
-      <TypeFilter activaTabId={inquiryTab.id} onChange={handleTypeChange} />
+      <TypeFilter activeTabId={inquiryTab.id} onChange={handleTypeChange} />
       <InquiryList inquiries={inquires[inquiryTab.name] as InquiryData[]} />
       <InquiryEditor />
 

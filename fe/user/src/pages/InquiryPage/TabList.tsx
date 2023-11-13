@@ -6,11 +6,11 @@ export type InquiryTab = {
 };
 
 type Props = {
-  activaTabId: number;
+  activeTabId: number;
   onChange: (InquiryType: InquiryTab) => void;
 };
 
-export const TypeFilter: React.FC<Props> = ({ activaTabId, onChange }) => {
+export const TypeFilter: React.FC<Props> = ({ activeTabId, onChange }) => {
   const tabList: InquiryTab[] = [
     {
       id: 1,
@@ -30,7 +30,7 @@ export const TypeFilter: React.FC<Props> = ({ activaTabId, onChange }) => {
     <StyledList>
       {tabList.map((tab) => {
         return (
-          <li key={tab.id} className={activaTabId === tab.id ? 'active' : ''}>
+          <li key={tab.id} className={activeTabId === tab.id ? 'active' : ''}>
             <button onClick={() => onChange(tab)}>{tab.name}</button>
           </li>
         );
