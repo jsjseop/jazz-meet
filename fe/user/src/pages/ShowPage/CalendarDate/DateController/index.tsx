@@ -41,7 +41,11 @@ export const DateController: React.FC<Props> = ({
       <StyledArrowButton>
         <CaretLeft onClick={goToPreviousGroup} />
       </StyledArrowButton>
-      <DateGroup dates={currentDateGroup} selectedDate={selectedDate} />
+      <DateGroup
+        dates={currentDateGroup}
+        selectedDate={selectedDate}
+        selectDate={selectDate}
+      />
       <StyledArrowButton>
         <CaretRight onClick={goToNextGroup} />
       </StyledArrowButton>

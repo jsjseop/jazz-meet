@@ -4,9 +4,14 @@ import { equalDates, getKoreanWeekdayName } from '~/utils/dateUtils';
 type Props = {
   dates: Date[];
   selectedDate: Date;
+  selectDate: (date: Date) => void;
 };
 
-export const DateGroup: React.FC<Props> = ({ dates, selectedDate }) => {
+export const DateGroup: React.FC<Props> = ({
+  dates,
+  selectedDate,
+  selectDate,
+}) => {
   const today = new Date();
 
   return (
@@ -19,6 +24,7 @@ export const DateGroup: React.FC<Props> = ({ dates, selectedDate }) => {
           <StyledDateInfo
             key={dateNumber}
             $active={equalDates(date, selectedDate)}
+            onClick={() => selectDate(date)}
           >
             <StyledDay>{equalDates(date, today) ? '오늘' : day}</StyledDay>
             <StyledDate>{dateNumber}</StyledDate>
