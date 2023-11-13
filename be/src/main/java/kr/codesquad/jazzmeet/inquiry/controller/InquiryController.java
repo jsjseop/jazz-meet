@@ -30,9 +30,10 @@ public class InquiryController {
 	 * 문의 글 목록 조회 API
 	 */
 	@GetMapping("/api/inquiries")
-	public ResponseEntity<InquirySearchResponse> getInquiries(@RequestParam String category,
+	public ResponseEntity<InquirySearchResponse> getInquiries(
+		@RequestParam(required = false, defaultValue = "서비스") String category,
 		@RequestParam(required = false) String word,
-		@RequestParam @Min(value = 1) int page) {
+		@RequestParam(required = false, defaultValue = "1") @Min(value = 1) int page) {
 		InquirySearchResponse inquiries = inquiryService.getInquiries(category, word, page);
 
 		return ResponseEntity.ok(inquiries);
