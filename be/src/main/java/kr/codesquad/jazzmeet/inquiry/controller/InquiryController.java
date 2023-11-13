@@ -63,7 +63,7 @@ public class InquiryController {
 	 * 문의 글 삭제 API
 	 */
 	@DeleteMapping("/api/inquiries/{inquiryId}")
-	public ResponseEntity<?> delete(@PathVariable Long inquiryId,
+	public ResponseEntity<Void> delete(@PathVariable Long inquiryId,
 		@RequestBody @Valid InquiryDeleteRequest inquiryDeleteRequest) {
 		inquiryService.delete(inquiryId, inquiryDeleteRequest);
 
