@@ -11,6 +11,7 @@ export const Header: React.FC = () => {
         </Link>
         <StyledButtons>
           <Link to="/map">지도</Link>
+          <Link to="/show">공연</Link>
           <Link to="/inquiry">문의</Link>
         </StyledButtons>
       </StyledLeftContainer>

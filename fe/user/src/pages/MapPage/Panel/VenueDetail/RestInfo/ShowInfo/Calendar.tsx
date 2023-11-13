@@ -164,9 +164,9 @@ const StyledDay = styled.div<{ isCurrentDay?: boolean; isEventDate?: boolean }>`
     justify-content: center;
     align-items: center;
 
- ${({ isEventDate }) =>
-   isEventDate &&
-   `
+    ${({ isEventDate }) =>
+      isEventDate &&
+      `
      &::after {
       content: '';
       width: 10%;
@@ -177,5 +177,5 @@ const StyledDay = styled.div<{ isCurrentDay?: boolean; isEventDate?: boolean }>`
       background-color: #f04d23;
   }
   `};
-    
+  }
 `;
