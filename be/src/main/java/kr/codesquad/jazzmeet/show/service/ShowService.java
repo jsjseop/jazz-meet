@@ -16,10 +16,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import kr.codesquad.jazzmeet.global.error.CustomException;
 import kr.codesquad.jazzmeet.global.error.statuscode.ShowErrorCode;
-import kr.codesquad.jazzmeet.show.dto.ShowResponse;
 import kr.codesquad.jazzmeet.show.dto.response.ExistShowCalendarResponse;
 import kr.codesquad.jazzmeet.show.dto.response.ShowByDateAndVenueResponse;
 import kr.codesquad.jazzmeet.show.dto.response.ShowByDateResponse;
+import kr.codesquad.jazzmeet.show.dto.response.ShowDetailResponse;
+import kr.codesquad.jazzmeet.show.dto.response.ShowResponse;
 import kr.codesquad.jazzmeet.show.dto.response.UpcomingShowResponse;
 import kr.codesquad.jazzmeet.show.entity.Show;
 import kr.codesquad.jazzmeet.show.mapper.ShowMapper;
@@ -112,5 +113,16 @@ public class ShowService {
 		Page<ShowSummaryWithVenue> shows = showQueryRepository.getShows(word, pageRequest);
 
 		return ShowMapper.INSTANCE.toShowResponse(shows);
+	}
+
+	public ShowDetailResponse getShowDetail(Long showId) {
+		Show show = getShowById(showId);
+
+		return ShowMapper.INSTANCE.toShowDetailResponse(show);
+	}
+
+	private Show getShowById(Long showId) {
+		return showRepository.findEntireShowById(showId)
+			.orElseThrow(() -> new CustomException(ShowErrorCode.NOT_FOUND_SHOW));
 	}
 }
