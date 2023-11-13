@@ -22,13 +22,16 @@ export const DateController: React.FC<Props> = ({
   selectDate,
 }) => {
   const [datesInMonth, setDatesInMonth] = useState<DateData[]>([]);
-  const [page, setPage] = useState();
-
-  const currentDateGroup = getCurrentDateGroup(
-    datesInMonth,
+  const [centerDateIndex, setCenterDateIndex] = useState(
     selectedDate.getDate() - 1,
-    page,
   );
+
+  const currentDateGroup = getCurrentDateGroup(datesInMonth, centerDateIndex);
+
+  const goToPreviousGroup = () =>
+    setCenterDateIndex((p) => getCenterDateIndex(p - 9));
+  const goToNextGroup = () =>
+    setCenterDateIndex((p) => getCenterDateIndex(p + 9));
 
   useEffect(() => {
     const currentYear = calendarDate.getFullYear();
@@ -41,9 +44,6 @@ export const DateController: React.FC<Props> = ({
 
     setDatesInMonth(dates);
   }, [calendarDate]);
-
-  const goToPreviousGroup = () => {};
-  const goToNextGroup = () => {};
 
   return (
     <StyledDateContainer>
@@ -58,24 +58,28 @@ export const DateController: React.FC<Props> = ({
   );
 };
 
-const getCurrentDateGroup = (
-  datesInMonth: DateData[],
-  dateIndex?: number,
-  page?: number,
-) => {
-  if (typeof dateIndex !== 'undefined' && dateIndex !== 0) {
-    return dateIndex < 7
-      ? datesInMonth.slice(0, 13)
-      : datesInMonth.length - dateIndex < 7
-      ? datesInMonth.slice(datesInMonth.length - 13, datesInMonth.length)
-      : datesInMonth.slice(dateIndex - 6, dateIndex + 7);
+const getCurrentDateGroup = (datesInMonth: DateData[], dateIndex: number) => {
+  if (dateIndex < 7) {
+    return datesInMonth.slice(0, 13);
   }
 
-  if (typeof page !== 'undefined' && page >= 0 && page < 3) {
-    return datesInMonth.slice(page * 13, (page + 1) * 13);
+  if (datesInMonth.length - dateIndex < 7) {
+    return datesInMonth.slice(datesInMonth.length - 13, datesInMonth.length);
   }
 
-  return datesInMonth.slice(0, 13);
+  return datesInMonth.slice(dateIndex - 6, dateIndex + 7);
+};
+
+const getCenterDateIndex = (index: number) => {
+  if (index < 7) {
+    return 6;
+  }
+
+  if (index < 16) {
+    return 15;
+  }
+
+  return 24;
 };
 
 const StyledDateContainer = styled.div`
