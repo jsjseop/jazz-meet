@@ -11,13 +11,11 @@ export type DateData = {
 };
 
 type Props = {
-  calendarDate: Date;
   selectedDate: Date;
   selectDate: (date: Date) => void;
 };
 
 export const DateController: React.FC<Props> = ({
-  calendarDate,
   selectedDate,
   selectDate,
 }) => {
@@ -32,9 +30,9 @@ export const DateController: React.FC<Props> = ({
     setCenterDateIndex((p) => getCenterDateIndex(p + 9));
 
   useEffect(() => {
-    setDatesInMonth(getMonthDates(calendarDate));
+    setDatesInMonth(getMonthDates(selectedDate));
     setCenterDateIndex(selectedDate.getDate() - 1);
-  }, [calendarDate, selectedDate]);
+  }, [selectedDate]);
 
   return (
     <StyledDateContainer>
