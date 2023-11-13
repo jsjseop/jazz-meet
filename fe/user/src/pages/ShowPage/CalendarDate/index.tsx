@@ -16,8 +16,10 @@ export const CalendarDate: React.FC = () => {
     <StyledCalendarDate>
       <Header
         calendarDate={calendarDate}
+        selectedDate={selectedDate}
         goToPreviousMonth={goToPreviousMonth}
         goToNextMonth={goToNextMonth}
+        selectDate={selectDate}
       />
       <DateController
         calendarDate={calendarDate}
