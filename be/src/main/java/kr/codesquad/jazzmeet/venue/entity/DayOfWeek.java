@@ -1,7 +1,10 @@
 package kr.codesquad.jazzmeet.venue.entity;
 
 import java.time.DateTimeException;
+import java.util.Arrays;
 
+import kr.codesquad.jazzmeet.global.error.CustomException;
+import kr.codesquad.jazzmeet.global.error.statuscode.VenueErrorCode;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -23,5 +26,12 @@ public enum DayOfWeek {
 			throw new DateTimeException("Invalid value for DayOfWeek: " + index);
 		}
 		return ENUMS[index].name;
+	}
+
+	public static DayOfWeek toDayOfWeek(String name) {
+		return Arrays.stream(ENUMS)
+			.filter(dayOfWeek -> dayOfWeek.name.equals(name))
+			.findFirst()
+			.orElseThrow(() -> new CustomException(VenueErrorCode.NOT_FOUND_DAY_OF_WEEK));
 	}
 }

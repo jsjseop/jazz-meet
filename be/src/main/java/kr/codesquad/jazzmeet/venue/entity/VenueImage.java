@@ -1,6 +1,5 @@
 package kr.codesquad.jazzmeet.venue.entity;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -25,10 +24,10 @@ public class VenueImage {
 	private Long id;
 	@Column(nullable = false)
 	private Long imageOrder;
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "venue_id")
 	private Venue venue;
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "image_id")
 	private Image image;
 
@@ -39,10 +38,7 @@ public class VenueImage {
 		this.image = image;
 	}
 
-	// 연관관계 편의 메서드
-	public void add(Venue venue, Image image) {
+	public void addVenue(Venue venue) {
 		this.venue = venue;
-		this.image = image;
-		venue.getImages().add(this);
 	}
 }
