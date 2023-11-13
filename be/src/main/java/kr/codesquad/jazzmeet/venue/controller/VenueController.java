@@ -5,15 +5,19 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import kr.codesquad.jazzmeet.venue.dto.request.VenueCreateRequest;
+import kr.codesquad.jazzmeet.venue.dto.request.VenueUpdateRequest;
 import kr.codesquad.jazzmeet.venue.dto.response.NearbyVenueResponse;
 import kr.codesquad.jazzmeet.venue.dto.response.VenueAutocompleteResponse;
 import kr.codesquad.jazzmeet.venue.dto.response.VenueCreateResponse;
@@ -123,9 +127,30 @@ public class VenueController {
 	 * 공연장 등록 API
 	 */
 	@PostMapping("/api/venues")
-	public ResponseEntity<VenueCreateResponse> createVenue(@RequestBody VenueCreateRequest venueCreateRequest) {
+	public ResponseEntity<VenueCreateResponse> createVenue(@RequestBody @Valid VenueCreateRequest venueCreateRequest) {
 		VenueCreateResponse venueCreateResponse = venueFacade.createVenue(venueCreateRequest);
 
 		return ResponseEntity.status(HttpStatus.CREATED).body(venueCreateResponse);
+	}
+
+	/**
+	 * 공연장 수정 API
+	 */
+	@PutMapping("/api/venues/{venueId}")
+	public ResponseEntity<VenueDetailResponse> updateVenue(@RequestBody @Valid VenueUpdateRequest venueUpdateRequest,
+		@PathVariable Long venueId) {
+		VenueDetailResponse venueDetailResponse = venueFacade.updateVenue(venueUpdateRequest, venueId);
+
+		return ResponseEntity.ok(venueDetailResponse);
+	}
+
+	/**
+	 * 공연장 삭제 API
+	 */
+	@DeleteMapping("/api/venues/{venueId}")
+	public ResponseEntity<Void> deleteVenue(@PathVariable Long venueId) {
+		venueFacade.deleteVenue(venueId);
+
+		return ResponseEntity.noContent().build();
 	}
 }

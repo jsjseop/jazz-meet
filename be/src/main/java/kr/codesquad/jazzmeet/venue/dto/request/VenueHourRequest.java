@@ -1,6 +1,6 @@
 package kr.codesquad.jazzmeet.venue.dto.request;
 
-public record VenueCreateHour(
+public record VenueHourRequest(
 	String day,
 	String businessHours
 ) {

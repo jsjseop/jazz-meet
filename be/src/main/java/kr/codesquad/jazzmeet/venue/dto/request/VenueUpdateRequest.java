@@ -6,7 +6,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Builder;
 
 @Builder
-public record VenueCreateRequest(
+public record VenueUpdateRequest(
 	String name,
 	@Size(max = 10)
 	List<Long> imageIds,
