@@ -1,4 +1,4 @@
-package kr.codesquad.jazzmeet.show.dto;
+package kr.codesquad.jazzmeet.show.dto.response;
 
 import java.util.List;
 
