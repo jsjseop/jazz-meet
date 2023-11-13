@@ -83,12 +83,16 @@ public class InquiryService {
 
 	@Transactional
 	public void delete(Long inquiryId, InquiryDeleteRequest request) {
-		Inquiry inquiry = inquiryRepository.findById(inquiryId)
-			.orElseThrow(() -> new CustomException(InquiryErrorCode.NOT_FOUND_INQUIRY));
+		Inquiry inquiry = findById(inquiryId);
 		inspectDeletedInquiry(inquiry);
 		matchesPassword(request.password(), inquiry.getPassword());
 
 		inquiry.updateStatusToDeleted();
+	}
+
+	private Inquiry findById(Long inquiryId) {
+		return inquiryRepository.findById(inquiryId)
+			.orElseThrow(() -> new CustomException(InquiryErrorCode.NOT_FOUND_INQUIRY));
 	}
 
 	private void matchesPassword(String rawPassword, String encodedPassword) {
