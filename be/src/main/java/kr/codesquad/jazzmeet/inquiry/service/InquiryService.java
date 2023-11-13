@@ -84,7 +84,7 @@ public class InquiryService {
 	@Transactional
 	public void delete(Long inquiryId, InquiryDeleteRequest request) {
 		Inquiry inquiry = findById(inquiryId);
-		inspectDeletedInquiry(inquiry);
+		inspectDeletedInquiry(inquiry.getStatus());
 		matchesPassword(request.password(), inquiry.getPassword());
 
 		inquiry.updateStatusToDeleted();
@@ -102,8 +102,7 @@ public class InquiryService {
 		}
 	}
 
-	private void inspectDeletedInquiry(Inquiry inquiry) {
-		InquiryStatus status = inquiry.getStatus();
+	private void inspectDeletedInquiry(InquiryStatus status) {
 		if (status.equals(InquiryStatus.DELETED)) {
 			throw new CustomException(InquiryErrorCode.ALREADY_DELETED);
 		}
