@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { equalDates, getKoreanWeekdayName, isToday } from '~/utils/dateUtils';
+import { equalDates, getKoreanWeekdayName } from '~/utils/dateUtils';
 
 type Props = {
   dates: Date[];
@@ -7,6 +7,8 @@ type Props = {
 };
 
 export const DateGroup: React.FC<Props> = ({ dates, selectedDate }) => {
+  const today = new Date();
+
   return (
     <StyledDateGroup>
       {dates.map((date: Date) => {
@@ -18,7 +20,7 @@ export const DateGroup: React.FC<Props> = ({ dates, selectedDate }) => {
             key={dateNumber}
             $active={equalDates(date, selectedDate)}
           >
-            <StyledDay>{isToday(date) ? '오늘' : day}</StyledDay>
+            <StyledDay>{equalDates(date, today) ? '오늘' : day}</StyledDay>
             <StyledDate>{dateNumber}</StyledDate>
           </StyledDateInfo>
         );
