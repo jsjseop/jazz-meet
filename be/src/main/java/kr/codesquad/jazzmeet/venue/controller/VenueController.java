@@ -105,6 +105,9 @@ public class VenueController {
 		return ResponseEntity.ok(venue);
 	}
 
+	/**
+	 * 공연장 목록 조회 - 검색 API
+	 */
 	@GetMapping("/api/venues/search")
 	public ResponseEntity<VenueSearchResponse> searchVenueList(
 		@RequestParam String word, @RequestParam(defaultValue = "1") @Min(value = 1) int page) {
