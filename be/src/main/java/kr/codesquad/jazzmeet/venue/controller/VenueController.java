@@ -22,6 +22,7 @@ import kr.codesquad.jazzmeet.venue.dto.response.NearbyVenueResponse;
 import kr.codesquad.jazzmeet.venue.dto.response.VenueAutocompleteResponse;
 import kr.codesquad.jazzmeet.venue.dto.response.VenueCreateResponse;
 import kr.codesquad.jazzmeet.venue.dto.response.VenueDetailResponse;
+import kr.codesquad.jazzmeet.venue.dto.response.VenueListResponse;
 import kr.codesquad.jazzmeet.venue.dto.response.VenuePinsResponse;
 import kr.codesquad.jazzmeet.venue.dto.response.VenueSearchResponse;
 import kr.codesquad.jazzmeet.venue.service.VenueFacade;
@@ -124,6 +125,17 @@ public class VenueController {
 		VenueSearchResponse venueResponse = venueService.findVenueSearchById(venueId);
 
 		return ResponseEntity.ok(venueResponse);
+	}
+
+	/**
+	 * 공연장 목록 조회 API
+	 */
+	@GetMapping("/api/venues")
+	public ResponseEntity<VenueListResponse> findVenues(@RequestParam(required = false) String word,
+		@RequestParam(defaultValue = "1") @Min(value = 1) int page) {
+		VenueListResponse venues = venueService.findVenuesByWord(word, page);
+
+		return ResponseEntity.ok(venues);
 	}
 
 	/**
