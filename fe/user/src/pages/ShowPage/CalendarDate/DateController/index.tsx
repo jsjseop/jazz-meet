@@ -5,11 +5,6 @@ import CaretRight from '~/assets/icons/CaretRight.svg?react';
 import { getMonthDates } from '~/utils/dateUtils';
 import { DateGroup } from './DateGroup';
 
-export type DateData = {
-  date: number;
-  day: string;
-};
-
 type Props = {
   selectedDate: Date;
   selectDate: (date: Date) => void;

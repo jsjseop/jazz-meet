@@ -16,13 +16,11 @@ export const MonthController: React.FC<MonthControllerProps> = ({
 
   const monthText = `${selectedYear}.${selectedMonth}`;
 
-  const onPreviousMonthClick = () => {
+  const onPreviousMonthClick = () =>
     selectDate(new Date(selectedYear, selectedMonth - 1, 0));
-  };
 
-  const onNextMonthClick = () => {
+  const onNextMonthClick = () =>
     selectDate(new Date(selectedYear, selectedMonth, 1));
-  };
 
   return (
     <StyledMonthController>
