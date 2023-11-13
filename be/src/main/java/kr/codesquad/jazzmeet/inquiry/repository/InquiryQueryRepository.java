@@ -43,7 +43,8 @@ public class InquiryQueryRepository {
 				.and(isEqualsCategory(category))
 				.and(isNotDeleted()))
 			.limit(pageable.getPageSize())
-			.offset(pageable.getOffset()).fetch();
+			.offset(pageable.getOffset())
+			.orderBy(inquiry.createdAt.desc()).fetch();
 
 		JPAQuery<Long> inquiriesByWordCount = countInquiries(word);
 
