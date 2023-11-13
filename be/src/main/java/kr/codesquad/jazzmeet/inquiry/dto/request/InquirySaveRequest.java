@@ -8,10 +8,10 @@ import lombok.Builder;
 public record InquirySaveRequest(
 	@NotNull
 	String category,
-	@Size(max = 8)
+	@Size(min = 2, max = 8)
 	@NotNull
 	String nickname,
-	@Size(max = 20)
+	@Size(min = 4, max = 20)
 	@NotNull
 	String password,
 	@NotNull
