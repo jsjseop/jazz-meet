@@ -2,6 +2,7 @@ package kr.codesquad.jazzmeet.fixture;
 
 import java.time.LocalDateTime;
 
+import kr.codesquad.jazzmeet.inquiry.dto.request.InquirySaveRequest;
 import kr.codesquad.jazzmeet.inquiry.entity.Answer;
 import kr.codesquad.jazzmeet.inquiry.entity.Inquiry;
 import kr.codesquad.jazzmeet.inquiry.util.InquiryCategory;
@@ -67,4 +68,13 @@ public class InquiryFixture {
 			.build();
 	}
 
+	public static InquirySaveRequest createInquiryRequest(String category, String nickname, String password,
+		String content) {
+		return InquirySaveRequest.builder()
+			.category(category)
+			.nickname(nickname)
+			.password(password)
+			.content(content)
+			.build();
+	}
 }

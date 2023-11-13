@@ -2,6 +2,9 @@ package kr.codesquad.jazzmeet.inquiry.entity;
 
 import java.time.LocalDateTime;
 
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -32,8 +35,10 @@ public class Answer {
 	private Inquiry inquiry;
 	@Column(nullable = false)
 	private Long adminId;
+	@CreationTimestamp
 	@Column(nullable = false)
 	private LocalDateTime createdAt;
+	@UpdateTimestamp
 	@Column(nullable = false)
 	private LocalDateTime modifiedAt;
 
