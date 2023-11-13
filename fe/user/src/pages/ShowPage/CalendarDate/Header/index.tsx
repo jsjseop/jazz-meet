@@ -1,10 +1,10 @@
 import styled from '@emotion/styled';
-import { MonthController } from './MonthController';
+import { MonthController, MonthControllerProps } from './MonthController';
 
-export const Header: React.FC = () => {
+export const Header: React.FC<MonthControllerProps> = ({ ...props }) => {
   return (
     <StyledHeader>
-      <MonthController />
+      <MonthController {...props} />
       {/* <DatePicker /> */}
     </StyledHeader>
   );

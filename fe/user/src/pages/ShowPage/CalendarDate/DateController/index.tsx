@@ -1,9 +1,44 @@
 import styled from '@emotion/styled';
+import { useEffect, useState } from 'react';
 import CaretLeft from '~/assets/icons/CaretLeft.svg?react';
 import CaretRight from '~/assets/icons/CaretRight.svg?react';
+import { getFirstDay, getLastDate, getMonthDates } from '~/utils/dateUtils';
 import { DateGroup } from './DateGroup';
 
-export const DateController: React.FC = () => {
+export type DateData = {
+  date: number;
+  day: string;
+};
+
+type Props = {
+  calendarDate: Date;
+  selectedDate: Date;
+  selectDate: (date: Date) => void;
+};
+
+export const DateController: React.FC<Props> = ({
+  calendarDate,
+  selectedDate,
+  selectDate,
+}) => {
+  const [datesInMonth, setDatesInMonth] = useState<DateData[]>([]);
+  const [page, setPage] = useState();
+
+  const todayIndex = selectedDate.getDate() - 1;
+  const currentDateGroup = getCurrentDateGroup(datesInMonth, todayIndex, page);
+
+  useEffect(() => {
+    const currentYear = calendarDate.getFullYear();
+    const currentMonth = calendarDate.getMonth() + 1;
+
+    const firstDay = getFirstDay(currentYear, currentMonth);
+    const lastDate = getLastDate(currentYear, currentMonth);
+
+    const dates = getMonthDates(firstDay, lastDate);
+
+    setDatesInMonth(dates);
+  }, [calendarDate]);
+
   const goToPreviousGroup = () => {};
   const goToNextGroup = () => {};
 
@@ -12,12 +47,32 @@ export const DateController: React.FC = () => {
       <StyledArrowButton>
         <CaretLeft onClick={goToPreviousGroup} />
       </StyledArrowButton>
-      <DateGroup />
+      <DateGroup dates={currentDateGroup} />
       <StyledArrowButton>
         <CaretRight onClick={goToNextGroup} />
       </StyledArrowButton>
     </StyledDateContainer>
   );
+};
+
+const getCurrentDateGroup = (
+  datesInMonth: DateData[],
+  todayIndex?: number,
+  page?: number,
+) => {
+  if (typeof todayIndex !== 'undefined' && todayIndex !== 0) {
+    return todayIndex < 7
+      ? datesInMonth.slice(0, 13)
+      : datesInMonth.length - todayIndex < 7
+      ? datesInMonth.slice(datesInMonth.length - 13, datesInMonth.length)
+      : datesInMonth.slice(todayIndex - 6, todayIndex + 7);
+  }
+
+  if (typeof page !== 'undefined' && page >= 0 && page < 3) {
+    return datesInMonth.slice(page * 13, (page + 1) * 13);
+  }
+
+  return datesInMonth.slice(0, 13);
 };
 
 const StyledDateContainer = styled.div`

@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import { getFirstDay, getLastDate } from '~/utils/dateUtils';
 
 type Props = {
   calendarDate: Date;
@@ -27,7 +28,7 @@ export const Calendar: React.FC<Props> = ({
   const selectedDay = selectedDate.getDate();
 
   const firstDay = getFirstDay(currentYear, currentMonth);
-  const lastDay = getLastDay(calendarDate.getFullYear(), currentMonth);
+  const lastDay = getLastDate(calendarDate.getFullYear(), currentMonth);
 
   const CalendarHeaderTitle = `${calendarDate.toLocaleString('en-US', {
     month: 'long',
@@ -78,18 +79,6 @@ export const Calendar: React.FC<Props> = ({
       </StyledDaysGrid>
     </StyledCalendar>
   );
-};
-
-const getFirstDay = (year: number, month: number) => {
-  const firstDay = new Date(year, month - 1, 1);
-
-  return firstDay.getDay();
-};
-
-const getLastDay = (year: number, month: number) => {
-  const lastDay = new Date(year, month, 0); // 0일은 지난 달의 마지막 날을 의미합니다.
-
-  return lastDay.getDate();
 };
 
 const StyledCalendar = styled.div`

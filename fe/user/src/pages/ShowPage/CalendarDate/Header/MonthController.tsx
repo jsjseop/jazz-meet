@@ -2,14 +2,26 @@ import styled from '@emotion/styled';
 import CaretLeft from '~/assets/icons/CaretLeft.svg?react';
 import CaretRight from '~/assets/icons/CaretRight.svg?react';
 
-export const MonthController: React.FC = () => {
-  const goToPreviousMonth = () => {};
-  const goToNextMonth = () => {};
+export type MonthControllerProps = {
+  calendarDate: Date;
+  goToPreviousMonth: () => void;
+  goToNextMonth: () => void;
+};
+
+export const MonthController: React.FC<MonthControllerProps> = ({
+  calendarDate,
+  goToPreviousMonth,
+  goToNextMonth,
+}) => {
+  const currentYear = calendarDate.getFullYear();
+  const currentMonth = calendarDate.getMonth() + 1;
+
+  const monthText = `${currentYear}.${currentMonth}`;
 
   return (
     <StyledMonthController>
       <CaretLeft onClick={goToPreviousMonth} />
-      <MonthText>2023.11</MonthText>
+      <MonthText>{monthText}</MonthText>
       <CaretRight onClick={goToNextMonth} />
     </StyledMonthController>
   );

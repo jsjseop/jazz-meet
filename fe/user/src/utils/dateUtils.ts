@@ -28,3 +28,24 @@ export const getFormattedDateTime = (date: Date) => {
 
   return formattedDateTime;
 };
+
+export const getFirstDay = (year: number, month: number) => {
+  return new Date(year, month - 1, 1).getDay();
+};
+
+export const getLastDate = (year: number, month: number) => {
+  return new Date(year, month, 0).getDate(); // 0일은 지난 달의 마지막 날을 의미합니다.
+};
+
+export const getMonthDates = (firstDay: number, lastDate: number) => {
+  const dates = [];
+
+  for (let i = 1; i <= lastDate; i++) {
+    dates.push({
+      date: i,
+      day: getKoreanWeekdayName((firstDay + i - 1) % 7),
+    });
+  }
+
+  return dates;
+};

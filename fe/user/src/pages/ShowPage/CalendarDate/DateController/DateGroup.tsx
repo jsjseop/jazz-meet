@@ -1,61 +1,11 @@
 import styled from '@emotion/styled';
+import { DateData } from '.';
 
-export const DateGroup: React.FC = () => {
-  const dates = [
-    {
-      day: '수',
-      date: 1,
-    },
-    {
-      day: '목',
-      date: 2,
-    },
-    {
-      day: '금',
-      date: 3,
-    },
-    {
-      day: '토',
-      date: 4,
-    },
-    {
-      day: '일',
-      date: 5,
-    },
-    {
-      day: '월',
-      date: 6,
-    },
-    {
-      day: '화',
-      date: 7,
-    },
-    {
-      day: '수',
-      date: 8,
-    },
-    {
-      day: '목',
-      date: 9,
-    },
-    {
-      day: '금',
-      date: 10,
-    },
-    {
-      day: '토',
-      date: 11,
-    },
-    {
-      day: '일',
-      date: 12,
-    },
-    {
-      day: '월',
-      date: 13,
-    },
-  ];
+type Props = {
+  dates: DateData[];
+};
 
+export const DateGroup: React.FC<Props> = ({ dates }) => {
   return (
     <StyledDateGroup>
       {dates.map(({ day, date }) => (
