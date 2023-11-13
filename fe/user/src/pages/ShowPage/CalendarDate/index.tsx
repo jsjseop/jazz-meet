@@ -13,5 +13,4 @@ export const CalendarDate: React.FC = () => {
 
 const StyledCalendarDate = styled.div`
   width: 100%;
-  margin: 80px auto 25px;
 `;

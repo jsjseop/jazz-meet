@@ -11,5 +11,5 @@ export const ShowContainer: React.FC = () => {
 
 const StyledShowContainer = styled.div`
   width: 100%;
-  margin: 0 auto;
+  margin: 25px auto;
 `;

@@ -13,4 +13,5 @@ export const ShowPage: React.FC = () => {
 
 const StyledShowPage = styled.div`
   max-width: 1200px;
+  margin: 80px auto 140px;
 `;
