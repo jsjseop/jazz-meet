@@ -12,6 +12,6 @@ export const CalendarDate: React.FC = () => {
 };
 
 const StyledCalendarDate = styled.div`
-  max-width: 1200px;
+  width: 100%;
   margin: 80px auto 25px;
 `;
