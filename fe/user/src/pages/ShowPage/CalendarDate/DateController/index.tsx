@@ -24,8 +24,11 @@ export const DateController: React.FC<Props> = ({
   const [datesInMonth, setDatesInMonth] = useState<DateData[]>([]);
   const [page, setPage] = useState();
 
-  const todayIndex = selectedDate.getDate() - 1;
-  const currentDateGroup = getCurrentDateGroup(datesInMonth, todayIndex, page);
+  const currentDateGroup = getCurrentDateGroup(
+    datesInMonth,
+    selectedDate.getDate() - 1,
+    page,
+  );
 
   useEffect(() => {
     const currentYear = calendarDate.getFullYear();
@@ -47,7 +50,7 @@ export const DateController: React.FC<Props> = ({
       <StyledArrowButton>
         <CaretLeft onClick={goToPreviousGroup} />
       </StyledArrowButton>
-      <DateGroup dates={currentDateGroup} />
+      <DateGroup dates={currentDateGroup} selectedDate={selectedDate} />
       <StyledArrowButton>
         <CaretRight onClick={goToNextGroup} />
       </StyledArrowButton>
@@ -57,15 +60,15 @@ export const DateController: React.FC<Props> = ({
 
 const getCurrentDateGroup = (
   datesInMonth: DateData[],
-  todayIndex?: number,
+  dateIndex?: number,
   page?: number,
 ) => {
-  if (typeof todayIndex !== 'undefined' && todayIndex !== 0) {
-    return todayIndex < 7
+  if (typeof dateIndex !== 'undefined' && dateIndex !== 0) {
+    return dateIndex < 7
       ? datesInMonth.slice(0, 13)
-      : datesInMonth.length - todayIndex < 7
+      : datesInMonth.length - dateIndex < 7
       ? datesInMonth.slice(datesInMonth.length - 13, datesInMonth.length)
-      : datesInMonth.slice(todayIndex - 6, todayIndex + 7);
+      : datesInMonth.slice(dateIndex - 6, dateIndex + 7);
   }
 
   if (typeof page !== 'undefined' && page >= 0 && page < 3) {
