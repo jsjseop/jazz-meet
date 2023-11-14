@@ -155,4 +155,10 @@ public class ShowService {
 
 		return ShowMapper.INSTANCE.toShowDetailResponse(updatedShow);
 	}
+
+	@Transactional
+	public void deleteShow(Long showId) {
+		Show show = getShowById(showId);
+		showRepository.delete(show);
+	}
 }
