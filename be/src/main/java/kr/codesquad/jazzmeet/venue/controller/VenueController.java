@@ -112,7 +112,7 @@ public class VenueController {
 	 */
 	@GetMapping("/api/venues/search")
 	public ResponseEntity<VenueSearchResponse> searchVenueList(
-		@RequestParam String word, @RequestParam(defaultValue = "1") @Min(value = 1) int page) {
+		@RequestParam(required = false) String word, @RequestParam(defaultValue = "1") @Min(value = 1) int page) {
 		VenueSearchResponse venuesResponse = venueService.searchVenueList(word, page);
 
 		return ResponseEntity.ok(venuesResponse);

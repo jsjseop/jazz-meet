@@ -10,12 +10,20 @@ import lombok.Builder;
 
 @Builder
 public record VenueUpdateRequest(
+	@NotNull
+	@Size(max = 50)
 	String name,
 	@Size(max = 10)
 	List<Long> imageIds,
+	@NotNull
+	@Size(max = 50)
 	String roadNameAddress,
+	@NotNull
+	@Size(max = 50)
 	String lotNumberAddress,
+	@Size(max = 20)
 	String phoneNumber,
+	@Size(max = 500)
 	String description,
 	List<VenueLinkRequest> links,
 	List<VenueHourRequest> venueHours,
