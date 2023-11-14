@@ -261,4 +261,44 @@ class ShowControllerTest {
 			.andDo(print())
 			.andExpect(status().isBadRequest());
 	}
+
+	@DisplayName("관리자가 공연을 수정한다.")
+	@Test
+	void updateShow() throws Exception {
+		//given
+		Long showId = 1L;
+		RegisterShowRequest request = RegisterShowRequest.builder()
+			.teamName("부기우기 트리오")
+			.description("설명")
+			.posterId(1L)
+			.startTime(LocalDateTime.of(2023, 11, 14, 13, 0))
+			.endTime(LocalDateTime.of(2023, 11, 14, 14, 0))
+			.build();
+
+		ShowDetailResponse response = ShowDetailResponse.builder()
+			.id(1L)
+			.teamName("부기우기 트리오")
+			.description("설명")
+			.venueName("부기우기")
+			.poster(new ShowPoster(1L, "url"))
+			.startTime(LocalDateTime.of(2023, 11, 14, 13, 0))
+			.endTime(LocalDateTime.of(2023, 11, 14, 14, 0))
+			.build();
+
+		when(showService.updateShow(any(), any())).thenReturn(response);
+
+		//when //then
+		mockMvc.perform(
+				put("/api/shows/{showId}", showId)
+					.content(objectMapper.writeValueAsString(request))
+					.contentType(MediaType.APPLICATION_JSON)
+			)
+			.andDo(print())
+			.andExpect(jsonPath("$.id").value(response.id()))
+			.andExpect(jsonPath("$.teamName").value(response.teamName()))
+			.andExpect(jsonPath("$.venueName").value(response.venueName()))
+			.andExpect(jsonPath("$.description").value(response.description()))
+			.andExpect(jsonPath("$.poster.id").value(response.poster().getId()))
+			.andExpect(jsonPath("$.poster.url").value(response.poster().getUrl()));
+	}
 }
