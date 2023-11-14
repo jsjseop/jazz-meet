@@ -55,6 +55,9 @@ dependencies {
     // aws s3
     implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
 
+    // security-core
+    implementation 'org.springframework.security:spring-security-core'
+
 }
 
 // Querydsl: 설정부

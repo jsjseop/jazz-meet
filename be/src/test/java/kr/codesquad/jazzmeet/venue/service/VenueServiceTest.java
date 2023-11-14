@@ -398,7 +398,7 @@ class VenueServiceTest extends IntegrationTestSupport {
 		Venue venue2 = VenueFixture.createVenue("플랫나인", "서울 서초구 강남대로65길 10");
 		Venue venue3 = VenueFixture.createVenue("entry55", "서울 동작구 동작대로1길");
 
-		venueRepository.saveAll(List.of(venue1, venue2, venue3));
+		List<Venue> savedVenues = venueRepository.saveAll(List.of(venue1, venue2, venue3));
 
 		// when
 		String word = "강남";
@@ -409,6 +409,7 @@ class VenueServiceTest extends IntegrationTestSupport {
 		// then
 		assertThat(venueSearchResponse.totalCount()).isEqualTo(2);
 		assertThat(venueSearchResponse.currentPage()).isEqualTo(page);
+		assertThat(venueSearchResponse.maxPage()).isEqualTo(1);
 		assertThat(venueSearchResponse.venues()).extracting(VenueSearch::address)
 			.doesNotContain(venue3.getRoadNameAddress())
 			.contains(venue1.getRoadNameAddress())

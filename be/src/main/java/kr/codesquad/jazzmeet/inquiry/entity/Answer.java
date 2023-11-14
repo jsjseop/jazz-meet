@@ -36,10 +36,10 @@ public class Answer {
 	@Column(nullable = false)
 	private Long adminId;
 	@CreationTimestamp
-	@Column(nullable = false)
+	@Column(nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
 	private LocalDateTime createdAt;
 	@UpdateTimestamp
-	@Column(nullable = false)
+	@Column(nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
 	private LocalDateTime modifiedAt;
 
 	@Builder
