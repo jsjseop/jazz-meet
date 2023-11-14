@@ -117,20 +117,11 @@ public class InquiryService {
 	@Transactional
 	public InquiryAnswerSaveResponse saveAnswer(InquiryAnswerSaveRequest request) {
 		Long inquiryId = request.inquiryId();
-		Inquiry inquiry = findById(inquiryId);
-		inspectExistAnswer(inquiry);
+		Inquiry inquiry = findById(inquiryId).inspectExistAnswer();
 		Answer answer = InquiryMapper.INSTANCE.toAnswer(request.content(), inquiry, DEFAULT_ADMIN_ID);
 		Answer savedAnswer = answerRepository.save(answer);
 		inquiry.updateStatusToReplied(savedAnswer);
 
 		return InquiryMapper.INSTANCE.toInquiryAnswerSaveResponse(savedAnswer);
-	}
-
-	private void inspectExistAnswer(Inquiry inquiry) {
-		InquiryStatus status = inquiry.getStatus();
-		Answer answer = inquiry.getAnswer();
-		if (status == InquiryStatus.REPLIED || answer != null) {
-			throw new CustomException(InquiryErrorCode.ALREADY_REPLIED);
-		}
 	}
 }

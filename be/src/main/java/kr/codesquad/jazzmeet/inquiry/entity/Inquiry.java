@@ -15,6 +15,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrePersist;
+import kr.codesquad.jazzmeet.global.error.CustomException;
+import kr.codesquad.jazzmeet.global.error.statuscode.InquiryErrorCode;
 import kr.codesquad.jazzmeet.inquiry.util.InquiryCategory;
 import kr.codesquad.jazzmeet.inquiry.util.InquiryStatus;
 import lombok.AccessLevel;
@@ -76,5 +78,12 @@ public class Inquiry {
 	public void updateStatusToReplied(Answer answer) {
 		this.status = InquiryStatus.REPLIED;
 		this.answer = answer;
+	}
+
+	public Inquiry inspectExistAnswer() {
+		if (this.status == InquiryStatus.REPLIED || this.answer != null) {
+			throw new CustomException(InquiryErrorCode.ALREADY_REPLIED);
+		}
+		return this;
 	}
 }
