@@ -1,10 +1,5 @@
 package kr.codesquad.jazzmeet.inquiry.entity;
 
-import java.time.LocalDateTime;
-
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -14,6 +9,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import kr.codesquad.jazzmeet.global.time.BaseTimeEntity;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -23,9 +19,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "inquiry_answer")
-public class Answer {
+public class Answer extends BaseTimeEntity {
 
-	@Getter
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -36,19 +31,15 @@ public class Answer {
 	private Inquiry inquiry;
 	@Column(nullable = false)
 	private Long adminId;
-	@CreationTimestamp
-	@Column(nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-	private LocalDateTime createdAt;
-	@UpdateTimestamp
-	@Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
-	private LocalDateTime modifiedAt;
 
 	@Builder
-	public Answer(String content, Inquiry inquiry, Long adminId, LocalDateTime createdAt, LocalDateTime modifiedAt) {
+	public Answer(String content, Inquiry inquiry, Long adminId) {
 		this.content = content;
 		this.inquiry = inquiry;
 		this.adminId = adminId;
-		this.createdAt = createdAt;
-		this.modifiedAt = modifiedAt;
+	}
+
+	public void updateContent(String content) {
+		this.content = content;
 	}
 }
