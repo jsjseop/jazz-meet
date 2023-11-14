@@ -44,12 +44,12 @@ export const getVenueShowsByDate = async ({
   return response.json();
 };
 
-export const getShowDates = async (
-  year: number,
-  month: number,
-): Promise<HasShowDates> => {
-  const date = `${year}${month}`;
-  const response = await fetchData(`/api/shows/calendar?date=${date}`);
+export const getShowDates = async (date: Date): Promise<HasShowDates> => {
+  const FormattedYearMonth = getFormattedYearMonth(date);
+
+  const response = await fetchData(
+    `/api/shows/calendar?date=${FormattedYearMonth}`,
+  );
 
   return response.json();
 };

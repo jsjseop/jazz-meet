@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import { useEffect, useState } from 'react';
+import { getShowDates } from '~/apis/show';
 import CaretLeft from '~/assets/icons/CaretLeft.svg?react';
 import CaretRight from '~/assets/icons/CaretRight.svg?react';
 import { getMonthDates } from '~/utils/dateUtils';
@@ -16,6 +17,7 @@ export const DateController: React.FC<Props> = ({
 }) => {
   const [datesInMonth, setDatesInMonth] = useState<Date[]>([]);
   const [centerDateIndex, setCenterDateIndex] = useState(0);
+  const [showDates, setShowDates] = useState<number[]>([]);
 
   const currentDateGroup = getCurrentDateGroup(datesInMonth, centerDateIndex);
 
@@ -25,7 +27,18 @@ export const DateController: React.FC<Props> = ({
     setCenterDateIndex((p) => getCenterDateIndex(p + 9));
 
   useEffect(() => {
+    const updateShowDates = async () => {
+      const showDates = await getShowDates(selectedDate);
+
+      setShowDates(showDates.hasShow);
+    };
+
+    updateShowDates();
     setDatesInMonth(getMonthDates(selectedDate));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedDate.getMonth()]);
+
+  useEffect(() => {
     setCenterDateIndex(selectedDate.getDate() - 1);
   }, [selectedDate]);
 
@@ -36,6 +49,7 @@ export const DateController: React.FC<Props> = ({
       </StyledArrowButton>
       <DateGroup
         dates={currentDateGroup}
+        showDates={showDates}
         selectedDate={selectedDate}
         selectDate={selectDate}
       />
