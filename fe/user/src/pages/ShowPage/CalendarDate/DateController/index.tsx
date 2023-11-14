@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { getShowDates } from '~/apis/show';
 import CaretLeft from '~/assets/icons/CaretLeft.svg?react';
 import CaretRight from '~/assets/icons/CaretRight.svg?react';
-import { getMonthDates } from '~/utils/dateUtils';
+import { getFormattedYearMonth, getMonthDates } from '~/utils/dateUtils';
 import { DateGroup } from './DateGroup';
 
 type Props = {
@@ -28,9 +28,25 @@ export const DateController: React.FC<Props> = ({
 
   useEffect(() => {
     const updateShowDates = async () => {
-      const showDates = await getShowDates(selectedDate);
+      const datesData = await getShowDates(selectedDate);
+      const showDates = datesData.hasShow;
 
-      setShowDates(showDates.hasShow);
+      try {
+        const closestShowDate = getClosestShowDate(showDates, selectedDate);
+
+        selectDate(closestShowDate);
+      } catch (e) {
+        console.error(e);
+        selectDate(
+          new Date(
+            selectedDate.getFullYear(),
+            selectedDate.getMonth(),
+            selectedDate.getDate(),
+          ),
+        );
+      }
+
+      setShowDates(showDates);
     };
 
     updateShowDates();
@@ -82,6 +98,37 @@ const getCenterDateIndex = (index: number) => {
   }
 
   return 24;
+};
+
+const getClosestShowDate = (dates: number[], date: Date) => {
+  const dateNumber = date.getDate();
+  const showDates = [...dates].sort((prev, next) => prev - next);
+
+  if (showDates.includes(dateNumber)) {
+    return date;
+  }
+
+  if (showDates.length === 0) {
+    throw new Error(`No show date found in ${getFormattedYearMonth(date)}`);
+  }
+
+  const showDateIndex = showDates.findIndex(
+    (showDate) => showDate > dateNumber,
+  );
+
+  if (showDateIndex === -1) {
+    return new Date(
+      date.getFullYear(),
+      date.getMonth(),
+      showDates[showDates.length - 1],
+    );
+  }
+
+  return new Date(
+    date.getFullYear(),
+    date.getMonth(),
+    showDates[showDateIndex],
+  );
 };
 
 const StyledDateContainer = styled.div`
