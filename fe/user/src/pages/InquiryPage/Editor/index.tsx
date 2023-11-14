@@ -46,7 +46,7 @@ export const InquiryEditor: React.FC<Props> = ({ currentCategory }) => {
       alert('정상적으로 문의가 등록되었습니다.');
       setInquiryContent('');
       location.reload();
-    } catch (e) {
+    } catch {
       alert('문의등록에 실패했습니다. 다시 시도해주세요.');
     }
   };
