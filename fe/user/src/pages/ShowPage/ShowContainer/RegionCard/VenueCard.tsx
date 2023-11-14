@@ -1,15 +1,10 @@
 import styled from '@emotion/styled';
 import CaretRight from '~/assets/icons/CaretRight.svg?react';
+import { ShowDetail } from '~/types/api.types';
 
 type Props = {
   name: string;
-  shows: {
-    id: number;
-    posterUrl: string;
-    teamName: string;
-    startTime: string;
-    endTime: string;
-  }[];
+  shows: Omit<ShowDetail, 'description'>[];
 };
 
 export const VenueCard: React.FC<Props> = ({ name, shows }) => {
