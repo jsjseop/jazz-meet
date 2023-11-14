@@ -10,10 +10,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.constraints.Min;
-import kr.codesquad.jazzmeet.show.dto.ShowResponse;
 import kr.codesquad.jazzmeet.show.dto.response.ExistShowCalendarResponse;
 import kr.codesquad.jazzmeet.show.dto.response.ShowByDateAndVenueResponse;
 import kr.codesquad.jazzmeet.show.dto.response.ShowByDateResponse;
+import kr.codesquad.jazzmeet.show.dto.response.ShowDetailResponse;
+import kr.codesquad.jazzmeet.show.dto.response.ShowResponse;
 import kr.codesquad.jazzmeet.show.dto.response.UpcomingShowResponse;
 import kr.codesquad.jazzmeet.show.service.ShowService;
 import lombok.RequiredArgsConstructor;
@@ -82,5 +83,15 @@ public class ShowController {
 		ShowResponse showResponse = showService.getShows(word, page);
 
 		return ResponseEntity.ok(showResponse);
+	}
+
+	/**
+	 * 공연 상세 조회 API
+	 */
+	@GetMapping("/api/shows/{showId}")
+	public ResponseEntity<ShowDetailResponse> getShowDetail(@PathVariable Long showId) {
+		ShowDetailResponse showDetailResponse = showService.getShowDetail(showId);
+
+		return ResponseEntity.ok(showDetailResponse);
 	}
 }

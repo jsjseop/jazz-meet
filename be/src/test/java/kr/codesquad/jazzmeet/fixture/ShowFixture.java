@@ -35,4 +35,14 @@ public class ShowFixture {
 			.venue(venue)
 			.build();
 	}
+
+	public static Show createShow(String teamName, LocalDateTime time, Venue venue, Image image) {
+		return Show.builder()
+			.teamName(teamName)
+			.poster(image)
+			.startTime(time)
+			.endTime(time)
+			.venue(venue)
+			.build();
+	}
 }

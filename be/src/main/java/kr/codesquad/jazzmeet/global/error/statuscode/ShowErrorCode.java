@@ -7,7 +7,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum ShowErrorCode implements StatusCode {
 
-	NOT_VALID_DATE_FORMAT(HttpStatus.BAD_REQUEST, "날짜 포맷이 잘못되었습니다. 'yyyyMMdd' 형식으로 입력해주세요");
+	NOT_VALID_DATE_FORMAT(HttpStatus.BAD_REQUEST, "날짜 포맷이 잘못되었습니다. 'yyyyMMdd' 형식으로 입력해주세요"),
+	NOT_FOUND_SHOW(HttpStatus.NOT_FOUND, "해당하는 공연이 없습니다.");
 
 	private final HttpStatus httpStatus;
 	private final String message;
