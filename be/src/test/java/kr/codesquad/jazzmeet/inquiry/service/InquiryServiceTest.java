@@ -286,7 +286,7 @@ class InquiryServiceTest extends IntegrationTestSupport {
 	}
 
 	@Test
-	@DisplayName("관리자는 문의에 답변을 등록할 수 있다.")
+	@DisplayName("문의에 답변을 등록할 수 있다.")
 	void saveAnswer() {
 		// given
 		Long inquiryId = inquiryRepository.save(InquiryFixture.createInquiry()).getId();
