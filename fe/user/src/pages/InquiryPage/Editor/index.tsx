@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { postInquiryData } from '~/apis/inquiry';
 import { AutoSizingTextArea } from '~/components/AutoSizingTextArea';
 import { InquiryCategories } from '~/types/inquiry.types';
+import { validateContent, validateNickname } from './validation';
 
 type Props = {
   currentCategory: InquiryCategories;
@@ -22,11 +23,21 @@ export const InquiryEditor: React.FC<Props> = ({ currentCategory }) => {
     const nickname = formData.get('nickname') as string;
     const password = formData.get('password') as string;
 
+    const trimmedContent = inquiryContent.trim();
+    const trimmedNickname = nickname.trim();
+
+    if (
+      !validateContent(trimmedContent) ||
+      !validateNickname(trimmedNickname)
+    ) {
+      return;
+    }
+
     const { statusCode } = await postInquiryData({
       category: currentCategory,
-      nickname,
+      nickname: trimmedNickname,
       password,
-      content: inquiryContent,
+      content: trimmedContent,
     });
 
     if (statusCode === 201) {
