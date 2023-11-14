@@ -16,11 +16,11 @@ export const InquiryPage: React.FC = () => {
   });
   const [inquiryData, setInquiryData] = useState<InquiryData>();
 
-  const setCategory = (category: InquiryCategories) => {
+  const selectCategory = (category: InquiryCategories) => {
     setInquiryParams((prev) => ({ ...prev, category, page: 1 }));
   };
 
-  const setWord = (word: string) => {
+  const onWordChange = (word: string) => {
     setInquiryParams((prev) => ({ ...prev, word }));
   };
 
@@ -38,11 +38,11 @@ export const InquiryPage: React.FC = () => {
 
   return (
     <StyledDiv>
-      <Header setWord={setWord} />
+      <Header onWordChange={onWordChange} />
 
       <Categories
         currentCategory={inquiryParams.category!}
-        setCategory={setCategory}
+        selectCategory={selectCategory}
       />
       <InquiryList inquiries={inquiryData?.inquiries} />
       <InquiryEditor currentCategory={inquiryParams.category!} />

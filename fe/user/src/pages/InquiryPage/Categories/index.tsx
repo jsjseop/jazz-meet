@@ -5,12 +5,12 @@ import { Category } from './Category';
 
 type Props = {
   currentCategory: InquiryCategories;
-  setCategory: (category: InquiryCategories) => void;
+  selectCategory: (category: InquiryCategories) => void;
 };
 
 export const Categories: React.FC<Props> = ({
   currentCategory,
-  setCategory,
+  selectCategory,
 }) => {
   return (
     <StyledCategories>
@@ -19,7 +19,7 @@ export const Categories: React.FC<Props> = ({
           key={index}
           isSelected={currentCategory === category}
           category={category}
-          onClick={() => setCategory(category)}
+          onClick={() => selectCategory(category)}
         />
       ))}
     </StyledCategories>
