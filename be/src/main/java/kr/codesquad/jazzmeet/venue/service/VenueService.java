@@ -83,7 +83,6 @@ public class VenueService {
 		}
 
 		Polygon range = rangeCoordinatesRequest.toRange();
-
 		List<VenuePins> venues = venueQueryRepository.findVenuePinsByLocation(range);
 
 		return venues.stream()
