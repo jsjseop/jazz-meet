@@ -1,4 +1,9 @@
-import { HasShowDates, ShowDetail, UpcomingShow } from '~/types/api.types';
+import {
+  HasShowDates,
+  ShowDetail,
+  ShowRegion,
+  UpcomingShow,
+} from '~/types/api.types';
 import { getFormattedDate, getFormattedYearMonth } from '~/utils/dateUtils';
 import { fetchData } from './fetchData';
 
@@ -45,6 +50,16 @@ export const getShowDates = async (
 ): Promise<HasShowDates> => {
   const date = `${year}${month}`;
   const response = await fetchData(`/api/shows/calendar?date=${date}`);
+
+  return response.json();
+};
+
+export const getShowsByDate = async (date: Date): Promise<ShowRegion[]> => {
+  const formattedDate = getFormattedDate(date);
+
+  const response = await fetchData(
+    `/api/shows/by-region?date=${formattedDate}`,
+  );
 
   return response.json();
 };
