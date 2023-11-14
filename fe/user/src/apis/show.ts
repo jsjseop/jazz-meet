@@ -38,3 +38,13 @@ export const getVenueShowsByDate = async ({
 
   return response.json();
 };
+
+export const getShowDates = async (
+  year: number,
+  month: number,
+): Promise<HasShowDates> => {
+  const date = `${year}${month}`;
+  const response = await fetchData(`/api/shows/calendar?date=${date}`);
+
+  return response.json();
+};
