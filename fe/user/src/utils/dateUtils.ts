@@ -28,3 +28,48 @@ export const getFormattedDateTime = (date: Date) => {
 
   return formattedDateTime;
 };
+
+export const getFirstDay = (year: number, month: number) => {
+  return new Date(year, month - 1, 1).getDay();
+};
+
+export const getLastDate = (year: number, month: number) => {
+  return new Date(year, month, 0).getDate(); // 0일은 지난 달의 마지막 날을 의미합니다.
+};
+
+export const getMonthDates = (date: Date) => {
+  const currentYear = date.getFullYear();
+  const currentMonth = date.getMonth() + 1;
+
+  const lastDate = getLastDate(currentYear, currentMonth);
+
+  const dates = [];
+
+  for (let i = 1; i <= lastDate; i++) {
+    dates.push(new Date(currentYear, currentMonth - 1, i));
+  }
+
+  return dates;
+};
+
+export const isToday = (date: Date) => {
+  const today = new Date();
+
+  return (
+    date.getFullYear() === today.getFullYear() &&
+    date.getMonth() === today.getMonth() &&
+    date.getDate() === today.getDate()
+  );
+};
+
+export const equalDates = (date1: Date, date2: Date) => {
+  const year1 = date1.getFullYear();
+  const month1 = date1.getMonth();
+  const day1 = date1.getDate();
+
+  const year2 = date2.getFullYear();
+  const month2 = date2.getMonth();
+  const day2 = date2.getDate();
+
+  return year1 === year2 && month1 === month2 && day1 === day2;
+};

@@ -1,23 +1,73 @@
 import styled from '@emotion/styled';
+import { useEffect, useState } from 'react';
 import CaretLeft from '~/assets/icons/CaretLeft.svg?react';
 import CaretRight from '~/assets/icons/CaretRight.svg?react';
+import { getMonthDates } from '~/utils/dateUtils';
 import { DateGroup } from './DateGroup';
 
-export const DateController: React.FC = () => {
-  const goToPreviousGroup = () => {};
-  const goToNextGroup = () => {};
+type Props = {
+  selectedDate: Date;
+  selectDate: (date: Date) => void;
+};
+
+export const DateController: React.FC<Props> = ({
+  selectedDate,
+  selectDate,
+}) => {
+  const [datesInMonth, setDatesInMonth] = useState<Date[]>([]);
+  const [centerDateIndex, setCenterDateIndex] = useState(0);
+
+  const currentDateGroup = getCurrentDateGroup(datesInMonth, centerDateIndex);
+
+  const goToPreviousGroup = () =>
+    setCenterDateIndex((p) => getCenterDateIndex(p - 9));
+  const goToNextGroup = () =>
+    setCenterDateIndex((p) => getCenterDateIndex(p + 9));
+
+  useEffect(() => {
+    setDatesInMonth(getMonthDates(selectedDate));
+    setCenterDateIndex(selectedDate.getDate() - 1);
+  }, [selectedDate]);
 
   return (
     <StyledDateContainer>
       <StyledArrowButton>
         <CaretLeft onClick={goToPreviousGroup} />
       </StyledArrowButton>
-      <DateGroup />
+      <DateGroup
+        dates={currentDateGroup}
+        selectedDate={selectedDate}
+        selectDate={selectDate}
+      />
       <StyledArrowButton>
         <CaretRight onClick={goToNextGroup} />
       </StyledArrowButton>
     </StyledDateContainer>
   );
+};
+
+const getCurrentDateGroup = (datesInMonth: Date[], dateIndex: number) => {
+  if (dateIndex < 7) {
+    return datesInMonth.slice(0, 13);
+  }
+
+  if (datesInMonth.length - dateIndex < 7) {
+    return datesInMonth.slice(datesInMonth.length - 13, datesInMonth.length);
+  }
+
+  return datesInMonth.slice(dateIndex - 6, dateIndex + 7);
+};
+
+const getCenterDateIndex = (index: number) => {
+  if (index < 7) {
+    return 6;
+  }
+
+  if (index < 16) {
+    return 15;
+  }
+
+  return 24;
 };
 
 const StyledDateContainer = styled.div`
