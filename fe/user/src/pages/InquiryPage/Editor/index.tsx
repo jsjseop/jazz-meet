@@ -35,18 +35,18 @@ export const InquiryEditor: React.FC<Props> = ({ currentCategory }) => {
       return;
     }
 
-    const { statusCode } = await postInquiryData({
-      category: currentCategory,
-      nickname: trimmedNickname,
-      password,
-      content: trimmedContent,
-    });
+    try {
+      await postInquiryData({
+        category: currentCategory,
+        nickname: trimmedNickname,
+        password,
+        content: trimmedContent,
+      });
 
-    if (statusCode === 201) {
       alert('정상적으로 문의가 등록되었습니다.');
       setInquiryContent('');
       location.reload();
-    } else {
+    } catch (e) {
       alert('문의등록에 실패했습니다. 다시 시도해주세요.');
     }
   };

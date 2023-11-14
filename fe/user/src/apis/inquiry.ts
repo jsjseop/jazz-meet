@@ -33,7 +33,11 @@ export const postInquiryData = async (params: PostInquiryParams) => {
 
   const data = await response.json();
 
-  return { ...data, statusCode: response.status };
+  if (!response.ok) {
+    throw new Error(data.errorMessage);
+  }
+
+  return data;
 };
 
 export const deleteInquiry = async (inquiryId: number, password: string) => {
