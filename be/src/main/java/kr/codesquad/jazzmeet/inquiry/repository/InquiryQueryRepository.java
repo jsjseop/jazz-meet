@@ -17,6 +17,7 @@ import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import kr.codesquad.jazzmeet.inquiry.util.InquiryCategory;
+import kr.codesquad.jazzmeet.inquiry.util.InquiryStatus;
 import kr.codesquad.jazzmeet.inquiry.vo.InquiryDetail;
 import kr.codesquad.jazzmeet.inquiry.vo.InquirySearchData;
 import lombok.RequiredArgsConstructor;
@@ -37,13 +38,21 @@ public class InquiryQueryRepository {
 					inquiry.createdAt
 				))
 			.from(inquiry)
-			.where(isContainWordInNickname(word).or(isContainWordInContent(word)).and(isEqualsCategory(category)))
+			.where(isContainWordInNickname(word)
+				.or(isContainWordInContent(word))
+				.and(isEqualsCategory(category))
+				.and(isNotDeleted()))
 			.limit(pageable.getPageSize())
-			.offset(pageable.getOffset()).fetch();
+			.offset(pageable.getOffset())
+			.orderBy(inquiry.createdAt.desc()).fetch();
 
 		JPAQuery<Long> inquiriesByWordCount = countInquiries(word);
 
 		return PageableExecutionUtils.getPage(inquiries, pageable, inquiriesByWordCount::fetchOne);
+	}
+
+	private BooleanExpression isNotDeleted() {
+		return inquiry.status.ne(InquiryStatus.DELETED);
 	}
 
 	private JPAQuery<Long> countInquiries(String word) {
@@ -78,7 +87,7 @@ public class InquiryQueryRepository {
 			))
 			.from(inquiry)
 			.leftJoin(answer).on(answer.inquiry.id.eq(inquiryId))
-			.where(inquiry.id.eq(inquiryId)).fetchOne();
+			.where(inquiry.id.eq(inquiryId).and(isNotDeleted())).fetchOne();
 
 		return Optional.ofNullable(inquiryDetail);
 	}

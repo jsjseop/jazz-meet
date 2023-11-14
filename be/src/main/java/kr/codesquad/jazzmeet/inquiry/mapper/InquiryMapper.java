@@ -8,10 +8,12 @@ import org.mapstruct.factory.Mappers;
 
 import kr.codesquad.jazzmeet.inquiry.dto.request.InquirySaveRequest;
 import kr.codesquad.jazzmeet.inquiry.dto.response.InquiryAnswerDetail;
+import kr.codesquad.jazzmeet.inquiry.dto.response.InquiryAnswerSaveResponse;
 import kr.codesquad.jazzmeet.inquiry.dto.response.InquiryDetailResponse;
 import kr.codesquad.jazzmeet.inquiry.dto.response.InquirySaveResponse;
 import kr.codesquad.jazzmeet.inquiry.dto.response.InquirySearch;
 import kr.codesquad.jazzmeet.inquiry.dto.response.InquirySearchResponse;
+import kr.codesquad.jazzmeet.inquiry.entity.Answer;
 import kr.codesquad.jazzmeet.inquiry.entity.Inquiry;
 import kr.codesquad.jazzmeet.inquiry.util.InquiryCategory;
 import kr.codesquad.jazzmeet.inquiry.vo.InquiryDetail;
@@ -51,4 +53,10 @@ public interface InquiryMapper {
 
 	@Mapping(target = "status", source = "status.koName")
 	InquirySaveResponse toInquirySaveResponse(Inquiry savedInquiry);
+
+	@Mapping(target = "content", source = "content")
+	@Mapping(target = "inquiry", source = "inquiry")
+	Answer toAnswer(String content, Inquiry inquiry, Long adminId);
+
+	InquiryAnswerSaveResponse toInquiryAnswerSaveResponse(Answer answer);
 }

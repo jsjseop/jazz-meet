@@ -5,19 +5,24 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import kr.codesquad.jazzmeet.venue.dto.request.VenueCreateRequest;
+import kr.codesquad.jazzmeet.venue.dto.request.VenueUpdateRequest;
 import kr.codesquad.jazzmeet.venue.dto.response.NearbyVenueResponse;
 import kr.codesquad.jazzmeet.venue.dto.response.VenueAutocompleteResponse;
 import kr.codesquad.jazzmeet.venue.dto.response.VenueCreateResponse;
 import kr.codesquad.jazzmeet.venue.dto.response.VenueDetailResponse;
+import kr.codesquad.jazzmeet.venue.dto.response.VenueListResponse;
 import kr.codesquad.jazzmeet.venue.dto.response.VenuePinsResponse;
 import kr.codesquad.jazzmeet.venue.dto.response.VenueSearchResponse;
 import kr.codesquad.jazzmeet.venue.service.VenueFacade;
@@ -101,6 +106,9 @@ public class VenueController {
 		return ResponseEntity.ok(venue);
 	}
 
+	/**
+	 * 공연장 목록 조회 - 검색 API
+	 */
 	@GetMapping("/api/venues/search")
 	public ResponseEntity<VenueSearchResponse> searchVenueList(
 		@RequestParam String word, @RequestParam(defaultValue = "1") @Min(value = 1) int page) {
@@ -120,12 +128,44 @@ public class VenueController {
 	}
 
 	/**
+	 * 공연장 목록 조회 API
+	 */
+	@GetMapping("/api/venues")
+	public ResponseEntity<VenueListResponse> findVenues(@RequestParam(required = false) String word,
+		@RequestParam(defaultValue = "1") @Min(value = 1) int page) {
+		VenueListResponse venues = venueService.findVenuesByWord(word, page);
+
+		return ResponseEntity.ok(venues);
+	}
+
+	/**
 	 * 공연장 등록 API
 	 */
 	@PostMapping("/api/venues")
-	public ResponseEntity<VenueCreateResponse> createVenue(@RequestBody VenueCreateRequest venueCreateRequest) {
+	public ResponseEntity<VenueCreateResponse> createVenue(@RequestBody @Valid VenueCreateRequest venueCreateRequest) {
 		VenueCreateResponse venueCreateResponse = venueFacade.createVenue(venueCreateRequest);
 
 		return ResponseEntity.status(HttpStatus.CREATED).body(venueCreateResponse);
+	}
+
+	/**
+	 * 공연장 수정 API
+	 */
+	@PutMapping("/api/venues/{venueId}")
+	public ResponseEntity<VenueDetailResponse> updateVenue(@RequestBody @Valid VenueUpdateRequest venueUpdateRequest,
+		@PathVariable Long venueId) {
+		VenueDetailResponse venueDetailResponse = venueFacade.updateVenue(venueUpdateRequest, venueId);
+
+		return ResponseEntity.ok(venueDetailResponse);
+	}
+
+	/**
+	 * 공연장 삭제 API
+	 */
+	@DeleteMapping("/api/venues/{venueId}")
+	public ResponseEntity<Void> deleteVenue(@PathVariable Long venueId) {
+		venueFacade.deleteVenue(venueId);
+
+		return ResponseEntity.noContent().build();
 	}
 }

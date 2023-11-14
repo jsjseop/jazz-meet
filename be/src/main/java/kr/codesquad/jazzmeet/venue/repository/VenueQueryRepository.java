@@ -19,6 +19,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
 
+import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
@@ -26,6 +27,7 @@ import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import kr.codesquad.jazzmeet.venue.dto.ShowInfo;
+import kr.codesquad.jazzmeet.venue.dto.VenueInfo;
 import kr.codesquad.jazzmeet.venue.entity.Venue;
 import kr.codesquad.jazzmeet.venue.mapper.VenueMapper;
 import kr.codesquad.jazzmeet.venue.vo.NearbyVenue;
@@ -74,16 +76,14 @@ public class VenueQueryRepository {
 					venue.location)
 			)
 			.from(venue)
-			.where(
-				isContainWordInName(word).or(isContainWordInAddress(word))
-			)
+			.where(containsInNameOrAddress(word))
 			.orderBy(venue.id.asc())
 			.fetch();
 	}
 
 	// 쿼리를 생성하여 사각형 범위 내에 있는 장소를 찾습니다.
 	public List<VenuePins> findVenuePinsByLocation(Polygon range) {
-		List<VenuePins> venues = query
+		return query
 			.select(Projections.constructor(VenuePins.class,
 				venue.id,
 				venue.name,
@@ -91,8 +91,6 @@ public class VenueQueryRepository {
 			.from(venue)
 			.where(isLocationWithInRange(range))
 			.fetch();
-
-		return venues;
 	}
 
 	public Page<VenueSearchData> findVenuesByLocation(Polygon range, Pageable pageable, LocalDate curDate) {
@@ -126,27 +124,14 @@ public class VenueQueryRepository {
 		return PageableExecutionUtils.getPage(venueSearchList, pageable, venuesByLocationCount::fetchOne);
 	}
 
-	private BooleanExpression isContainWordInName(String word) {
-		return venue.name.contains(word);
-	}
-
-	private BooleanExpression isContainWordInAddress(String word) {
-		return venue.roadNameAddress.contains(word);
-	}
-
-	private BooleanExpression isLocationWithInRange(Polygon range) {
-		return Expressions.booleanTemplate("ST_Within({0}, {1})", venue.location, range);
-	}
-
-	private BooleanExpression isStartTimeEqCurDate(LocalDate curDate) {
-		return Expressions.stringTemplate("DATE({0})", show.startTime)
-			.eq(Expressions.stringTemplate("DATE({0})", curDate));
-	}
-
 	private JPAQuery<Long> getVenuesByLocationCount(Polygon range) {
 		return query.select(venue.count())
 			.from(venue)
 			.where(isLocationWithInRange(range));
+	}
+
+	private BooleanExpression isLocationWithInRange(Polygon range) {
+		return Expressions.booleanTemplate("ST_Within({0}, {1})", venue.location, range);
 	}
 
 	public Page<VenueSearchData> searchVenueList(String word, Pageable pageable, LocalDate curDate) {
@@ -154,7 +139,7 @@ public class VenueQueryRepository {
 			.leftJoin(show)
 			.on(venue.id.eq(show.venue.id))
 			.on(isStartTimeEqCurDate(curDate))
-			.where(isContainWordInName(word).or(isContainWordInAddress(word)))
+			.where(containsInNameOrAddress(word))
 			.limit(pageable.getPageSize())
 			.offset(pageable.getOffset())
 			.transform(
@@ -183,7 +168,7 @@ public class VenueQueryRepository {
 	private JPAQuery<Long> countSearchVenueList(String word) {
 		return query.select(venue.count())
 			.from(venue)
-			.where(isContainWordInName(word).or(isContainWordInAddress(word)));
+			.where(containsInNameOrAddress(word));
 	}
 
 	public List<VenueSearchData> findVenueSearchById(Long venueId, LocalDate curDate) {
@@ -209,6 +194,57 @@ public class VenueQueryRepository {
 					)
 				)
 			);
+	}
+
+	public Page<VenueInfo> findVenuesByWord(String word, Pageable pageable) {
+		List<VenueInfo> venueInfos = query.select(
+				Projections.constructor(VenueInfo.class,
+					venue.id,
+					venue.name,
+					venue.roadNameAddress.as(ADDRESS))
+			)
+			.from(venue)
+			.where(containsInName(word))
+			.limit(pageable.getPageSize())
+			.offset(pageable.getOffset())
+			.fetch();
+
+		JPAQuery<Long> countVenuesByWordQuery = countVenuesByWord(word);
+
+		return PageableExecutionUtils.getPage(venueInfos, pageable, countVenuesByWordQuery::fetchOne);
+	}
+
+	private JPAQuery<Long> countVenuesByWord(String word) {
+		return query.select(venue.count())
+			.from(venue)
+			.where(containsInName(word));
+	}
+
+	private BooleanBuilder containsInNameOrAddress(String word) {
+		BooleanBuilder booleanBuilder = new BooleanBuilder();
+		booleanBuilder.or(containsInName(word));
+		booleanBuilder.or(containsInAddress(word));
+
+		return booleanBuilder;
+	}
+
+	private BooleanExpression containsInName(String word) {
+		if (word == null || word.equals("")) {
+			return null;
+		}
+		return venue.name.contains(word);
+	}
+
+	private BooleanExpression containsInAddress(String word) {
+		if (word == null || word.equals("")) {
+			return null;
+		}
+		return venue.roadNameAddress.contains(word);
+	}
+
+	private BooleanExpression isStartTimeEqCurDate(LocalDate curDate) {
+		return Expressions.stringTemplate("DATE({0})", show.startTime)
+			.eq(Expressions.stringTemplate("DATE({0})", curDate));
 	}
 
 	public Optional<VenueDetail> findVenue(Long venueId) {

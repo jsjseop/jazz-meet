@@ -2,6 +2,7 @@ package kr.codesquad.jazzmeet.inquiry.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -11,7 +12,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
+import kr.codesquad.jazzmeet.inquiry.dto.request.InquiryAnswerSaveRequest;
+import kr.codesquad.jazzmeet.inquiry.dto.request.InquiryDeleteRequest;
 import kr.codesquad.jazzmeet.inquiry.dto.request.InquirySaveRequest;
+import kr.codesquad.jazzmeet.inquiry.dto.response.InquiryAnswerSaveResponse;
 import kr.codesquad.jazzmeet.inquiry.dto.response.InquiryDetailResponse;
 import kr.codesquad.jazzmeet.inquiry.dto.response.InquirySaveResponse;
 import kr.codesquad.jazzmeet.inquiry.dto.response.InquirySearchResponse;
@@ -28,9 +32,10 @@ public class InquiryController {
 	 * 문의 글 목록 조회 API
 	 */
 	@GetMapping("/api/inquiries")
-	public ResponseEntity<InquirySearchResponse> getInquiries(@RequestParam String category,
+	public ResponseEntity<InquirySearchResponse> getInquiries(
+		@RequestParam(defaultValue = "서비스") String category,
 		@RequestParam(required = false) String word,
-		@RequestParam @Min(value = 1) int page) {
+		@RequestParam(defaultValue = "1") @Min(value = 1) int page) {
 		InquirySearchResponse inquiries = inquiryService.getInquiries(category, word, page);
 
 		return ResponseEntity.ok(inquiries);
@@ -54,5 +59,26 @@ public class InquiryController {
 		InquirySaveResponse inquiry = inquiryService.save(inquirySaveRequest);
 
 		return ResponseEntity.status(HttpStatus.CREATED).body(inquiry);
+	}
+
+	/**
+	 * 문의 글 삭제 API
+	 */
+	@DeleteMapping("/api/inquiries/{inquiryId}")
+	public ResponseEntity<Void> delete(@PathVariable Long inquiryId,
+		@RequestBody @Valid InquiryDeleteRequest inquiryDeleteRequest) {
+		inquiryService.delete(inquiryId, inquiryDeleteRequest);
+
+		return ResponseEntity.noContent().build();
+	}
+
+	/**
+	 * 문의 답변 등록 API
+	 */
+	@PostMapping("/api/inquiries/answers")
+	public ResponseEntity<InquiryAnswerSaveResponse> saveAnswer(@RequestBody InquiryAnswerSaveRequest request) {
+		InquiryAnswerSaveResponse answer = inquiryService.saveAnswer(request);
+
+		return ResponseEntity.status(HttpStatus.CREATED).body(answer);
 	}
 }

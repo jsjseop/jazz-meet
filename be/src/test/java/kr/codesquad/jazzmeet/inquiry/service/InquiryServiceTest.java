@@ -3,15 +3,20 @@ package kr.codesquad.jazzmeet.inquiry.service;
 import static org.assertj.core.api.Assertions.*;
 
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import kr.codesquad.jazzmeet.IntegrationTestSupport;
 import kr.codesquad.jazzmeet.fixture.InquiryFixture;
 import kr.codesquad.jazzmeet.global.error.CustomException;
 import kr.codesquad.jazzmeet.global.error.statuscode.InquiryErrorCode;
+import kr.codesquad.jazzmeet.inquiry.dto.request.InquiryAnswerSaveRequest;
+import kr.codesquad.jazzmeet.inquiry.dto.request.InquiryDeleteRequest;
 import kr.codesquad.jazzmeet.inquiry.dto.request.InquirySaveRequest;
+import kr.codesquad.jazzmeet.inquiry.dto.response.InquiryAnswerSaveResponse;
 import kr.codesquad.jazzmeet.inquiry.dto.response.InquiryDetailResponse;
 import kr.codesquad.jazzmeet.inquiry.dto.response.InquirySaveResponse;
 import kr.codesquad.jazzmeet.inquiry.dto.response.InquirySearch;
@@ -20,7 +25,6 @@ import kr.codesquad.jazzmeet.inquiry.entity.Answer;
 import kr.codesquad.jazzmeet.inquiry.entity.Inquiry;
 import kr.codesquad.jazzmeet.inquiry.repository.InquiryAnswerRepository;
 import kr.codesquad.jazzmeet.inquiry.repository.InquiryRepository;
-import kr.codesquad.jazzmeet.inquiry.util.EncryptPasswordEncoder;
 import kr.codesquad.jazzmeet.inquiry.util.InquiryCategory;
 import kr.codesquad.jazzmeet.inquiry.util.InquiryStatus;
 
@@ -33,7 +37,7 @@ class InquiryServiceTest extends IntegrationTestSupport {
 	@Autowired
 	InquiryAnswerRepository inquiryAnswerRepository;
 	@Autowired
-	EncryptPasswordEncoder encryptPasswordEncoder;
+	BCryptPasswordEncoder bCryptPasswordEncoder;
 
 	@AfterEach
 	void dbClean() {
@@ -186,14 +190,12 @@ class InquiryServiceTest extends IntegrationTestSupport {
 		InquirySaveRequest inquirySaveRequest = InquiryFixture.createInquiryRequest(category, nickname, password,
 			content);
 
-		String encryptedPwd = encryptPasswordEncoder.encode(password);
-
 		// when
 		InquirySaveResponse saved = inquiryService.save(inquirySaveRequest);
-		String savedEncryptedPwd = inquiryRepository.findById(saved.id()).get().getPassword();
+		String encodedPassword = inquiryRepository.findById(saved.id()).get().getPassword();
 
 		// then
-		assertThat(savedEncryptedPwd).isEqualTo(encryptedPwd);
+		assertThat(bCryptPasswordEncoder.matches(password, encodedPassword)).isTrue();
 	}
 
 	@Test
@@ -211,5 +213,130 @@ class InquiryServiceTest extends IntegrationTestSupport {
 		assertThatThrownBy(() -> inquiryService.save(inquirySaveRequest))
 			.isInstanceOf(CustomException.class)
 			.hasMessage(InquiryErrorCode.NO_MATCH_VALUE.getMessage());
+	}
+
+	@Test
+	@DisplayName("비밀번호가 일치하면 문의가 삭제된다.")
+	void delete() {
+		// given
+		String password = "비밀번호 테스트";
+		Inquiry inquiry = InquiryFixture.createInquiry(bCryptPasswordEncoder.encode(password));
+		Long inquiryId = inquiryRepository.save(inquiry).getId();
+		InquiryDeleteRequest inquiryDeleteRequest = InquiryFixture.createInquiryDeleteRequest(password);
+
+		// when
+		inquiryService.delete(inquiryId, inquiryDeleteRequest);
+		Inquiry savedInquiry = inquiryRepository.findById(inquiryId).get();
+
+		// then
+		Assertions.assertAll(
+			() -> assertThat(savedInquiry.getStatus())
+				.isEqualTo(InquiryStatus.DELETED),
+			() -> assertThat(bCryptPasswordEncoder.matches(password, savedInquiry.getPassword()))
+				.isTrue()
+		);
+	}
+
+	@Test
+	@DisplayName("존재하지 않는 문의는 삭제할 수 없다.")
+	void deleteNotFoundException() {
+		// given
+		String password = "비밀번호 테스트";
+		Long inquiryId = 0L;
+		InquiryDeleteRequest inquiryDeleteRequest = InquiryFixture.createInquiryDeleteRequest(password);
+
+		// when // then
+		assertThatThrownBy(() -> inquiryService.delete(inquiryId, inquiryDeleteRequest))
+			.isInstanceOf(CustomException.class)
+			.hasMessage(InquiryErrorCode.NOT_FOUND_INQUIRY.getMessage());
+
+	}
+
+	@Test
+	@DisplayName("이미 삭제 된 문의는 삭제할 수 없다.")
+	void deleteAlreadyDeletedException() {
+		// given
+		String password = "비밀번호 테스트";
+		InquiryStatus status = InquiryStatus.DELETED;
+		Inquiry inquiry = InquiryFixture.createInquiry(bCryptPasswordEncoder.encode(password), status);
+		Long inquiryId = inquiryRepository.save(inquiry).getId();
+		InquiryDeleteRequest inquiryDeleteRequest = InquiryFixture.createInquiryDeleteRequest(password);
+
+		// when // then
+		assertThatThrownBy(() -> inquiryService.delete(inquiryId, inquiryDeleteRequest))
+			.isInstanceOf(CustomException.class)
+			.hasMessage(InquiryErrorCode.ALREADY_DELETED.getMessage());
+
+	}
+
+	@Test
+	@DisplayName("비밀번호가 일치하지 않는 문의는 삭제할 수 없다.")
+	void deleteNotMatchedPasswordException() {
+		// given
+		String password = "비밀번호 테스트";
+		Inquiry inquiry = InquiryFixture.createInquiry(bCryptPasswordEncoder.encode(password));
+		Long inquiryId = inquiryRepository.save(inquiry).getId();
+		String wrongPassword = "잘못 된 비밀번호";
+		InquiryDeleteRequest inquiryDeleteRequest = InquiryFixture.createInquiryDeleteRequest(wrongPassword);
+
+		// when // then
+		assertThatThrownBy(() -> inquiryService.delete(inquiryId, inquiryDeleteRequest))
+			.isInstanceOf(CustomException.class)
+			.hasMessage(InquiryErrorCode.WRONG_PASSWORD.getMessage());
+	}
+
+	@Test
+	@DisplayName("관리자는 문의에 답변을 등록할 수 있다.")
+	void saveAnswer() {
+		// given
+		Long inquiryId = inquiryRepository.save(InquiryFixture.createInquiry()).getId();
+		String content = "문의 답변 내용";
+		InquiryAnswerSaveRequest request = InquiryFixture.createInquiryAnswerSaveRequest(inquiryId, content);
+
+		// when
+		InquiryAnswerSaveResponse response = inquiryService.saveAnswer(request);
+
+		Inquiry inquiry = inquiryRepository.findById(inquiryId).get();
+		Answer answer = inquiryAnswerRepository.findById(response.id()).get();
+
+		// then
+		Assertions.assertAll(
+			() -> assertThat(inquiry.getAnswer())
+				.usingRecursiveComparison()
+				.ignoringFields("inquiry")
+				.isEqualTo(answer),
+			() -> assertThat(inquiry.getStatus()).isEqualTo(InquiryStatus.REPLIED),
+			() -> assertThat(response.content()).isEqualTo(content),
+			() -> assertThat(response.createdAt()).isNotNull()
+		);
+	}
+
+	@Test
+	@DisplayName("존재하지 않는 문의에 대한 답변은 등록할 수 없다.")
+	void saveAnswerNotExistInquiryException() {
+		// given
+		Long inquiryId = 0L;
+		String content = "문의 답변 내용";
+		InquiryAnswerSaveRequest request = InquiryFixture.createInquiryAnswerSaveRequest(inquiryId, content);
+
+		// when // then
+		assertThatThrownBy(() -> inquiryService.saveAnswer(request))
+			.isInstanceOf(CustomException.class)
+			.hasMessage(InquiryErrorCode.NOT_FOUND_INQUIRY.getMessage());
+	}
+
+	@Test
+	@DisplayName("이미 답변 완료 된 문의에 대한 답변은 등록할 수 없다.")
+	void saveAnswerAlreadyRepliedException() {
+		// given
+		InquiryStatus status = InquiryStatus.REPLIED;
+		Long inquiryId = inquiryRepository.save(InquiryFixture.createInquiry(status)).getId();
+		String content = "문의 답변 내용";
+		InquiryAnswerSaveRequest request = InquiryFixture.createInquiryAnswerSaveRequest(inquiryId, content);
+
+		// when // then
+		assertThatThrownBy(() -> inquiryService.saveAnswer(request))
+			.isInstanceOf(CustomException.class)
+			.hasMessage(InquiryErrorCode.ALREADY_REPLIED.getMessage());
 	}
 }

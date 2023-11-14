@@ -12,10 +12,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import kr.codesquad.jazzmeet.global.error.CustomException;
 import kr.codesquad.jazzmeet.global.error.statuscode.VenueErrorCode;
+import kr.codesquad.jazzmeet.venue.dto.VenueInfo;
 import kr.codesquad.jazzmeet.venue.dto.VenueSearch;
 import kr.codesquad.jazzmeet.venue.dto.response.NearbyVenueResponse;
 import kr.codesquad.jazzmeet.venue.dto.response.VenueAutocompleteResponse;
 import kr.codesquad.jazzmeet.venue.dto.response.VenueDetailResponse;
+import kr.codesquad.jazzmeet.venue.dto.response.VenueListResponse;
 import kr.codesquad.jazzmeet.venue.dto.response.VenuePinsResponse;
 import kr.codesquad.jazzmeet.venue.dto.response.VenueSearchResponse;
 import kr.codesquad.jazzmeet.venue.entity.Venue;
@@ -35,6 +37,7 @@ import lombok.RequiredArgsConstructor;
 public class VenueService {
 	private static final int PAGE_NUMBER_OFFSET = 1; // 페이지를 1부터 시작하게 하기 위한 offset
 	private static final int PAGE_SIZE = 10;
+	private static final int ADMIN_PAGE_SIZE = 20;
 
 	private final VenueRepository venueRepository;
 	private final VenueQueryRepository venueQueryRepository;
@@ -119,12 +122,16 @@ public class VenueService {
 
 	}
 
+	public Venue findById(Long venueId) {
+		return venueRepository.findById(venueId)
+			.orElseThrow(() -> new CustomException(VenueErrorCode.NOT_FOUND_VENUE));
+	}
+
 	public VenueDetailResponse findVenue(Long venueId) {
 		VenueDetail venueDetail = venueQueryRepository.findVenue(venueId)
 			.orElseThrow(() -> new CustomException(VenueErrorCode.NOT_FOUND_VENUE));
 
 		return VenueMapper.INSTANCE.toVenueDetailResponse(venueDetail);
-
 	}
 
 	public VenueSearchResponse searchVenueList(String word, int page) {
@@ -156,7 +163,21 @@ public class VenueService {
 			PAGE_NUMBER_OFFSET, PAGE_NUMBER_OFFSET);
 	}
 
+	public VenueListResponse findVenuesByWord(String word, int page) {
+		PageRequest pageRequest = PageRequest.of(page - PAGE_NUMBER_OFFSET, ADMIN_PAGE_SIZE);
+
+		Page<VenueInfo> venueInfos = venueQueryRepository.findVenuesByWord(word, pageRequest);
+
+		return VenueMapper.INSTANCE.toVenueListResponse(venueInfos, venueInfos.getNumber() + PAGE_NUMBER_OFFSET);
+	}
+
+	@Transactional
 	public Venue save(Venue venue) {
 		return venueRepository.save(venue);
+	}
+
+	@Transactional
+	public void deleteById(Long venueId) {
+		venueRepository.deleteById(venueId);
 	}
 }

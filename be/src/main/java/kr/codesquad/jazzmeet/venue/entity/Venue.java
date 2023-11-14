@@ -62,19 +62,33 @@ public class Venue {
 		this.thumbnailUrl = thumbnailUrl;
 	}
 
+	public void updateVenue(String name, String roadNameAddress, String lotNumberAddress, String phoneNumber, String description,
+		Point location, String thumbnailUrl) {
+		this.name = name;
+		this.roadNameAddress = roadNameAddress;
+		this.lotNumberAddress = lotNumberAddress;
+		this.phoneNumber = phoneNumber;
+		this.description = description;
+		this.location = location;
+		this.thumbnailUrl = thumbnailUrl;
+		this.images.clear();
+		this.links.clear();
+		this.venueHours.clear();
+	}
+
 	// 연관관계 편의 메서드
 	public void addVenueImage(VenueImage venueImage) {
-		images.add(venueImage);
+		this.images.add(venueImage);
 		venueImage.addVenue(this);
 	}
 
 	public void addLink(Link link) {
-		links.add(link);
+		this.links.add(link);
 		link.addVenue(this);
 	}
 
 	public void addVenueHour(VenueHour venueHour) {
-		venueHours.add(venueHour);
+		this.venueHours.add(venueHour);
 		venueHour.addVenue(this);
 	}
 }

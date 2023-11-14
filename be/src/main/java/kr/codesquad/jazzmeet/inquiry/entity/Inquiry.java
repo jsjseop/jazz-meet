@@ -2,6 +2,7 @@ package kr.codesquad.jazzmeet.inquiry.entity;
 
 import java.time.LocalDateTime;
 
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 
 import jakarta.persistence.CascadeType;
@@ -41,10 +42,11 @@ public class Inquiry {
 	@Column(nullable = false, length = 10)
 	private InquiryCategory category;
 	@Enumerated(value = EnumType.STRING)
+	@ColumnDefault("'WAITING'")
 	@Column(nullable = false, length = 10)
 	private InquiryStatus status;
 	@CreationTimestamp
-	@Column(nullable = false)
+	@Column(nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
 	private LocalDateTime createdAt;
 	@OneToOne(mappedBy = "inquiry", cascade = CascadeType.REMOVE, orphanRemoval = true)
 	private Answer answer;
@@ -65,5 +67,14 @@ public class Inquiry {
 		if (this.status == null) {
 			this.status = InquiryStatus.WAITING;
 		}
+	}
+
+	public void updateStatusToDeleted() {
+		this.status = InquiryStatus.DELETED;
+	}
+
+	public void updateStatusToReplied(Answer answer) {
+		this.status = InquiryStatus.REPLIED;
+		this.answer = answer;
 	}
 }

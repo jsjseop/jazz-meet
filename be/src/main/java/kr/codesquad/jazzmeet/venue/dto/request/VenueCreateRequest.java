@@ -2,18 +2,20 @@ package kr.codesquad.jazzmeet.venue.dto.request;
 
 import java.util.List;
 
+import jakarta.validation.constraints.Size;
 import lombok.Builder;
 
 @Builder
 public record VenueCreateRequest(
 	String name,
+	@Size(max = 10)
 	List<Long> imageIds,
 	String roadNameAddress,
 	String lotNumberAddress,
 	String phoneNumber,
 	String description,
-	List<VenueCreateLink> links,
-	List<VenueCreateHour> venueHours,
+	List<VenueLinkRequest> links,
+	List<VenueHourRequest> venueHours,
 	double latitude,
 	double longitude
 ) {

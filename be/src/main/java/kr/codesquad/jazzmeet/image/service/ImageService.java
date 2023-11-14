@@ -40,15 +40,18 @@ public class ImageService {
 	}
 
 	@Transactional
-	public void deleteImage(Long imageId) {
-		Image image = imageRepository.findById(imageId)
-			.orElseThrow(() -> new CustomException(ImageErrorCode.NOT_FOUND_IMAGE));
+	public void registerImage(Image image) {
+		image.updateStatus(ImageStatus.REGISTERED);
+	}
 
+	@Transactional
+	public void deleteImage(Long imageId) {
+		Image image = findById(imageId);
 		image.updateStatus(ImageStatus.DELETED);
 	}
 
 	public Image findById(Long imageId) {
-		return imageRepository.findById(imageId)
+		return imageRepository.findByIdAndStatusNot(imageId, ImageStatus.DELETED)
 			.orElseThrow(() -> new CustomException(ImageErrorCode.NOT_FOUND_IMAGE));
 	}
 }

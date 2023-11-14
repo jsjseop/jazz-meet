@@ -26,6 +26,7 @@ import kr.codesquad.jazzmeet.image.entity.Image;
 import kr.codesquad.jazzmeet.image.repository.ImageRepository;
 import kr.codesquad.jazzmeet.show.entity.Show;
 import kr.codesquad.jazzmeet.show.repository.ShowRepository;
+import kr.codesquad.jazzmeet.venue.dto.VenueInfo;
 import kr.codesquad.jazzmeet.venue.entity.Venue;
 import kr.codesquad.jazzmeet.venue.entity.VenueImage;
 import kr.codesquad.jazzmeet.venue.util.VenueUtil;
@@ -247,5 +248,52 @@ class VenueQueryRepositoryTest extends IntegrationTestSupport {
 		assertThat(venueDetail.getImages()).hasSize(2)
 			.extracting("url")
 			.contains("image1.url", "image2.url");
+	}
+
+	@Test
+	@DisplayName("Word에 해당하는 공연장 목록을 조회한다")
+	void findVenuesByWord() {
+	    // given
+		Venue venue1 = VenueFixture.createVenue("강남1", "주소1");
+		Venue venue2 = VenueFixture.createVenue("강남2", "주소2");
+		Venue venue3 = VenueFixture.createVenue("마포1", "주소3");
+
+		venueRepository.saveAll(List.of(venue1, venue2, venue3));
+
+		String word = "강남";
+		PageRequest pageRequest = PageRequest.of(0, 20);
+
+		// when
+		Page<VenueInfo> venues = venueQueryRepository.findVenuesByWord(word, pageRequest);
+
+		// then
+		Assertions.assertAll(
+			() -> assertThat(venues.getTotalElements()).isEqualTo(2),
+			() -> assertThat(venues.getContent()).extracting("name")
+			.containsExactly(venue1.getName(), venue2.getName())
+		);
+	}
+
+	@Test
+	@DisplayName("Word가 null이면 모든 공연장 목록을 조회한다")
+	void findVenues() {
+		// given
+		Venue venue1 = VenueFixture.createVenue("강남1", "주소1");
+		Venue venue2 = VenueFixture.createVenue("강남2", "주소2");
+		Venue venue3 = VenueFixture.createVenue("마포1", "주소3");
+
+		venueRepository.saveAll(List.of(venue1, venue2, venue3));
+
+		PageRequest pageRequest = PageRequest.of(0, 20);
+
+		// when
+		Page<VenueInfo> venues = venueQueryRepository.findVenuesByWord(null, pageRequest);
+
+		// then
+		Assertions.assertAll(
+			() -> assertThat(venues.getTotalElements()).isEqualTo(3),
+			() -> assertThat(venues.getContent()).extracting("name")
+				.containsExactly(venue1.getName(), venue2.getName(), venue3.getName())
+		);
 	}
 }

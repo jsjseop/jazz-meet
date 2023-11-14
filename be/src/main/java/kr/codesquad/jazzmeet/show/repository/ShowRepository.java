@@ -3,6 +3,7 @@ package kr.codesquad.jazzmeet.show.repository;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -19,4 +20,7 @@ public interface ShowRepository extends JpaRepository<Show, Long> {
 
 	@Query("select s from Show s where s.venue.id = :venueId and FUNCTION('DATE', s.startTime) = :date")
 	List<Show> findByVenueIdAndDate(@Param("venueId") Long venueId, @Param("date") LocalDate date);
+
+	@Query("select s from Show s join fetch s.venue join fetch s.poster where s.id = :showId")
+	Optional<Show> findEntireShowById(@Param("showId") Long showId);
 }

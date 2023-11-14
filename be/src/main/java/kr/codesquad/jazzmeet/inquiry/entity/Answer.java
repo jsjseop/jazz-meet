@@ -19,6 +19,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "inquiry_answer")
@@ -31,15 +32,15 @@ public class Answer {
 	@Column(nullable = false, length = 1000)
 	private String content;
 	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "inquiry_id")
+	@JoinColumn(name = "inquiry_id", nullable = false)
 	private Inquiry inquiry;
 	@Column(nullable = false)
 	private Long adminId;
 	@CreationTimestamp
-	@Column(nullable = false)
+	@Column(nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
 	private LocalDateTime createdAt;
 	@UpdateTimestamp
-	@Column(nullable = false)
+	@Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
 	private LocalDateTime modifiedAt;
 
 	@Builder

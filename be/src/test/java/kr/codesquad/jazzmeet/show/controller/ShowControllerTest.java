@@ -1,11 +1,13 @@
 package kr.codesquad.jazzmeet.show.controller;
 
 import static org.hamcrest.Matchers.*;
+import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.junit.jupiter.api.DisplayName;
@@ -16,12 +18,22 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import kr.codesquad.jazzmeet.show.dto.response.ShowByDateResponse;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import kr.codesquad.jazzmeet.show.dto.request.RegisterShowRequest;
 import kr.codesquad.jazzmeet.show.dto.response.ExistShowCalendarResponse;
+import kr.codesquad.jazzmeet.show.dto.response.RegisterShowResponse;
+import kr.codesquad.jazzmeet.show.dto.response.ShowByDateResponse;
+import kr.codesquad.jazzmeet.show.dto.response.ShowDetailResponse;
+import kr.codesquad.jazzmeet.show.dto.response.ShowResponse;
 import kr.codesquad.jazzmeet.show.service.ShowService;
+import kr.codesquad.jazzmeet.show.vo.ShowPoster;
 
 @WebMvcTest(controllers = ShowController.class)
 class ShowControllerTest {
+
+	@Autowired
+	ObjectMapper objectMapper;
 
 	@Autowired
 	MockMvc mockMvc;
@@ -73,7 +85,7 @@ class ShowControllerTest {
 
 		//when //then
 		mockMvc.perform(
-				get("/api/shows")
+				get("/api/shows/by-region")
 					.queryParam("date", date)
 					.contentType(MediaType.APPLICATION_JSON)
 			)
@@ -82,5 +94,171 @@ class ShowControllerTest {
 			.andExpect(jsonPath("$", instanceOf(List.class)))
 			.andExpect(jsonPath("$[0].region").value("서울시 강남구"))
 			.andExpect(jsonPath("$[0].venues", instanceOf(List.class)));
+	}
+
+	@DisplayName("관리자가 공연장명과 page를 요청하면 해당하는 공연 목록을 조회한다.")
+	@Test
+	void getShows() throws Exception {
+		//given
+		String name = "부기우기";
+		int currentPage = 1;
+		when(showService.getShows(name, currentPage)).thenReturn(
+			ShowResponse.builder().currentPage(1).maxPage(3).totalCount(30).shows(List.of()).build());
+
+		//when //then
+		mockMvc.perform(
+				get("/api/shows")
+					.queryParam("word", name)
+					.queryParam("page", "1")
+					.contentType(MediaType.APPLICATION_JSON)
+			)
+			.andDo(print())
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.shows", instanceOf(List.class)))
+			.andExpect(jsonPath("$.currentPage").value(1))
+			.andExpect(jsonPath("$.maxPage").value(3))
+			.andExpect(jsonPath("$.totalCount").value(30));
+	}
+
+	@DisplayName("관리자가 공연의 id로 공연을 상세 조회한다.")
+	@Test
+	void getShowDetail() throws Exception {
+		//given
+		Long showId = 1L;
+		when(showService.getShowDetail(any())).thenReturn(
+			ShowDetailResponse.builder().id(showId).poster(new ShowPoster(1L, "url")).showName("퀄텟").build());
+
+		//when //then
+		mockMvc.perform(
+				get("/api/shows/{showId}", showId)
+					.contentType(MediaType.APPLICATION_JSON)
+			)
+			.andDo(print())
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.id").value(1L))
+			.andExpect(jsonPath("$.poster.id").value(1L))
+			.andExpect(jsonPath("$.poster.url").value("url"))
+			.andExpect(jsonPath("$.showName").value("퀄텟"));
+	}
+
+	@DisplayName("관리자가 공연장 페이지에서 공연 등록을 한다.")
+	@Test
+	void registerShow() throws Exception {
+		//given
+		Long venueId = 1L;
+		RegisterShowRequest request = RegisterShowRequest.builder()
+			.name("러스틱재즈 트리오")
+			.description("러스틱 재즈 설명")
+			.posterId(1L)
+			.startTime(LocalDateTime.of(2023, 11, 13, 17, 00))
+			.endTime(LocalDateTime.of(2023, 11, 13, 19, 00))
+			.build();
+
+		when(showService.registerShow(any(), any())).thenReturn(new RegisterShowResponse(1L));
+
+		//when //then
+		mockMvc.perform(
+				post("/api/shows/{venueId}", venueId)
+					.content(objectMapper.writeValueAsString(request))
+					.contentType(MediaType.APPLICATION_JSON)
+			)
+			.andDo(print())
+			.andExpect(status().isCreated())
+			.andExpect(jsonPath("$.id").value(1L));
+	}
+
+	@DisplayName("관리자가 공연장 페이지에서 공연 등록을 할 때 팀 이름은 반드시 필요하다.")
+	@Test
+	void registerShowWhenNotExistName() throws Exception {
+		//given
+		Long venueId = 1L;
+		RegisterShowRequest request = RegisterShowRequest.builder()
+			.description("러스틱 재즈 설명")
+			.posterId(1L)
+			.startTime(LocalDateTime.of(2023, 11, 13, 17, 00))
+			.endTime(LocalDateTime.of(2023, 11, 13, 19, 00))
+			.build();
+
+		when(showService.registerShow(any(), any())).thenReturn(new RegisterShowResponse(1L));
+
+		//when //then
+		mockMvc.perform(
+				post("/api/shows/{venueId}", venueId)
+					.content(objectMapper.writeValueAsString(request))
+					.contentType(MediaType.APPLICATION_JSON)
+			)
+			.andDo(print())
+			.andExpect(status().isBadRequest());
+	}
+
+	@DisplayName("관리자가 공연장 페이지에서 공연 등록을 할 때 팀 이름은 50자까지 가능하다.")
+	@Test
+	void registerShowWhenOutOfFifty() throws Exception {
+		//given
+		Long venueId = 1L;
+
+		RegisterShowRequest request = RegisterShowRequest.builder()
+			.name("아".repeat(51))
+			.description("러스틱 재즈 설명")
+			.posterId(1L)
+			.startTime(LocalDateTime.of(2023, 11, 13, 17, 00))
+			.endTime(LocalDateTime.of(2023, 11, 13, 19, 00))
+			.build();
+
+		//when //then
+		mockMvc.perform(
+				post("/api/shows/{venueId}", venueId)
+					.content(objectMapper.writeValueAsString(request))
+					.contentType(MediaType.APPLICATION_JSON)
+			)
+			.andDo(print())
+			.andExpect(status().isBadRequest());
+	}
+
+	@DisplayName("관리자가 공연장 페이지에서 공연 등록을 할 때 설명은 1000자까지 가능하다.")
+	@Test
+	void registerShowWhenOutOfThousand() throws Exception {
+		//given
+		Long venueId = 1L;
+
+		RegisterShowRequest request = RegisterShowRequest.builder()
+			.name("러스틱 재즈")
+			.description("러".repeat(1001))
+			.posterId(1L)
+			.startTime(LocalDateTime.of(2023, 11, 13, 17, 00))
+			.endTime(LocalDateTime.of(2023, 11, 13, 19, 00))
+			.build();
+
+		//when //then
+		mockMvc.perform(
+				post("/api/shows/{venueId}", venueId)
+					.content(objectMapper.writeValueAsString(request))
+					.contentType(MediaType.APPLICATION_JSON)
+			)
+			.andDo(print())
+			.andExpect(status().isBadRequest());
+	}
+
+	@DisplayName("관리자가 공연장 페이지에서 공연 등록을 할 때 poster id는 반드시 필요하다.")
+	@Test
+	void registerShowNotExistPoster() throws Exception {
+		//given
+		Long venueId = 1L;
+
+		RegisterShowRequest request = RegisterShowRequest.builder()
+			.name("러스틱 재즈")
+			.description("러스틱 재즈 설명")
+			.startTime(LocalDateTime.of(2023, 11, 13, 17, 00))
+			.endTime(LocalDateTime.of(2023, 11, 13, 19, 00))
+			.build();
+
+		//when //then
+		mockMvc.perform(
+				post("/api/shows/{venueId}", venueId)
+					.content(objectMapper.writeValueAsString(request))
+					.contentType(MediaType.APPLICATION_JSON)
+			)
+			.andDo(print())
+			.andExpect(status().isBadRequest());
 	}
 }
