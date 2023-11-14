@@ -56,7 +56,7 @@ export const Calendar: React.FC<Props> = ({
         {Array.from({ length: firstDay }).map((_, index) => (
           <StyledDay key={index}></StyledDay>
         ))}
-        {Array.from({ length: lastDay }).map((_, index) => {
+        {Array.from({ length: lastDate }).map((_, index) => {
           const day = index + 1;
 
           return (
