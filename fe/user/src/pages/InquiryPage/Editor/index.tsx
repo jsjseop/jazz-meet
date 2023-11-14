@@ -20,15 +20,17 @@ export const InquiryEditor: React.FC<Props> = ({ currentCategory }) => {
     e.preventDefault();
 
     const formData = new FormData(e.currentTarget);
-    const nickname = formData.get('nickname') as string;
-    const password = formData.get('password') as string;
+    const nickname = formData.get(NICKNAME)?.toString();
+    const password = formData.get(PASSWORD)?.toString();
 
     const trimmedContent = inquiryContent.trim();
-    const trimmedNickname = nickname.trim();
+    const trimmedNickname = nickname?.trim();
 
     if (
       !validateContent(trimmedContent) ||
-      !validateNickname(trimmedNickname)
+      !validateNickname(trimmedNickname) ||
+      !trimmedNickname ||
+      !password
     ) {
       return;
     }

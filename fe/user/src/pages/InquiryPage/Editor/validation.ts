@@ -6,7 +6,7 @@ export const validateContent = (content: string) => {
   return true;
 };
 
-export const validateNickname = (nickname: string) => {
+export const validateNickname = (nickname?: string) => {
   if (!nickname) {
     alert('닉네임을 입력해주세요.');
     return false;
