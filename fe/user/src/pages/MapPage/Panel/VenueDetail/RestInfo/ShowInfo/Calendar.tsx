@@ -28,7 +28,7 @@ export const Calendar: React.FC<Props> = ({
   const selectedDay = selectedDate.getDate();
 
   const firstDay = getFirstDay(currentYear, currentMonth);
-  const lastDay = getLastDate(calendarDate.getFullYear(), currentMonth);
+  const lastDate = getLastDate(calendarDate.getFullYear(), currentMonth);
 
   const CalendarHeaderTitle = `${calendarDate.toLocaleString('en-US', {
     month: 'long',
