@@ -42,6 +42,12 @@ const StyledVenueCard = styled.div`
   border-radius: 6px;
   border: 1px solid #dbe1e4;
   padding: 12px 0;
+
+  @media screen and (max-width: 900px) {
+    border-radius: 0;
+    border: none;
+    border-bottom: 1px solid #dbe1e4;
+  }
 `;
 
 const StyledCardHeader = styled.div`
@@ -75,7 +81,8 @@ const StyledShowTime = styled.span`
 
 const StyledShowTeam = styled.span`
   color: #686970;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
   overflow: hidden;
 `;

@@ -36,4 +36,10 @@ const StyledVenueCardList = styled.div`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 22px;
+
+  @media screen and (max-width: 900px) {
+    margin-top: 0;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 0;
+  }
 `;
