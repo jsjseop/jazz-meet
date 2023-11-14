@@ -48,7 +48,7 @@ export const InquiryPage: React.FC = () => {
       <InquiryEditor currentCategory={inquiryParams.category!} />
 
       <PaginationBox
-        maxPage={inquiryData?.maxPage ?? 1}
+        maxPage={inquiryData?.maxPage || 1}
         currentPage={inquiryParams.page!}
         onChange={onPageChange}
       />
