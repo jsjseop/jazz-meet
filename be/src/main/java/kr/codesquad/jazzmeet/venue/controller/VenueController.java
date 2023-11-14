@@ -17,8 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
-import kr.codesquad.jazzmeet.venue.dto.annotation.Latitude;
-import kr.codesquad.jazzmeet.venue.dto.annotation.Longitude;
+import kr.codesquad.jazzmeet.venue.controller.annotation.Latitude;
+import kr.codesquad.jazzmeet.venue.controller.annotation.Longitude;
 import kr.codesquad.jazzmeet.venue.dto.request.RangeCoordinatesRequest;
 import kr.codesquad.jazzmeet.venue.dto.request.VenueCreateRequest;
 import kr.codesquad.jazzmeet.venue.dto.request.VenueUpdateRequest;

@@ -1,4 +1,4 @@
-package kr.codesquad.jazzmeet.venue.dto.annotation;
+package kr.codesquad.jazzmeet.venue.controller.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

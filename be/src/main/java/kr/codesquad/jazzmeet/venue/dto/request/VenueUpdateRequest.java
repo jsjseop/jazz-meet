@@ -4,8 +4,8 @@ import java.util.List;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import kr.codesquad.jazzmeet.venue.dto.annotation.Latitude;
-import kr.codesquad.jazzmeet.venue.dto.annotation.Longitude;
+import kr.codesquad.jazzmeet.venue.controller.annotation.Latitude;
+import kr.codesquad.jazzmeet.venue.controller.annotation.Longitude;
 import lombok.Builder;
 
 @Builder

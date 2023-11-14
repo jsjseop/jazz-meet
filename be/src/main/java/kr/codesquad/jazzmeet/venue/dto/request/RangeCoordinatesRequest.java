@@ -2,7 +2,7 @@ package kr.codesquad.jazzmeet.venue.dto.request;
 
 import org.locationtech.jts.geom.Polygon;
 
-import kr.codesquad.jazzmeet.venue.dto.annotation.RangeCoordinates;
+import kr.codesquad.jazzmeet.venue.controller.annotation.RangeCoordinates;
 import kr.codesquad.jazzmeet.venue.util.LocationUtil;
 import lombok.Builder;
 
