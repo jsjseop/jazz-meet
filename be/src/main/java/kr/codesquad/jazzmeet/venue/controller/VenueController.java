@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
+import kr.codesquad.jazzmeet.venue.dto.annotation.Latitude;
+import kr.codesquad.jazzmeet.venue.dto.annotation.Longitude;
 import kr.codesquad.jazzmeet.venue.dto.request.RangeCoordinatesRequest;
 import kr.codesquad.jazzmeet.venue.dto.request.VenueCreateRequest;
 import kr.codesquad.jazzmeet.venue.dto.request.VenueUpdateRequest;
@@ -54,8 +56,8 @@ public class VenueController {
 	 */
 	@GetMapping("/api/venues/around-venues")
 	public ResponseEntity<List<NearbyVenueResponse>> findNearbyVenues(
-		@RequestParam(required = false) Double latitude,
-		@RequestParam(required = false) Double longitude) {
+		@RequestParam(required = false) @Latitude Double latitude,
+		@RequestParam(required = false) @Longitude Double longitude) {
 		List<NearbyVenueResponse> nearByVenues = venueService.findNearByVenues(latitude, longitude);
 
 		return ResponseEntity.ok(nearByVenues);
@@ -76,7 +78,7 @@ public class VenueController {
 	 */
 	@GetMapping("/api/venues/pins/map")
 	public ResponseEntity<List<VenuePinsResponse>> findVenuePinsByLocation(
-		@ModelAttribute RangeCoordinatesRequest rangeCoordinatesRequest) {
+		@ModelAttribute @Valid RangeCoordinatesRequest rangeCoordinatesRequest) {
 		List<VenuePinsResponse> venuePins = venueService.findVenuePinsByLocation(rangeCoordinatesRequest);
 
 		return ResponseEntity.ok(venuePins);

@@ -54,7 +54,7 @@ public class VenueService {
 	}
 
 	public List<NearbyVenueResponse> findNearByVenues(Double latitude, Double longitude) {
-		if (!LocationUtil.isValidCoordinates(latitude, longitude)) {
+		if (LocationUtil.hasNull(latitude, longitude)) {
 			return List.of();
 		}
 
@@ -79,7 +79,7 @@ public class VenueService {
 	}
 
 	public List<VenuePinsResponse> findVenuePinsByLocation(RangeCoordinatesRequest rangeCoordinatesRequest) {
-		if (!rangeCoordinatesRequest.isValidCoordinates()) {
+		if (rangeCoordinatesRequest.hasNull()) {
 			return List.of();
 		}
 
@@ -93,7 +93,7 @@ public class VenueService {
 	}
 
 	public VenueSearchResponse findVenuesByLocation(RangeCoordinatesRequest rangeCoordinatesRequest, int page) {
-		if (!rangeCoordinatesRequest.isValidCoordinates()) {
+		if (rangeCoordinatesRequest.hasNull()) {
 			return VenueSearchResponse.emptyVenues();
 		}
 

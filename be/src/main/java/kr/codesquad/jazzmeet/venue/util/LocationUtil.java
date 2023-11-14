@@ -38,7 +38,7 @@ public final class LocationUtil {
 		return geometryFactory.createPolygon(coordinates);
 	}
 
-	public static boolean isValidCoordinates(Double latitude, Double longitude) {
-		return latitude != null && longitude != null;
+	public static boolean hasNull(Double latitude, Double longitude) {
+		return latitude == null || longitude == null;
 	}
 }
