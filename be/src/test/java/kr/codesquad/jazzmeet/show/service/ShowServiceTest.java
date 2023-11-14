@@ -430,7 +430,7 @@ class ShowServiceTest extends IntegrationTestSupport {
 
 		Long venueId = venue.getId();
 		RegisterShowRequest request = RegisterShowRequest.builder()
-			.name("Entry55 퀄텟")
+			.teamName("Entry55 퀄텟")
 			.posterId(poster.getId())
 			.description("description")
 			.startTime(LocalDateTime.of(2023, 11, 13, 11, 50))

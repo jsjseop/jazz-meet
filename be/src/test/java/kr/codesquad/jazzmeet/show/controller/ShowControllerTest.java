@@ -147,7 +147,7 @@ class ShowControllerTest {
 		//given
 		Long venueId = 1L;
 		RegisterShowRequest request = RegisterShowRequest.builder()
-			.name("러스틱재즈 트리오")
+			.teamName("러스틱재즈 트리오")
 			.description("러스틱 재즈 설명")
 			.posterId(1L)
 			.startTime(LocalDateTime.of(2023, 11, 13, 17, 00))
@@ -198,7 +198,7 @@ class ShowControllerTest {
 		Long venueId = 1L;
 
 		RegisterShowRequest request = RegisterShowRequest.builder()
-			.name("아".repeat(51))
+			.teamName("아".repeat(51))
 			.description("러스틱 재즈 설명")
 			.posterId(1L)
 			.startTime(LocalDateTime.of(2023, 11, 13, 17, 00))
@@ -222,7 +222,7 @@ class ShowControllerTest {
 		Long venueId = 1L;
 
 		RegisterShowRequest request = RegisterShowRequest.builder()
-			.name("러스틱 재즈")
+			.teamName("러스틱 재즈")
 			.description("러".repeat(1001))
 			.posterId(1L)
 			.startTime(LocalDateTime.of(2023, 11, 13, 17, 00))
@@ -246,7 +246,7 @@ class ShowControllerTest {
 		Long venueId = 1L;
 
 		RegisterShowRequest request = RegisterShowRequest.builder()
-			.name("러스틱 재즈")
+			.teamName("러스틱 재즈")
 			.description("러스틱 재즈 설명")
 			.startTime(LocalDateTime.of(2023, 11, 13, 17, 00))
 			.endTime(LocalDateTime.of(2023, 11, 13, 19, 00))

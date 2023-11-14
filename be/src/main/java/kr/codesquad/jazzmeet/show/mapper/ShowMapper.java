@@ -37,6 +37,5 @@ public interface ShowMapper {
 	@Mapping(target = "venueName", source = "venue.name")
 	ShowDetailResponse toShowDetailResponse(Show show);
 
-	@Mapping(target = "teamName", source = "registerShowRequest.name")
 	Show toShow(RegisterShowRequest registerShowRequest, Venue venue, Image poster);
 }
