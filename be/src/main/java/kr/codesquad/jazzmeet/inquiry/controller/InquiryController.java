@@ -76,7 +76,7 @@ public class InquiryController {
 	 * 문의 답변 등록 API
 	 */
 	@PostMapping("/api/inquiries/answers")
-	public ResponseEntity<InquiryAnswerSaveResponse> saveAnswer(@RequestBody InquiryAnswerSaveRequest request) {
+	public ResponseEntity<InquiryAnswerSaveResponse> saveAnswer(@RequestBody @Valid InquiryAnswerSaveRequest request) {
 		InquiryAnswerSaveResponse answer = inquiryService.saveAnswer(request);
 
 		return ResponseEntity.status(HttpStatus.CREATED).body(answer);
