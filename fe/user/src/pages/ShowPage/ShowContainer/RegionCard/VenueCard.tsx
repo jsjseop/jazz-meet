@@ -2,6 +2,7 @@ import styled from '@emotion/styled';
 import { useNavigate } from 'react-router-dom';
 import CaretRight from '~/assets/icons/CaretRight.svg?react';
 import { ShowDetail } from '~/types/api.types';
+import { getFormattedTimeRange } from '~/utils/dateUtils';
 
 type Props = {
   id: number;
@@ -21,10 +22,11 @@ export const VenueCard: React.FC<Props> = ({ id, name, shows }) => {
         <CaretRight />
       </StyledCardHeader>
       {shows.map((show) => {
-        const showTime = `${show.startTime.slice(
-          11,
-          16,
-        )} - ${show.endTime.slice(11, 16)}`;
+        const showTime = getFormattedTimeRange(
+          new Date(show.startTime),
+          new Date(show.endTime),
+        );
+
         return (
           <StyledShowInfo key={show.id}>
             <StyledShowTime>{showTime}</StyledShowTime>
