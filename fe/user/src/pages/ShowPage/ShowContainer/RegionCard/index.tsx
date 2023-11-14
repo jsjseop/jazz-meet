@@ -7,8 +7,8 @@ export const RegionCard: React.FC<ShowRegion> = ({ region, venues }) => {
     <StyledRegionCard>
       <StyledCardHeader>{region}</StyledCardHeader>
       <StyledVenueCardList>
-        {venues.map(({ id, name, shows }) => (
-          <VenueCard key={id} name={name} shows={shows} />
+        {venues.map((venue) => (
+          <VenueCard key={venue.id} {...venue} />
         ))}
       </StyledVenueCardList>
     </StyledRegionCard>

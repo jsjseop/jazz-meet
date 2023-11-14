@@ -1,16 +1,22 @@
 import styled from '@emotion/styled';
+import { useNavigate } from 'react-router-dom';
 import CaretRight from '~/assets/icons/CaretRight.svg?react';
 import { ShowDetail } from '~/types/api.types';
 
 type Props = {
+  id: number;
   name: string;
   shows: Omit<ShowDetail, 'description'>[];
 };
 
-export const VenueCard: React.FC<Props> = ({ name, shows }) => {
+export const VenueCard: React.FC<Props> = ({ id, name, shows }) => {
+  const navigate = useNavigate();
+
+  const navigateToVenueDetail = () => navigate(`/map/venues/${id}`);
+
   return (
     <StyledVenueCard>
-      <StyledCardHeader>
+      <StyledCardHeader onClick={navigateToVenueDetail}>
         <span>{name}</span>
         <CaretRight />
       </StyledCardHeader>
@@ -44,6 +50,11 @@ const StyledCardHeader = styled.div`
   font-size: 24px;
   font-weight: bold;
   color: #1b1b1b;
+
+  &:hover {
+    cursor: pointer;
+    opacity: 0.7;
+  }
 `;
 
 const StyledShowInfo = styled.div`
