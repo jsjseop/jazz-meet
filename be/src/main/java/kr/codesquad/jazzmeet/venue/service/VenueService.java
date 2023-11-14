@@ -25,7 +25,7 @@ import kr.codesquad.jazzmeet.venue.entity.Venue;
 import kr.codesquad.jazzmeet.venue.mapper.VenueMapper;
 import kr.codesquad.jazzmeet.venue.repository.VenueQueryRepository;
 import kr.codesquad.jazzmeet.venue.repository.VenueRepository;
-import kr.codesquad.jazzmeet.venue.util.VenueUtil;
+import kr.codesquad.jazzmeet.venue.util.LocationUtil;
 import kr.codesquad.jazzmeet.venue.vo.NearbyVenue;
 import kr.codesquad.jazzmeet.venue.vo.VenueDetail;
 import kr.codesquad.jazzmeet.venue.vo.VenuePins;
@@ -54,11 +54,11 @@ public class VenueService {
 	}
 
 	public List<NearbyVenueResponse> findNearByVenues(Double latitude, Double longitude) {
-		if (!isValidCoordinates(latitude, longitude)) {
+		if (!LocationUtil.isValidCoordinates(latitude, longitude)) {
 			return List.of();
 		}
 
-		Point point = VenueUtil.createPoint(latitude, longitude);
+		Point point = LocationUtil.createPoint(latitude, longitude);
 		List<NearbyVenue> venues = venueQueryRepository.findNearbyVenuesByLocation(point);
 
 		return venues.stream()
@@ -109,10 +109,6 @@ public class VenueService {
 
 		return VenueMapper.INSTANCE.toVenueSearchResponse(venueSearchList, venuesByLocation.getTotalElements(),
 			venuesByLocation.getNumber() + PAGE_NUMBER_OFFSET, venuesByLocation.getTotalPages());
-	}
-
-	private boolean isValidCoordinates(Double latitude, Double longitude) {
-		return latitude != null && longitude != null;
 	}
 
 	public Venue findById(Long venueId) {

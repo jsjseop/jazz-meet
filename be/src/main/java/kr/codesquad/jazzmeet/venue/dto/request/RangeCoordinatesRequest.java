@@ -2,7 +2,7 @@ package kr.codesquad.jazzmeet.venue.dto.request;
 
 import org.locationtech.jts.geom.Polygon;
 
-import kr.codesquad.jazzmeet.venue.util.VenueUtil;
+import kr.codesquad.jazzmeet.venue.util.LocationUtil;
 import lombok.Builder;
 
 @Builder
@@ -18,6 +18,6 @@ public record RangeCoordinatesRequest(
 	}
 
 	public Polygon toRange() {
-		return VenueUtil.createRange(lowLatitude, highLatitude, lowLongitude, highLongitude);
+		return LocationUtil.createRange(lowLatitude, highLatitude, lowLongitude, highLongitude);
 	}
 }

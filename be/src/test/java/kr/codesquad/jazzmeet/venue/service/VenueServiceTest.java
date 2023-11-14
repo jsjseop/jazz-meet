@@ -28,12 +28,12 @@ import kr.codesquad.jazzmeet.venue.entity.Venue;
 import kr.codesquad.jazzmeet.venue.entity.VenueImage;
 import kr.codesquad.jazzmeet.venue.repository.VenueImageRepository;
 import kr.codesquad.jazzmeet.venue.repository.VenueRepository;
-import kr.codesquad.jazzmeet.venue.util.VenueUtil;
+import kr.codesquad.jazzmeet.venue.util.LocationUtil;
 
 class VenueServiceTest extends IntegrationTestSupport {
 
 	// 기본 위치 (서울시청)
-	private static final Point DEFAULT_POINT = VenueUtil.createPoint(37.56671605441306, 126.97849382312168);
+	private static final Point DEFAULT_POINT = LocationUtil.createPoint(37.56671605441306, 126.97849382312168);
 
 	@Autowired
 	VenueService venueService;
@@ -121,9 +121,9 @@ class VenueServiceTest extends IntegrationTestSupport {
 		double latitude = 37.49824611392008;
 		double longitude = 127.02463599761059;
 
-		Point pointA = VenueUtil.createPoint(37.50049856339995, 127.0249505634053);
-		Point pointB = VenueUtil.createPoint(37.5014268697288, 127.03302845194163);
-		Point pointC = VenueUtil.createPoint(37.49907417387371, 127.02848692360855);
+		Point pointA = LocationUtil.createPoint(37.50049856339995, 127.0249505634053);
+		Point pointB = LocationUtil.createPoint(37.5014268697288, 127.03302845194163);
+		Point pointC = LocationUtil.createPoint(37.49907417387371, 127.02848692360855);
 
 		Venue venueA = VenueFixture.createVenue("공연장A", "주소", pointA);
 		Venue venueB = VenueFixture.createVenue("공연장B", "주소", pointB);
@@ -147,7 +147,7 @@ class VenueServiceTest extends IntegrationTestSupport {
 	void findVenuesPinsByWordInName() throws Exception {
 		//given
 		String word = "부기우기";
-		Point point = VenueUtil.createPoint(123.11111, 123.123123);
+		Point point = LocationUtil.createPoint(123.11111, 123.123123);
 		Venue venue1 = VenueFixture.createVenue("부기우기", "서울 용산구 회나무로 21 2층", point);
 		Venue venue2 = VenueFixture.createVenue("Entry55", "서울 동작구 동작대로1길 18 B-102", point);
 		venueRepository.saveAll(List.of(venue1, venue2));
@@ -166,7 +166,7 @@ class VenueServiceTest extends IntegrationTestSupport {
 	void findVenuesPinsByWordInAddress() throws Exception {
 		//given
 		String word = "서울";
-		Point point = VenueUtil.createPoint(123.11111, 123.123123);
+		Point point = LocationUtil.createPoint(123.11111, 123.123123);
 		Venue venue1 = VenueFixture.createVenue("부기우기", "서울 용산구 회나무로 21 2층", point);
 		Venue venue2 = VenueFixture.createVenue("Entry55", "서울 동작구 동작대로1길 18 B-102", point);
 		venueRepository.saveAll(List.of(venue1, venue2));
@@ -187,7 +187,7 @@ class VenueServiceTest extends IntegrationTestSupport {
 	void findVenuesByWordIsNull() throws Exception {
 		//given
 		String word = null;
-		Point point = VenueUtil.createPoint(123.11111, 123.123123);
+		Point point = LocationUtil.createPoint(123.11111, 123.123123);
 		Venue venue1 = VenueFixture.createVenue("부기우기", "서울 용산구 회나무로 21 2층", point);
 		Venue venue2 = VenueFixture.createVenue("Entry55", "서울 동작구 동작대로1길 18 B-102", point);
 		venueRepository.saveAll(List.of(venue1, venue2));
@@ -211,11 +211,11 @@ class VenueServiceTest extends IntegrationTestSupport {
 			lowLatitude, highLatitude, lowLongitude, highLongitude);
 
 		Venue venue1 = VenueFixture.createVenue("부기우기", "서울 용산구 회나무로 21 2층",
-			VenueUtil.createPoint(37.52387497068088, 126.9294615244093));
+			LocationUtil.createPoint(37.52387497068088, 126.9294615244093));
 		Venue venue2 = VenueFixture.createVenue("Entry55", "서울 동작구 동작대로1길 18 B-102",
-			VenueUtil.createPoint(37.53387497068088, 126.9394615244093));
+			LocationUtil.createPoint(37.53387497068088, 126.9394615244093));
 		Venue venue3 = VenueFixture.createVenue("러스틱 재즈", "서울 마포구 망원로 74 지하",
-			VenueUtil.createPoint(38.0, 128.0)); // 범위 벗어남
+			LocationUtil.createPoint(38.0, 128.0)); // 범위 벗어남
 		venueRepository.saveAll(List.of(venue1, venue2, venue3));
 
 		//when
@@ -239,9 +239,9 @@ class VenueServiceTest extends IntegrationTestSupport {
 			lowLatitude, highLatitude, lowLongitude, highLongitude);
 
 		Venue venue1 = VenueFixture.createVenue("부기우기", "서울 용산구 회나무로 21 2층",
-			VenueUtil.createPoint(36.5387497068088, 125.9294615244093));
+			LocationUtil.createPoint(36.5387497068088, 125.9294615244093));
 		Venue venue2 = VenueFixture.createVenue("Entry55", "서울 동작구 동작대로1길 18 B-102",
-			VenueUtil.createPoint(38.53387497068088, 128.9394615244093));
+			LocationUtil.createPoint(38.53387497068088, 128.9394615244093));
 		venueRepository.saveAll(List.of(venue1, venue2));
 
 		//when
@@ -263,9 +263,9 @@ class VenueServiceTest extends IntegrationTestSupport {
 			lowLatitude, highLatitude, lowLongitude, highLongitude);
 
 		Venue venue1 = VenueFixture.createVenue("부기우기", "서울 용산구 회나무로 21 2층",
-			VenueUtil.createPoint(lowLatitude, highLongitude)); // 남동
+			LocationUtil.createPoint(lowLatitude, highLongitude)); // 남동
 		Venue venue2 = VenueFixture.createVenue("Entry55", "서울 동작구 동작대로1길 18 B-102",
-			VenueUtil.createPoint(highLatitude, lowLongitude)); // 북서
+			LocationUtil.createPoint(highLatitude, lowLongitude)); // 북서
 		venueRepository.saveAll(List.of(venue1, venue2));
 
 		//when
@@ -287,11 +287,11 @@ class VenueServiceTest extends IntegrationTestSupport {
 			lowLatitude, highLatitude, lowLongitude, highLongitude);
 
 		Venue venue1 = VenueFixture.createVenue("부기우기", "서울 용산구 회나무로 21 2층",
-			VenueUtil.createPoint(37.52387497068088, 126.9294615244093));
+			LocationUtil.createPoint(37.52387497068088, 126.9294615244093));
 		Venue venue2 = VenueFixture.createVenue("Entry55", "서울 동작구 동작대로1길 18 B-102",
-			VenueUtil.createPoint(37.53387497068088, 126.9394615244093));
+			LocationUtil.createPoint(37.53387497068088, 126.9394615244093));
 		Venue venue3 = VenueFixture.createVenue("러스틱 재즈", "서울 마포구 망원로 74 지하",
-			VenueUtil.createPoint(38.0, 128.0)); // 범위 벗어남
+			LocationUtil.createPoint(38.0, 128.0)); // 범위 벗어남
 		venueRepository.saveAll(List.of(venue1, venue2, venue3));
 
 		//when
@@ -314,9 +314,9 @@ class VenueServiceTest extends IntegrationTestSupport {
 			lowLatitude, highLatitude, lowLongitude, highLongitude);
 		int page = 1;
 
-		Point point1 = VenueUtil.createPoint(37.558531649528895, 126.91891927086303);
-		Point point2 = VenueUtil.createPoint(37.5560565982576, 126.930179961597);
-		Point point3 = VenueUtil.createPoint(37.5502406352943, 126.9229031896536);
+		Point point1 = LocationUtil.createPoint(37.558531649528895, 126.91891927086303);
+		Point point2 = LocationUtil.createPoint(37.5560565982576, 126.930179961597);
+		Point point3 = LocationUtil.createPoint(37.5502406352943, 126.9229031896536);
 
 		Venue venue1 = VenueFixture.createVenue("연남5701", "서울 마포구 동교로23길 64 지하", point1);
 		Venue venue2 = VenueFixture.createVenue("숲길", "서울 마포구 와우산로37길 11", point2);
@@ -349,9 +349,9 @@ class VenueServiceTest extends IntegrationTestSupport {
 			lowLatitude, highLatitude, lowLongitude, highLongitude);
 		int page = 1;
 
-		Point point1 = VenueUtil.createPoint(37.558531649528895, 126.91891927086303);
-		Point point2 = VenueUtil.createPoint(37.5560565982576, 126.930179961597);
-		Point point3 = VenueUtil.createPoint(37.5502406352943, 126.9229031896536);
+		Point point1 = LocationUtil.createPoint(37.558531649528895, 126.91891927086303);
+		Point point2 = LocationUtil.createPoint(37.5560565982576, 126.930179961597);
+		Point point3 = LocationUtil.createPoint(37.5502406352943, 126.9229031896536);
 
 		Venue venue1 = VenueFixture.createVenue("연남5701", "서울 마포구 동교로23길 64 지하", point1);
 		Venue venue2 = VenueFixture.createVenue("숲길", "서울 마포구 와우산로37길 11", point2);
@@ -453,7 +453,7 @@ class VenueServiceTest extends IntegrationTestSupport {
 	void findVenue() throws Exception {
 		//given
 		Venue venue = VenueFixture.createVenue("부기우기", "서울 용산구 회나무로 21 2층",
-			VenueUtil.createPoint(37.52387497068088, 126.9294615244093));
+			LocationUtil.createPoint(37.52387497068088, 126.9294615244093));
 
 		Image image1 = ImageFixture.createImage("image1.url");
 		Image image2 = ImageFixture.createImage("image2.url");
@@ -485,7 +485,7 @@ class VenueServiceTest extends IntegrationTestSupport {
 		//given
 		Long venueId = -1L;
 		Venue venue = VenueFixture.createVenue("부기우기", "서울 용산구 회나무로 21 2층",
-			VenueUtil.createPoint(37.52387497068088, 126.9294615244093));
+			LocationUtil.createPoint(37.52387497068088, 126.9294615244093));
 
 		Image image1 = ImageFixture.createImage("image1.url");
 		Image image2 = ImageFixture.createImage("image2.url");

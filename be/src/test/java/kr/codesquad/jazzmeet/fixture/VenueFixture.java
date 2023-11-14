@@ -6,7 +6,7 @@ import kr.codesquad.jazzmeet.image.entity.Image;
 import kr.codesquad.jazzmeet.venue.dto.request.RangeCoordinatesRequest;
 import kr.codesquad.jazzmeet.venue.entity.Venue;
 import kr.codesquad.jazzmeet.venue.entity.VenueImage;
-import kr.codesquad.jazzmeet.venue.util.VenueUtil;
+import kr.codesquad.jazzmeet.venue.util.LocationUtil;
 
 public class VenueFixture {
 	public static Venue createVenue(String name, String address, Point point) {
@@ -22,7 +22,7 @@ public class VenueFixture {
 
 	public static Venue createVenue(String name, String address) {
 		String lotNumberAddress = "지번";
-		Point point = VenueUtil.createPoint(123.123, 32.111);
+		Point point = LocationUtil.createPoint(123.123, 32.111);
 
 		return Venue.builder()
 			.name(name)
