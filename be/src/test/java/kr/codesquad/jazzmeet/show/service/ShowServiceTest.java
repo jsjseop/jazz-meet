@@ -202,9 +202,10 @@ class ShowServiceTest extends IntegrationTestSupport {
 		Venue venue1 = VenueFixture.createVenue("부기우기", "경기도 고양시");
 		Venue venue2 = VenueFixture.createVenue("클럽에반스", "경기도 고양시");
 
-		Show show1 = ShowFixture.createShow("부기우기 트리오1", LocalDateTime.of(2023, 11, 1, 18, 00), venue1);
+		Show show1 = ShowFixture.createShow("Entry55 트리오1", LocalDateTime.of(2023, 11, 3, 18, 00), venue2);
 		Show show2 = ShowFixture.createShow("부기우기 트리오2", LocalDateTime.of(2023, 11, 2, 20, 00), venue1);
-		Show show3 = ShowFixture.createShow("Entry55 트리오1", LocalDateTime.of(2023, 11, 3, 18, 00), venue2);
+		Show show3 = ShowFixture.createShow("부기우기 트리오1", LocalDateTime.of(2023, 11, 1, 18, 00), venue1);
+
 		showRepository.saveAll(List.of(show1, show2, show3));
 
 		//when

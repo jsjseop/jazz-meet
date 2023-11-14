@@ -51,6 +51,7 @@ public class ShowQueryRepository {
 			.where(show.startTime.year().eq(date.getYear())
 				.and(show.startTime.month().eq(date.getMonthValue())))
 			.groupBy(show.startTime.dayOfMonth())
+			.orderBy(show.startTime.dayOfMonth().asc())
 			.fetch();
 	}
 
