@@ -50,6 +50,7 @@ public interface InquiryMapper {
 
 	@Mapping(target = "category", source = "inquiryCategory")
 	@Mapping(target = "password", source = "encryptedPwd")
+	@Mapping(ignore = true, target = "status")
 	Inquiry toInquiry(InquirySaveRequest inquirySaveRequest, InquiryCategory inquiryCategory, String encryptedPwd);
 
 	@Mapping(target = "status", source = "status.koName")
