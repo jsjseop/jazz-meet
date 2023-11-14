@@ -2,7 +2,19 @@ import styled from '@emotion/styled';
 import SearchIcon from '@mui/icons-material/Search';
 import { IconButton, InputBase, Paper, Typography } from '@mui/material';
 
-export const InquiryPageHeader: React.FC = () => {
+type Props = {
+  setWord: (word: string) => void;
+};
+
+export const Header: React.FC<Props> = ({ setWord }) => {
+  const onSearchSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const word = new FormData(e.currentTarget).get(SEARCH_INPUT_NAME) as string;
+
+    setWord(word);
+  };
+
   return (
     <StyledHeader>
       <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
@@ -10,6 +22,7 @@ export const InquiryPageHeader: React.FC = () => {
       </Typography>
       <Paper
         component="form"
+        onSubmit={onSearchSubmit}
         elevation={0}
         sx={{
           p: '2px 4px',
@@ -21,6 +34,7 @@ export const InquiryPageHeader: React.FC = () => {
         }}
       >
         <InputBase
+          name={SEARCH_INPUT_NAME}
           sx={{ ml: 1, flex: 1 }}
           placeholder="궁금하신 내용을 검색해 보세요."
         />
@@ -31,6 +45,8 @@ export const InquiryPageHeader: React.FC = () => {
     </StyledHeader>
   );
 };
+
+const SEARCH_INPUT_NAME = 'word';
 
 const StyledHeader = styled.header`
   width: 100%;

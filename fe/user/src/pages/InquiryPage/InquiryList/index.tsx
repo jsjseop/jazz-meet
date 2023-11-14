@@ -1,33 +1,32 @@
 import styled from '@emotion/styled';
-import { Inquiry } from './Inquiry';
-
-export type InquiryData = {
-  id: number;
-  status: '검토중' | '답변완료';
-  content: string;
-  nickname: string;
-  createdAt: string;
-};
+import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
+import { Inquiry } from '~/types/inquiry.types';
+import { InquiryItem } from './InquiryItem';
 
 type Props = {
-  inquiries: InquiryData[];
+  inquiries?: Inquiry[];
 };
 
 export const InquiryList: React.FC<Props> = ({ inquiries }) => {
   return (
-    <StyledList>
-      {inquiries.map((inquiry) => {
-        return (
-          <li key={inquiry.id}>
-            <Inquiry inquiry={inquiry} />
-          </li>
-        );
-      })}
-    </StyledList>
+    <>
+      {inquiries && inquiries.length > 0 ? (
+        <StyledInquiryList>
+          {inquiries.map((inquiry) => (
+            <InquiryItem key={inquiry.id} inquiry={inquiry} />
+          ))}
+        </StyledInquiryList>
+      ) : (
+        <StyledEmptyList>
+          <ErrorOutlineIcon />
+          <span>문의사항이 없습니다.</span>
+        </StyledEmptyList>
+      )}
+    </>
   );
 };
 
-const StyledList = styled.ul`
+const StyledInquiryList = styled.ul`
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -39,4 +38,15 @@ const StyledList = styled.ul`
   & > li {
     border-bottom: 1px solid #c7c7c7;
   }
+`;
+
+const StyledEmptyList = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+  height: 100px;
+  font-size: 16px;
+  color: #888;
+  margin-top: 20px;
 `;
