@@ -52,14 +52,12 @@ public class Show {
 		this.poster = poster;
 	}
 
-	public Show update(String teamName, String description, LocalDateTime startTime, LocalDateTime endTime,
+	public void update(String teamName, String description, LocalDateTime startTime, LocalDateTime endTime,
 		Image poster) {
 		this.teamName = teamName;
 		this.description = description;
 		this.startTime = startTime;
 		this.endTime = endTime;
 		this.poster = poster;
-
-		return this;
 	}
 }

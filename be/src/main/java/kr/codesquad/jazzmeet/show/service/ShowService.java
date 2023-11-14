@@ -150,10 +150,10 @@ public class ShowService {
 		Show show = getShowById(showId);
 		Image poster = imageService.findById(request.posterId());
 
-		Show updatedShow = show.update(request.teamName(), request.description(), request.startTime(),
+		show.update(request.teamName(), request.description(), request.startTime(),
 			request.endTime(), poster);
 
-		return ShowMapper.INSTANCE.toShowDetailResponse(updatedShow);
+		return ShowMapper.INSTANCE.toShowDetailResponse(show);
 	}
 
 	@Transactional
