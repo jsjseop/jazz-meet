@@ -72,4 +72,9 @@ public class Inquiry {
 	public void updateStatusToDeleted() {
 		this.status = InquiryStatus.DELETED;
 	}
+
+	public void updateStatusToReplied(Answer answer) {
+		this.status = InquiryStatus.REPLIED;
+		this.answer = answer;
+	}
 }
