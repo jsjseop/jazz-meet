@@ -25,7 +25,7 @@ export const InquiryPage: React.FC = () => {
   };
 
   const onPageChange = (_: React.ChangeEvent<unknown>, page: number) => {
-    setInquiryParams((prev) => ({ ...prev, page: page }));
+    setInquiryParams((prev) => ({ ...prev, page }));
   };
 
   useEffect(() => {
