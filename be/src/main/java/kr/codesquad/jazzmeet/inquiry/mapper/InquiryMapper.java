@@ -9,6 +9,7 @@ import org.mapstruct.factory.Mappers;
 import kr.codesquad.jazzmeet.inquiry.dto.request.InquirySaveRequest;
 import kr.codesquad.jazzmeet.inquiry.dto.response.InquiryAnswerDetail;
 import kr.codesquad.jazzmeet.inquiry.dto.response.InquiryAnswerSaveResponse;
+import kr.codesquad.jazzmeet.inquiry.dto.response.InquiryAnswerUpdateResponse;
 import kr.codesquad.jazzmeet.inquiry.dto.response.InquiryDetailResponse;
 import kr.codesquad.jazzmeet.inquiry.dto.response.InquirySaveResponse;
 import kr.codesquad.jazzmeet.inquiry.dto.response.InquirySearch;
@@ -59,4 +60,6 @@ public interface InquiryMapper {
 	Answer toAnswer(String content, Inquiry inquiry, Long adminId);
 
 	InquiryAnswerSaveResponse toInquiryAnswerSaveResponse(Answer answer);
+
+	InquiryAnswerUpdateResponse toInquiryAnswerUpdateResponse(Answer answer);
 }
