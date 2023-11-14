@@ -13,8 +13,8 @@ public record RangeCoordinatesRequest(
 	Double highLongitude
 ) {
 
-	public boolean validCoordinates() {
-		return lowLatitude == null || highLatitude == null || lowLongitude == null || highLongitude == null;
+	public boolean isValidCoordinates() {
+		return lowLatitude != null && highLatitude != null && lowLongitude != null && highLongitude != null;
 	}
 
 	public Polygon toRange() {

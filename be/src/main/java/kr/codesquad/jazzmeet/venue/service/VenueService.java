@@ -54,7 +54,7 @@ public class VenueService {
 	}
 
 	public List<NearbyVenueResponse> findNearByVenues(Double latitude, Double longitude) {
-		if (validateCoordinates(latitude, longitude)) {
+		if (!isValidCoordinates(latitude, longitude)) {
 			return List.of();
 		}
 
@@ -79,7 +79,7 @@ public class VenueService {
 	}
 
 	public List<VenuePinsResponse> findVenuePinsByLocation(RangeCoordinatesRequest rangeCoordinatesRequest) {
-		if (rangeCoordinatesRequest.validCoordinates()) {
+		if (!rangeCoordinatesRequest.isValidCoordinates()) {
 			return List.of();
 		}
 
@@ -93,7 +93,7 @@ public class VenueService {
 	}
 
 	public VenueSearchResponse findVenuesByLocation(RangeCoordinatesRequest rangeCoordinatesRequest, int page) {
-		if (rangeCoordinatesRequest.validCoordinates()) {
+		if (!rangeCoordinatesRequest.isValidCoordinates()) {
 			return VenueSearchResponse.emptyVenues();
 		}
 
@@ -111,8 +111,8 @@ public class VenueService {
 			venuesByLocation.getNumber() + PAGE_NUMBER_OFFSET, venuesByLocation.getTotalPages());
 	}
 
-	private boolean validateCoordinates(Double latitude, Double longitude) {
-		return latitude == null || longitude == null;
+	private boolean isValidCoordinates(Double latitude, Double longitude) {
+		return latitude != null && longitude != null;
 	}
 
 	public Venue findById(Long venueId) {
