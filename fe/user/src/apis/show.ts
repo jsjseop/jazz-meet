@@ -1,6 +1,6 @@
 import { HasShowDates, ShowDetail, UpcomingShow } from '~/types/api.types';
-import { fetchData } from './fetchData';
 import { getFormattedDate, getFormattedYearMonth } from '~/utils/dateUtils';
+import { fetchData } from './fetchData';
 
 export const getUpcomingShows = async (): Promise<UpcomingShow[]> => {
   const response = await fetchData(`/api/shows/upcoming`);
@@ -8,7 +8,7 @@ export const getUpcomingShows = async (): Promise<UpcomingShow[]> => {
   return response.json();
 };
 
-export const getHasShowDates = async ({
+export const getVenueShowDates = async ({
   venueId,
   date,
 }: {
@@ -23,7 +23,7 @@ export const getHasShowDates = async ({
   return response.json();
 };
 
-export const getShowsByDate = async ({
+export const getVenueShowsByDate = async ({
   venueId,
   date,
 }: {
