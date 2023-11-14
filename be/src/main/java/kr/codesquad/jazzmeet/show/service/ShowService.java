@@ -152,6 +152,7 @@ public class ShowService {
 
 		show.update(request.teamName(), request.description(), request.startTime(),
 			request.endTime(), poster);
+		imageService.registerImage(poster);
 
 		return ShowMapper.INSTANCE.toShowDetailResponse(show);
 	}
@@ -159,6 +160,8 @@ public class ShowService {
 	@Transactional
 	public void deleteShow(Long showId) {
 		Show show = getShowById(showId);
+
+		imageService.deleteImage(show.getPoster().getId());
 		showRepository.delete(show);
 	}
 }
