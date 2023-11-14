@@ -14,6 +14,7 @@ import kr.codesquad.jazzmeet.global.error.CustomException;
 import kr.codesquad.jazzmeet.global.error.statuscode.VenueErrorCode;
 import kr.codesquad.jazzmeet.venue.dto.VenueInfo;
 import kr.codesquad.jazzmeet.venue.dto.VenueSearch;
+import kr.codesquad.jazzmeet.venue.dto.request.RangeCoordinatesRequest;
 import kr.codesquad.jazzmeet.venue.dto.response.NearbyVenueResponse;
 import kr.codesquad.jazzmeet.venue.dto.response.VenueAutocompleteResponse;
 import kr.codesquad.jazzmeet.venue.dto.response.VenueDetailResponse;
@@ -77,13 +78,12 @@ public class VenueService {
 			.toList();
 	}
 
-	public List<VenuePinsResponse> findVenuePinsByLocation(Double lowLatitude, Double highLatitude, Double lowLongitude,
-		Double highLongitude) {
-		if (validateCoordinates(lowLatitude, highLatitude, lowLongitude, highLongitude)) {
+	public List<VenuePinsResponse> findVenuePinsByLocation(RangeCoordinatesRequest rangeCoordinatesRequest) {
+		if (rangeCoordinatesRequest.validCoordinates()) {
 			return List.of();
 		}
 
-		Polygon range = VenueUtil.createRange(lowLatitude, highLatitude, lowLongitude, highLongitude);
+		Polygon range = rangeCoordinatesRequest.toRange();
 
 		List<VenuePins> venues = venueQueryRepository.findVenuePinsByLocation(range);
 
@@ -92,13 +92,12 @@ public class VenueService {
 			.toList();
 	}
 
-	public VenueSearchResponse findVenuesByLocation(Double lowLatitude, Double highLatitude,
-		Double lowLongitude, Double highLongitude, int page) {
-		if (validateCoordinates(lowLatitude, highLatitude, lowLongitude, highLongitude)) {
+	public VenueSearchResponse findVenuesByLocation(RangeCoordinatesRequest rangeCoordinatesRequest, int page) {
+		if (rangeCoordinatesRequest.validCoordinates()) {
 			return VenueSearchResponse.emptyVenues();
 		}
 
-		Polygon range = VenueUtil.createRange(lowLatitude, highLatitude, lowLongitude, highLongitude);
+		Polygon range = rangeCoordinatesRequest.toRange();
 		PageRequest pageRequest = PageRequest.of(page - PAGE_NUMBER_OFFSET, PAGE_SIZE);
 		LocalDate curDate = LocalDate.now();
 		Page<VenueSearchData> venuesByLocation = venueQueryRepository.findVenuesByLocation(range, pageRequest, curDate);
@@ -114,12 +113,6 @@ public class VenueService {
 
 	private boolean validateCoordinates(Double latitude, Double longitude) {
 		return latitude == null || longitude == null;
-	}
-
-	private boolean validateCoordinates(Double lowLatitude, Double highLatitude, Double lowLongitude,
-		Double highLongitude) {
-		return lowLatitude == null || highLatitude == null || lowLongitude == null || highLongitude == null;
-
 	}
 
 	public Venue findById(Long venueId) {

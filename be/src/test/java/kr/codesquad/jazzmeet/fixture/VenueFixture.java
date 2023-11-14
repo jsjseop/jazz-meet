@@ -3,6 +3,7 @@ package kr.codesquad.jazzmeet.fixture;
 import org.locationtech.jts.geom.Point;
 
 import kr.codesquad.jazzmeet.image.entity.Image;
+import kr.codesquad.jazzmeet.venue.dto.request.RangeCoordinatesRequest;
 import kr.codesquad.jazzmeet.venue.entity.Venue;
 import kr.codesquad.jazzmeet.venue.entity.VenueImage;
 import kr.codesquad.jazzmeet.venue.util.VenueUtil;
@@ -36,6 +37,16 @@ public class VenueFixture {
 			.venue(venue)
 			.image(image)
 			.imageOrder(imageOrder)
+			.build();
+	}
+
+	public static RangeCoordinatesRequest createRangeCoordinatesRequest(Double lowLatitude, Double highLatitude,
+		Double lowLongitude, Double highLongitude) {
+		return RangeCoordinatesRequest.builder()
+			.lowLatitude(lowLatitude)
+			.highLatitude(highLatitude)
+			.lowLongitude(lowLongitude)
+			.highLongitude(highLongitude)
 			.build();
 	}
 }

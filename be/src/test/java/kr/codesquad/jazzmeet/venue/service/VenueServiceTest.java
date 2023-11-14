@@ -18,6 +18,7 @@ import kr.codesquad.jazzmeet.global.error.CustomException;
 import kr.codesquad.jazzmeet.image.entity.Image;
 import kr.codesquad.jazzmeet.image.repository.ImageRepository;
 import kr.codesquad.jazzmeet.venue.dto.VenueSearch;
+import kr.codesquad.jazzmeet.venue.dto.request.RangeCoordinatesRequest;
 import kr.codesquad.jazzmeet.venue.dto.response.NearbyVenueResponse;
 import kr.codesquad.jazzmeet.venue.dto.response.VenueAutocompleteResponse;
 import kr.codesquad.jazzmeet.venue.dto.response.VenueDetailResponse;
@@ -206,6 +207,8 @@ class VenueServiceTest extends IntegrationTestSupport {
 		Double highLatitude = 37.61077342780979;
 		Double lowLongitude = 126.9293615244093;
 		Double highLongitude = 127.10246683663273;
+		RangeCoordinatesRequest rangeCoordinatesRequest = VenueFixture.createRangeCoordinatesRequest(
+			lowLatitude, highLatitude, lowLongitude, highLongitude);
 
 		Venue venue1 = VenueFixture.createVenue("부기우기", "서울 용산구 회나무로 21 2층",
 			VenueUtil.createPoint(37.52387497068088, 126.9294615244093));
@@ -216,8 +219,7 @@ class VenueServiceTest extends IntegrationTestSupport {
 		venueRepository.saveAll(List.of(venue1, venue2, venue3));
 
 		//when
-		List<VenuePinsResponse> venuePins = venueService.findVenuePinsByLocation(lowLatitude, highLatitude,
-			lowLongitude, highLongitude);
+		List<VenuePinsResponse> venuePins = venueService.findVenuePinsByLocation(rangeCoordinatesRequest);
 
 		//then
 		assertThat(venuePins).hasSize(2)
@@ -233,6 +235,8 @@ class VenueServiceTest extends IntegrationTestSupport {
 		Double highLatitude = 37.61077342780979;
 		Double lowLongitude = 126.9293615244093;
 		Double highLongitude = 127.10246683663273;
+		RangeCoordinatesRequest rangeCoordinatesRequest = VenueFixture.createRangeCoordinatesRequest(
+			lowLatitude, highLatitude, lowLongitude, highLongitude);
 
 		Venue venue1 = VenueFixture.createVenue("부기우기", "서울 용산구 회나무로 21 2층",
 			VenueUtil.createPoint(36.5387497068088, 125.9294615244093));
@@ -241,8 +245,7 @@ class VenueServiceTest extends IntegrationTestSupport {
 		venueRepository.saveAll(List.of(venue1, venue2));
 
 		//when
-		List<VenuePinsResponse> venuePins = venueService.findVenuePinsByLocation(lowLatitude, highLatitude,
-			lowLongitude, highLongitude);
+		List<VenuePinsResponse> venuePins = venueService.findVenuePinsByLocation(rangeCoordinatesRequest);
 
 		//then
 		assertThat(venuePins).hasSize(0);
@@ -256,6 +259,8 @@ class VenueServiceTest extends IntegrationTestSupport {
 		Double highLatitude = 37.61077342780979;
 		Double lowLongitude = 126.9293615244093;
 		Double highLongitude = 127.10246683663273;
+		RangeCoordinatesRequest rangeCoordinatesRequest = VenueFixture.createRangeCoordinatesRequest(
+			lowLatitude, highLatitude, lowLongitude, highLongitude);
 
 		Venue venue1 = VenueFixture.createVenue("부기우기", "서울 용산구 회나무로 21 2층",
 			VenueUtil.createPoint(lowLatitude, highLongitude)); // 남동
@@ -264,8 +269,7 @@ class VenueServiceTest extends IntegrationTestSupport {
 		venueRepository.saveAll(List.of(venue1, venue2));
 
 		//when
-		List<VenuePinsResponse> venuePins = venueService.findVenuePinsByLocation(lowLatitude, highLatitude,
-			lowLongitude, highLongitude);
+		List<VenuePinsResponse> venuePins = venueService.findVenuePinsByLocation(rangeCoordinatesRequest);
 
 		//then
 		assertThat(venuePins).hasSize(0);
@@ -279,6 +283,8 @@ class VenueServiceTest extends IntegrationTestSupport {
 		Double highLatitude = 37.61077342780979;
 		Double lowLongitude = 126.9293615244093;
 		Double highLongitude = null;
+		RangeCoordinatesRequest rangeCoordinatesRequest = VenueFixture.createRangeCoordinatesRequest(
+			lowLatitude, highLatitude, lowLongitude, highLongitude);
 
 		Venue venue1 = VenueFixture.createVenue("부기우기", "서울 용산구 회나무로 21 2층",
 			VenueUtil.createPoint(37.52387497068088, 126.9294615244093));
@@ -289,8 +295,7 @@ class VenueServiceTest extends IntegrationTestSupport {
 		venueRepository.saveAll(List.of(venue1, venue2, venue3));
 
 		//when
-		List<VenuePinsResponse> venuePins = venueService.findVenuePinsByLocation(lowLatitude, highLatitude,
-			lowLongitude, highLongitude);
+		List<VenuePinsResponse> venuePins = venueService.findVenuePinsByLocation(rangeCoordinatesRequest);
 
 		//then
 		assertThat(venuePins).hasSize(0)
@@ -305,6 +310,8 @@ class VenueServiceTest extends IntegrationTestSupport {
 		Double highLatitude = 37.56412598864679;
 		Double lowLongitude = 126.91146553944996;
 		Double highLongitude = 126.94298838861823;
+		RangeCoordinatesRequest rangeCoordinatesRequest = VenueFixture.createRangeCoordinatesRequest(
+			lowLatitude, highLatitude, lowLongitude, highLongitude);
 		int page = 1;
 
 		Point point1 = VenueUtil.createPoint(37.558531649528895, 126.91891927086303);
@@ -318,8 +325,7 @@ class VenueServiceTest extends IntegrationTestSupport {
 		venueRepository.saveAll(List.of(venue1, venue2, venue3));
 
 		// when
-		VenueSearchResponse venuesByLocation = venueService.findVenuesByLocation(lowLatitude, highLatitude,
-			lowLongitude, highLongitude, page);
+		VenueSearchResponse venuesByLocation = venueService.findVenuesByLocation(rangeCoordinatesRequest, page);
 
 		// then
 		Assertions.assertAll(
@@ -339,6 +345,8 @@ class VenueServiceTest extends IntegrationTestSupport {
 		Double highLatitude = 37.56412598864679;
 		Double lowLongitude = 126.91146553944996;
 		Double highLongitude = null;
+		RangeCoordinatesRequest rangeCoordinatesRequest = VenueFixture.createRangeCoordinatesRequest(
+			lowLatitude, highLatitude, lowLongitude, highLongitude);
 		int page = 1;
 
 		Point point1 = VenueUtil.createPoint(37.558531649528895, 126.91891927086303);
@@ -352,8 +360,7 @@ class VenueServiceTest extends IntegrationTestSupport {
 		venueRepository.saveAll(List.of(venue1, venue2, venue3));
 
 		// when
-		VenueSearchResponse venuesByLocation = venueService.findVenuesByLocation(lowLatitude, highLatitude,
-			lowLongitude, highLongitude, page);
+		VenueSearchResponse venuesByLocation = venueService.findVenuesByLocation(rangeCoordinatesRequest, page);
 
 		// then
 		assertThat(venuesByLocation.venues()).hasSize(0);
