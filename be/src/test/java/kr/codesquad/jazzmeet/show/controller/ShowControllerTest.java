@@ -301,4 +301,19 @@ class ShowControllerTest {
 			.andExpect(jsonPath("$.poster.id").value(response.poster().getId()))
 			.andExpect(jsonPath("$.poster.url").value(response.poster().getUrl()));
 	}
+
+	@DisplayName("관리자는 공연 Id로 공연을 삭제한다.")
+	@Test
+	void deleteShow() throws Exception {
+		//given
+		Long showId = 1L;
+
+		//when //then
+		mockMvc.perform(
+				delete("/api/shows/{showId}", showId)
+					.contentType(MediaType.APPLICATION_JSON)
+			)
+			.andDo(print())
+			.andExpect(status().isNoContent());
+	}
 }

@@ -478,4 +478,20 @@ class ShowServiceTest extends IntegrationTestSupport {
 				.extracting("url")
 				.isEqualTo("url"));
 	}
+
+	@DisplayName("관리자가 공연 id로 공연을 삭제한다.")
+	@Test
+	void deleteShow() throws Exception {
+		//given
+		Venue venue = VenueFixture.createVenue("부기우기", "서울 마포구");
+		Show show = ShowFixture.createShow("퀄텟", LocalDateTime.of(2023, 11, 14, 15, 0), venue);
+		showRepository.save(show);
+
+		Long showId = show.getId();
+
+		//when
+		showService.deleteShow(showId);
+
+		assertThat(showRepository.findById(showId)).isEmpty();
+	}
 }
