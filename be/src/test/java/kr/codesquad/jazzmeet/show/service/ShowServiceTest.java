@@ -391,7 +391,7 @@ class ShowServiceTest extends IntegrationTestSupport {
 		//then
 		Assertions.assertAll(
 			() -> assertThat(showDetail)
-				.extracting("id", "showName", "venueName", "startTime", "endTime")
+				.extracting("id", "teamName", "venueName", "startTime", "endTime")
 				.contains(show.getId(), "Entry55 퀄텟1", "부기우기", LocalDateTime.of(2023, 11, 1, 20, 00),
 					LocalDateTime.of(2023, 11, 1, 20, 00)),
 

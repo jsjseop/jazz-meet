@@ -35,7 +35,6 @@ public interface ShowMapper {
 	ShowResponse toShowResponse(Page<ShowSummaryWithVenue> page);
 
 	@Mapping(target = "venueName", source = "venue.name")
-	@Mapping(target = "showName", source = "teamName")
 	ShowDetailResponse toShowDetailResponse(Show show);
 
 	@Mapping(target = "teamName", source = "registerShowRequest.name")

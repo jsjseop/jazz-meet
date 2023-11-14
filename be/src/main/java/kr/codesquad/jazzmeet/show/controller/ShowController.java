@@ -31,6 +31,9 @@ public class ShowController {
 
 	private final ShowService showService;
 
+	/**
+	 * 진행 중인 공연 조회 API
+	 */
 	@GetMapping("/api/shows/upcoming")
 	public ResponseEntity<List<UpcomingShowResponse>> getUpcomingShows() {
 		LocalDateTime nowTime = LocalDateTime.now();

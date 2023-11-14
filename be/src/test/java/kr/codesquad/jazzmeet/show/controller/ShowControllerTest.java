@@ -126,7 +126,7 @@ class ShowControllerTest {
 		//given
 		Long showId = 1L;
 		when(showService.getShowDetail(any())).thenReturn(
-			ShowDetailResponse.builder().id(showId).poster(new ShowPoster(1L, "url")).showName("퀄텟").build());
+			ShowDetailResponse.builder().id(showId).poster(new ShowPoster(1L, "url")).teamName("퀄텟").build());
 
 		//when //then
 		mockMvc.perform(
@@ -138,7 +138,7 @@ class ShowControllerTest {
 			.andExpect(jsonPath("$.id").value(1L))
 			.andExpect(jsonPath("$.poster.id").value(1L))
 			.andExpect(jsonPath("$.poster.url").value("url"))
-			.andExpect(jsonPath("$.showName").value("퀄텟"));
+			.andExpect(jsonPath("$.teamName").value("퀄텟"));
 	}
 
 	@DisplayName("관리자가 공연장 페이지에서 공연 등록을 한다.")

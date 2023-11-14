@@ -8,7 +8,7 @@ import lombok.Builder;
 @Builder
 public record ShowDetailResponse(
 	Long id,
-	String showName,
+	String teamName,
 	String venueName,
 	String description,
 	ShowPoster poster,
