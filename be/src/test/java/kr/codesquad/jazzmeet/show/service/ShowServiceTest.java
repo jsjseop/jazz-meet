@@ -20,7 +20,10 @@ import kr.codesquad.jazzmeet.fixture.VenueFixture;
 import kr.codesquad.jazzmeet.global.error.CustomException;
 import kr.codesquad.jazzmeet.global.error.statuscode.ShowErrorCode;
 import kr.codesquad.jazzmeet.image.entity.Image;
+import kr.codesquad.jazzmeet.image.repository.ImageRepository;
+import kr.codesquad.jazzmeet.show.dto.request.RegisterShowRequest;
 import kr.codesquad.jazzmeet.show.dto.response.ExistShowCalendarResponse;
+import kr.codesquad.jazzmeet.show.dto.response.RegisterShowResponse;
 import kr.codesquad.jazzmeet.show.dto.response.ShowByDateAndVenueResponse;
 import kr.codesquad.jazzmeet.show.dto.response.ShowByDateResponse;
 import kr.codesquad.jazzmeet.show.dto.response.ShowDetailResponse;
@@ -39,11 +42,14 @@ class ShowServiceTest extends IntegrationTestSupport {
 	ShowRepository showRepository;
 	@Autowired
 	VenueRepository venueRepository;
+	@Autowired
+	ImageRepository imageRepository;
 
 	@AfterEach
 	void dbClean() {
 		showRepository.deleteAllInBatch();
 		venueRepository.deleteAllInBatch();
+		imageRepository.deleteAllInBatch();
 	}
 
 	@Test
@@ -410,5 +416,31 @@ class ShowServiceTest extends IntegrationTestSupport {
 		assertThatThrownBy(() -> showService.getShowDetail(id))
 			.isInstanceOf(CustomException.class)
 			.hasMessage(ShowErrorCode.NOT_FOUND_SHOW.getMessage());
+	}
+
+	@DisplayName("관리자가 공연을 등록한다.")
+	@Test
+	void saveShow() throws Exception {
+		//given
+		Venue venue = VenueFixture.createVenue("부기우기", "경기 고양시 덕양구");
+		venueRepository.save(venue);
+
+		Image poster = ImageFixture.createImage("url");
+		imageRepository.save(poster);
+
+		Long venueId = venue.getId();
+		RegisterShowRequest request = RegisterShowRequest.builder()
+			.name("Entry55 퀄텟")
+			.posterId(poster.getId())
+			.description("description")
+			.startTime(LocalDateTime.of(2023, 11, 13, 11, 50))
+			.endTime(LocalDateTime.of(2023, 11, 13, 11, 50))
+			.build();
+
+		//when
+		RegisterShowResponse response = showService.registerShow(venueId, request);
+
+		//then
+		assertThat(response.id()).isNotNull();
 	}
 }

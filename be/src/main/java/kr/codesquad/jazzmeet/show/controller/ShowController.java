@@ -3,14 +3,20 @@ package kr.codesquad.jazzmeet.show.controller;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
+import kr.codesquad.jazzmeet.show.dto.request.RegisterShowRequest;
 import kr.codesquad.jazzmeet.show.dto.response.ExistShowCalendarResponse;
+import kr.codesquad.jazzmeet.show.dto.response.RegisterShowResponse;
 import kr.codesquad.jazzmeet.show.dto.response.ShowByDateAndVenueResponse;
 import kr.codesquad.jazzmeet.show.dto.response.ShowByDateResponse;
 import kr.codesquad.jazzmeet.show.dto.response.ShowDetailResponse;
@@ -93,5 +99,16 @@ public class ShowController {
 		ShowDetailResponse showDetailResponse = showService.getShowDetail(showId);
 
 		return ResponseEntity.ok(showDetailResponse);
+	}
+
+	/**
+	 * 공연 등록 API
+	 */
+	@PostMapping("/api/shows/{venueId}")
+	public ResponseEntity<RegisterShowResponse> registerShow(@PathVariable Long venueId,
+		@Valid @RequestBody RegisterShowRequest registerShowRequest) {
+		RegisterShowResponse response = showService.registerShow(venueId, registerShowRequest);
+
+		return ResponseEntity.status(HttpStatus.CREATED).body(response);
 	}
 }
