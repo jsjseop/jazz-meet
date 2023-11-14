@@ -45,29 +45,26 @@ public interface VenueMapper {
 	@Mapping(target = "longitude", source = "location.x")
 	VenuePinsResponse toVenuePinsBySearchResponse(VenuePins venuePinsByWord);
 
-	default VenueSearchResponse toVenueSearchResponse(List<VenueSearch> venueSearchList,
-		long totalCount, int currentPage, long maxPage) {
-		Integer dummy = null;
-		return toVenueSearchResponse(dummy, venueSearchList, totalCount, currentPage, maxPage);
-	}
+	@Mapping(target = "venues", source = "venueSearchList.content")
+	@Mapping(target = "totalCount", source = "venueSearchList.totalElements")
+	@Mapping(target = "maxPage", source = "venueSearchList.totalPages")
+	VenueSearchResponse toVenueSearchResponse(Page<VenueSearchData> venueSearchList, int currentPage);
 
 	@Mapping(target = "venues", source = "venueSearchList")
-	VenueSearchResponse toVenueSearchResponse(Integer dummy, List<VenueSearch> venueSearchList,
-		long totalCount, int currentPage, long maxPage);
+	VenueSearchResponse toVenueSearchResponse(List<VenueSearchData> venueSearchList, int totalCount, int currentPage, int maxPage);
 
 	default VenueSearch toVenueSearch(VenueSearchData venueSearchData) {
-		Integer dummy = null;
 		List<ShowInfo> showInfo = venueSearchData.getShowInfo();
 		if ((showInfo.size() == 1) && showInfo.get(0).emptyCheck()) {
 			showInfo = new ArrayList<>();
 		}
-		return toVenueSearch(dummy, venueSearchData, showInfo);
+		return toVenueSearch(venueSearchData, showInfo);
 	}
 
 	@Mapping(target = "latitude", source = "venueSearchData.location.y")
 	@Mapping(target = "longitude", source = "venueSearchData.location.x")
 	@Mapping(target = "showInfo", source = "showInfoList")
-	VenueSearch toVenueSearch(Integer dummy, VenueSearchData venueSearchData, List<ShowInfo> showInfoList);
+	VenueSearch toVenueSearch(VenueSearchData venueSearchData, List<ShowInfo> showInfoList);
 
 	@Mapping(target = "venues", source = "venueInfos.content")
 	@Mapping(target = "totalCount", source = "venueInfos.totalElements")
@@ -78,16 +75,10 @@ public interface VenueMapper {
 	@Mapping(target = "longitude", source = "location.x")
 	VenueDetailResponse toVenueDetailResponse(VenueDetail venueDetail);
 
-	default VenueDetail toVenueDetail(Venue venue,
-		List<VenueDetailImage> images, List<VenueDetailLink> links, List<VenueDetailVenueHour> venueHours) {
-		Integer dummy = null;
-		return toVenueDatail(dummy, venue, images, links, venueHours);
-	}
-
 	@Mapping(target = "images", source = "images")
 	@Mapping(target = "links", source = "links")
 	@Mapping(target = "venueHours", source = "venueHours")
-	VenueDetail toVenueDatail(Integer dummy, Venue venue,
+	VenueDetail toVenueDetail(Venue venue,
 		List<VenueDetailImage> images, List<VenueDetailLink> links, List<VenueDetailVenueHour> venueHours);
 
 	Venue toVenue(VenueCreateRequest venueCreateRequest, Point location, String thumbnailUrl);

@@ -10,7 +10,7 @@ public record VenueSearchResponse(
 	List<VenueSearch> venues,
 	long totalCount,
 	int currentPage,
-	long maxPage) {
+	int maxPage) {
 	public static VenueSearchResponse emptyVenues() {
 		return VenueSearchResponse.builder().venues(List.of()).build();
 	}

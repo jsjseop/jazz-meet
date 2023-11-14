@@ -13,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 import kr.codesquad.jazzmeet.global.error.CustomException;
 import kr.codesquad.jazzmeet.global.error.statuscode.VenueErrorCode;
 import kr.codesquad.jazzmeet.venue.dto.VenueInfo;
-import kr.codesquad.jazzmeet.venue.dto.VenueSearch;
 import kr.codesquad.jazzmeet.venue.dto.request.RangeCoordinatesRequest;
 import kr.codesquad.jazzmeet.venue.dto.response.NearbyVenueResponse;
 import kr.codesquad.jazzmeet.venue.dto.response.VenueAutocompleteResponse;
@@ -102,13 +101,7 @@ public class VenueService {
 		LocalDate curDate = LocalDate.now();
 		Page<VenueSearchData> venuesByLocation = venueQueryRepository.findVenuesByLocation(range, pageRequest, curDate);
 
-		List<VenueSearch> venueSearchList = venuesByLocation.getContent()
-			.stream()
-			.map(VenueMapper.INSTANCE::toVenueSearch)
-			.toList();
-
-		return VenueMapper.INSTANCE.toVenueSearchResponse(venueSearchList, venuesByLocation.getTotalElements(),
-			venuesByLocation.getNumber() + PAGE_NUMBER_OFFSET, venuesByLocation.getTotalPages());
+		return VenueMapper.INSTANCE.toVenueSearchResponse(venuesByLocation, venuesByLocation.getNumber() + PAGE_NUMBER_OFFSET);
 	}
 
 	public Venue findById(Long venueId) {
@@ -133,22 +126,15 @@ public class VenueService {
 		Page<VenueSearchData> venueSearchDataList = venueQueryRepository
 			.searchVenueList(word, pageRequest, curDate);
 
-		List<VenueSearch> venueSearchList = venueSearchDataList.stream()
-			.map(VenueMapper.INSTANCE::toVenueSearch)
-			.toList();
-
-		return VenueMapper.INSTANCE.toVenueSearchResponse(venueSearchList, venueSearchDataList.getTotalElements(),
-			venueSearchDataList.getNumber() + PAGE_NUMBER_OFFSET, venueSearchDataList.getTotalPages());
+		return VenueMapper.INSTANCE.toVenueSearchResponse(venueSearchDataList,
+			venueSearchDataList.getNumber() + PAGE_NUMBER_OFFSET);
 	}
 
 	public VenueSearchResponse findVenueSearchById(Long venueId) {
 		LocalDate curDate = LocalDate.now();
 		List<VenueSearchData> venueSearchDataList = venueQueryRepository.findVenueSearchById(venueId, curDate);
-		List<VenueSearch> venueSearchList = venueSearchDataList.stream()
-			.map(VenueMapper.INSTANCE::toVenueSearch)
-			.toList();
 
-		return VenueMapper.INSTANCE.toVenueSearchResponse(venueSearchList, venueSearchList.size(),
+		return VenueMapper.INSTANCE.toVenueSearchResponse(venueSearchDataList, venueSearchDataList.size(),
 			PAGE_NUMBER_OFFSET, PAGE_NUMBER_OFFSET);
 	}
 
