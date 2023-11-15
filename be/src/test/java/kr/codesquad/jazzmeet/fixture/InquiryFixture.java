@@ -97,7 +97,7 @@ public class InquiryFixture {
 			.build();
 	}
 
-	public static InquirySaveRequest createInquiryRequest(String category, String nickname, String password,
+	public static InquirySaveRequest createInquirySaveRequest(String category, String nickname, String password,
 		String content) {
 		return InquirySaveRequest.builder()
 			.category(category)

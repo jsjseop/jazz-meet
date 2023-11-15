@@ -3,6 +3,8 @@ package kr.codesquad.jazzmeet.inquiry.service;
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.Optional;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -169,7 +171,7 @@ class InquiryServiceTest extends IntegrationTestSupport {
 		String nickname = "지안";
 		String password = "1234";
 		String content = "문의 내용";
-		InquirySaveRequest inquirySaveRequest = InquiryFixture.createInquiryRequest(category, nickname, password,
+		InquirySaveRequest inquirySaveRequest = InquiryFixture.createInquirySaveRequest(category, nickname, password,
 			content);
 
 		// when
@@ -189,7 +191,7 @@ class InquiryServiceTest extends IntegrationTestSupport {
 		String nickname = "지안";
 		String password = "비밀번호";
 		String content = "문의 내용";
-		InquirySaveRequest inquirySaveRequest = InquiryFixture.createInquiryRequest(category, nickname, password,
+		InquirySaveRequest inquirySaveRequest = InquiryFixture.createInquirySaveRequest(category, nickname, password,
 			content);
 
 		// when
@@ -208,7 +210,7 @@ class InquiryServiceTest extends IntegrationTestSupport {
 		String nickname = "지안";
 		String password = "비밀번호";
 		String content = "문의 내용";
-		InquirySaveRequest inquirySaveRequest = InquiryFixture.createInquiryRequest(category, nickname, password,
+		InquirySaveRequest inquirySaveRequest = InquiryFixture.createInquirySaveRequest(category, nickname, password,
 			content);
 
 		// when // then
