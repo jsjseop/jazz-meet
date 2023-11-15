@@ -1,8 +1,10 @@
 import styled from '@emotion/styled';
+import { useEffect, useRef } from 'react';
 import { equalDates, getKoreanWeekdayName } from '~/utils/dateUtils';
 
 type Props = {
   dates: Date[];
+  centerDateIndex: number;
   showDates: number[];
   selectedDate: Date;
   selectDate: (date: Date) => void;
@@ -10,46 +12,74 @@ type Props = {
 
 export const DateGroup: React.FC<Props> = ({
   dates,
+  centerDateIndex,
   showDates,
   selectedDate,
   selectDate,
 }) => {
+  const dateGroupRef = useRef<HTMLDivElement>(null);
+  const dateContainerRef = useRef<HTMLUListElement>(null);
   const today = new Date();
+  const DATE_BUTTON_WIDTH = 92;
+
+  useEffect(() => {
+    if (dateGroupRef.current && dateContainerRef.current) {
+      const dateGroupWidth = dateGroupRef.current.offsetWidth;
+      const dateContainerWidth = dateContainerRef.current.scrollWidth;
+
+      const translateX =
+        dateGroupWidth / 2 - centerDateIndex * DATE_BUTTON_WIDTH;
+      const scrollX =
+        translateX > 0
+          ? 0
+          : translateX + dateContainerWidth - dateGroupWidth < 0
+          ? dateGroupWidth - dateContainerWidth
+          : translateX;
+
+      dateContainerRef.current.style.transform = `translateX(${scrollX}px)`;
+    }
+  }, [centerDateIndex]);
 
   return (
-    <StyledDateGroup>
-      {dates.map((date: Date) => {
-        const day = getKoreanWeekdayName(date.getDay());
-        const dateNumber = date.getDate();
+    <StyledDateGroup ref={dateGroupRef}>
+      <StyledDateContainer ref={dateContainerRef}>
+        {dates.map((date: Date) => {
+          const day = getKoreanWeekdayName(date.getDay());
+          const dateNumber = date.getDate();
 
-        return (
-          <li key={dateNumber}>
-            <StyledDateInfo
-              $selected={equalDates(date, selectedDate)}
-              onClick={() => selectDate(date)}
-              disabled={!showDates.includes(dateNumber)}
-            >
-              <StyledDay>{equalDates(date, today) ? '오늘' : day}</StyledDay>
-              <StyledDate>{dateNumber}</StyledDate>
-            </StyledDateInfo>
-          </li>
-        );
-      })}
+          return (
+            <li key={dateNumber}>
+              <StyledDateInfo
+                $selected={equalDates(date, selectedDate)}
+                onClick={() => selectDate(date)}
+                disabled={!showDates.includes(dateNumber)}
+              >
+                <StyledDay>{equalDates(date, today) ? '오늘' : day}</StyledDay>
+                <StyledDate>{dateNumber}</StyledDate>
+              </StyledDateInfo>
+            </li>
+          );
+        })}
+      </StyledDateContainer>
     </StyledDateGroup>
   );
 };
 
-const StyledDateGroup = styled.ul`
-  width: 100%;
+const StyledDateGroup = styled.div`
+  flex: 1;
+  overflow: hidden;
+`;
+
+const StyledDateContainer = styled.ul`
   display: flex;
-  justify-content: space-around;
+  transition: transform 0.3s ease-in-out;
 `;
 
 const StyledDateInfo = styled.button<{ $selected: boolean }>`
   display: flex;
   flex-direction: column;
   align-items: center;
-  min-width: 24px;
+  width: 92px;
 
   &:hover {
     cursor: pointer;

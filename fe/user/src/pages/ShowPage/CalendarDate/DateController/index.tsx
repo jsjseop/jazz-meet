@@ -23,8 +23,6 @@ export const DateController: React.FC<Props> = ({
     setShowsAtDate: state.setShowsAtDate,
   }));
 
-  const currentDateGroup = getCurrentDateGroup(datesInMonth, centerDateIndex);
-
   const goToPreviousGroup = () =>
     setCenterDateIndex((p) => getCenterDateIndex(p - 9));
   const goToNextGroup = () =>
@@ -76,7 +74,8 @@ export const DateController: React.FC<Props> = ({
         <CaretLeft onClick={goToPreviousGroup} />
       </StyledArrowButton>
       <DateGroup
-        dates={currentDateGroup}
+        dates={datesInMonth}
+        centerDateIndex={centerDateIndex}
         showDates={showDates}
         selectedDate={selectedDate}
         selectDate={selectDate}
@@ -86,18 +85,6 @@ export const DateController: React.FC<Props> = ({
       </StyledArrowButton>
     </StyledDateContainer>
   );
-};
-
-const getCurrentDateGroup = (datesInMonth: Date[], dateIndex: number) => {
-  if (dateIndex < 7) {
-    return datesInMonth.slice(0, 13);
-  }
-
-  if (datesInMonth.length - dateIndex < 7) {
-    return datesInMonth.slice(datesInMonth.length - 13, datesInMonth.length);
-  }
-
-  return datesInMonth.slice(dateIndex - 6, dateIndex + 7);
 };
 
 const getCenterDateIndex = (index: number) => {
@@ -180,6 +167,19 @@ const StyledArrowButton = styled.button`
 
     &:active {
       opacity: 0.5;
+    }
+  }
+
+  @media screen and (max-width: 1264px) {
+    position: static;
+
+    &:first-of-type {
+      transform: none;
+    }
+
+    &:last-of-type {
+      right: 0;
+      transform: none;
     }
   }
 `;
