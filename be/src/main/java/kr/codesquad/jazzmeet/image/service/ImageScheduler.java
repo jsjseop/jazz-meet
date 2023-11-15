@@ -14,7 +14,7 @@ public class ImageScheduler {
 	private final ImageService imageService;
 	private final CloudService cloudService;
 
-	@Scheduled(cron = "0 0 12 ? * MON")
+	@Scheduled(cron = "0 0 12 ? * MON")	// 매주 월요일 12시 00분 00초
 	public void deleteNotRegisteredImages() {
 		List<String> imageUrls = imageService.findNotRegisteredImageUrls();
 
