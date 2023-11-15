@@ -25,16 +25,21 @@ export const validatePasswordLength = ({
   maxLength,
 }: {
   password?: string;
-  minLength: number;
-  maxLength: number;
+  minLength?: number;
+  maxLength?: number;
 }) => {
   if (!password) {
     alert('비밀번호를 입력해주세요.');
     return false;
   }
 
-  if (password.length < minLength || password.length > maxLength) {
-    alert(`비밀번호는 ${minLength}자 이상 ${maxLength}자 이하로 입력해주세요.`);
+  if (minLength == null || password.length < minLength) {
+    alert(`비밀번호는 ${minLength}자 이상으로 입력해주세요.`);
+    return false;
+  }
+
+  if (maxLength == null || password.length > maxLength) {
+    alert(`비밀번호는 ${maxLength}자 이하로 입력해주세요.`);
     return false;
   }
 
