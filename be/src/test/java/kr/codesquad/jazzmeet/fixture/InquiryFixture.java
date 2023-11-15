@@ -118,4 +118,8 @@ public class InquiryFixture {
 	public static InquiryAnswerUpdateRequest createInquiryAnswerUpdateRequest(String content) {
 		return new InquiryAnswerUpdateRequest(content);
 	}
+
+	public static InquiryAnswerSaveRequest createInquiryAnswerSaveRequest(Long inquiryId) {
+		return new InquiryAnswerSaveRequest(inquiryId, "답변 내용");
+	}
 }

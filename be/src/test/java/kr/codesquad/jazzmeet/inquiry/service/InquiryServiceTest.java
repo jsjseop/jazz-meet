@@ -377,4 +377,36 @@ class InquiryServiceTest extends IntegrationTestSupport {
 			.isInstanceOf(CustomException.class)
 			.hasMessage(InquiryErrorCode.NOT_FOUND_ANSWER.getMessage());
 	}
+
+	@Test
+	@DisplayName("문의에 대한 답변을 삭제할 수 있다.")
+	void deleteAnswer() {
+		// given
+		Inquiry inquiry = inquiryRepository.save(InquiryFixture.createInquiry());
+		Long answerId = inquiryService.saveAnswer(
+			InquiryFixture.createInquiryAnswerSaveRequest(inquiry.getId())).id();
+
+		// when
+		inquiryService.deleteAnswer(answerId);
+		Optional<Answer> foundAnswer = inquiryAnswerRepository.findById(answerId);
+
+		// then
+		assertAll(
+			() -> assertThat(foundAnswer).isEmpty(),
+			() -> assertThat(inquiry.getAnswer()).isNull(),
+			() -> assertThat(inquiry.getStatus()).isEqualTo(InquiryStatus.WAITING)
+		);
+	}
+
+	@Test
+	@DisplayName("존재하지 않는 답변은 수정할 수 없다.")
+	void deleteAnswerNotExistException() {
+		// given
+		Long answerId = 0L;
+
+		// when // then
+		assertThatThrownBy(() -> inquiryService.deleteAnswer(answerId))
+			.isInstanceOf(CustomException.class)
+			.hasMessage(InquiryErrorCode.NOT_FOUND_ANSWER.getMessage());
+	}
 }
