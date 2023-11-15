@@ -1,9 +1,9 @@
 package kr.codesquad.jazzmeet.inquiry.service;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,9 +14,11 @@ import kr.codesquad.jazzmeet.fixture.InquiryFixture;
 import kr.codesquad.jazzmeet.global.error.CustomException;
 import kr.codesquad.jazzmeet.global.error.statuscode.InquiryErrorCode;
 import kr.codesquad.jazzmeet.inquiry.dto.request.InquiryAnswerSaveRequest;
+import kr.codesquad.jazzmeet.inquiry.dto.request.InquiryAnswerUpdateRequest;
 import kr.codesquad.jazzmeet.inquiry.dto.request.InquiryDeleteRequest;
 import kr.codesquad.jazzmeet.inquiry.dto.request.InquirySaveRequest;
 import kr.codesquad.jazzmeet.inquiry.dto.response.InquiryAnswerSaveResponse;
+import kr.codesquad.jazzmeet.inquiry.dto.response.InquiryAnswerUpdateResponse;
 import kr.codesquad.jazzmeet.inquiry.dto.response.InquiryDetailResponse;
 import kr.codesquad.jazzmeet.inquiry.dto.response.InquirySaveResponse;
 import kr.codesquad.jazzmeet.inquiry.dto.response.InquirySearch;
@@ -229,7 +231,7 @@ class InquiryServiceTest extends IntegrationTestSupport {
 		Inquiry savedInquiry = inquiryRepository.findById(inquiryId).get();
 
 		// then
-		Assertions.assertAll(
+		assertAll(
 			() -> assertThat(savedInquiry.getStatus())
 				.isEqualTo(InquiryStatus.DELETED),
 			() -> assertThat(bCryptPasswordEncoder.matches(password, savedInquiry.getPassword()))
@@ -286,7 +288,7 @@ class InquiryServiceTest extends IntegrationTestSupport {
 	}
 
 	@Test
-	@DisplayName("관리자는 문의에 답변을 등록할 수 있다.")
+	@DisplayName("문의에 답변을 등록할 수 있다.")
 	void saveAnswer() {
 		// given
 		Long inquiryId = inquiryRepository.save(InquiryFixture.createInquiry()).getId();
@@ -300,7 +302,7 @@ class InquiryServiceTest extends IntegrationTestSupport {
 		Answer answer = inquiryAnswerRepository.findById(response.id()).get();
 
 		// then
-		Assertions.assertAll(
+		assertAll(
 			() -> assertThat(inquiry.getAnswer())
 				.usingRecursiveComparison()
 				.ignoringFields("inquiry")
@@ -338,5 +340,41 @@ class InquiryServiceTest extends IntegrationTestSupport {
 		assertThatThrownBy(() -> inquiryService.saveAnswer(request))
 			.isInstanceOf(CustomException.class)
 			.hasMessage(InquiryErrorCode.ALREADY_REPLIED.getMessage());
+	}
+
+	@Test
+	@DisplayName("문의에 대한 답변을 수정할 수 있다.")
+	void updateAnswer() {
+		// given
+		Inquiry inquiry = inquiryRepository.save(InquiryFixture.createInquiry());
+		String content = "답변 내용";
+		Long answerId = inquiryAnswerRepository.save(InquiryFixture.createInquiryAnswer(inquiry, content)).getId();
+		String modifiedContent = "수정된 답변 내용";
+		InquiryAnswerUpdateRequest request = InquiryFixture.createInquiryAnswerUpdateRequest(modifiedContent);
+
+		// when
+		InquiryAnswerUpdateResponse response = inquiryService.updateAnswer(answerId, request);
+
+		// then
+		assertAll(
+			() -> assertThat(response.id()).isNotNull(),
+			() -> assertThat(response.content()).isEqualTo(modifiedContent),
+			() -> assertThat(response.createdAt()).isNotNull(),
+			() -> assertThat(response.modifiedAt()).isAfter(response.createdAt())
+		);
+	}
+
+	@Test
+	@DisplayName("존재하지 않는 답변은 수정할 수 없다.")
+	void updateAnswerNotExistException() {
+		// given
+		Long answerId = 0L;
+		String modifiedContent = "수정된 답변 내용";
+		InquiryAnswerUpdateRequest request = InquiryFixture.createInquiryAnswerUpdateRequest(modifiedContent);
+
+		// when // then
+		assertThatThrownBy(() -> inquiryService.updateAnswer(answerId, request))
+			.isInstanceOf(CustomException.class)
+			.hasMessage(InquiryErrorCode.NOT_FOUND_ANSWER.getMessage());
 	}
 }

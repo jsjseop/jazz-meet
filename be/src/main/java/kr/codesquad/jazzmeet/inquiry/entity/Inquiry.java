@@ -1,10 +1,5 @@
 package kr.codesquad.jazzmeet.inquiry.entity;
 
-import java.time.LocalDateTime;
-
-import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.CreationTimestamp;
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -15,6 +10,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrePersist;
+import kr.codesquad.jazzmeet.global.error.CustomException;
+import kr.codesquad.jazzmeet.global.error.statuscode.InquiryErrorCode;
+import kr.codesquad.jazzmeet.global.time.BaseTimeEntity;
 import kr.codesquad.jazzmeet.inquiry.util.InquiryCategory;
 import kr.codesquad.jazzmeet.inquiry.util.InquiryStatus;
 import lombok.AccessLevel;
@@ -25,7 +23,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-public class Inquiry {
+public class Inquiry extends BaseTimeEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,24 +40,19 @@ public class Inquiry {
 	@Column(nullable = false, length = 10)
 	private InquiryCategory category;
 	@Enumerated(value = EnumType.STRING)
-	@ColumnDefault("'WAITING'")
 	@Column(nullable = false, length = 10)
 	private InquiryStatus status;
-	@CreationTimestamp
-	@Column(nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-	private LocalDateTime createdAt;
 	@OneToOne(mappedBy = "inquiry", cascade = CascadeType.REMOVE, orphanRemoval = true)
 	private Answer answer;
 
 	@Builder
 	public Inquiry(String nickname, String password, String content, InquiryCategory category,
-		InquiryStatus status, LocalDateTime createdAt) {
+		InquiryStatus status) {
 		this.nickname = nickname;
 		this.password = password;
 		this.content = content;
 		this.category = category;
 		this.status = status;
-		this.createdAt = createdAt;
 	}
 
 	@PrePersist
@@ -76,5 +69,12 @@ public class Inquiry {
 	public void updateStatusToReplied(Answer answer) {
 		this.status = InquiryStatus.REPLIED;
 		this.answer = answer;
+	}
+
+	public Inquiry inspectExistAnswer() {
+		if (this.status == InquiryStatus.REPLIED || this.answer != null) {
+			throw new CustomException(InquiryErrorCode.ALREADY_REPLIED);
+		}
+		return this;
 	}
 }

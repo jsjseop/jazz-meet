@@ -1,8 +1,7 @@
 package kr.codesquad.jazzmeet.fixture;
 
-import java.time.LocalDateTime;
-
 import kr.codesquad.jazzmeet.inquiry.dto.request.InquiryAnswerSaveRequest;
+import kr.codesquad.jazzmeet.inquiry.dto.request.InquiryAnswerUpdateRequest;
 import kr.codesquad.jazzmeet.inquiry.dto.request.InquiryDeleteRequest;
 import kr.codesquad.jazzmeet.inquiry.dto.request.InquirySaveRequest;
 import kr.codesquad.jazzmeet.inquiry.entity.Answer;
@@ -19,7 +18,6 @@ public class InquiryFixture {
 			.content("내용")
 			.category(category)
 			.status(InquiryStatus.WAITING)
-			.createdAt(LocalDateTime.now())
 			.build();
 	}
 
@@ -30,7 +28,6 @@ public class InquiryFixture {
 			.content("내용")
 			.category(category)
 			.status(InquiryStatus.WAITING)
-			.createdAt(LocalDateTime.now())
 			.build();
 	}
 
@@ -41,7 +38,6 @@ public class InquiryFixture {
 			.content(content)
 			.category(category)
 			.status(InquiryStatus.WAITING)
-			.createdAt(LocalDateTime.now())
 			.build();
 	}
 
@@ -52,7 +48,6 @@ public class InquiryFixture {
 			.content("문의 내용")
 			.category(InquiryCategory.SERVICE)
 			.status(InquiryStatus.WAITING)
-			.createdAt(LocalDateTime.now())
 			.build();
 	}
 
@@ -63,7 +58,6 @@ public class InquiryFixture {
 			.content("문의 내용")
 			.category(InquiryCategory.SERVICE)
 			.status(InquiryStatus.WAITING)
-			.createdAt(LocalDateTime.now())
 			.build();
 	}
 
@@ -74,7 +68,6 @@ public class InquiryFixture {
 			.content("문의 내용")
 			.category(InquiryCategory.SERVICE)
 			.status(status)
-			.createdAt(LocalDateTime.now())
 			.build();
 	}
 
@@ -85,7 +78,6 @@ public class InquiryFixture {
 			.content("문의 내용")
 			.category(InquiryCategory.SERVICE)
 			.status(status)
-			.createdAt(LocalDateTime.now())
 			.build();
 	}
 
@@ -94,8 +86,14 @@ public class InquiryFixture {
 			.adminId(1L)
 			.content("답변 내용")
 			.inquiry(inquiry)
-			.createdAt(LocalDateTime.now())
-			.modifiedAt(LocalDateTime.now())
+			.build();
+	}
+
+	public static Answer createInquiryAnswer(Inquiry inquiry, String content) {
+		return Answer.builder()
+			.adminId(1L)
+			.content(content)
+			.inquiry(inquiry)
 			.build();
 	}
 
@@ -115,5 +113,9 @@ public class InquiryFixture {
 
 	public static InquiryAnswerSaveRequest createInquiryAnswerSaveRequest(Long inquiryId, String content) {
 		return new InquiryAnswerSaveRequest(inquiryId, content);
+	}
+
+	public static InquiryAnswerUpdateRequest createInquiryAnswerUpdateRequest(String content) {
+		return new InquiryAnswerUpdateRequest(content);
 	}
 }

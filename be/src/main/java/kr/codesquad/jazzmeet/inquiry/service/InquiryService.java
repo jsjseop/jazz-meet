@@ -11,10 +11,12 @@ import org.springframework.transaction.annotation.Transactional;
 import kr.codesquad.jazzmeet.global.error.CustomException;
 import kr.codesquad.jazzmeet.global.error.statuscode.InquiryErrorCode;
 import kr.codesquad.jazzmeet.inquiry.dto.request.InquiryAnswerSaveRequest;
+import kr.codesquad.jazzmeet.inquiry.dto.request.InquiryAnswerUpdateRequest;
 import kr.codesquad.jazzmeet.inquiry.dto.request.InquiryDeleteRequest;
 import kr.codesquad.jazzmeet.inquiry.dto.request.InquirySaveRequest;
 import kr.codesquad.jazzmeet.inquiry.dto.response.InquiryAnswerDetail;
 import kr.codesquad.jazzmeet.inquiry.dto.response.InquiryAnswerSaveResponse;
+import kr.codesquad.jazzmeet.inquiry.dto.response.InquiryAnswerUpdateResponse;
 import kr.codesquad.jazzmeet.inquiry.dto.response.InquiryDetailResponse;
 import kr.codesquad.jazzmeet.inquiry.dto.response.InquirySaveResponse;
 import kr.codesquad.jazzmeet.inquiry.dto.response.InquirySearch;
@@ -117,8 +119,7 @@ public class InquiryService {
 	@Transactional
 	public InquiryAnswerSaveResponse saveAnswer(InquiryAnswerSaveRequest request) {
 		Long inquiryId = request.inquiryId();
-		Inquiry inquiry = findById(inquiryId);
-		inspectExistAnswer(inquiry);
+		Inquiry inquiry = findById(inquiryId).inspectExistAnswer();
 		Answer answer = InquiryMapper.INSTANCE.toAnswer(request.content(), inquiry, DEFAULT_ADMIN_ID);
 		Answer savedAnswer = answerRepository.save(answer);
 		inquiry.updateStatusToReplied(savedAnswer);
@@ -126,11 +127,17 @@ public class InquiryService {
 		return InquiryMapper.INSTANCE.toInquiryAnswerSaveResponse(savedAnswer);
 	}
 
-	private void inspectExistAnswer(Inquiry inquiry) {
-		InquiryStatus status = inquiry.getStatus();
-		Answer answer = inquiry.getAnswer();
-		if (status == InquiryStatus.REPLIED || answer != null) {
-			throw new CustomException(InquiryErrorCode.ALREADY_REPLIED);
-		}
+	@Transactional
+	public InquiryAnswerUpdateResponse updateAnswer(Long answerId, InquiryAnswerUpdateRequest request) {
+		Answer answer = findAnswerById(answerId);
+		answer.updateContent(request.content());
+		answerRepository.flush(); // modifiedAt 반영을 위해 변경 사항 강제 커밋
+
+		return InquiryMapper.INSTANCE.toInquiryAnswerUpdateResponse(answer);
+	}
+
+	private Answer findAnswerById(Long answerId) {
+		return answerRepository.findById(answerId)
+			.orElseThrow(() -> new CustomException(InquiryErrorCode.NOT_FOUND_ANSWER));
 	}
 }
