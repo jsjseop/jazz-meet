@@ -1,3 +1,4 @@
+import { Inquiry, InquiryCategories } from './inquiry.types';
 import { Coordinate } from './map.types';
 
 export type AroundVenue = {
@@ -104,4 +105,38 @@ export type ShowVenue = {
   id: number;
   name: string;
   shows: Omit<ShowDetail, 'description'>[];
+};
+
+export type GetInquiryParams = {
+  category?: InquiryCategories;
+  word?: string;
+  page?: number;
+};
+
+export type InquiryData = {
+  inquiries: Inquiry[];
+} & Pagination;
+
+type Pagination = {
+  totalCount: number;
+  currentPage: number;
+  maxPage: number;
+};
+
+export type InquiryDetail = {
+  id: number;
+  content: string;
+  answer: {
+    id: number;
+    content: string;
+    createdAt: string;
+    modifiedAt: string;
+  };
+};
+
+export type PostInquiryParams = {
+  category: InquiryCategories;
+  nickname: string;
+  password: string;
+  content: string;
 };
