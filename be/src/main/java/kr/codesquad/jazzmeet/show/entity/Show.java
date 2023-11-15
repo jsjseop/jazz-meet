@@ -13,6 +13,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import kr.codesquad.jazzmeet.image.entity.Image;
+import kr.codesquad.jazzmeet.image.entity.ImageStatus;
 import kr.codesquad.jazzmeet.venue.entity.Venue;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -52,14 +53,21 @@ public class Show {
 		this.poster = poster;
 	}
 
-	public Show update(String teamName, String description, LocalDateTime startTime, LocalDateTime endTime,
+	public void updateShow(String teamName, String description, LocalDateTime startTime, LocalDateTime endTime,
 		Image poster) {
 		this.teamName = teamName;
 		this.description = description;
 		this.startTime = startTime;
 		this.endTime = endTime;
 		this.poster = poster;
+		registerPoster();
+	}
 
-		return this;
+	private void registerPoster() {
+		this.poster.updateStatus(ImageStatus.REGISTERED);
+	}
+
+	public void deletePoster() {
+		this.poster.updateStatus(ImageStatus.DELETED);
 	}
 }
