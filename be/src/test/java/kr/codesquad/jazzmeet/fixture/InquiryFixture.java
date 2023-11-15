@@ -1,9 +1,9 @@
 package kr.codesquad.jazzmeet.fixture;
 
-import kr.codesquad.jazzmeet.inquiry.dto.request.InquiryAnswerSaveRequest;
-import kr.codesquad.jazzmeet.inquiry.dto.request.InquiryAnswerUpdateRequest;
 import kr.codesquad.jazzmeet.inquiry.dto.request.InquiryDeleteRequest;
 import kr.codesquad.jazzmeet.inquiry.dto.request.InquirySaveRequest;
+import kr.codesquad.jazzmeet.inquiry.dto.request.answer.InquiryAnswerSaveRequest;
+import kr.codesquad.jazzmeet.inquiry.dto.request.answer.InquiryAnswerUpdateRequest;
 import kr.codesquad.jazzmeet.inquiry.entity.Answer;
 import kr.codesquad.jazzmeet.inquiry.entity.Inquiry;
 import kr.codesquad.jazzmeet.inquiry.util.InquiryCategory;

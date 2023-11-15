@@ -1,8 +1,8 @@
-package kr.codesquad.jazzmeet.inquiry.dto.response;
+package kr.codesquad.jazzmeet.inquiry.dto.response.answer;
 
 import java.time.LocalDateTime;
 
-public record InquiryAnswerDetail(
+public record InquiryAnswerUpdateResponse(
 	Long id,
 	String content,
 	LocalDateTime createdAt,

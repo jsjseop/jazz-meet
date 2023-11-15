@@ -13,15 +13,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
-import kr.codesquad.jazzmeet.inquiry.dto.request.InquiryAnswerSaveRequest;
-import kr.codesquad.jazzmeet.inquiry.dto.request.InquiryAnswerUpdateRequest;
 import kr.codesquad.jazzmeet.inquiry.dto.request.InquiryDeleteRequest;
 import kr.codesquad.jazzmeet.inquiry.dto.request.InquirySaveRequest;
-import kr.codesquad.jazzmeet.inquiry.dto.response.InquiryAnswerSaveResponse;
-import kr.codesquad.jazzmeet.inquiry.dto.response.InquiryAnswerUpdateResponse;
+import kr.codesquad.jazzmeet.inquiry.dto.request.answer.InquiryAnswerSaveRequest;
+import kr.codesquad.jazzmeet.inquiry.dto.request.answer.InquiryAnswerUpdateRequest;
 import kr.codesquad.jazzmeet.inquiry.dto.response.InquiryDetailResponse;
 import kr.codesquad.jazzmeet.inquiry.dto.response.InquirySaveResponse;
 import kr.codesquad.jazzmeet.inquiry.dto.response.InquirySearchResponse;
+import kr.codesquad.jazzmeet.inquiry.dto.response.answer.InquiryAnswerSaveResponse;
+import kr.codesquad.jazzmeet.inquiry.dto.response.answer.InquiryAnswerUpdateResponse;
 import kr.codesquad.jazzmeet.inquiry.service.InquiryService;
 import lombok.RequiredArgsConstructor;
 
