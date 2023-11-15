@@ -3,6 +3,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useState } from 'react';
 import { deleteInquiry } from '~/apis/inquiry';
+import { validatePasswordLength } from '~/utils/validation';
 
 type Props = {
   inquiryId: number;
@@ -16,17 +17,28 @@ export const Delete: React.FC<Props> = ({ inquiryId }) => {
   const onDeleteInquirySubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const password = new FormData(e.currentTarget).get(PASSWORD) as string;
-    const response = await deleteInquiry(inquiryId, password);
+    const password = new FormData(e.currentTarget).get(PASSWORD)?.toString();
 
-    if (response.errorMessage) {
-      alert(response.errorMessage);
-
+    if (
+      validatePasswordLength({
+        password,
+        minLength: PASSWORD_MIN_LENGTH,
+        maxLength: PASSWORD_MAX_LENGTH,
+      }) ||
+      !password
+    ) {
       return;
     }
 
-    alert('정상적으로 삭제되었습니다.');
-    closePasswordInput();
+    try {
+      await deleteInquiry(inquiryId, password);
+      alert('정상적으로 삭제되었습니다.');
+      closePasswordInput();
+    } catch (e) {
+      if (e instanceof Error) {
+        alert(e.message);
+      }
+    }
   };
 
   return (
@@ -38,6 +50,8 @@ export const Delete: React.FC<Props> = ({ inquiryId }) => {
             required
             name={PASSWORD}
             type="password"
+            minLength={PASSWORD_MIN_LENGTH}
+            maxLength={PASSWORD_MAX_LENGTH}
             placeholder="비밀번호"
           />
           <StyledSubmitButton>확인</StyledSubmitButton>
@@ -51,6 +65,8 @@ export const Delete: React.FC<Props> = ({ inquiryId }) => {
 };
 
 const PASSWORD = 'password';
+const PASSWORD_MIN_LENGTH = 4;
+const PASSWORD_MAX_LENGTH = 20;
 
 const StyledDelete = styled.div`
   width: 40px;
