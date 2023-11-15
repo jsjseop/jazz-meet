@@ -27,7 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 public class S3ImageHandler {
 
 	private static final String IMAGE_DIRECTORY = "images/";
-	public static final int FILE_NAME_SEPERATE_INDEX = 4;
+	public static final int FILE_NAME_SEPARATE_INDEX = 4;
 
 	private final AmazonS3Client amazonS3Client;
 
@@ -93,7 +93,7 @@ public class S3ImageHandler {
 	public List<String> deleteImages(List<String> imageUrls) {
 		try {
 			String[] urls = imageUrls.stream()
-				.map(url -> IMAGE_DIRECTORY + url.split("/")[FILE_NAME_SEPERATE_INDEX])
+				.map(url -> IMAGE_DIRECTORY + url.split("/")[FILE_NAME_SEPARATE_INDEX])
 				.toArray(String[]::new);
 			DeleteObjectsRequest deleteObjectsRequest = new DeleteObjectsRequest(bucket).withKeys(urls);
 
