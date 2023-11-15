@@ -36,12 +36,12 @@ public class AdminService {
 	}
 
 	private void isExistAdmin(String loginId) {
-		if (!findAdminByName(loginId).isEmpty()) {
+		if (!findAdminByLoginId(loginId).isEmpty()) {
 			throw new CustomException(AdminErrorCode.ALREADY_EXIST_ADMIN);
 		}
 	}
 
-	private Optional<Admin> findAdminByName(String loginId) {
+	private Optional<Admin> findAdminByLoginId(String loginId) {
 		return adminRepository.findByLoginId(loginId);
 	}
 
