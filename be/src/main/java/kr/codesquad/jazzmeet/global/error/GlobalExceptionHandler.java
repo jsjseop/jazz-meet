@@ -1,6 +1,5 @@
 package kr.codesquad.jazzmeet.global.error;
 
-import org.springframework.core.NestedExceptionUtils;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -32,7 +31,7 @@ public class GlobalExceptionHandler {
 		ErrorCode errorCode = ErrorCode.INTERNAL_SERVER_ERROR_DB;
 		log.error("DataAccessException: ", ex);
 		return ResponseEntity.status(errorCode.getHttpStatus())
-			.body(new ErrorResponse(errorCode.getMessage(), ex.getMessage() + ", " + ex.getMostSpecificCause()));
+			.body(new ErrorResponse(errorCode.getMessage()));
 	}
 
 	// 서버 오류
@@ -41,8 +40,7 @@ public class GlobalExceptionHandler {
 		ErrorCode errorCode = ErrorCode.INTERNAL_SERVER_ERROR;
 		log.error("Exception: ", ex);
 		return ResponseEntity.status(errorCode.getHttpStatus())
-			.body(new ErrorResponse(errorCode.getMessage(),
-				ex.getMessage() + ", " + NestedExceptionUtils.getMostSpecificCause(ex)));
+			.body(new ErrorResponse(errorCode.getMessage()));
 	}
 
 	// validation, 잘못된 request 예외 처리.
@@ -52,8 +50,6 @@ public class GlobalExceptionHandler {
 		ErrorCode errorCode = ErrorCode.VALIDATION_FAILED;
 		log.warn("MethodArgumentNotValidException handling: {}", ex.getMessage());
 		return ResponseEntity.status(errorCode.getHttpStatus())
-			.body(new ErrorResponse(errorCode.getMessage(),
-				ex.getMessage() + ", " + NestedExceptionUtils.getMostSpecificCause(ex)));
+			.body(new ErrorResponse(errorCode.getMessage()));
 	}
-
 }
