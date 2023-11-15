@@ -63,13 +63,6 @@ public class InquiryService {
 			inquirySearchData.getNumber() + PAGE_NUMBER_OFFSET, inquirySearchData.getTotalPages());
 	}
 
-	private String isNullInsertBlank(String word) {
-		if (word == null) {
-			return "";
-		}
-		return word;
-	}
-
 	public InquiryDetailResponse getInquiryDetail(Long inquiryId) {
 		InquiryDetail inquiry = inquiryQueryRepository.findInquiryAndAnswerByInquiryId(inquiryId)
 			.orElseThrow(() -> new CustomException(InquiryErrorCode.NOT_FOUND_INQUIRY));
@@ -98,24 +91,6 @@ public class InquiryService {
 		inquiry.updateStatusToDeleted();
 	}
 
-	private Inquiry findById(Long inquiryId) {
-		return inquiryRepository.findById(inquiryId)
-			.orElseThrow(() -> new CustomException(InquiryErrorCode.NOT_FOUND_INQUIRY));
-	}
-
-	private void matchesPassword(String rawPassword, String encodedPassword) {
-		boolean isMatched = bCryptPasswordEncoder.matches(rawPassword, encodedPassword);
-		if (!isMatched) {
-			throw new CustomException(InquiryErrorCode.WRONG_PASSWORD);
-		}
-	}
-
-	private void inspectDeletedInquiry(InquiryStatus status) {
-		if (status == InquiryStatus.DELETED) {
-			throw new CustomException(InquiryErrorCode.ALREADY_DELETED);
-		}
-	}
-
 	@Transactional
 	public InquiryAnswerSaveResponse saveAnswer(InquiryAnswerSaveRequest request) {
 		Long inquiryId = request.inquiryId();
@@ -134,6 +109,31 @@ public class InquiryService {
 		answerRepository.flush(); // modifiedAt 반영을 위해 변경 사항 강제 커밋
 
 		return InquiryMapper.INSTANCE.toInquiryAnswerUpdateResponse(answer);
+	}
+
+	private String isNullInsertBlank(String word) {
+		if (word == null) {
+			return "";
+		}
+		return word;
+	}
+
+	private Inquiry findById(Long inquiryId) {
+		return inquiryRepository.findById(inquiryId)
+			.orElseThrow(() -> new CustomException(InquiryErrorCode.NOT_FOUND_INQUIRY));
+	}
+
+	private void matchesPassword(String rawPassword, String encodedPassword) {
+		boolean isMatched = bCryptPasswordEncoder.matches(rawPassword, encodedPassword);
+		if (!isMatched) {
+			throw new CustomException(InquiryErrorCode.WRONG_PASSWORD);
+		}
+	}
+
+	private void inspectDeletedInquiry(InquiryStatus status) {
+		if (status == InquiryStatus.DELETED) {
+			throw new CustomException(InquiryErrorCode.ALREADY_DELETED);
+		}
 	}
 
 	private Answer findAnswerById(Long answerId) {
