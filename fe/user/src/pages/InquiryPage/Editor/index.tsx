@@ -1,32 +1,92 @@
 import styled from '@emotion/styled';
 import { useState } from 'react';
+import { postInquiryData } from '~/apis/inquiry';
 import { AutoSizingTextArea } from '~/components/AutoSizingTextArea';
+import { InquiryCategories } from '~/types/inquiry.types';
+import { validateContent, validateNickname } from './validation';
 
-export const InquiryEditor: React.FC = () => {
+type Props = {
+  currentCategory: InquiryCategories;
+};
+
+export const InquiryEditor: React.FC<Props> = ({ currentCategory }) => {
   const [inquiryContent, setInquiryContent] = useState('');
 
   const onChangeInquiryContent = (value: string) => {
     setInquiryContent(value);
   };
 
+  const onInquirySubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const formData = new FormData(e.currentTarget);
+    const nickname = formData.get(NICKNAME)?.toString();
+    const password = formData.get(PASSWORD)?.toString();
+
+    const trimmedContent = inquiryContent.trim();
+    const trimmedNickname = nickname?.trim();
+
+    if (
+      !validateContent(trimmedContent) ||
+      !validateNickname(trimmedNickname) ||
+      !trimmedNickname ||
+      !password
+    ) {
+      return;
+    }
+
+    try {
+      await postInquiryData({
+        category: currentCategory,
+        nickname: trimmedNickname,
+        password,
+        content: trimmedContent,
+      });
+
+      alert('정상적으로 문의가 등록되었습니다.');
+      setInquiryContent('');
+      location.reload();
+    } catch {
+      alert('문의등록에 실패했습니다. 다시 시도해주세요.');
+    }
+  };
+
   return (
-    <StyledWrapper>
-      <StyledForms>
+    <StyledInquiryEditor onSubmit={onInquirySubmit}>
+      <StyledInquiryInputSection>
         <AutoSizingTextArea
+          required
           value={inquiryContent}
           onChange={onChangeInquiryContent}
         />
-        <StyledInputContainer>
-          <input type="text" placeholder="닉네임" />
-          <input type="password" placeholder="비밀번호" />
-        </StyledInputContainer>
-      </StyledForms>
+        <StyledUserInfoInput>
+          <input
+            name={NICKNAME}
+            required
+            minLength={2}
+            maxLength={8}
+            type="text"
+            placeholder="닉네임"
+          />
+          <input
+            name={PASSWORD}
+            required
+            minLength={4}
+            maxLength={20}
+            type="password"
+            placeholder="비밀번호"
+          />
+        </StyledUserInfoInput>
+      </StyledInquiryInputSection>
       <StyledSubmit>등록하기</StyledSubmit>
-    </StyledWrapper>
+    </StyledInquiryEditor>
   );
 };
 
-const StyledWrapper = styled.div`
+const NICKNAME = 'nickname';
+const PASSWORD = 'password';
+
+const StyledInquiryEditor = styled.form`
   margin-top: 170px;
   width: 100%;
   display: flex;
@@ -34,7 +94,7 @@ const StyledWrapper = styled.div`
   gap: 21px;
 `;
 
-const StyledForms = styled.div`
+const StyledInquiryInputSection = styled.div`
   width: 100%;
   display: flex;
   gap: 8px;
@@ -63,7 +123,7 @@ const StyledForms = styled.div`
   }
 `;
 
-const StyledInputContainer = styled.div`
+const StyledUserInfoInput = styled.div`
   display: flex;
   flex-direction: column;
   gap: 8px;
