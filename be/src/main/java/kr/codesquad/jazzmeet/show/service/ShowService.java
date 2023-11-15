@@ -150,9 +150,8 @@ public class ShowService {
 		Show show = getShowById(showId);
 		Image poster = imageService.findById(request.posterId());
 
-		show.update(request.teamName(), request.description(), request.startTime(),
+		show.updateShow(request.teamName(), request.description(), request.startTime(),
 			request.endTime(), poster);
-		imageService.registerImage(poster);
 
 		return ShowMapper.INSTANCE.toShowDetailResponse(show);
 	}
@@ -161,7 +160,7 @@ public class ShowService {
 	public void deleteShow(Long showId) {
 		Show show = getShowById(showId);
 
-		imageService.deleteImage(show.getPoster().getId());
+		show.deletePoster();
 		showRepository.delete(show);
 	}
 }
