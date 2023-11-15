@@ -6,12 +6,6 @@ import lombok.Getter;
 public class ErrorResponse {
 	// ResponseEntity의 body에 담기 위해 사용
 	private final String errorMessage;
-	private String detail;
-
-	public ErrorResponse(String errorMessage, String detail) {
-		this.errorMessage = errorMessage;
-		this.detail = detail;
-	}
 
 	public ErrorResponse(String errorMessage) {
 		this.errorMessage = errorMessage;
