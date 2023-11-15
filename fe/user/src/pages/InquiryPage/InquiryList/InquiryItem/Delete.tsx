@@ -20,7 +20,7 @@ export const Delete: React.FC<Props> = ({ inquiryId }) => {
     const password = new FormData(e.currentTarget).get(PASSWORD)?.toString();
 
     if (
-      validatePasswordLength({
+      !validatePasswordLength({
         password,
         minLength: PASSWORD_MIN_LENGTH,
         maxLength: PASSWORD_MAX_LENGTH,
@@ -34,6 +34,7 @@ export const Delete: React.FC<Props> = ({ inquiryId }) => {
       await deleteInquiry(inquiryId, password);
       alert('정상적으로 삭제되었습니다.');
       closePasswordInput();
+      location.reload();
     } catch (e) {
       if (e instanceof Error) {
         alert(e.message);

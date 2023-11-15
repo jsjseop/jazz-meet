@@ -51,8 +51,6 @@ export const deleteInquiry = async (inquiryId: number, password: string) => {
 
   if (response.status === 400) {
     const data = await response.json();
-    throw new Error(data.errorMessage);
+    throw new Error(data);
   }
-
-  return response.json();
 };
