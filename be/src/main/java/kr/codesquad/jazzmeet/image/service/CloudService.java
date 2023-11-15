@@ -18,7 +18,7 @@ public class CloudService {
 		return s3ImageHandler.uploadImages(multipartFiles);
 	}
 
-	public void deleteImages(List<String> imageUrls) {
-		s3ImageHandler.deleteImages(imageUrls);
+	public List<String> deleteImages(List<String> imageUrls) {
+		return s3ImageHandler.deleteImages(imageUrls);
 	}
 }

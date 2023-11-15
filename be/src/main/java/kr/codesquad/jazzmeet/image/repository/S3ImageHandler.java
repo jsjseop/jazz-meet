@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.DeleteObjectsRequest;
+import com.amazonaws.services.s3.model.DeleteObjectsResult;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 
@@ -89,9 +90,10 @@ public class S3ImageHandler {
 		return fileName.substring(lastDotIndex + 1).toLowerCase();
 	}
 
-	public void deleteImages(List<String> imageUrls) {
+	public List<String> deleteImages(List<String> imageUrls) {
 		try {
 			DeleteObjectsRequest deleteObjectsRequest = new DeleteObjectsRequest(bucket);
+
 			ArrayList<KeyVersion> keys = new ArrayList<>();
 			imageUrls.forEach(url -> {
 				KeyVersion keyVersion = new KeyVersion(url);
@@ -99,7 +101,16 @@ public class S3ImageHandler {
 			});
 			deleteObjectsRequest.setKeys(keys);
 
-			amazonS3Client.deleteObjects(deleteObjectsRequest);
+			DeleteObjectsResult deleteObjectsResult = amazonS3Client.deleteObjects(deleteObjectsRequest);
+
+			ArrayList<String> deletedImageUrls = new ArrayList<>();
+			deleteObjectsResult.getDeletedObjects().forEach(
+				deletedObject -> {
+					String key = deletedObject.getKey();
+					deletedImageUrls.add(key);
+				}
+			);
+			return deletedImageUrls;
 		} catch (Exception e) {
 			throw new CustomException(ImageErrorCode.IMAGE_DELETE_ERROR);
 		}
