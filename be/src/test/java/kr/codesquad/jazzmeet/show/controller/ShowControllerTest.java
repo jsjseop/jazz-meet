@@ -126,7 +126,7 @@ class ShowControllerTest {
 		//given
 		Long showId = 1L;
 		when(showService.getShowDetail(any())).thenReturn(
-			ShowDetailResponse.builder().id(showId).poster(new ShowPoster(1L, "url")).showName("퀄텟").build());
+			ShowDetailResponse.builder().id(showId).poster(new ShowPoster(1L, "url")).teamName("퀄텟").build());
 
 		//when //then
 		mockMvc.perform(
@@ -138,7 +138,7 @@ class ShowControllerTest {
 			.andExpect(jsonPath("$.id").value(1L))
 			.andExpect(jsonPath("$.poster.id").value(1L))
 			.andExpect(jsonPath("$.poster.url").value("url"))
-			.andExpect(jsonPath("$.showName").value("퀄텟"));
+			.andExpect(jsonPath("$.teamName").value("퀄텟"));
 	}
 
 	@DisplayName("관리자가 공연장 페이지에서 공연 등록을 한다.")
@@ -147,7 +147,7 @@ class ShowControllerTest {
 		//given
 		Long venueId = 1L;
 		RegisterShowRequest request = RegisterShowRequest.builder()
-			.name("러스틱재즈 트리오")
+			.teamName("러스틱재즈 트리오")
 			.description("러스틱 재즈 설명")
 			.posterId(1L)
 			.startTime(LocalDateTime.of(2023, 11, 13, 17, 00))
@@ -198,7 +198,7 @@ class ShowControllerTest {
 		Long venueId = 1L;
 
 		RegisterShowRequest request = RegisterShowRequest.builder()
-			.name("아".repeat(51))
+			.teamName("아".repeat(51))
 			.description("러스틱 재즈 설명")
 			.posterId(1L)
 			.startTime(LocalDateTime.of(2023, 11, 13, 17, 00))
@@ -222,7 +222,7 @@ class ShowControllerTest {
 		Long venueId = 1L;
 
 		RegisterShowRequest request = RegisterShowRequest.builder()
-			.name("러스틱 재즈")
+			.teamName("러스틱 재즈")
 			.description("러".repeat(1001))
 			.posterId(1L)
 			.startTime(LocalDateTime.of(2023, 11, 13, 17, 00))
@@ -246,7 +246,7 @@ class ShowControllerTest {
 		Long venueId = 1L;
 
 		RegisterShowRequest request = RegisterShowRequest.builder()
-			.name("러스틱 재즈")
+			.teamName("러스틱 재즈")
 			.description("러스틱 재즈 설명")
 			.startTime(LocalDateTime.of(2023, 11, 13, 17, 00))
 			.endTime(LocalDateTime.of(2023, 11, 13, 19, 00))
@@ -260,5 +260,45 @@ class ShowControllerTest {
 			)
 			.andDo(print())
 			.andExpect(status().isBadRequest());
+	}
+
+	@DisplayName("관리자가 공연을 수정한다.")
+	@Test
+	void updateShow() throws Exception {
+		//given
+		Long showId = 1L;
+		RegisterShowRequest request = RegisterShowRequest.builder()
+			.teamName("부기우기 트리오")
+			.description("설명")
+			.posterId(1L)
+			.startTime(LocalDateTime.of(2023, 11, 14, 13, 0))
+			.endTime(LocalDateTime.of(2023, 11, 14, 14, 0))
+			.build();
+
+		ShowDetailResponse response = ShowDetailResponse.builder()
+			.id(1L)
+			.teamName("부기우기 트리오")
+			.description("설명")
+			.venueName("부기우기")
+			.poster(new ShowPoster(1L, "url"))
+			.startTime(LocalDateTime.of(2023, 11, 14, 13, 0))
+			.endTime(LocalDateTime.of(2023, 11, 14, 14, 0))
+			.build();
+
+		when(showService.updateShow(any(), any())).thenReturn(response);
+
+		//when //then
+		mockMvc.perform(
+				put("/api/shows/{showId}", showId)
+					.content(objectMapper.writeValueAsString(request))
+					.contentType(MediaType.APPLICATION_JSON)
+			)
+			.andDo(print())
+			.andExpect(jsonPath("$.id").value(response.id()))
+			.andExpect(jsonPath("$.teamName").value(response.teamName()))
+			.andExpect(jsonPath("$.venueName").value(response.venueName()))
+			.andExpect(jsonPath("$.description").value(response.description()))
+			.andExpect(jsonPath("$.poster.id").value(response.poster().getId()))
+			.andExpect(jsonPath("$.poster.url").value(response.poster().getUrl()));
 	}
 }

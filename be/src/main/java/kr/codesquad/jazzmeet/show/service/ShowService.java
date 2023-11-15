@@ -144,4 +144,15 @@ public class ShowService {
 
 		return new RegisterShowResponse(savedShow.getId());
 	}
+
+	@Transactional
+	public ShowDetailResponse updateShow(Long showId, RegisterShowRequest request) {
+		Show show = getShowById(showId);
+		Image poster = imageService.findById(request.posterId());
+
+		Show updatedShow = show.update(request.teamName(), request.description(), request.startTime(),
+			request.endTime(), poster);
+
+		return ShowMapper.INSTANCE.toShowDetailResponse(updatedShow);
+	}
 }

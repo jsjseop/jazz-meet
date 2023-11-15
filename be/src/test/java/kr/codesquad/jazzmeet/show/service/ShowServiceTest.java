@@ -202,9 +202,10 @@ class ShowServiceTest extends IntegrationTestSupport {
 		Venue venue1 = VenueFixture.createVenue("부기우기", "경기도 고양시");
 		Venue venue2 = VenueFixture.createVenue("클럽에반스", "경기도 고양시");
 
-		Show show1 = ShowFixture.createShow("부기우기 트리오1", LocalDateTime.of(2023, 11, 1, 18, 00), venue1);
+		Show show1 = ShowFixture.createShow("Entry55 트리오1", LocalDateTime.of(2023, 11, 3, 18, 00), venue2);
 		Show show2 = ShowFixture.createShow("부기우기 트리오2", LocalDateTime.of(2023, 11, 2, 20, 00), venue1);
-		Show show3 = ShowFixture.createShow("Entry55 트리오1", LocalDateTime.of(2023, 11, 3, 18, 00), venue2);
+		Show show3 = ShowFixture.createShow("부기우기 트리오1", LocalDateTime.of(2023, 11, 1, 18, 00), venue1);
+
 		showRepository.saveAll(List.of(show1, show2, show3));
 
 		//when
@@ -391,7 +392,7 @@ class ShowServiceTest extends IntegrationTestSupport {
 		//then
 		Assertions.assertAll(
 			() -> assertThat(showDetail)
-				.extracting("id", "showName", "venueName", "startTime", "endTime")
+				.extracting("id", "teamName", "venueName", "startTime", "endTime")
 				.contains(show.getId(), "Entry55 퀄텟1", "부기우기", LocalDateTime.of(2023, 11, 1, 20, 00),
 					LocalDateTime.of(2023, 11, 1, 20, 00)),
 
@@ -430,7 +431,7 @@ class ShowServiceTest extends IntegrationTestSupport {
 
 		Long venueId = venue.getId();
 		RegisterShowRequest request = RegisterShowRequest.builder()
-			.name("Entry55 퀄텟")
+			.teamName("Entry55 퀄텟")
 			.posterId(poster.getId())
 			.description("description")
 			.startTime(LocalDateTime.of(2023, 11, 13, 11, 50))
@@ -442,5 +443,39 @@ class ShowServiceTest extends IntegrationTestSupport {
 
 		//then
 		assertThat(response.id()).isNotNull();
+	}
+
+	@DisplayName("관리자가 show id로 공연을 수정한다.")
+	@Test
+	void updateShow() throws Exception {
+		//given
+		Venue venue = VenueFixture.createVenue("부기우기", "서울 마포구");
+		Show show = ShowFixture.createShow("퀄텟", LocalDateTime.of(2023, 11, 14, 15, 0), venue);
+		showRepository.save(show);
+
+		Image poster = ImageFixture.createImage("url");
+		imageRepository.save(poster);
+
+		Long showId = show.getId();
+		LocalDateTime startTime = LocalDateTime.of(2023, 11, 14, 18, 0);
+		RegisterShowRequest request = RegisterShowRequest.builder()
+			.teamName("수정된 팀 명")
+			.description("수정됨")
+			.posterId(poster.getId())
+			.startTime(startTime)
+			.endTime(startTime.plusHours(2))
+			.build();
+
+		//when
+		ShowDetailResponse response = showService.updateShow(showId, request);
+
+		//then
+		Assertions.assertAll(
+			() -> assertThat(response)
+				.extracting("teamName", "venueName", "description", "startTime", "endTime")
+				.contains("수정된 팀 명", "부기우기", "수정됨", startTime, startTime.plusHours(2)),
+			() -> assertThat(response.poster())
+				.extracting("url")
+				.isEqualTo("url"));
 	}
 }
