@@ -1,29 +1,32 @@
 import styled from '@emotion/styled';
+import { useNavigate } from 'react-router-dom';
 import CaretRight from '~/assets/icons/CaretRight.svg?react';
+import { ShowDetail } from '~/types/api.types';
+import { getFormattedTimeRange } from '~/utils/dateUtils';
 
 type Props = {
+  id: number;
   name: string;
-  shows: {
-    id: number;
-    posterUrl: string;
-    teamName: string;
-    startTime: string;
-    endTime: string;
-  }[];
+  shows: Omit<ShowDetail, 'description'>[];
 };
 
-export const VenueCard: React.FC<Props> = ({ name, shows }) => {
+export const VenueCard: React.FC<Props> = ({ id, name, shows }) => {
+  const navigate = useNavigate();
+
+  const navigateToVenueDetail = () => navigate(`/map/venues/${id}`);
+
   return (
     <StyledVenueCard>
-      <StyledCardHeader>
+      <StyledCardHeader onClick={navigateToVenueDetail}>
         <span>{name}</span>
         <CaretRight />
       </StyledCardHeader>
       {shows.map((show) => {
-        const showTime = `${show.startTime.slice(
-          11,
-          16,
-        )} - ${show.endTime.slice(11, 16)}`;
+        const showTime = getFormattedTimeRange(
+          new Date(show.startTime),
+          new Date(show.endTime),
+        );
+
         return (
           <StyledShowInfo key={show.id}>
             <StyledShowTime>{showTime}</StyledShowTime>
@@ -39,6 +42,12 @@ const StyledVenueCard = styled.div`
   border-radius: 6px;
   border: 1px solid #dbe1e4;
   padding: 12px 0;
+
+  @media screen and (max-width: 900px) {
+    border-radius: 0;
+    border: none;
+    border-bottom: 1px solid #dbe1e4;
+  }
 `;
 
 const StyledCardHeader = styled.div`
@@ -49,6 +58,11 @@ const StyledCardHeader = styled.div`
   font-size: 24px;
   font-weight: bold;
   color: #1b1b1b;
+
+  &:hover {
+    cursor: pointer;
+    opacity: 0.7;
+  }
 `;
 
 const StyledShowInfo = styled.div`
@@ -67,7 +81,8 @@ const StyledShowTime = styled.span`
 
 const StyledShowTeam = styled.span`
   color: #686970;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
   overflow: hidden;
 `;

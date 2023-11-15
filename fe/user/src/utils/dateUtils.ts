@@ -37,6 +37,21 @@ export const getFormattedDateString = (date: string | Date) => {
     .padStart(2, '0')}.${dateObj.getDate().toString().padStart(2, '0')}`;
 }; // ex) 2023.01.01
 
+export const getFormattedTime = (date: Date) => {
+  const hours = String(date.getHours()).padStart(2, '0');
+  const minutes = String(date.getMinutes()).padStart(2, '0');
+  const formattedTime = `${hours}:${minutes}`;
+
+  return formattedTime;
+};
+
+export const getFormattedTimeRange = (start: Date, end: Date) => {
+  const startTime = getFormattedTime(start);
+  const endTime = getFormattedTime(end);
+
+  return `${startTime}-${endTime}`;
+};
+
 export const getFirstDay = (year: number, month: number) => {
   return new Date(year, month - 1, 1).getDay();
 };

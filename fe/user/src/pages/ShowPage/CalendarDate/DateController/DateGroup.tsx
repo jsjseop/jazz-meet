@@ -3,12 +3,14 @@ import { equalDates, getKoreanWeekdayName } from '~/utils/dateUtils';
 
 type Props = {
   dates: Date[];
+  showDates: number[];
   selectedDate: Date;
   selectDate: (date: Date) => void;
 };
 
 export const DateGroup: React.FC<Props> = ({
   dates,
+  showDates,
   selectedDate,
   selectDate,
 }) => {
@@ -21,27 +23,29 @@ export const DateGroup: React.FC<Props> = ({
         const dateNumber = date.getDate();
 
         return (
-          <StyledDateInfo
-            key={dateNumber}
-            $active={equalDates(date, selectedDate)}
-            onClick={() => selectDate(date)}
-          >
-            <StyledDay>{equalDates(date, today) ? '오늘' : day}</StyledDay>
-            <StyledDate>{dateNumber}</StyledDate>
-          </StyledDateInfo>
+          <li key={dateNumber}>
+            <StyledDateInfo
+              $selected={equalDates(date, selectedDate)}
+              onClick={() => selectDate(date)}
+              disabled={!showDates.includes(dateNumber)}
+            >
+              <StyledDay>{equalDates(date, today) ? '오늘' : day}</StyledDay>
+              <StyledDate>{dateNumber}</StyledDate>
+            </StyledDateInfo>
+          </li>
         );
       })}
     </StyledDateGroup>
   );
 };
 
-const StyledDateGroup = styled.div`
+const StyledDateGroup = styled.ul`
   width: 100%;
   display: flex;
   justify-content: space-around;
 `;
 
-const StyledDateInfo = styled.div<{ $active: boolean }>`
+const StyledDateInfo = styled.button<{ $selected: boolean }>`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -56,8 +60,16 @@ const StyledDateInfo = styled.div<{ $active: boolean }>`
     opacity: 0.5;
   }
 
+  &:disabled {
+    pointer-events: none;
+
+    > p {
+      color: #e4e4e4;
+    }
+  }
+
   > p {
-    ${({ $active }) => $active && `color: #FF5019`}
+    color: ${({ $selected }) => ($selected ? '#FF5019' : '')};
   }
 `;
 

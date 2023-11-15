@@ -96,6 +96,17 @@ export type VenueDetailData = {
   description: string;
 } & Coordinate;
 
+export type ShowRegion = {
+  region: string;
+  venues: ShowVenue[];
+};
+
+export type ShowVenue = {
+  id: number;
+  name: string;
+  shows: Omit<ShowDetail, 'description'>[];
+};
+
 export type GetInquiryParams = {
   category?: InquiryCategories;
   word?: string;

@@ -1,10 +1,10 @@
-import { Calendar } from './Calendar';
-import { useCalendar } from './useCalendar';
+import { getVenueShowDates, getVenueShowsByDate } from 'apis/show';
 import { useEffect, useState } from 'react';
-import { HasShowDates, ShowDetail } from 'types/api.types';
 import { useParams } from 'react-router-dom';
-import { getHasShowDates, getShowsByDate } from 'apis/show';
+import { HasShowDates, ShowDetail } from 'types/api.types';
+import { Calendar } from './Calendar';
 import { ShowList } from './ShowList';
+import { useCalendar } from './useCalendar';
 
 export const ShowInfo: React.FC = () => {
   const [showList, setShowList] = useState<ShowDetail[]>();
@@ -24,7 +24,7 @@ export const ShowInfo: React.FC = () => {
     if (!venueId) return;
 
     const updateShowList = async () => {
-      const shows = await getShowsByDate({ venueId, date: selectedDate });
+      const shows = await getVenueShowsByDate({ venueId, date: selectedDate });
       setShowList(shows);
     };
 
@@ -35,7 +35,7 @@ export const ShowInfo: React.FC = () => {
     if (!venueId) return;
 
     const updateHasShowDates = async () => {
-      const dates = await getHasShowDates({ venueId, date: calendarDate });
+      const dates = await getVenueShowDates({ venueId, date: calendarDate });
       setHasShowDates(dates);
     };
 
