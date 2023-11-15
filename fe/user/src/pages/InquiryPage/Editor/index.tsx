@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { postInquiryData } from '~/apis/inquiry';
 import { AutoSizingTextArea } from '~/components/AutoSizingTextArea';
 import { InquiryCategories } from '~/types/inquiry.types';
-import { validateContent, validateNickname } from '../../../utils/validation';
+import { validateContent, validateNickname } from '~/utils/validation';
 
 type Props = {
   currentCategory: InquiryCategories;
