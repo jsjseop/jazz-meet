@@ -1,6 +1,5 @@
 package kr.codesquad.jazzmeet.image.service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -25,10 +24,7 @@ public class ImageService {
 	@Transactional
 	public ImageIdsResponse saveImages(List<String> imageUrls) {
 		List<Image> images = imageUrls.stream()
-			.map(url -> {
-				LocalDateTime now = LocalDateTime.now();
-				return ImageMapper.INSTANCE.toImage(url, ImageStatus.UNREGISTERED, now);
-			})
+			.map(url -> ImageMapper.INSTANCE.toImage(url, ImageStatus.UNREGISTERED))
 			.toList();
 
 		List<Image> saveImages = imageRepository.saveAll(images);
