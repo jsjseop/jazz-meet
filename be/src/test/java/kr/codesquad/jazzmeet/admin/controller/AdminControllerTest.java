@@ -137,4 +137,48 @@ class AdminControllerTest {
 			.andDo(print())
 			.andExpect(status().isBadRequest());
 	}
+
+	@DisplayName("루트 관리자가 관리자 계정을 생성할 때 loginId는 null이면 안 된다.")
+	@Test
+	void signUpWhenLoginIdIsNull() throws Exception {
+		//given
+		Long root = 1L;
+		String target = null;
+		SignUpAdminRequest request = SignUpAdminRequest.builder()
+			.loginId(target)
+			.password("12345")
+			.build();
+
+		//when //then
+		mockMvc.perform(
+				post("/api/admins/sign-up")
+					.requestAttr("id", root)
+					.content(objectMapper.writeValueAsString(request))
+					.contentType(MediaType.APPLICATION_JSON)
+			)
+			.andDo(print())
+			.andExpect(status().isBadRequest());
+	}
+
+	@DisplayName("루트 관리자가 관리자 계정을 생성할 때 password는 null이면 안 된다.")
+	@Test
+	void signUpWhenPasswordIsNull() throws Exception {
+		//given
+		Long root = 1L;
+		String target = null;
+		SignUpAdminRequest request = SignUpAdminRequest.builder()
+			.loginId("admin1")
+			.password(target)
+			.build();
+
+		//when //then
+		mockMvc.perform(
+				post("/api/admins/sign-up")
+					.requestAttr("id", root)
+					.content(objectMapper.writeValueAsString(request))
+					.contentType(MediaType.APPLICATION_JSON)
+			)
+			.andDo(print())
+			.andExpect(status().isBadRequest());
+	}
 }
