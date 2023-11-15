@@ -52,4 +52,14 @@ public class GlobalExceptionHandler {
 		return ResponseEntity.status(errorCode.getHttpStatus())
 			.body(new ErrorResponse(errorCode.getMessage()));
 	}
+
+	// 400 BAD REQUEST
+	// 타입 불일치
+	@ExceptionHandler(MethodArgumentTypeMismatchException.class)
+	protected ResponseEntity<ErrorResponse> handleRequestFailException(Exception ex) {
+		ErrorCode errorCode = ErrorCode.VALIDATION_FAILED;
+		log.warn("MethodArgumentNotValidException handling: {}", ex.getMessage());
+		return ResponseEntity.status(errorCode.getHttpStatus())
+			.body(new ErrorResponse(errorCode.getMessage()));
+	}
 }
