@@ -143,6 +143,7 @@ public class InquiryService {
 
 	@Transactional
 	public void deleteAnswer(Long answerId) {
+		// TODO: 쿼리 개선
 		Answer answer = findAnswerById(answerId);
 		Long inquiryId = answer.getInquiry().getId();
 		Inquiry inquiry = findById(inquiryId);
