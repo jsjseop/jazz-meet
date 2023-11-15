@@ -74,7 +74,7 @@ public class ShowService {
 			.toList();
 	}
 
-	private static LocalDate getLocalDate(String date) {
+	private LocalDate getLocalDate(String date) {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
 		try {
 			LocalDate formattedDate = LocalDate.parse(date, formatter);
@@ -84,7 +84,7 @@ public class ShowService {
 		}
 	}
 
-	private static boolean isDate(String date) {
+	private boolean isDate(String date) {
 		return date == null;
 	}
 
