@@ -80,9 +80,29 @@ class ImageServiceTest extends IntegrationTestSupport {
 		imageRepository.saveAll(List.of(image1, image2, image3));
 
 		// when
-		List<String> imageUrls = imageService.findAllStatusNotRegistered();
+		List<String> imageUrls = imageService.findNotRegisteredImageUrls();
 
 		// then
 		assertThat(imageUrls).containsExactly("url2", "url3");
+	}
+
+	@Test
+	@DisplayName("URL의 리스트를 입력 받아서 URL에 해당하는 이미지를 모두 삭제한다")
+	void deleteImagesByUrls() {
+	    // given
+		Image image1 = ImageFixture.createImage("url1");
+		Image image2 = ImageFixture.createImage("url2");
+		Image image3 = ImageFixture.createImage("url3");
+
+		imageRepository.saveAll(List.of(image1, image2, image3));
+		List<String> imageUrls = List.of(image1.getUrl(), image2.getUrl());
+
+		// when
+		imageService.deleteImagesByUrls(imageUrls);
+
+	    // then
+		List<Image> images = imageRepository.findAll();
+		assertThat(images).extracting("url")
+			.containsExactly("url3");
 	}
 }

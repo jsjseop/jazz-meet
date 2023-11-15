@@ -11,6 +11,7 @@ import kr.codesquad.jazzmeet.image.dto.response.ImageIdsResponse;
 import kr.codesquad.jazzmeet.image.entity.Image;
 import kr.codesquad.jazzmeet.image.entity.ImageStatus;
 import kr.codesquad.jazzmeet.image.mapper.ImageMapper;
+import kr.codesquad.jazzmeet.image.repository.ImageQueryRepository;
 import kr.codesquad.jazzmeet.image.repository.ImageRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -20,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 public class ImageService {
 
 	private final ImageRepository imageRepository;
+	private final ImageQueryRepository imageQueryRepository;
 
 	@Transactional
 	public ImageIdsResponse saveImages(List<String> imageUrls) {
@@ -46,10 +48,15 @@ public class ImageService {
 			.orElseThrow(() -> new CustomException(ImageErrorCode.NOT_FOUND_IMAGE));
 	}
 
-	public List<String> findAllStatusNotRegistered() {
+	public List<String> findNotRegisteredImageUrls() {
 		List<Image> images = imageRepository.findAllByStatusNot(ImageStatus.REGISTERED);
 		return images.stream()
 			.map(Image::getUrl)
 			.toList();
+	}
+
+	@Transactional
+	public void deleteImagesByUrls(List<String> urls) {
+		imageQueryRepository.deleteAllInUrls(urls);
 	}
 }
