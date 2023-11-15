@@ -56,7 +56,7 @@ public class Inquiry extends BaseTimeEntity {
 	}
 
 	@PrePersist
-	public void PrePersist() { // DB에 default 값 넣어주는 역할
+	private void PrePersist() { // DB에 default 값 넣어주는 역할
 		if (this.status == null) {
 			this.status = InquiryStatus.WAITING;
 		}
