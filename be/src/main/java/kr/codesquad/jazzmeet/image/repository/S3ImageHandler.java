@@ -1,5 +1,7 @@
 package kr.codesquad.jazzmeet.image.repository;
 
+import static com.amazonaws.services.s3.model.DeleteObjectsRequest.KeyVersion;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -12,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.DeleteObjectsRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 
@@ -84,5 +87,17 @@ public class S3ImageHandler {
 			throw new CustomException(ImageErrorCode.WRONG_IMAGE_FORMAT);
 		}
 		return fileName.substring(lastDotIndex + 1).toLowerCase();
+	}
+
+	public void deleteImages(List<String> imageUrls) {
+		DeleteObjectsRequest deleteObjectsRequest = new DeleteObjectsRequest(bucket);
+		ArrayList<KeyVersion> keys = new ArrayList<>();
+		imageUrls.forEach(url -> {
+			KeyVersion keyVersion = new KeyVersion(url);
+			keys.add(keyVersion);
+		});
+		deleteObjectsRequest.setKeys(keys);
+
+		amazonS3Client.deleteObjects(deleteObjectsRequest);
 	}
 }
