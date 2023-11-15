@@ -1,4 +1,3 @@
-import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { equalDates, getKoreanWeekdayName } from '~/utils/dateUtils';
 
@@ -26,7 +25,6 @@ export const DateGroup: React.FC<Props> = ({
         return (
           <li key={dateNumber}>
             <StyledDateInfo
-              $active={showDates.includes(dateNumber)}
               $selected={equalDates(date, selectedDate)}
               onClick={() => selectDate(date)}
               disabled={!showDates.includes(dateNumber)}
@@ -47,35 +45,32 @@ const StyledDateGroup = styled.ul`
   justify-content: space-around;
 `;
 
-const StyledDateInfo = styled.button<{ $active: boolean; $selected: boolean }>`
+const StyledDateInfo = styled.button<{ $selected: boolean }>`
   display: flex;
   flex-direction: column;
   align-items: center;
   min-width: 24px;
 
-  ${({ $active, $selected }) =>
-    $active
-      ? css`
-          &:hover {
-            cursor: pointer;
-            opacity: 0.7;
-          }
+  &:hover {
+    cursor: pointer;
+    opacity: 0.7;
+  }
 
-          &:active {
-            opacity: 0.5;
-          }
+  &:active {
+    opacity: 0.5;
+  }
 
-          > p {
-            color: ${$selected ? '#FF5019' : ''};
-          }
-        `
-      : css`
-          pointer-events: none;
+  &:disabled {
+    pointer-events: none;
 
-          > p {
-            color: #e4e4e4;
-          }
-        `}
+    > p {
+      color: #e4e4e4;
+    }
+  }
+
+  > p {
+    color: ${({ $selected }) => ($selected ? '#FF5019' : '')};
+  }
 `;
 
 const StyledDay = styled.p`
