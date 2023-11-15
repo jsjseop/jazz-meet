@@ -5,15 +5,15 @@ import lombok.Getter;
 @Getter
 public class ErrorResponse {
 	// ResponseEntity의 body에 담기 위해 사용
-	private String message;
+	private final String errorMessage;
 	private String detail;
 
-	public ErrorResponse(String message, String detail) {
-		this.message = message;
+	public ErrorResponse(String errorMessage, String detail) {
+		this.errorMessage = errorMessage;
 		this.detail = detail;
 	}
 
-	public ErrorResponse(String message) {
-		this.message = message;
+	public ErrorResponse(String errorMessage) {
+		this.errorMessage = errorMessage;
 	}
 }
