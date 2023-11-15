@@ -1,5 +1,6 @@
 package kr.codesquad.jazzmeet.image.service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -49,7 +50,9 @@ public class ImageService {
 	}
 
 	public List<String> findNotRegisteredImageUrls() {
-		List<Image> images = imageRepository.findAllByStatusNot(ImageStatus.REGISTERED);
+		LocalDate today = LocalDate.now();
+		// UNREGISTERED 상태는 created_at이 today와 다른 데이터 조회
+		List<Image> images = imageQueryRepository.findAllNotRegistered(today);
 		return images.stream()
 			.map(Image::getUrl)
 			.toList();
