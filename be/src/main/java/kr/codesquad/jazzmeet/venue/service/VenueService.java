@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import kr.codesquad.jazzmeet.global.error.CustomException;
 import kr.codesquad.jazzmeet.global.error.statuscode.VenueErrorCode;
 import kr.codesquad.jazzmeet.venue.dto.VenueInfo;
-import kr.codesquad.jazzmeet.venue.dto.VenueSearch;
+import kr.codesquad.jazzmeet.venue.dto.request.RangeCoordinatesRequest;
 import kr.codesquad.jazzmeet.venue.dto.response.NearbyVenueResponse;
 import kr.codesquad.jazzmeet.venue.dto.response.VenueAutocompleteResponse;
 import kr.codesquad.jazzmeet.venue.dto.response.VenueDetailResponse;
@@ -24,7 +24,7 @@ import kr.codesquad.jazzmeet.venue.entity.Venue;
 import kr.codesquad.jazzmeet.venue.mapper.VenueMapper;
 import kr.codesquad.jazzmeet.venue.repository.VenueQueryRepository;
 import kr.codesquad.jazzmeet.venue.repository.VenueRepository;
-import kr.codesquad.jazzmeet.venue.util.VenueUtil;
+import kr.codesquad.jazzmeet.venue.util.LocationUtil;
 import kr.codesquad.jazzmeet.venue.vo.NearbyVenue;
 import kr.codesquad.jazzmeet.venue.vo.VenueDetail;
 import kr.codesquad.jazzmeet.venue.vo.VenuePins;
@@ -53,11 +53,11 @@ public class VenueService {
 	}
 
 	public List<NearbyVenueResponse> findNearByVenues(Double latitude, Double longitude) {
-		if (validateCoordinates(latitude, longitude)) {
+		if (LocationUtil.hasNull(latitude, longitude)) {
 			return List.of();
 		}
 
-		Point point = VenueUtil.createPoint(latitude, longitude);
+		Point point = LocationUtil.createPoint(latitude, longitude);
 		List<NearbyVenue> venues = venueQueryRepository.findNearbyVenuesByLocation(point);
 
 		return venues.stream()
@@ -77,14 +77,12 @@ public class VenueService {
 			.toList();
 	}
 
-	public List<VenuePinsResponse> findVenuePinsByLocation(Double lowLatitude, Double highLatitude, Double lowLongitude,
-		Double highLongitude) {
-		if (validateCoordinates(lowLatitude, highLatitude, lowLongitude, highLongitude)) {
+	public List<VenuePinsResponse> findVenuePinsByLocation(RangeCoordinatesRequest rangeCoordinatesRequest) {
+		if (rangeCoordinatesRequest.hasNull()) {
 			return List.of();
 		}
 
-		Polygon range = VenueUtil.createRange(lowLatitude, highLatitude, lowLongitude, highLongitude);
-
+		Polygon range = rangeCoordinatesRequest.toRange();
 		List<VenuePins> venues = venueQueryRepository.findVenuePinsByLocation(range);
 
 		return venues.stream()
@@ -92,34 +90,17 @@ public class VenueService {
 			.toList();
 	}
 
-	public VenueSearchResponse findVenuesByLocation(Double lowLatitude, Double highLatitude,
-		Double lowLongitude, Double highLongitude, int page) {
-		if (validateCoordinates(lowLatitude, highLatitude, lowLongitude, highLongitude)) {
+	public VenueSearchResponse findVenuesByLocation(RangeCoordinatesRequest rangeCoordinatesRequest, int page) {
+		if (rangeCoordinatesRequest.hasNull()) {
 			return VenueSearchResponse.emptyVenues();
 		}
 
-		Polygon range = VenueUtil.createRange(lowLatitude, highLatitude, lowLongitude, highLongitude);
+		Polygon range = rangeCoordinatesRequest.toRange();
 		PageRequest pageRequest = PageRequest.of(page - PAGE_NUMBER_OFFSET, PAGE_SIZE);
 		LocalDate curDate = LocalDate.now();
 		Page<VenueSearchData> venuesByLocation = venueQueryRepository.findVenuesByLocation(range, pageRequest, curDate);
 
-		List<VenueSearch> venueSearchList = venuesByLocation.getContent()
-			.stream()
-			.map(VenueMapper.INSTANCE::toVenueSearch)
-			.toList();
-
-		return VenueMapper.INSTANCE.toVenueSearchResponse(venueSearchList, venuesByLocation.getTotalElements(),
-			venuesByLocation.getNumber() + PAGE_NUMBER_OFFSET, venuesByLocation.getTotalPages());
-	}
-
-	private boolean validateCoordinates(Double latitude, Double longitude) {
-		return latitude == null || longitude == null;
-	}
-
-	private boolean validateCoordinates(Double lowLatitude, Double highLatitude, Double lowLongitude,
-		Double highLongitude) {
-		return lowLatitude == null || highLatitude == null || lowLongitude == null || highLongitude == null;
-
+		return VenueMapper.INSTANCE.toVenueSearchResponse(venuesByLocation, venuesByLocation.getNumber() + PAGE_NUMBER_OFFSET);
 	}
 
 	public Venue findById(Long venueId) {
@@ -144,22 +125,15 @@ public class VenueService {
 		Page<VenueSearchData> venueSearchDataList = venueQueryRepository
 			.searchVenueList(word, pageRequest, curDate);
 
-		List<VenueSearch> venueSearchList = venueSearchDataList.stream()
-			.map(VenueMapper.INSTANCE::toVenueSearch)
-			.toList();
-
-		return VenueMapper.INSTANCE.toVenueSearchResponse(venueSearchList, venueSearchDataList.getTotalElements(),
-			venueSearchDataList.getNumber() + PAGE_NUMBER_OFFSET, venueSearchDataList.getTotalPages());
+		return VenueMapper.INSTANCE.toVenueSearchResponse(venueSearchDataList,
+			venueSearchDataList.getNumber() + PAGE_NUMBER_OFFSET);
 	}
 
 	public VenueSearchResponse findVenueSearchById(Long venueId) {
 		LocalDate curDate = LocalDate.now();
 		List<VenueSearchData> venueSearchDataList = venueQueryRepository.findVenueSearchById(venueId, curDate);
-		List<VenueSearch> venueSearchList = venueSearchDataList.stream()
-			.map(VenueMapper.INSTANCE::toVenueSearch)
-			.toList();
 
-		return VenueMapper.INSTANCE.toVenueSearchResponse(venueSearchList, venueSearchList.size(),
+		return VenueMapper.INSTANCE.toVenueSearchResponse(venueSearchDataList, venueSearchDataList.size(),
 			PAGE_NUMBER_OFFSET, PAGE_NUMBER_OFFSET);
 	}
 

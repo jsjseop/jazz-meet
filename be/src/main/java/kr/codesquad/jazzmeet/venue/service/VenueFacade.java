@@ -22,7 +22,7 @@ import kr.codesquad.jazzmeet.venue.entity.Venue;
 import kr.codesquad.jazzmeet.venue.entity.VenueHour;
 import kr.codesquad.jazzmeet.venue.entity.VenueImage;
 import kr.codesquad.jazzmeet.venue.mapper.VenueMapper;
-import kr.codesquad.jazzmeet.venue.util.VenueUtil;
+import kr.codesquad.jazzmeet.venue.util.LocationUtil;
 import lombok.RequiredArgsConstructor;
 
 @Transactional(readOnly = true)
@@ -38,7 +38,7 @@ public class VenueFacade {
 
 	@Transactional
 	public VenueCreateResponse createVenue(VenueCreateRequest venueCreateRequest) {
-		Point location = VenueUtil.createPoint(venueCreateRequest.latitude(), venueCreateRequest.longitude());
+		Point location = LocationUtil.createPoint(venueCreateRequest.latitude(), venueCreateRequest.longitude());
 
 		List<Long> imageIds = venueCreateRequest.imageIds();
 		Image thumbnailImage = imageService.findById(imageIds.get(THUMBNAIL_IMAGE_INDEX));
@@ -88,7 +88,7 @@ public class VenueFacade {
 	}
 
 	private void updateVenueFromRequest(Venue venue, VenueUpdateRequest venueUpdateRequest) {
-		Point point = VenueUtil.createPoint(venueUpdateRequest.latitude(), venueUpdateRequest.longitude());
+		Point point = LocationUtil.createPoint(venueUpdateRequest.latitude(), venueUpdateRequest.longitude());
 
 		List<Long> imageIds = venueUpdateRequest.imageIds();
 		Image thumbnailImage = imageService.findById(imageIds.get(THUMBNAIL_IMAGE_INDEX));

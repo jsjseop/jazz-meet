@@ -8,9 +8,9 @@ import org.locationtech.jts.geom.Polygon;
 import kr.codesquad.jazzmeet.global.error.CustomException;
 import kr.codesquad.jazzmeet.global.error.statuscode.VenueErrorCode;
 
-public final class VenueUtil {
+public final class LocationUtil {
 
-	private VenueUtil() {
+	private LocationUtil() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -36,5 +36,9 @@ public final class VenueUtil {
 		};
 
 		return geometryFactory.createPolygon(coordinates);
+	}
+
+	public static boolean hasNull(Double latitude, Double longitude) {
+		return latitude == null || longitude == null;
 	}
 }

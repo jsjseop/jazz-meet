@@ -29,7 +29,7 @@ import kr.codesquad.jazzmeet.show.repository.ShowRepository;
 import kr.codesquad.jazzmeet.venue.dto.VenueInfo;
 import kr.codesquad.jazzmeet.venue.entity.Venue;
 import kr.codesquad.jazzmeet.venue.entity.VenueImage;
-import kr.codesquad.jazzmeet.venue.util.VenueUtil;
+import kr.codesquad.jazzmeet.venue.util.LocationUtil;
 import kr.codesquad.jazzmeet.venue.vo.VenueDetail;
 import kr.codesquad.jazzmeet.venue.vo.VenuePins;
 import kr.codesquad.jazzmeet.venue.vo.VenueSearchData;
@@ -64,7 +64,7 @@ class VenueQueryRepositoryTest extends IntegrationTestSupport {
 	void findVenuesByWordInName() throws Exception {
 		//given
 		String word = "부기우기";
-		Point point = VenueUtil.createPoint(111.111, 222.222);
+		Point point = LocationUtil.createPoint(111.111, 222.222);
 		Venue venue1 = VenueFixture.createVenue("부기우기", "서울 용산구 회나무로 21 2층", point);
 		Venue venue2 = VenueFixture.createVenue("entry55", "서울 동작구 동작대로1길 18 B-102", point);
 		venueRepository.saveAll(List.of(venue1, venue2));
@@ -83,7 +83,7 @@ class VenueQueryRepositoryTest extends IntegrationTestSupport {
 	void findVenuesByWordInAddress() throws Exception {
 		//given
 		String word = "서울";
-		Point point = VenueUtil.createPoint(111.111, 222.222);
+		Point point = LocationUtil.createPoint(111.111, 222.222);
 		Venue venue1 = VenueFixture.createVenue("부기우기", "서울 용산구 회나무로 21 2층", point);
 		Venue venue2 = VenueFixture.createVenue("entry55", "서울 동작구 동작대로1길 18 B-102", point);
 		venueRepository.saveAll(List.of(venue1, venue2));
@@ -108,14 +108,14 @@ class VenueQueryRepositoryTest extends IntegrationTestSupport {
 		Double lowLongitude = 126.9293615244093;
 		Double highLongitude = 127.10246683663273;
 
-		Polygon range = VenueUtil.createRange(lowLatitude, highLatitude, lowLongitude, highLongitude);
+		Polygon range = LocationUtil.createRange(lowLatitude, highLatitude, lowLongitude, highLongitude);
 
 		Venue venue1 = VenueFixture.createVenue("부기우기", "서울 용산구 회나무로 21 2층",
-			VenueUtil.createPoint(37.52387497068088, 126.9394615244093));
+			LocationUtil.createPoint(37.52387497068088, 126.9394615244093));
 		Venue venue2 = VenueFixture.createVenue("Entry55", "서울 동작구 동작대로1길 18 B-102",
-			VenueUtil.createPoint(37.53387497068088, 126.9494615244093));
+			LocationUtil.createPoint(37.53387497068088, 126.9494615244093));
 		Venue venue3 = VenueFixture.createVenue("러스틱 재즈", "서울 마포구 망원로 74 지하",
-			VenueUtil.createPoint(38.0, 128.0)); // 범위 벗어남
+			LocationUtil.createPoint(38.0, 128.0)); // 범위 벗어남
 		venueRepository.saveAll(List.of(venue1, venue2, venue3));
 
 		//when
@@ -135,11 +135,11 @@ class VenueQueryRepositoryTest extends IntegrationTestSupport {
 		Double highLatitude = 37.56412598864679;
 		Double lowLongitude = 126.91146553944996;
 		Double highLongitude = 126.94298838861823;
-		Polygon range = VenueUtil.createRange(lowLatitude, highLatitude, lowLongitude, highLongitude);
+		Polygon range = LocationUtil.createRange(lowLatitude, highLatitude, lowLongitude, highLongitude);
 		PageRequest pageRequest = PageRequest.of(0, 10);
 
-		Point point1 = VenueUtil.createPoint(37.558531649528895, 126.91891927086303);
-		Point point2 = VenueUtil.createPoint(37.5560565982576, 126.930179961597);
+		Point point1 = LocationUtil.createPoint(37.558531649528895, 126.91891927086303);
+		Point point2 = LocationUtil.createPoint(37.5560565982576, 126.930179961597);
 
 		Venue venue1 = VenueFixture.createVenue("연남5701", "서울 마포구 동교로23길 64 지하", point1);
 		Venue venue2 = VenueFixture.createVenue("숲길", "서울 마포구 와우산로37길 11", point2);
@@ -179,8 +179,8 @@ class VenueQueryRepositoryTest extends IntegrationTestSupport {
 	@DisplayName("주어진 공연장 ID에 해당하고 입력 받은 일자에 진행되는 공연을 포함하는 공연장 목록을 조회한다.")
 	void findVenuesById() {
 		// given
-		Point point1 = VenueUtil.createPoint(37.558531649528895, 126.91891927086303);
-		Point point2 = VenueUtil.createPoint(37.5560565982576, 126.930179961597);
+		Point point1 = LocationUtil.createPoint(37.558531649528895, 126.91891927086303);
+		Point point2 = LocationUtil.createPoint(37.5560565982576, 126.930179961597);
 
 		Venue venue1 = VenueFixture.createVenue("연남5701", "서울 마포구 동교로23길 64 지하", point1);
 		Venue venue2 = VenueFixture.createVenue("숲길", "서울 마포구 와우산로37길 11", point2);
@@ -220,7 +220,7 @@ class VenueQueryRepositoryTest extends IntegrationTestSupport {
 	void findVenueById() throws Exception {
 		//given
 		Venue venue = VenueFixture.createVenue("부기우기", "서울 용산구 회나무로 21 2층",
-			VenueUtil.createPoint(37.52387497068088, 126.9294615244093));
+			LocationUtil.createPoint(37.52387497068088, 126.9294615244093));
 
 		Image image1 = ImageFixture.createImage("image1.url");
 		Image image2 = ImageFixture.createImage("image2.url");

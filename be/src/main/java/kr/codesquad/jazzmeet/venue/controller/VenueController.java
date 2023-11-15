@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -16,6 +17,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
+import kr.codesquad.jazzmeet.venue.controller.annotation.Latitude;
+import kr.codesquad.jazzmeet.venue.controller.annotation.Longitude;
+import kr.codesquad.jazzmeet.venue.dto.request.RangeCoordinatesRequest;
 import kr.codesquad.jazzmeet.venue.dto.request.VenueCreateRequest;
 import kr.codesquad.jazzmeet.venue.dto.request.VenueUpdateRequest;
 import kr.codesquad.jazzmeet.venue.dto.response.NearbyVenueResponse;
@@ -52,8 +56,8 @@ public class VenueController {
 	 */
 	@GetMapping("/api/venues/around-venues")
 	public ResponseEntity<List<NearbyVenueResponse>> findNearbyVenues(
-		@RequestParam(required = false) Double latitude,
-		@RequestParam(required = false) Double longitude) {
+		@RequestParam(required = false) @Latitude Double latitude,
+		@RequestParam(required = false) @Longitude Double longitude) {
 		List<NearbyVenueResponse> nearByVenues = venueService.findNearByVenues(latitude, longitude);
 
 		return ResponseEntity.ok(nearByVenues);
@@ -73,10 +77,9 @@ public class VenueController {
 	 * 공연장 위치 정보(핀) 목록 조회 - 지도 기반 API
 	 */
 	@GetMapping("/api/venues/pins/map")
-	public ResponseEntity<List<VenuePinsResponse>> findVenuePinsByLocation(@RequestParam Double lowLatitude,
-		@RequestParam Double highLatitude, @RequestParam Double lowLongitude, @RequestParam Double highLongitude) {
-		List<VenuePinsResponse> venuePins = venueService.findVenuePinsByLocation(lowLatitude, highLatitude,
-			lowLongitude, highLongitude);
+	public ResponseEntity<List<VenuePinsResponse>> findVenuePinsByLocation(
+		@ModelAttribute @Valid RangeCoordinatesRequest rangeCoordinatesRequest) {
+		List<VenuePinsResponse> venuePins = venueService.findVenuePinsByLocation(rangeCoordinatesRequest);
 
 		return ResponseEntity.ok(venuePins);
 	}
@@ -86,12 +89,10 @@ public class VenueController {
 	 */
 	@GetMapping("/api/venues/map")
 	public ResponseEntity<VenueSearchResponse> findVenuesByLocation(
-		@RequestParam(required = false) Double lowLatitude, @RequestParam(required = false) Double highLatitude,
-		@RequestParam(required = false) Double lowLongitude, @RequestParam(required = false) Double highLongitude,
+		@ModelAttribute RangeCoordinatesRequest rangeCoordinatesRequest,
 		@RequestParam(defaultValue = "1") @Min(value = 1) int page
 	) {
-		VenueSearchResponse venueResponse = venueService.findVenuesByLocation(lowLatitude, highLatitude,
-			lowLongitude, highLongitude, page);
+		VenueSearchResponse venueResponse = venueService.findVenuesByLocation(rangeCoordinatesRequest, page);
 
 		return ResponseEntity.ok(venueResponse);
 	}
@@ -111,7 +112,7 @@ public class VenueController {
 	 */
 	@GetMapping("/api/venues/search")
 	public ResponseEntity<VenueSearchResponse> searchVenueList(
-		@RequestParam String word, @RequestParam(defaultValue = "1") @Min(value = 1) int page) {
+		@RequestParam(required = false) String word, @RequestParam(defaultValue = "1") @Min(value = 1) int page) {
 		VenueSearchResponse venuesResponse = venueService.searchVenueList(word, page);
 
 		return ResponseEntity.ok(venuesResponse);
