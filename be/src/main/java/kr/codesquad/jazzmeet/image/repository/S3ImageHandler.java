@@ -90,14 +90,18 @@ public class S3ImageHandler {
 	}
 
 	public void deleteImages(List<String> imageUrls) {
-		DeleteObjectsRequest deleteObjectsRequest = new DeleteObjectsRequest(bucket);
-		ArrayList<KeyVersion> keys = new ArrayList<>();
-		imageUrls.forEach(url -> {
-			KeyVersion keyVersion = new KeyVersion(url);
-			keys.add(keyVersion);
-		});
-		deleteObjectsRequest.setKeys(keys);
+		try {
+			DeleteObjectsRequest deleteObjectsRequest = new DeleteObjectsRequest(bucket);
+			ArrayList<KeyVersion> keys = new ArrayList<>();
+			imageUrls.forEach(url -> {
+				KeyVersion keyVersion = new KeyVersion(url);
+				keys.add(keyVersion);
+			});
+			deleteObjectsRequest.setKeys(keys);
 
-		amazonS3Client.deleteObjects(deleteObjectsRequest);
+			amazonS3Client.deleteObjects(deleteObjectsRequest);
+		} catch (Exception e) {
+			throw new CustomException(ImageErrorCode.IMAGE_DELETE_ERROR);
+		}
 	}
 }
