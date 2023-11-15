@@ -1,5 +1,6 @@
 package kr.codesquad.jazzmeet.image.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,4 +13,6 @@ import kr.codesquad.jazzmeet.image.entity.ImageStatus;
 public interface ImageRepository extends JpaRepository<Image, Long> {
 
 	Optional<Image> findByIdAndStatusNot(Long imageId, ImageStatus status);
+
+	List<Image> findAllByStatusNot(ImageStatus status);
 }

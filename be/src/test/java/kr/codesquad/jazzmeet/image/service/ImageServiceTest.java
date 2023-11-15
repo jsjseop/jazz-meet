@@ -68,4 +68,21 @@ class ImageServiceTest extends IntegrationTestSupport {
 		assertThatThrownBy(() -> imageService.deleteImage(wrongId))
 			.isInstanceOf(CustomException.class);
 	}
+
+	@Test
+	@DisplayName("이미지의 상태가 REGISTERED가 아닌 이미지를 모두 조회하고 url의 목록으로 반환한다")
+	void findAllStatusNotRegistered() {
+	    // given
+		Image image1 = ImageFixture.createImage("url1", ImageStatus.REGISTERED);
+		Image image2 = ImageFixture.createImage("url2", ImageStatus.UNREGISTERED);
+		Image image3 = ImageFixture.createImage("url3", ImageStatus.DELETED);
+
+		imageRepository.saveAll(List.of(image1, image2, image3));
+
+		// when
+		List<String> imageUrls = imageService.findAllStatusNotRegistered();
+
+		// then
+		assertThat(imageUrls).containsExactly("url2", "url3");
+	}
 }

@@ -45,4 +45,11 @@ public class ImageService {
 		return imageRepository.findByIdAndStatusNot(imageId, ImageStatus.DELETED)
 			.orElseThrow(() -> new CustomException(ImageErrorCode.NOT_FOUND_IMAGE));
 	}
+
+	public List<String> findAllStatusNotRegistered() {
+		List<Image> images = imageRepository.findAllByStatusNot(ImageStatus.REGISTERED);
+		return images.stream()
+			.map(Image::getUrl)
+			.toList();
+	}
 }

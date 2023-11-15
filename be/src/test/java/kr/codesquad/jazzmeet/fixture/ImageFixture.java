@@ -10,4 +10,11 @@ public class ImageFixture {
 			.status(ImageStatus.UNREGISTERED)
 			.build();
 	}
+
+	public static Image createImage(String imageUrl, ImageStatus status) {
+		return Image.builder()
+			.url(imageUrl)
+			.status(status)
+			.build();
+	}
 }
