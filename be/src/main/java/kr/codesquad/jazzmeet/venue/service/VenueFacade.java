@@ -108,7 +108,7 @@ public class VenueFacade {
 		AtomicLong imageOrder = new AtomicLong();
 		imageIds.forEach(imageId -> {
 			Image image = imageService.findById(imageId);
-			imageService.registerImage(image);
+			image.register();
 			VenueImage venueImage = VenueImage.builder()
 				.imageOrder(imageOrder.incrementAndGet())
 				.image(image)

@@ -42,7 +42,11 @@ public class Image {
 		return url;
 	}
 
-	public void updateStatus(ImageStatus status) {
-		this.status = status;
+	public void delete() {
+		this.status = ImageStatus.DELETED;
+	}
+
+	public void register() {
+		this.status = ImageStatus.REGISTERED;
 	}
 }

@@ -40,14 +40,9 @@ public class ImageService {
 	}
 
 	@Transactional
-	public void registerImage(Image image) {
-		image.updateStatus(ImageStatus.REGISTERED);
-	}
-
-	@Transactional
 	public void deleteImage(Long imageId) {
 		Image image = findById(imageId);
-		image.updateStatus(ImageStatus.DELETED);
+		image.delete();
 	}
 
 	public Image findById(Long imageId) {

@@ -68,19 +68,4 @@ class ImageServiceTest extends IntegrationTestSupport {
 		assertThatThrownBy(() -> imageService.deleteImage(wrongId))
 			.isInstanceOf(CustomException.class);
 	}
-
-	@Test
-	@DisplayName("이미지의 상태를 등록 상태로 변경한다")
-	void registerImage() {
-		// given
-		Image image = ImageFixture.createImage("imgUrl");
-		Image savedImage = imageRepository.save(image);
-
-		// when
-		imageService.registerImage(savedImage);
-
-		// then
-		Image registeredImage = imageRepository.save(savedImage);
-		assertThat(registeredImage).extracting("status").isEqualTo(ImageStatus.REGISTERED);
-	}
 }

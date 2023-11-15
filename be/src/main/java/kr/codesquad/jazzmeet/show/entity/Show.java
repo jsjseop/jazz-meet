@@ -13,7 +13,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import kr.codesquad.jazzmeet.image.entity.Image;
-import kr.codesquad.jazzmeet.image.entity.ImageStatus;
 import kr.codesquad.jazzmeet.venue.entity.Venue;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -64,10 +63,10 @@ public class Show {
 	}
 
 	private void registerPoster() {
-		this.poster.updateStatus(ImageStatus.REGISTERED);
+		this.poster.register();
 	}
 
 	public void deletePoster() {
-		this.poster.updateStatus(ImageStatus.DELETED);
+		this.poster.delete();
 	}
 }
