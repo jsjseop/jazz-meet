@@ -140,4 +140,14 @@ public class InquiryService {
 		return answerRepository.findById(answerId)
 			.orElseThrow(() -> new CustomException(InquiryErrorCode.NOT_FOUND_ANSWER));
 	}
+
+	@Transactional
+	public void deleteAnswer(Long answerId) {
+		Answer answer = findAnswerById(answerId);
+		Long inquiryId = answer.getInquiry().getId();
+		Inquiry inquiry = findById(inquiryId);
+		inquiry.updateStatusToWaiting();
+
+		answerRepository.delete(answer);
+	}
 }

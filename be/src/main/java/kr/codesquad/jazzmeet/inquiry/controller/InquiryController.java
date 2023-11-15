@@ -94,4 +94,14 @@ public class InquiryController {
 		InquiryAnswerUpdateResponse answer = inquiryService.updateAnswer(answerId, request);
 		return ResponseEntity.ok(answer);
 	}
+
+	/**
+	 * 문의 답변 삭제 API
+	 */
+	@DeleteMapping("/api/inquiries/answers/{answerId}")
+	public ResponseEntity<Void> deleteAnswer(@PathVariable Long answerId) {
+		// TODO: 로그인 구현 시, token과 answer의 adminId가 같은지 검증 후 삭제 가능.
+		inquiryService.deleteAnswer(answerId);
+		return ResponseEntity.noContent().build();
+	}
 }
