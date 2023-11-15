@@ -50,7 +50,8 @@ export const deleteInquiry = async (inquiryId: number, password: string) => {
   });
 
   if (response.status === 400) {
-    const data = await response.text();
-    throw new Error(data);
+    const data = await response.json();
+
+    throw data;
   }
 };

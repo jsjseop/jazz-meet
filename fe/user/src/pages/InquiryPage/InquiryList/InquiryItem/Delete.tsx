@@ -41,9 +41,12 @@ export const Delete: React.FC<Props> = ({ inquiryId }) => {
       closePasswordInput();
       location.reload();
     } catch (e) {
-      if (e instanceof Error) {
-        alert(JSON.parse(e.message).errorMessage);
+      if (typeof e === 'object' && e !== null && 'errorMessage' in e) {
+        alert(e.errorMessage);
+        return;
       }
+
+      console.error(String(e));
     }
   };
 
