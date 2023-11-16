@@ -20,7 +20,6 @@ export const MapPage: React.FC = () => {
   const word = new URLSearchParams(search).get('word');
   const venueId = new URLSearchParams(search).get('venueId');
 
-  // 지도가 첫 렌더링 될 때
   useEffect(() => {
     if (word) {
       updateMapDataBySearch(word);

@@ -56,28 +56,42 @@ const StyledMap = styled.div`
   width: 100%;
   height: inherit;
 
-  .marker-container {
-    background-color: #47484e;
+  .marker {
+    background-color: #ffffff;
     white-space: nowrap;
+    border: 1px solid #efeff0;
     border-radius: 24px 24px 24px 3px;
     padding: 5px 10px 5px 5px;
     box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.25);
     display: flex;
     align-items: center;
     gap: 5px;
-  }
 
-  .marker-icon-container {
-    width: 38px;
-    height: 38px;
-    background-color: #ffffff;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
+    &--icon {
+      width: 38px;
+      height: 38px;
+      background-color: #47484e;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
 
-  .marker-text {
-    color: #ffffff;
+    &--text {
+      color: #47484e;
+    }
+
+    &.active {
+      background-color: #47484e;
+      border: none;
+
+      .marker--icon {
+        background-color: #ffffff;
+      }
+
+      .marker--text {
+        color: #ffffff;
+      }
+    }
   }
 `;

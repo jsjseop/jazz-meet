@@ -18,6 +18,7 @@ import {
 export const useMapDataUpdater = (map?: naver.maps.Map) => {
   const [pins, setPins] = useState<Pin[]>();
   const [searchedVenues, setSearchedVenues] = useState<SearchedVenues>();
+  const [selectedVenueId, setSelectedVenueId] = useState<number>(-1);
 
   const pinsOnMap = useRef<naver.maps.Marker[]>();
   const markersOnMap = useRef<naver.maps.Marker[]>();
@@ -104,19 +105,31 @@ export const useMapDataUpdater = (map?: naver.maps.Map) => {
       navigate(`venues/${venueId}`);
     };
 
-    pinsOnMap.current = addPinsOnMap(filteredPins, map, goToVenueDetail);
-    markersOnMap.current = addMarkersOnMap(
-      searchedVenues.venues,
+    pinsOnMap.current = addPinsOnMap({
+      pins: filteredPins,
       map,
-      goToVenueDetail,
-    );
+      selectedVenueId,
+      onPinClick: (venueId) => {
+        goToVenueDetail(venueId);
+        setSelectedVenueId(venueId);
+      },
+    });
+    markersOnMap.current = addMarkersOnMap({
+      pins: searchedVenues.venues,
+      map,
+      selectedVenueId,
+      onMarkerClick: (venueId) => {
+        goToVenueDetail(venueId);
+        setSelectedVenueId(venueId);
+      },
+    });
 
     if (enableFitBounds.current) {
       fitBoundsToCoordinates([...filteredPins, ...searchedVenues.venues], map);
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [map, pins, searchedVenues]);
+  }, [map, pins, searchedVenues, selectedVenueId]);
 
   return {
     searchedVenues,
