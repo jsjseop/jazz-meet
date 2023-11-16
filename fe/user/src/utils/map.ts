@@ -123,6 +123,20 @@ export const addPinsOnMap = ({
       onPinClick(pin.id);
     });
 
+    addMarkerMouseOverEvent(marker, () => {
+      marker.setIcon({
+        content: generateMarkerContent(pin.name, false),
+        anchor: new naver.maps.Point(4.5, 7),
+      });
+    });
+
+    addMarkerMouseOutEvent(marker, () => {
+      marker.setIcon({
+        content: PIN_SVG,
+        anchor: new naver.maps.Point(4.5, 7),
+      });
+    });
+
     return marker;
   });
 };
@@ -132,6 +146,20 @@ const addMarkerClickEvent = (
   callBack: () => void,
 ) => {
   naver.maps.Event.addListener(marker, 'click', callBack);
+};
+
+const addMarkerMouseOverEvent = (
+  marker: naver.maps.Marker,
+  callBack: () => void,
+) => {
+  naver.maps.Event.addListener(marker, 'mouseover', callBack);
+};
+
+const addMarkerMouseOutEvent = (
+  marker: naver.maps.Marker,
+  callBack: () => void,
+) => {
+  naver.maps.Event.addListener(marker, 'mouseout', callBack);
 };
 
 export const getInitMap = (userCoordinate: Coordinate | null) => {
