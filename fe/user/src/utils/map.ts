@@ -3,24 +3,30 @@ import { PIN_SVG, TIED_EIGHTH_NOTES_SVG } from '~/constants/MAP';
 import { Pin } from '~/types/api.types';
 import { Coordinate, CoordinateBoundary } from '~/types/map.types';
 
-export const fitBoundsToPins = (pins: Pin[], map: naver.maps.Map) => {
-  if (pins.length === 0) {
+export const fitBoundsToCoordinates = (
+  // pins: Pin[],
+  coordinates: Coordinate[],
+  map: naver.maps.Map,
+) => {
+  if (coordinates.length === 0) {
     return;
   }
 
-  if (pins.length === 1) {
-    map.setCenter(new naver.maps.LatLng(pins[0].latitude, pins[0].longitude));
+  if (coordinates.length === 1) {
+    map.setCenter(
+      new naver.maps.LatLng(coordinates[0].latitude, coordinates[0].longitude),
+    );
 
     return;
   }
 
   const bounds = new naver.maps.LatLngBounds(
-    new naver.maps.LatLng(pins[0].latitude, pins[0].longitude),
-    new naver.maps.LatLng(pins[1].latitude, pins[1].longitude),
+    new naver.maps.LatLng(coordinates[0].latitude, coordinates[0].longitude),
+    new naver.maps.LatLng(coordinates[1].latitude, coordinates[1].longitude),
   );
 
-  pins.forEach((pin) => {
-    bounds.extend(new naver.maps.LatLng(pin.latitude, pin.longitude));
+  coordinates.forEach((coord) => {
+    bounds.extend(new naver.maps.LatLng(coord.latitude, coord.longitude));
   });
 
   map.fitBounds(bounds);

@@ -74,7 +74,7 @@ export const getVenuesByMapBounds = async (
 };
 
 export const getSingleVenue = async (
-  venueId: number,
+  venueId: string,
 ): Promise<SearchedVenues> => {
   const response = await fetchData(`/api/venues/search/${venueId}`);
 

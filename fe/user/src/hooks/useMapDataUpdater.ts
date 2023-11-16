@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
+  getSingleVenue,
   getVenuePinsByMapBounds,
   getVenuePinsBySearch,
   getVenuesByKeyword,
@@ -10,20 +11,22 @@ import { Pin, SearchedVenues } from '~/types/api.types';
 import {
   addMarkersOnMap,
   addPinsOnMap,
-  fitBoundsToPins,
+  fitBoundsToCoordinates,
   getMapBounds,
 } from '~/utils/map';
 
 export const useMapDataUpdater = (map?: naver.maps.Map) => {
   const [pins, setPins] = useState<Pin[]>();
-  const [searchedVenus, setSearchedVenues] = useState<SearchedVenues>();
+  const [searchedVenues, setSearchedVenues] = useState<SearchedVenues>();
 
   const pinsOnMap = useRef<naver.maps.Marker[]>();
   const markersOnMap = useRef<naver.maps.Marker[]>();
 
+  const enableFitBounds = useRef(false);
+
   const navigate = useNavigate();
 
-  const updateMapDataBasedOnBounds = () => {
+  const updateMapDataBasedOnBounds = async () => {
     if (!map) {
       return;
     }
@@ -34,15 +37,14 @@ export const useMapDataUpdater = (map?: naver.maps.Map) => {
       return;
     }
 
-    (async () => {
-      const [pins, venueList] = await Promise.all([
-        getVenuePinsByMapBounds(bounds),
-        getVenuesByMapBounds(bounds),
-      ]);
+    const [pins, venueList] = await Promise.all([
+      getVenuePinsByMapBounds(bounds),
+      getVenuesByMapBounds(bounds),
+    ]);
 
-      setPins(pins);
-      setSearchedVenues(venueList);
-    })();
+    setPins(pins);
+    setSearchedVenues(venueList);
+    enableFitBounds.current = false;
   };
 
   const updateMapDataBySearch = async (word: string) => {
@@ -53,9 +55,18 @@ export const useMapDataUpdater = (map?: naver.maps.Map) => {
 
     setPins(pins);
     setSearchedVenues(venueList);
+    enableFitBounds.current = true;
   };
 
-  const handleChangeVenueListPage = (page: number) => {
+  const updateMapDataByVenueId = async (venueId: string) => {
+    const venueList = await getSingleVenue(venueId);
+
+    setPins([]);
+    setSearchedVenues(venueList);
+    enableFitBounds.current = true;
+  };
+
+  const handleChangeVenueListPage = async (page: number) => {
     if (!map) {
       return;
     }
@@ -66,15 +77,14 @@ export const useMapDataUpdater = (map?: naver.maps.Map) => {
       return;
     }
 
-    (async () => {
-      const venueList = await getVenuesByMapBounds({ ...bounds, page });
-      setSearchedVenues(venueList);
-    })();
+    const venueList = await getVenuesByMapBounds({ ...bounds, page });
+
+    setSearchedVenues(venueList);
   };
 
   // pins, searchedVenues가 변경될 때 렌더링 한다.
   useEffect(() => {
-    if (!map || !pins || !searchedVenus) {
+    if (!map || !pins || !searchedVenues) {
       return;
     }
 
@@ -87,7 +97,7 @@ export const useMapDataUpdater = (map?: naver.maps.Map) => {
     }
 
     const filteredPins = pins.filter((pin) =>
-      searchedVenus.venues.every((venue) => venue.id !== pin.id),
+      searchedVenues.venues.every((venue) => venue.id !== pin.id),
     );
 
     const goToVenueDetail = (venueId: number) => {
@@ -96,19 +106,23 @@ export const useMapDataUpdater = (map?: naver.maps.Map) => {
 
     pinsOnMap.current = addPinsOnMap(filteredPins, map, goToVenueDetail);
     markersOnMap.current = addMarkersOnMap(
-      searchedVenus.venues,
+      searchedVenues.venues,
       map,
       goToVenueDetail,
     );
 
-    fitBoundsToPins(pins, map);
+    if (enableFitBounds.current) {
+      fitBoundsToCoordinates([...filteredPins, ...searchedVenues.venues], map);
+    }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [map, pins, searchedVenus]);
+  }, [map, pins, searchedVenues]);
 
   return {
-    searchedVenus,
+    searchedVenues,
     updateMapDataBasedOnBounds,
     updateMapDataBySearch,
+    updateMapDataByVenueId,
     handleChangeVenueListPage,
   };
 };

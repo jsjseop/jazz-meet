@@ -9,14 +9,16 @@ export const MapPage: React.FC = () => {
   const mapElement = useRef<HTMLDivElement>(null);
   const [map, setMap] = useState<naver.maps.Map>();
   const {
-    searchedVenus,
+    searchedVenues,
     updateMapDataBasedOnBounds,
     updateMapDataBySearch,
+    updateMapDataByVenueId,
     handleChangeVenueListPage,
   } = useMapDataUpdater(map);
 
   const { search } = useLocation();
   const word = new URLSearchParams(search).get('word');
+  const venueId = new URLSearchParams(search).get('venueId');
 
   // 지도가 첫 렌더링 될 때
   useEffect(() => {
@@ -26,10 +28,16 @@ export const MapPage: React.FC = () => {
       return;
     }
 
+    if (venueId) {
+      updateMapDataByVenueId(venueId);
+
+      return;
+    }
+
     updateMapDataBasedOnBounds();
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [word]);
+  }, [word, venueId]);
 
   return (
     <StyledMapPage>
@@ -40,7 +48,7 @@ export const MapPage: React.FC = () => {
       />
       <Panel
         mapElement={mapElement}
-        searchedVenus={searchedVenus}
+        searchedVenus={searchedVenues}
         handleChangeVenueListPage={handleChangeVenueListPage}
       />
     </StyledMapPage>
