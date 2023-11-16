@@ -3,6 +3,11 @@ import CloseIcon from '@mui/icons-material/Close';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useState } from 'react';
 import { deleteInquiry } from '~/apis/inquiry';
+import {
+  INQUIRY_PASSWORD_MAX_LENGTH,
+  INQUIRY_PASSWORD_MIN_LENGTH,
+} from '~/constants/LIMITS';
+import { validateInputLength } from '~/utils/validation';
 
 type Props = {
   inquiryId: number;
@@ -16,17 +21,32 @@ export const Delete: React.FC<Props> = ({ inquiryId }) => {
   const onDeleteInquirySubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const password = new FormData(e.currentTarget).get(PASSWORD) as string;
-    const response = await deleteInquiry(inquiryId, password);
+    const password = new FormData(e.currentTarget).get(PASSWORD)!.toString();
 
-    if (response.errorMessage) {
-      alert(response.errorMessage);
-
+    if (
+      !validateInputLength({
+        input: password,
+        minLength: INQUIRY_PASSWORD_MIN_LENGTH,
+        maxLength: INQUIRY_PASSWORD_MAX_LENGTH,
+        onInvalid: (message) => alert(`비밀번호를 ${message}`),
+      })
+    ) {
       return;
     }
 
-    alert('정상적으로 삭제되었습니다.');
-    closePasswordInput();
+    try {
+      await deleteInquiry(inquiryId, password);
+      alert('정상적으로 삭제되었습니다.');
+      closePasswordInput();
+      location.reload();
+    } catch (e) {
+      if (typeof e === 'object' && e !== null && 'errorMessage' in e) {
+        alert(e.errorMessage);
+        return;
+      }
+
+      console.error(String(e));
+    }
   };
 
   return (
@@ -38,6 +58,8 @@ export const Delete: React.FC<Props> = ({ inquiryId }) => {
             required
             name={PASSWORD}
             type="password"
+            minLength={INQUIRY_PASSWORD_MIN_LENGTH}
+            maxLength={INQUIRY_PASSWORD_MAX_LENGTH}
             placeholder="비밀번호"
           />
           <StyledSubmitButton>확인</StyledSubmitButton>
