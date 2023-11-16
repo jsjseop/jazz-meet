@@ -48,7 +48,7 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler({MethodArgumentNotValidException.class, ValidationException.class})
 	protected ResponseEntity<ErrorResponse> handleValidateException(Exception ex) {
 		ErrorCode errorCode = ErrorCode.VALIDATION_FAILED;
-		log.warn("MethodArgumentNotValidException handling: {}", ex.getMessage());
+		log.warn("ValidException handling: {}", ex.getMessage());
 		return ResponseEntity.status(errorCode.getHttpStatus())
 			.body(new ErrorResponse(errorCode.getMessage()));
 	}
@@ -57,8 +57,8 @@ public class GlobalExceptionHandler {
 	// 타입 불일치
 	@ExceptionHandler(MethodArgumentTypeMismatchException.class)
 	protected ResponseEntity<ErrorResponse> handleRequestFailException(Exception ex) {
-		ErrorCode errorCode = ErrorCode.VALIDATION_FAILED;
-		log.warn("MethodArgumentNotValidException handling: {}", ex.getMessage());
+		ErrorCode errorCode = ErrorCode.TYPE_MISMATCH;
+		log.warn("MethodArgumentTypeMismatchException handling: {}", ex.getMessage());
 		return ResponseEntity.status(errorCode.getHttpStatus())
 			.body(new ErrorResponse(errorCode.getMessage()));
 	}

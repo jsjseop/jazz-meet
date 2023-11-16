@@ -14,6 +14,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import kr.codesquad.jazzmeet.IntegrationTestSupport;
 import kr.codesquad.jazzmeet.fixture.InquiryFixture;
 import kr.codesquad.jazzmeet.global.error.CustomException;
+import kr.codesquad.jazzmeet.global.error.statuscode.ErrorCode;
 import kr.codesquad.jazzmeet.global.error.statuscode.InquiryErrorCode;
 import kr.codesquad.jazzmeet.inquiry.dto.request.InquiryDeleteRequest;
 import kr.codesquad.jazzmeet.inquiry.dto.request.InquirySaveRequest;
@@ -286,7 +287,7 @@ class InquiryServiceTest extends IntegrationTestSupport {
 		// when // then
 		assertThatThrownBy(() -> inquiryService.delete(inquiryId, inquiryDeleteRequest))
 			.isInstanceOf(CustomException.class)
-			.hasMessage(InquiryErrorCode.WRONG_PASSWORD.getMessage());
+			.hasMessage(ErrorCode.WRONG_PASSWORD.getMessage());
 	}
 
 	@Test

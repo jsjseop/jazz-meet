@@ -4,12 +4,12 @@ import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import kr.codesquad.jazzmeet.global.error.CustomException;
 import kr.codesquad.jazzmeet.global.error.statuscode.InquiryErrorCode;
+import kr.codesquad.jazzmeet.global.util.PasswordEncoder;
 import kr.codesquad.jazzmeet.inquiry.dto.request.InquiryDeleteRequest;
 import kr.codesquad.jazzmeet.inquiry.dto.request.InquirySaveRequest;
 import kr.codesquad.jazzmeet.inquiry.dto.request.answer.InquiryAnswerSaveRequest;
@@ -44,7 +44,6 @@ public class InquiryService {
 	private final InquiryQueryRepository inquiryQueryRepository;
 	private final InquiryAnswerRepository answerRepository;
 	private final InquiryRepository inquiryRepository;
-	private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
 	public InquirySearchResponse getInquiries(String category, String word, int page) {
 		// request는 한글, DB 저장은 영어로 되어있기 때문에 변환 필요.
@@ -74,7 +73,7 @@ public class InquiryService {
 
 	@Transactional
 	public InquirySaveResponse save(InquirySaveRequest inquirySaveRequest) {
-		String encryptedPwd = bCryptPasswordEncoder.encode(inquirySaveRequest.password());
+		String encryptedPwd = PasswordEncoder.encode(inquirySaveRequest.password());
 		InquiryCategory inquiryCategory = InquiryCategory.toInquiryCategory(inquirySaveRequest.category());
 		Inquiry inquiry = InquiryMapper.INSTANCE.toInquiry(inquirySaveRequest, inquiryCategory, encryptedPwd);
 		Inquiry savedInquiry = inquiryRepository.save(inquiry);
@@ -86,7 +85,7 @@ public class InquiryService {
 	public void delete(Long inquiryId, InquiryDeleteRequest request) {
 		Inquiry inquiry = findById(inquiryId);
 		inspectDeletedInquiry(inquiry.getStatus());
-		matchesPassword(request.password(), inquiry.getPassword());
+		PasswordEncoder.matchesPassword(request.password(), inquiry.getPassword());
 
 		inquiry.updateStatusToDeleted();
 	}
@@ -121,13 +120,6 @@ public class InquiryService {
 	private Inquiry findById(Long inquiryId) {
 		return inquiryRepository.findById(inquiryId)
 			.orElseThrow(() -> new CustomException(InquiryErrorCode.NOT_FOUND_INQUIRY));
-	}
-
-	private void matchesPassword(String rawPassword, String encodedPassword) {
-		boolean isMatched = bCryptPasswordEncoder.matches(rawPassword, encodedPassword);
-		if (!isMatched) {
-			throw new CustomException(InquiryErrorCode.WRONG_PASSWORD);
-		}
 	}
 
 	private void inspectDeletedInquiry(InquiryStatus status) {
