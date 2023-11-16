@@ -2,7 +2,6 @@ package kr.codesquad.jazzmeet.admin.service;
 
 import java.util.Optional;
 
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,6 +12,7 @@ import kr.codesquad.jazzmeet.admin.entity.UserRole;
 import kr.codesquad.jazzmeet.admin.repository.AdminRepository;
 import kr.codesquad.jazzmeet.global.error.CustomException;
 import kr.codesquad.jazzmeet.global.error.statuscode.AdminErrorCode;
+import kr.codesquad.jazzmeet.global.util.PasswordEncoder;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -21,7 +21,6 @@ import lombok.RequiredArgsConstructor;
 public class AdminService {
 
 	private final AdminRepository adminRepository;
-	private final BCryptPasswordEncoder encoder;
 
 	@Transactional
 	public Admin signUp(Long rootAdminId, SignUpAdminRequest signUpAdminRequest) {
@@ -29,7 +28,7 @@ public class AdminService {
 		root.isRoot();
 		isExistAdmin(signUpAdminRequest.loginId());
 
-		String encodedPassword = encoder.encode(signUpAdminRequest.password());
+		String encodedPassword = PasswordEncoder.encode(signUpAdminRequest.password());
 		Admin admin = AdminMapper.INSTANCE.toAdmin(signUpAdminRequest, encodedPassword, UserRole.ADMIN);
 
 		return adminRepository.save(admin);
