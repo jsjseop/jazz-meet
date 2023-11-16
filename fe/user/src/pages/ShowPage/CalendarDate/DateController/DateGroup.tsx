@@ -1,8 +1,10 @@
 import styled from '@emotion/styled';
 import { useEffect, useRef } from 'react';
+import { DATE_BUTTON_WIDTH } from '~/constants/ELEMENT_SIZE';
 import { equalDates, getKoreanWeekdayName } from '~/utils/dateUtils';
 
 type Props = {
+  dateGroupRef: React.RefObject<HTMLDivElement>;
   dates: Date[];
   centerDateIndex: number;
   showDates: number[];
@@ -11,16 +13,15 @@ type Props = {
 };
 
 export const DateGroup: React.FC<Props> = ({
+  dateGroupRef,
   dates,
   centerDateIndex,
   showDates,
   selectedDate,
   selectDate,
 }) => {
-  const dateGroupRef = useRef<HTMLDivElement>(null);
   const dateContainerRef = useRef<HTMLUListElement>(null);
   const today = new Date();
-  const DATE_BUTTON_WIDTH = 92;
 
   useEffect(() => {
     if (dateGroupRef.current && dateContainerRef.current) {
@@ -38,7 +39,7 @@ export const DateGroup: React.FC<Props> = ({
 
       dateContainerRef.current.style.transform = `translateX(${scrollX}px)`;
     }
-  }, [centerDateIndex]);
+  }, [centerDateIndex, dateGroupRef]);
 
   return (
     <StyledDateGroup ref={dateGroupRef}>

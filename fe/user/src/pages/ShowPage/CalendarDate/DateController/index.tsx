@@ -1,8 +1,9 @@
 import styled from '@emotion/styled';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { getShowDates, getShowsByDate } from '~/apis/show';
 import CaretLeft from '~/assets/icons/CaretLeft.svg?react';
 import CaretRight from '~/assets/icons/CaretRight.svg?react';
+import { DATE_BUTTON_WIDTH } from '~/constants/ELEMENT_SIZE';
 import { useShowStore } from '~/stores/useShowStore';
 import { getFormattedYearMonth, getMonthDates } from '~/utils/dateUtils';
 import { DateGroup } from './DateGroup';
@@ -22,12 +23,27 @@ export const DateController: React.FC<Props> = ({
   const { setShowsAtDate } = useShowStore((state) => ({
     setShowsAtDate: state.setShowsAtDate,
   }));
+  const dateGroupRef = useRef<HTMLDivElement>(null);
 
-  const goToPreviousGroup = () =>
-    setCenterDateIndex((p) => getCenterDateIndex(p - 9));
-  const goToNextGroup = () =>
-    setCenterDateIndex((p) => getCenterDateIndex(p + 9));
+  const goToPreviousGroup = () => {
+    if (!dateGroupRef.current) {
+      return;
+    }
 
+    const datePerWidth = dateGroupRef.current.offsetWidth / DATE_BUTTON_WIDTH;
+    setCenterDateIndex((p) => getCenterDateIndex(p - datePerWidth));
+  };
+  const goToNextGroup = () => {
+    if (!dateGroupRef.current) {
+      return;
+    }
+
+    const datePerWidth = dateGroupRef.current.offsetWidth / DATE_BUTTON_WIDTH;
+    const lastDateIndexOfMonth = datesInMonth.length - 1;
+    setCenterDateIndex((p) =>
+      getCenterDateIndex(p + datePerWidth, lastDateIndexOfMonth),
+    );
+  };
   useEffect(() => {
     const updateShowDates = async () => {
       const datesData = await getShowDates(selectedDate);
@@ -74,6 +90,7 @@ export const DateController: React.FC<Props> = ({
         <CaretLeft onClick={goToPreviousGroup} />
       </StyledArrowButton>
       <DateGroup
+        dateGroupRef={dateGroupRef}
         dates={datesInMonth}
         centerDateIndex={centerDateIndex}
         showDates={showDates}
@@ -87,16 +104,16 @@ export const DateController: React.FC<Props> = ({
   );
 };
 
-const getCenterDateIndex = (index: number) => {
-  if (index < 7) {
-    return 6;
+const getCenterDateIndex = (index: number, lastIndex?: number) => {
+  if (index < 0) {
+    return 0;
   }
 
-  if (index < 16) {
-    return 15;
+  if (lastIndex && index > lastIndex) {
+    return index;
   }
 
-  return 24;
+  return index;
 };
 
 const getClosestShowDate = (dates: number[], date: Date) => {
