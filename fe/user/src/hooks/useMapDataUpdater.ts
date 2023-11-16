@@ -126,6 +126,7 @@ export const useMapDataUpdater = (map?: naver.maps.Map) => {
 
     if (enableFitBounds.current) {
       fitBoundsToCoordinates([...filteredPins, ...searchedVenues.venues], map);
+      enableFitBounds.current = false;
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
