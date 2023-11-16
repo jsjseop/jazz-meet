@@ -25,12 +25,16 @@ export const DateController: React.FC<Props> = ({
   }));
   const dateGroupRef = useRef<HTMLDivElement>(null);
 
+  const datePerWidth =
+    dateGroupRef.current === null
+      ? 1
+      : dateGroupRef.current.offsetWidth / DATE_BUTTON_WIDTH;
+
   const goToPreviousGroup = () => {
     if (!dateGroupRef.current) {
       return;
     }
 
-    const datePerWidth = dateGroupRef.current.offsetWidth / DATE_BUTTON_WIDTH;
     setCenterDateIndex((p) => getCenterDateIndex(p - datePerWidth));
   };
   const goToNextGroup = () => {
@@ -38,10 +42,8 @@ export const DateController: React.FC<Props> = ({
       return;
     }
 
-    const datePerWidth = dateGroupRef.current.offsetWidth / DATE_BUTTON_WIDTH;
-    const lastDateIndexOfMonth = datesInMonth.length - 1;
     setCenterDateIndex((p) =>
-      getCenterDateIndex(p + datePerWidth, lastDateIndexOfMonth),
+      getCenterDateIndex(p + datePerWidth, datesInMonth.length - 1),
     );
   };
   useEffect(() => {
