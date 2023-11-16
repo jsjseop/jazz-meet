@@ -27,8 +27,9 @@ export const MapPage: React.FC = () => {
     }
 
     updateMapDataBasedOnBounds();
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [word]);
 
   return (
     <StyledMapPage>
