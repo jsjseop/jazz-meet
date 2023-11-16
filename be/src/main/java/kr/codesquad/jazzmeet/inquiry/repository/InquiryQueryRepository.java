@@ -62,10 +62,16 @@ public class InquiryQueryRepository {
 	}
 
 	private BooleanExpression isContainWordInNickname(String word) {
+		if (word == null || word.equals("")) {
+			return null;
+		}
 		return inquiry.nickname.contains(word);
 	}
 
 	private BooleanExpression isContainWordInContent(String word) {
+		if (word == null || word.equals("")) {
+			return null;
+		}
 		return inquiry.content.contains(word);
 	}
 

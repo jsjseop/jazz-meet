@@ -4,23 +4,23 @@ import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import kr.codesquad.jazzmeet.global.error.CustomException;
 import kr.codesquad.jazzmeet.global.error.statuscode.InquiryErrorCode;
-import kr.codesquad.jazzmeet.inquiry.dto.request.InquiryAnswerSaveRequest;
-import kr.codesquad.jazzmeet.inquiry.dto.request.InquiryAnswerUpdateRequest;
+import kr.codesquad.jazzmeet.global.util.PasswordEncoder;
 import kr.codesquad.jazzmeet.inquiry.dto.request.InquiryDeleteRequest;
 import kr.codesquad.jazzmeet.inquiry.dto.request.InquirySaveRequest;
-import kr.codesquad.jazzmeet.inquiry.dto.response.InquiryAnswerDetail;
-import kr.codesquad.jazzmeet.inquiry.dto.response.InquiryAnswerSaveResponse;
-import kr.codesquad.jazzmeet.inquiry.dto.response.InquiryAnswerUpdateResponse;
+import kr.codesquad.jazzmeet.inquiry.dto.request.answer.InquiryAnswerSaveRequest;
+import kr.codesquad.jazzmeet.inquiry.dto.request.answer.InquiryAnswerUpdateRequest;
 import kr.codesquad.jazzmeet.inquiry.dto.response.InquiryDetailResponse;
 import kr.codesquad.jazzmeet.inquiry.dto.response.InquirySaveResponse;
 import kr.codesquad.jazzmeet.inquiry.dto.response.InquirySearch;
 import kr.codesquad.jazzmeet.inquiry.dto.response.InquirySearchResponse;
+import kr.codesquad.jazzmeet.inquiry.dto.response.answer.InquiryAnswerDetail;
+import kr.codesquad.jazzmeet.inquiry.dto.response.answer.InquiryAnswerSaveResponse;
+import kr.codesquad.jazzmeet.inquiry.dto.response.answer.InquiryAnswerUpdateResponse;
 import kr.codesquad.jazzmeet.inquiry.entity.Answer;
 import kr.codesquad.jazzmeet.inquiry.entity.Inquiry;
 import kr.codesquad.jazzmeet.inquiry.mapper.InquiryMapper;
@@ -44,13 +44,10 @@ public class InquiryService {
 	private final InquiryQueryRepository inquiryQueryRepository;
 	private final InquiryAnswerRepository answerRepository;
 	private final InquiryRepository inquiryRepository;
-	private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
 	public InquirySearchResponse getInquiries(String category, String word, int page) {
 		// request는 한글, DB 저장은 영어로 되어있기 때문에 변환 필요.
 		InquiryCategory inquiryCategory = InquiryCategory.toInquiryCategory(category);
-		// word가 없으면 공백 문자를 넣어 category에 해당하는 모든 문의를 반환한다.
-		word = isNullInsertBlank(word);
 		PageRequest pageRequest = PageRequest.of(page - PAGE_NUMBER_OFFSET, PAGE_SIZE);
 
 		Page<InquirySearchData> inquirySearchData = inquiryQueryRepository.searchInquiries(word, inquiryCategory,
@@ -61,13 +58,6 @@ public class InquiryService {
 
 		return InquiryMapper.INSTANCE.toInquirySearchResponse(inquirySearches, inquirySearchData.getTotalElements(),
 			inquirySearchData.getNumber() + PAGE_NUMBER_OFFSET, inquirySearchData.getTotalPages());
-	}
-
-	private String isNullInsertBlank(String word) {
-		if (word == null) {
-			return "";
-		}
-		return word;
 	}
 
 	public InquiryDetailResponse getInquiryDetail(Long inquiryId) {
@@ -81,7 +71,7 @@ public class InquiryService {
 
 	@Transactional
 	public InquirySaveResponse save(InquirySaveRequest inquirySaveRequest) {
-		String encryptedPwd = bCryptPasswordEncoder.encode(inquirySaveRequest.password());
+		String encryptedPwd = PasswordEncoder.encode(inquirySaveRequest.password());
 		InquiryCategory inquiryCategory = InquiryCategory.toInquiryCategory(inquirySaveRequest.category());
 		Inquiry inquiry = InquiryMapper.INSTANCE.toInquiry(inquirySaveRequest, inquiryCategory, encryptedPwd);
 		Inquiry savedInquiry = inquiryRepository.save(inquiry);
@@ -93,27 +83,9 @@ public class InquiryService {
 	public void delete(Long inquiryId, InquiryDeleteRequest request) {
 		Inquiry inquiry = findById(inquiryId);
 		inspectDeletedInquiry(inquiry.getStatus());
-		matchesPassword(request.password(), inquiry.getPassword());
+		PasswordEncoder.matchesPassword(request.password(), inquiry.getPassword());
 
 		inquiry.updateStatusToDeleted();
-	}
-
-	private Inquiry findById(Long inquiryId) {
-		return inquiryRepository.findById(inquiryId)
-			.orElseThrow(() -> new CustomException(InquiryErrorCode.NOT_FOUND_INQUIRY));
-	}
-
-	private void matchesPassword(String rawPassword, String encodedPassword) {
-		boolean isMatched = bCryptPasswordEncoder.matches(rawPassword, encodedPassword);
-		if (!isMatched) {
-			throw new CustomException(InquiryErrorCode.WRONG_PASSWORD);
-		}
-	}
-
-	private void inspectDeletedInquiry(InquiryStatus status) {
-		if (status == InquiryStatus.DELETED) {
-			throw new CustomException(InquiryErrorCode.ALREADY_DELETED);
-		}
 	}
 
 	@Transactional
@@ -136,8 +108,33 @@ public class InquiryService {
 		return InquiryMapper.INSTANCE.toInquiryAnswerUpdateResponse(answer);
 	}
 
+	@Transactional
+	public void deleteAnswer(Long answerId) {
+		Answer answer = findAnswerByIdWithInquiry(answerId);
+		Inquiry inquiry = answer.getInquiry();
+		inquiry.updateStatusToWaiting();
+
+		answerRepository.delete(answer);
+	}
+
+	private Inquiry findById(Long inquiryId) {
+		return inquiryRepository.findById(inquiryId)
+			.orElseThrow(() -> new CustomException(InquiryErrorCode.NOT_FOUND_INQUIRY));
+	}
+
+	private void inspectDeletedInquiry(InquiryStatus status) {
+		if (status == InquiryStatus.DELETED) {
+			throw new CustomException(InquiryErrorCode.ALREADY_DELETED);
+		}
+	}
+
 	private Answer findAnswerById(Long answerId) {
 		return answerRepository.findById(answerId)
+			.orElseThrow(() -> new CustomException(InquiryErrorCode.NOT_FOUND_ANSWER));
+	}
+
+	private Answer findAnswerByIdWithInquiry(Long answerId) {
+		return answerRepository.findByIdWithInquiry(answerId)
 			.orElseThrow(() -> new CustomException(InquiryErrorCode.NOT_FOUND_ANSWER));
 	}
 }

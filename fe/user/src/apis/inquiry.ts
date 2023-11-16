@@ -49,5 +49,9 @@ export const deleteInquiry = async (inquiryId: number, password: string) => {
     body: JSON.stringify({ password }),
   });
 
-  return response.json();
+  if (response.status === 400) {
+    const data = await response.json();
+
+    throw data;
+  }
 };

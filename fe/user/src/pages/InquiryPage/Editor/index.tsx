@@ -2,8 +2,14 @@ import styled from '@emotion/styled';
 import { useState } from 'react';
 import { postInquiryData } from '~/apis/inquiry';
 import { AutoSizingTextArea } from '~/components/AutoSizingTextArea';
+import {
+  INQUIRY_NICKNAME_MAX_LENGTH,
+  INQUIRY_NICKNAME_MIN_LENGTH,
+  INQUIRY_PASSWORD_MAX_LENGTH,
+  INQUIRY_PASSWORD_MIN_LENGTH,
+} from '~/constants/LIMITS';
 import { InquiryCategories } from '~/types/inquiry.types';
-import { validateContent, validateNickname } from './validation';
+import { validateInputLength } from '~/utils/validation';
 
 type Props = {
   currentCategory: InquiryCategories;
@@ -20,17 +26,30 @@ export const InquiryEditor: React.FC<Props> = ({ currentCategory }) => {
     e.preventDefault();
 
     const formData = new FormData(e.currentTarget);
-    const nickname = formData.get(NICKNAME)?.toString();
-    const password = formData.get(PASSWORD)?.toString();
+    const nickname = formData.get(NICKNAME)!.toString();
+    const password = formData.get(PASSWORD)!.toString();
 
     const trimmedContent = inquiryContent.trim();
-    const trimmedNickname = nickname?.trim();
+    const trimmedNickname = nickname.trim();
 
     if (
-      !validateContent(trimmedContent) ||
-      !validateNickname(trimmedNickname) ||
-      !trimmedNickname ||
-      !password
+      !validateInputLength({
+        input: trimmedContent,
+        minLength: 1,
+        onInvalid: () => alert(`문의내용을 입력해주세요`),
+      }) ||
+      !validateInputLength({
+        input: trimmedNickname,
+        minLength: INQUIRY_NICKNAME_MIN_LENGTH,
+        maxLength: INQUIRY_NICKNAME_MAX_LENGTH,
+        onInvalid: (message) => alert(`닉네임을 ${message}`),
+      }) ||
+      !validateInputLength({
+        input: password,
+        minLength: INQUIRY_PASSWORD_MIN_LENGTH,
+        maxLength: INQUIRY_PASSWORD_MAX_LENGTH,
+        onInvalid: (message) => alert(`비밀번호을 ${message}`),
+      })
     ) {
       return;
     }
@@ -63,16 +82,16 @@ export const InquiryEditor: React.FC<Props> = ({ currentCategory }) => {
           <input
             name={NICKNAME}
             required
-            minLength={2}
-            maxLength={8}
+            minLength={INQUIRY_NICKNAME_MIN_LENGTH}
+            maxLength={INQUIRY_NICKNAME_MAX_LENGTH}
             type="text"
             placeholder="닉네임"
           />
           <input
             name={PASSWORD}
             required
-            minLength={4}
-            maxLength={20}
+            minLength={INQUIRY_PASSWORD_MIN_LENGTH}
+            maxLength={INQUIRY_PASSWORD_MAX_LENGTH}
             type="password"
             placeholder="비밀번호"
           />

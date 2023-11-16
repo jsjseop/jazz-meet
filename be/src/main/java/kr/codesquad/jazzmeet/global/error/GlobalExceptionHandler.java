@@ -3,9 +3,9 @@ package kr.codesquad.jazzmeet.global.error;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import jakarta.validation.ValidationException;
 import kr.codesquad.jazzmeet.global.error.statuscode.ErrorCode;
@@ -24,7 +24,7 @@ public class GlobalExceptionHandler {
 		return ResponseEntity.status(statusCode.getHttpStatus()).body(new ErrorResponse(statusCode.getMessage()));
 	}
 
-	// 500 에러
+	// 500 INTERNAL SERVER ERROR
 	// 데이터 베이스 오류
 	@ExceptionHandler(DataAccessException.class)
 	protected ResponseEntity<ErrorResponse> handleDataAccessException(DataAccessException ex) {
@@ -43,12 +43,22 @@ public class GlobalExceptionHandler {
 			.body(new ErrorResponse(errorCode.getMessage()));
 	}
 
-	// validation, 잘못된 request 예외 처리.
-	@ExceptionHandler({MethodArgumentNotValidException.class, ValidationException.class,
-		MissingServletRequestParameterException.class})
+	// 400 BAD REQUEST
+	// @Valid 검증 실패
+	@ExceptionHandler({MethodArgumentNotValidException.class, ValidationException.class})
 	protected ResponseEntity<ErrorResponse> handleValidateException(Exception ex) {
 		ErrorCode errorCode = ErrorCode.VALIDATION_FAILED;
-		log.warn("MethodArgumentNotValidException handling: {}", ex.getMessage());
+		log.warn("ValidException handling: {}", ex.getMessage());
+		return ResponseEntity.status(errorCode.getHttpStatus())
+			.body(new ErrorResponse(errorCode.getMessage()));
+	}
+
+	// 400 BAD REQUEST
+	// 타입 불일치
+	@ExceptionHandler(MethodArgumentTypeMismatchException.class)
+	protected ResponseEntity<ErrorResponse> handleRequestFailException(Exception ex) {
+		ErrorCode errorCode = ErrorCode.TYPE_MISMATCH;
+		log.warn("MethodArgumentTypeMismatchException handling: {}", ex.getMessage());
 		return ResponseEntity.status(errorCode.getHttpStatus())
 			.body(new ErrorResponse(errorCode.getMessage()));
 	}

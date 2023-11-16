@@ -3,6 +3,8 @@ package kr.codesquad.jazzmeet.inquiry.service;
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.Optional;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,17 +14,18 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import kr.codesquad.jazzmeet.IntegrationTestSupport;
 import kr.codesquad.jazzmeet.fixture.InquiryFixture;
 import kr.codesquad.jazzmeet.global.error.CustomException;
+import kr.codesquad.jazzmeet.global.error.statuscode.ErrorCode;
 import kr.codesquad.jazzmeet.global.error.statuscode.InquiryErrorCode;
-import kr.codesquad.jazzmeet.inquiry.dto.request.InquiryAnswerSaveRequest;
-import kr.codesquad.jazzmeet.inquiry.dto.request.InquiryAnswerUpdateRequest;
 import kr.codesquad.jazzmeet.inquiry.dto.request.InquiryDeleteRequest;
 import kr.codesquad.jazzmeet.inquiry.dto.request.InquirySaveRequest;
-import kr.codesquad.jazzmeet.inquiry.dto.response.InquiryAnswerSaveResponse;
-import kr.codesquad.jazzmeet.inquiry.dto.response.InquiryAnswerUpdateResponse;
+import kr.codesquad.jazzmeet.inquiry.dto.request.answer.InquiryAnswerSaveRequest;
+import kr.codesquad.jazzmeet.inquiry.dto.request.answer.InquiryAnswerUpdateRequest;
 import kr.codesquad.jazzmeet.inquiry.dto.response.InquiryDetailResponse;
 import kr.codesquad.jazzmeet.inquiry.dto.response.InquirySaveResponse;
 import kr.codesquad.jazzmeet.inquiry.dto.response.InquirySearch;
 import kr.codesquad.jazzmeet.inquiry.dto.response.InquirySearchResponse;
+import kr.codesquad.jazzmeet.inquiry.dto.response.answer.InquiryAnswerSaveResponse;
+import kr.codesquad.jazzmeet.inquiry.dto.response.answer.InquiryAnswerUpdateResponse;
 import kr.codesquad.jazzmeet.inquiry.entity.Answer;
 import kr.codesquad.jazzmeet.inquiry.entity.Inquiry;
 import kr.codesquad.jazzmeet.inquiry.repository.InquiryAnswerRepository;
@@ -169,7 +172,7 @@ class InquiryServiceTest extends IntegrationTestSupport {
 		String nickname = "지안";
 		String password = "1234";
 		String content = "문의 내용";
-		InquirySaveRequest inquirySaveRequest = InquiryFixture.createInquiryRequest(category, nickname, password,
+		InquirySaveRequest inquirySaveRequest = InquiryFixture.createInquirySaveRequest(category, nickname, password,
 			content);
 
 		// when
@@ -189,7 +192,7 @@ class InquiryServiceTest extends IntegrationTestSupport {
 		String nickname = "지안";
 		String password = "비밀번호";
 		String content = "문의 내용";
-		InquirySaveRequest inquirySaveRequest = InquiryFixture.createInquiryRequest(category, nickname, password,
+		InquirySaveRequest inquirySaveRequest = InquiryFixture.createInquirySaveRequest(category, nickname, password,
 			content);
 
 		// when
@@ -208,7 +211,7 @@ class InquiryServiceTest extends IntegrationTestSupport {
 		String nickname = "지안";
 		String password = "비밀번호";
 		String content = "문의 내용";
-		InquirySaveRequest inquirySaveRequest = InquiryFixture.createInquiryRequest(category, nickname, password,
+		InquirySaveRequest inquirySaveRequest = InquiryFixture.createInquirySaveRequest(category, nickname, password,
 			content);
 
 		// when // then
@@ -284,7 +287,7 @@ class InquiryServiceTest extends IntegrationTestSupport {
 		// when // then
 		assertThatThrownBy(() -> inquiryService.delete(inquiryId, inquiryDeleteRequest))
 			.isInstanceOf(CustomException.class)
-			.hasMessage(InquiryErrorCode.WRONG_PASSWORD.getMessage());
+			.hasMessage(ErrorCode.WRONG_PASSWORD.getMessage());
 	}
 
 	@Test
@@ -374,6 +377,38 @@ class InquiryServiceTest extends IntegrationTestSupport {
 
 		// when // then
 		assertThatThrownBy(() -> inquiryService.updateAnswer(answerId, request))
+			.isInstanceOf(CustomException.class)
+			.hasMessage(InquiryErrorCode.NOT_FOUND_ANSWER.getMessage());
+	}
+
+	@Test
+	@DisplayName("문의에 대한 답변을 삭제할 수 있다.")
+	void deleteAnswer() {
+		// given
+		Inquiry inquiry = inquiryRepository.save(InquiryFixture.createInquiry());
+		Long answerId = inquiryService.saveAnswer(
+			InquiryFixture.createInquiryAnswerSaveRequest(inquiry.getId())).id();
+
+		// when
+		inquiryService.deleteAnswer(answerId);
+		Optional<Answer> foundAnswer = inquiryAnswerRepository.findById(answerId);
+
+		// then
+		assertAll(
+			() -> assertThat(foundAnswer).isEmpty(),
+			() -> assertThat(inquiry.getAnswer()).isNull(),
+			() -> assertThat(inquiry.getStatus()).isEqualTo(InquiryStatus.WAITING)
+		);
+	}
+
+	@Test
+	@DisplayName("존재하지 않는 답변은 수정할 수 없다.")
+	void deleteAnswerNotExistException() {
+		// given
+		Long answerId = 0L;
+
+		// when // then
+		assertThatThrownBy(() -> inquiryService.deleteAnswer(answerId))
 			.isInstanceOf(CustomException.class)
 			.hasMessage(InquiryErrorCode.NOT_FOUND_ANSWER.getMessage());
 	}
