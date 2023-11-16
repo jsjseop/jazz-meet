@@ -83,7 +83,11 @@ export const addMarkersOnMap = ({
       },
     });
 
-    addMarkerClickEvent(marker, () => onMarkerClick(pin.id));
+    addMarkerClickEvent(marker, () => {
+      map.panTo(new naver.maps.LatLng(pin.latitude, pin.longitude));
+
+      onMarkerClick(pin.id);
+    });
 
     return marker;
   });
@@ -113,7 +117,11 @@ export const addPinsOnMap = ({
       },
     });
 
-    addMarkerClickEvent(marker, () => onPinClick(pin.id));
+    addMarkerClickEvent(marker, () => {
+      map.panTo(new naver.maps.LatLng(pin.latitude, pin.longitude));
+
+      onPinClick(pin.id);
+    });
 
     return marker;
   });
