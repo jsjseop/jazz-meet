@@ -12,7 +12,7 @@ export const fitBoundsToCoordinates = (
   }
 
   if (coordinates.length === 1) {
-    map.setCenter(
+    map.panTo(
       new naver.maps.LatLng(coordinates[0].latitude, coordinates[0].longitude),
     );
 
@@ -28,7 +28,7 @@ export const fitBoundsToCoordinates = (
     bounds.extend(new naver.maps.LatLng(coord.latitude, coord.longitude));
   });
 
-  map.fitBounds(bounds);
+  map.panToBounds(bounds);
 };
 
 export const fitBoundsToCoordinateBoundary = (
@@ -47,7 +47,7 @@ export const fitBoundsToCoordinateBoundary = (
     new naver.maps.LatLng(Number(highLatitude), Number(highLongitude)),
   );
 
-  map.fitBounds(bounds);
+  map.panToBounds(bounds);
 };
 
 const generateTiedEighthNotesSVG = (isActive?: boolean) =>
@@ -173,6 +173,8 @@ export const getInitMap = (userCoordinate: Coordinate | null) => {
       initCoordinate.latitude,
       initCoordinate.longitude,
     ),
+    mapDataControl: false,
+    tileTransition: false,
   });
 };
 

@@ -27,11 +27,6 @@ export const Map: React.FC<Props> = ({
     const map = getInitMap(null);
     onMapInitialized(map);
 
-    const boundsChangeEventListener = naver.maps.Event.addListener(
-      map,
-      'zoom_changed',
-      showMapSearchButton,
-    );
     const dragendEventListener = naver.maps.Event.addListener(
       map,
       'dragend',
@@ -39,7 +34,6 @@ export const Map: React.FC<Props> = ({
     );
 
     return () => {
-      naver.maps.Event.removeListener(boundsChangeEventListener);
       naver.maps.Event.removeListener(dragendEventListener);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps

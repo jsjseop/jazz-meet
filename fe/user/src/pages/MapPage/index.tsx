@@ -16,11 +16,15 @@ export const MapPage: React.FC = () => {
     handleChangeVenueListPage,
   } = useMapDataUpdater(map);
 
-  const { search } = useLocation();
+  const { pathname, search } = useLocation();
   const word = new URLSearchParams(search).get('word');
   const venueId = new URLSearchParams(search).get('venueId');
 
   useEffect(() => {
+    if (pathname !== '/map') {
+      return;
+    }
+
     if (word) {
       updateMapDataBySearch(word);
 
