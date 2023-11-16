@@ -48,8 +48,6 @@ public class InquiryService {
 	public InquirySearchResponse getInquiries(String category, String word, int page) {
 		// request는 한글, DB 저장은 영어로 되어있기 때문에 변환 필요.
 		InquiryCategory inquiryCategory = InquiryCategory.toInquiryCategory(category);
-		// word가 없으면 공백 문자를 넣어 category에 해당하는 모든 문의를 반환한다.
-		word = isNullInsertBlank(word);
 		PageRequest pageRequest = PageRequest.of(page - PAGE_NUMBER_OFFSET, PAGE_SIZE);
 
 		Page<InquirySearchData> inquirySearchData = inquiryQueryRepository.searchInquiries(word, inquiryCategory,
@@ -108,13 +106,6 @@ public class InquiryService {
 		answerRepository.flush(); // modifiedAt 반영을 위해 변경 사항 강제 커밋
 
 		return InquiryMapper.INSTANCE.toInquiryAnswerUpdateResponse(answer);
-	}
-
-	private String isNullInsertBlank(String word) {
-		if (word == null) {
-			return "";
-		}
-		return word;
 	}
 
 	private Inquiry findById(Long inquiryId) {
