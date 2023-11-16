@@ -13,15 +13,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
-import kr.codesquad.jazzmeet.inquiry.dto.request.InquiryAnswerSaveRequest;
-import kr.codesquad.jazzmeet.inquiry.dto.request.InquiryAnswerUpdateRequest;
 import kr.codesquad.jazzmeet.inquiry.dto.request.InquiryDeleteRequest;
 import kr.codesquad.jazzmeet.inquiry.dto.request.InquirySaveRequest;
-import kr.codesquad.jazzmeet.inquiry.dto.response.InquiryAnswerSaveResponse;
-import kr.codesquad.jazzmeet.inquiry.dto.response.InquiryAnswerUpdateResponse;
+import kr.codesquad.jazzmeet.inquiry.dto.request.answer.InquiryAnswerSaveRequest;
+import kr.codesquad.jazzmeet.inquiry.dto.request.answer.InquiryAnswerUpdateRequest;
 import kr.codesquad.jazzmeet.inquiry.dto.response.InquiryDetailResponse;
 import kr.codesquad.jazzmeet.inquiry.dto.response.InquirySaveResponse;
 import kr.codesquad.jazzmeet.inquiry.dto.response.InquirySearchResponse;
+import kr.codesquad.jazzmeet.inquiry.dto.response.answer.InquiryAnswerSaveResponse;
+import kr.codesquad.jazzmeet.inquiry.dto.response.answer.InquiryAnswerUpdateResponse;
 import kr.codesquad.jazzmeet.inquiry.service.InquiryService;
 import lombok.RequiredArgsConstructor;
 
@@ -93,5 +93,15 @@ public class InquiryController {
 		@RequestBody @Valid InquiryAnswerUpdateRequest request) {
 		InquiryAnswerUpdateResponse answer = inquiryService.updateAnswer(answerId, request);
 		return ResponseEntity.ok(answer);
+	}
+
+	/**
+	 * 문의 답변 삭제 API
+	 */
+	@DeleteMapping("/api/inquiries/answers/{answerId}")
+	public ResponseEntity<Void> deleteAnswer(@PathVariable Long answerId) {
+		// TODO: 로그인 구현 시, token과 answer의 adminId가 같은지 검증 후 삭제 가능.
+		inquiryService.deleteAnswer(answerId);
+		return ResponseEntity.noContent().build();
 	}
 }
