@@ -133,12 +133,15 @@ public class InquiryService {
 			.orElseThrow(() -> new CustomException(InquiryErrorCode.NOT_FOUND_ANSWER));
 	}
 
+	private Answer findAnswerByIdWithInquiry(Long answerId) {
+		return answerRepository.findByIdWithInquiry(answerId)
+			.orElseThrow(() -> new CustomException(InquiryErrorCode.NOT_FOUND_ANSWER));
+	}
+
 	@Transactional
 	public void deleteAnswer(Long answerId) {
-		// TODO: 쿼리 개선
-		Answer answer = findAnswerById(answerId);
-		Long inquiryId = answer.getInquiry().getId();
-		Inquiry inquiry = findById(inquiryId);
+		Answer answer = findAnswerByIdWithInquiry(answerId);
+		Inquiry inquiry = answer.getInquiry();
 		inquiry.updateStatusToWaiting();
 
 		answerRepository.delete(answer);
