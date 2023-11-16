@@ -1,8 +1,10 @@
 import styled from '@emotion/styled';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { SearchBox } from '~/components/SearchBox';
 
 export const Header: React.FC = () => {
+  const { pathname } = useLocation();
+
   return (
     <StyledHeader>
       <StyledLeftContainer>
@@ -10,7 +12,9 @@ export const Header: React.FC = () => {
           <StyledLogoImage src="https://github.com/jsh3418/js-calculator-bonobono/assets/57666791/07da94d4-01b3-4e70-8973-db44780f6d6e" />
         </Link>
         <StyledButtons>
-          <Link to="/map">지도</Link>
+          <Link to="/map" reloadDocument={pathname.slice(0, 4) === '/map'}>
+            공연장
+          </Link>
           <Link to="/show">공연</Link>
           <Link to="/inquiry">문의</Link>
         </StyledButtons>
