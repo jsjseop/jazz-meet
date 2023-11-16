@@ -125,14 +125,17 @@ export const addPinsOnMap = ({
 
     addMarkerMouseOverEvent(marker, () => {
       marker.setIcon({
-        content: generateMarkerContent(pin.name, false),
+        content: generateMarkerContent(pin.name, selectedVenueId === pin.id),
         anchor: new naver.maps.Point(4.5, 7),
       });
     });
 
     addMarkerMouseOutEvent(marker, () => {
       marker.setIcon({
-        content: PIN_SVG,
+        content:
+          selectedVenueId === pin.id
+            ? generateMarkerContent(pin.name, true)
+            : PIN_SVG,
         anchor: new naver.maps.Point(4.5, 7),
       });
     });

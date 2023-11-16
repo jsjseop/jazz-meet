@@ -1,5 +1,10 @@
 import styled from '@emotion/styled';
 import { useEffect, useState } from 'react';
+import {
+  HOVER_MARKER_Z_INDEX,
+  MARKER_Z_INDEX,
+  SELECTED_MARKER_Z_INDEX,
+} from '~/constants/MAP';
 import { getInitMap } from '~/utils/map';
 import { MapSearchButton } from './MapSearchButton';
 
@@ -57,6 +62,7 @@ const StyledMap = styled.div`
   height: inherit;
 
   .marker {
+    position: relative;
     background-color: #ffffff;
     white-space: nowrap;
     border: 1px solid #efeff0;
@@ -66,6 +72,11 @@ const StyledMap = styled.div`
     display: flex;
     align-items: center;
     gap: 5px;
+    z-index: ${MARKER_Z_INDEX};
+
+    &:hover {
+      z-index: ${HOVER_MARKER_Z_INDEX};
+    }
 
     &--icon {
       width: 38px;
@@ -84,6 +95,7 @@ const StyledMap = styled.div`
     &.active {
       background-color: #47484e;
       border: none;
+      z-index: ${SELECTED_MARKER_Z_INDEX};
 
       .marker--icon {
         background-color: #ffffff;
