@@ -20,7 +20,7 @@ public class ShowFixture {
 	public static Show createShow(String teamName, LocalDateTime time, Venue venue) {
 		return Show.builder()
 			.teamName(teamName)
-			.poster(new Image("image.url", ImageStatus.REGISTERED, LocalDateTime.now()))
+			.poster(new Image("image.url", ImageStatus.REGISTERED))
 			.startTime(time)
 			.endTime(time)
 			.venue(venue)
