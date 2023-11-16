@@ -108,6 +108,15 @@ public class InquiryService {
 		return InquiryMapper.INSTANCE.toInquiryAnswerUpdateResponse(answer);
 	}
 
+	@Transactional
+	public void deleteAnswer(Long answerId) {
+		Answer answer = findAnswerByIdWithInquiry(answerId);
+		Inquiry inquiry = answer.getInquiry();
+		inquiry.updateStatusToWaiting();
+
+		answerRepository.delete(answer);
+	}
+
 	private Inquiry findById(Long inquiryId) {
 		return inquiryRepository.findById(inquiryId)
 			.orElseThrow(() -> new CustomException(InquiryErrorCode.NOT_FOUND_INQUIRY));
@@ -127,14 +136,5 @@ public class InquiryService {
 	private Answer findAnswerByIdWithInquiry(Long answerId) {
 		return answerRepository.findByIdWithInquiry(answerId)
 			.orElseThrow(() -> new CustomException(InquiryErrorCode.NOT_FOUND_ANSWER));
-	}
-
-	@Transactional
-	public void deleteAnswer(Long answerId) {
-		Answer answer = findAnswerByIdWithInquiry(answerId);
-		Inquiry inquiry = answer.getInquiry();
-		inquiry.updateStatusToWaiting();
-
-		answerRepository.delete(answer);
 	}
 }

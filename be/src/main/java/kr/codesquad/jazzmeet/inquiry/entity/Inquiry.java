@@ -71,6 +71,11 @@ public class Inquiry extends BaseTimeEntity {
 		this.answer = answer;
 	}
 
+	public void updateStatusToWaiting() {
+		this.status = InquiryStatus.WAITING;
+		this.answer = null;
+	}
+
 	public Inquiry inspectExistAnswer() {
 		if (this.status == InquiryStatus.REPLIED || this.answer != null) {
 			throw new CustomException(InquiryErrorCode.ALREADY_REPLIED);
@@ -78,8 +83,4 @@ public class Inquiry extends BaseTimeEntity {
 		return this;
 	}
 
-	public void updateStatusToWaiting() {
-		this.status = InquiryStatus.WAITING;
-		this.answer = null;
-	}
 }
