@@ -29,8 +29,7 @@ export const Delete: React.FC<Props> = ({ inquiryId }) => {
         minLength: INQUIRY_PASSWORD_MIN_LENGTH,
         maxLength: INQUIRY_PASSWORD_MAX_LENGTH,
         onInvalid: (message) => alert(`비밀번호를 ${message}`),
-      }) ||
-      !password
+      })
     ) {
       return;
     }
