@@ -14,6 +14,7 @@ export const MapPage: React.FC = () => {
     updateMapDataBySearch,
     updateMapDataByVenueId,
     handleChangeVenueListPage,
+    selectVenue,
   } = useMapDataUpdater(map);
 
   const { pathname, search } = useLocation();
@@ -53,6 +54,7 @@ export const MapPage: React.FC = () => {
         mapElement={mapElement}
         searchedVenus={searchedVenues}
         handleChangeVenueListPage={handleChangeVenueListPage}
+        selectVenue={selectVenue}
       />
     </StyledMapPage>
   );

@@ -83,6 +83,10 @@ export const useMapDataUpdater = (map?: naver.maps.Map) => {
     setSearchedVenues(venueList);
   };
 
+  const selectVenue = (venueId: number) => {
+    setSelectedVenueId(venueId);
+  };
+
   // pins, searchedVenues가 변경될 때 렌더링 한다.
   useEffect(() => {
     if (!map || !pins || !searchedVenues) {
@@ -138,5 +142,6 @@ export const useMapDataUpdater = (map?: naver.maps.Map) => {
     updateMapDataBySearch,
     updateMapDataByVenueId,
     handleChangeVenueListPage,
+    selectVenue,
   };
 };
