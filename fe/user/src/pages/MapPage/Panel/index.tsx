@@ -7,21 +7,18 @@ type Props = {
   mapElement: React.RefObject<HTMLDivElement>;
   searchedVenus?: SearchedVenues;
   handleChangeVenueListPage: (page: number) => void;
-  selectVenue: (venueId: number) => void;
 };
 
 export const Panel: React.FC<Props> = ({
   mapElement,
   searchedVenus,
   handleChangeVenueListPage,
-  selectVenue,
 }) => {
   return (
     <StyledPanel>
       <VenueList
         searchedVenus={searchedVenus}
         handleChangeVenueListPage={handleChangeVenueListPage}
-        selectVenue={selectVenue}
       />
       <Outlet context={mapElement} />
     </StyledPanel>

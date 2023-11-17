@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import {
   getSingleVenue,
   getVenuePinsByMapBounds,
@@ -16,16 +16,18 @@ import {
 } from '~/utils/map';
 
 export const useMapDataUpdater = (map?: naver.maps.Map) => {
+  const navigate = useNavigate();
+  const { venueId } = useParams();
+
   const [pins, setPins] = useState<Pin[]>();
   const [searchedVenues, setSearchedVenues] = useState<SearchedVenues>();
-  const [selectedVenueId, setSelectedVenueId] = useState<number>(-1);
 
   const pinsOnMap = useRef<naver.maps.Marker[]>();
   const markersOnMap = useRef<naver.maps.Marker[]>();
 
   const enableFitBounds = useRef(false);
 
-  const navigate = useNavigate();
+  const selectedVenueId = venueId ? Number(venueId) : -1;
 
   const updateMapDataBasedOnBounds = async () => {
     if (!map) {
@@ -83,10 +85,6 @@ export const useMapDataUpdater = (map?: naver.maps.Map) => {
     setSearchedVenues(venueList);
   };
 
-  const selectVenue = (venueId: number) => {
-    setSelectedVenueId(venueId);
-  };
-
   // pins, searchedVenues가 변경될 때 렌더링 한다.
   useEffect(() => {
     if (!map || !pins || !searchedVenues) {
@@ -113,19 +111,13 @@ export const useMapDataUpdater = (map?: naver.maps.Map) => {
       pins: filteredPins,
       map,
       selectedVenueId,
-      onPinClick: (venueId) => {
-        goToVenueDetail(venueId);
-        setSelectedVenueId(venueId);
-      },
+      onPinClick: (venueId) => goToVenueDetail(venueId),
     });
     markersOnMap.current = addMarkersOnMap({
       pins: searchedVenues.venues,
       map,
       selectedVenueId,
-      onMarkerClick: (venueId) => {
-        goToVenueDetail(venueId);
-        setSelectedVenueId(venueId);
-      },
+      onMarkerClick: (venueId) => goToVenueDetail(venueId),
     });
 
     if (enableFitBounds.current) {
@@ -136,12 +128,31 @@ export const useMapDataUpdater = (map?: naver.maps.Map) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [map, pins, searchedVenues, selectedVenueId]);
 
+  useEffect(() => {
+    if (!map || !pins) {
+      return;
+    }
+
+    if (selectedVenueId !== -1) {
+      const selectedVenue = pins.find((pin) => pin.id === selectedVenueId);
+
+      if (selectedVenue) {
+        map.panTo(
+          new naver.maps.LatLng(
+            selectedVenue.latitude,
+            selectedVenue.longitude,
+          ),
+        );
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedVenueId]);
+
   return {
     searchedVenues,
     updateMapDataBasedOnBounds,
     updateMapDataBySearch,
     updateMapDataByVenueId,
     handleChangeVenueListPage,
-    selectVenue,
   };
 };

@@ -8,13 +8,11 @@ import { VenueItem } from './VenueItem';
 type Props = {
   searchedVenus?: SearchedVenues;
   handleChangeVenueListPage: (page: number) => void;
-  selectVenue: (venueId: number) => void;
 };
 
 export const VenueList: React.FC<Props> = ({
   searchedVenus,
   handleChangeVenueListPage,
-  selectVenue,
 }) => {
   const onVenueListPageChange = (
     _: React.ChangeEvent<unknown>,
@@ -34,11 +32,7 @@ export const VenueList: React.FC<Props> = ({
         <>
           <StyledVenues>
             {searchedVenus.venues.map((venue) => (
-              <Link
-                to={`/map/venues/${venue.id}`}
-                key={venue.id}
-                onClick={() => selectVenue(venue.id)}
-              >
+              <Link to={`/map/venues/${venue.id}`} key={venue.id}>
                 <VenueItem {...venue} />
               </Link>
             ))}

@@ -6,7 +6,6 @@ import { Map } from './Map';
 import { Panel } from './Panel';
 
 export const MapPage: React.FC = () => {
-  const mapElement = useRef<HTMLDivElement>(null);
   const [map, setMap] = useState<naver.maps.Map>();
   const {
     searchedVenues,
@@ -14,8 +13,8 @@ export const MapPage: React.FC = () => {
     updateMapDataBySearch,
     updateMapDataByVenueId,
     handleChangeVenueListPage,
-    selectVenue,
   } = useMapDataUpdater(map);
+  const mapElement = useRef<HTMLDivElement>(null);
 
   const { pathname, search } = useLocation();
   const word = new URLSearchParams(search).get('word');
@@ -54,7 +53,6 @@ export const MapPage: React.FC = () => {
         mapElement={mapElement}
         searchedVenus={searchedVenues}
         handleChangeVenueListPage={handleChangeVenueListPage}
-        selectVenue={selectVenue}
       />
     </StyledMapPage>
   );
