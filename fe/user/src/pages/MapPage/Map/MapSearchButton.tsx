@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import RefreshIcon from '@mui/icons-material/Refresh';
+import { useNavigate } from 'react-router-dom';
 
 type Props = {
   hideMapSearchButton: () => void;
@@ -10,9 +11,12 @@ export const MapSearchButton: React.FC<Props> = ({
   hideMapSearchButton,
   onCurrentViewSearchClick,
 }) => {
+  const navigate = useNavigate();
+
   const onMapSearchButtonClick = () => {
     hideMapSearchButton();
     onCurrentViewSearchClick();
+    navigate('/map');
   };
 
   return (
