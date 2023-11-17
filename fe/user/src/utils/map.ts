@@ -79,7 +79,7 @@ export const addMarkersOnMap = ({
       map: map,
       icon: {
         content: generateMarkerContent(pin.name, selectedVenueId === pin.id),
-        anchor: new naver.maps.Point(3, 48),
+        anchor: new naver.maps.Point(0, 50),
       },
     });
 
@@ -104,13 +104,16 @@ export const addPinsOnMap = ({
     const marker = new naver.maps.Marker({
       position: new naver.maps.LatLng(pin.latitude, pin.longitude),
       map: map,
-      icon: {
-        content:
-          selectedVenueId === pin.id
-            ? generateMarkerContent(pin.name, true)
-            : PIN_SVG,
-        anchor: new naver.maps.Point(4.5, 7),
-      },
+      icon:
+        selectedVenueId === pin.id
+          ? {
+              content: generateMarkerContent(pin.name, true),
+              anchor: new naver.maps.Point(0, 50),
+            }
+          : {
+              content: PIN_SVG,
+              anchor: new naver.maps.Point(0, 32),
+            },
     });
 
     addMarkerClickEvent(marker, () => onPinClick(pin.id));
@@ -118,18 +121,22 @@ export const addPinsOnMap = ({
     addMarkerMouseOverEvent(marker, () => {
       marker.setIcon({
         content: generateMarkerContent(pin.name, selectedVenueId === pin.id),
-        anchor: new naver.maps.Point(4.5, 7),
+        anchor: new naver.maps.Point(0, 50),
       });
     });
 
     addMarkerMouseOutEvent(marker, () => {
-      marker.setIcon({
-        content:
-          selectedVenueId === pin.id
-            ? generateMarkerContent(pin.name, true)
-            : PIN_SVG,
-        anchor: new naver.maps.Point(4.5, 7),
-      });
+      marker.setIcon(
+        selectedVenueId === pin.id
+          ? {
+              content: generateMarkerContent(pin.name, true),
+              anchor: new naver.maps.Point(0, 50),
+            }
+          : {
+              content: PIN_SVG,
+              anchor: new naver.maps.Point(0, 32),
+            },
+      );
     });
 
     return marker;
