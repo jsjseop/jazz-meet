@@ -70,6 +70,7 @@ const StyledMap = styled.div`
 
     &:hover {
       z-index: ${HOVER_MARKER_Z_INDEX};
+      box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5);
     }
 
     &--icon {
