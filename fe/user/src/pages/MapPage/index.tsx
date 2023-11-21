@@ -16,15 +16,11 @@ export const MapPage: React.FC = () => {
   } = useMapDataUpdater(map);
   const mapElement = useRef<HTMLDivElement>(null);
 
-  const { pathname, search } = useLocation();
+  const { search } = useLocation();
   const word = new URLSearchParams(search).get('word');
   const venueId = new URLSearchParams(search).get('venueId');
 
   useEffect(() => {
-    if (pathname !== '/map') {
-      return;
-    }
-
     if (word) {
       updateMapDataBySearch(word);
 
@@ -36,9 +32,6 @@ export const MapPage: React.FC = () => {
 
       return;
     }
-
-    updateMapDataBasedOnBounds();
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [word, venueId]);
 
