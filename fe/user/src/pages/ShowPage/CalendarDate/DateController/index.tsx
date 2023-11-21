@@ -112,7 +112,7 @@ const getCenterDateIndex = (index: number, lastIndex?: number) => {
   }
 
   if (lastIndex && index > lastIndex) {
-    return index;
+    return lastIndex;
   }
 
   return index;
