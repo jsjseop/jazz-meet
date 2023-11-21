@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import {
   getSingleVenue,
   getVenuePinsByMapBounds,
@@ -18,6 +18,7 @@ import {
 export const useMapDataUpdater = (map?: naver.maps.Map) => {
   const navigate = useNavigate();
   const { venueId } = useParams();
+  const { search } = useLocation();
 
   const [pins, setPins] = useState<Pin[]>();
   const [searchedVenues, setSearchedVenues] = useState<SearchedVenues>();
@@ -104,7 +105,7 @@ export const useMapDataUpdater = (map?: naver.maps.Map) => {
     );
 
     const goToVenueDetail = (venueId: number) => {
-      navigate(`venues/${venueId}`);
+      navigate(`venues/${venueId}${search}`);
     };
 
     pinsOnMap.current = addPinsOnMap({
