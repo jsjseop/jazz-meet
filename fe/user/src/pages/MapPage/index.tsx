@@ -2,6 +2,7 @@ import styled from '@emotion/styled';
 import { useEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useMapDataUpdater } from '~/hooks/useMapDataUpdater';
+import { getQueryBounds } from '~/utils/map';
 import { Map } from './Map';
 import { Panel } from './Panel';
 
@@ -9,6 +10,7 @@ export const MapPage: React.FC = () => {
   const [map, setMap] = useState<naver.maps.Map>();
   const {
     searchedVenues,
+    searchBasedOnBounds,
     updateMapDataBasedOnBounds,
     updateMapDataBySearch,
     updateMapDataByVenueId,
@@ -32,15 +34,19 @@ export const MapPage: React.FC = () => {
 
       return;
     }
+
+    const bounds = getQueryBounds(search);
+
+    updateMapDataBasedOnBounds(bounds);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [word, venueId]);
+  }, [map, word, venueId, search]);
 
   return (
     <StyledMapPage>
       <Map
         mapElement={mapElement}
         onMapInitialized={(map: naver.maps.Map) => setMap(map)}
-        onCurrentViewSearchClick={updateMapDataBasedOnBounds}
+        onCurrentViewSearchClick={searchBasedOnBounds}
       />
       <Panel
         mapElement={mapElement}

@@ -31,6 +31,18 @@ export const fitBoundsToCoordinates = (
   map.panToBounds(bounds);
 };
 
+export const fitBoundsToBoundary = (
+  coordinates: CoordinateBoundary,
+  map: naver.maps.Map,
+) => {
+  const bounds = new naver.maps.LatLngBounds(
+    new naver.maps.LatLng(coordinates.lowLatitude, coordinates.lowLongitude),
+    new naver.maps.LatLng(coordinates.highLatitude, coordinates.highLongitude),
+  );
+
+  map.fitBounds(bounds);
+};
+
 export const fitBoundsToCoordinateBoundary = (
   searchQueryString: string,
   map: naver.maps.Map,
@@ -192,4 +204,38 @@ export const getMapBounds = (
     lowLongitude: bounds.west(),
     highLongitude: bounds.east(),
   };
+};
+
+export const getQueryBounds = (
+  query: string,
+): CoordinateBoundary | undefined => {
+  const urlParams = new URLSearchParams(query);
+
+  const lowLatitude = urlParams.get('lowLatitude');
+  const highLatitude = urlParams.get('highLatitude');
+  const lowLongitude = urlParams.get('lowLongitude');
+  const highLongitude = urlParams.get('highLongitude');
+
+  if (!lowLatitude || !highLatitude || !lowLongitude || !highLongitude) {
+    return;
+  }
+
+  return {
+    lowLatitude: Number(lowLatitude),
+    highLatitude: Number(highLatitude),
+    lowLongitude: Number(lowLongitude),
+    highLongitude: Number(highLongitude),
+  };
+};
+
+export const isSameCoordinate = (
+  coord1: CoordinateBoundary,
+  coord2: CoordinateBoundary,
+) => {
+  return (
+    coord1.lowLatitude === coord2.lowLatitude &&
+    coord1.highLatitude === coord2.highLatitude &&
+    coord1.lowLongitude === coord2.lowLongitude &&
+    coord1.highLongitude === coord2.highLongitude
+  );
 };

@@ -8,9 +8,12 @@ import {
   getVenuesByMapBounds,
 } from '~/apis/venue';
 import { Pin, SearchedVenues } from '~/types/api.types';
+import { CoordinateBoundary } from '~/types/map.types';
+import { getQueryString } from '~/utils/getQueryString';
 import {
   addMarkersOnMap,
   addPinsOnMap,
+  fitBoundsToBoundary,
   fitBoundsToCoordinates,
   getMapBounds,
 } from '~/utils/map';
@@ -27,15 +30,32 @@ export const useMapDataUpdater = (map?: naver.maps.Map) => {
   const markersOnMap = useRef<naver.maps.Marker[]>();
 
   const enableFitBounds = useRef(false);
+  const boundary = useRef<CoordinateBoundary>();
 
   const selectedVenueId = venueId ? Number(venueId) : -1;
 
-  const updateMapDataBasedOnBounds = async () => {
+  const searchBasedOnBounds = () => {
     if (!map) {
       return;
     }
 
     const bounds = getMapBounds(map);
+
+    if (!bounds) {
+      return;
+    }
+
+    navigate(`/map${getQueryString(bounds)}`);
+  };
+
+  const updateMapDataBasedOnBounds = async (
+    queryBounds?: CoordinateBoundary,
+  ) => {
+    if (!map) {
+      return;
+    }
+
+    const bounds = queryBounds === undefined ? getMapBounds(map) : queryBounds;
 
     if (!bounds) {
       return;
@@ -48,6 +68,7 @@ export const useMapDataUpdater = (map?: naver.maps.Map) => {
 
     setPins(pins);
     setSearchedVenues(venueList);
+    boundary.current = bounds;
     enableFitBounds.current = false;
   };
 
@@ -124,6 +145,14 @@ export const useMapDataUpdater = (map?: naver.maps.Map) => {
     if (enableFitBounds.current) {
       fitBoundsToCoordinates([...filteredPins, ...searchedVenues.venues], map);
       enableFitBounds.current = false;
+      return;
+    }
+
+    if (boundary.current) {
+      console.log('boundary.current', boundary.current);
+      fitBoundsToBoundary(boundary.current, map);
+
+      boundary.current = undefined;
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -151,6 +180,7 @@ export const useMapDataUpdater = (map?: naver.maps.Map) => {
 
   return {
     searchedVenues,
+    searchBasedOnBounds,
     updateMapDataBasedOnBounds,
     updateMapDataBySearch,
     updateMapDataByVenueId,
