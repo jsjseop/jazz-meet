@@ -18,7 +18,7 @@ public class Image extends BaseTimeEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	@Column(nullable = false, unique = true, length = 500)
+	@Column(nullable = false, length = 500)
 	private String url;
 	@Enumerated(value = EnumType.STRING)
 	@Column(nullable = false, length = 12)
