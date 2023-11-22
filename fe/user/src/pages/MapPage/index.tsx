@@ -1,8 +1,9 @@
 import styled from '@emotion/styled';
 import { useEffect, useRef, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useMapDataUpdater } from '~/hooks/useMapDataUpdater';
-import { getQueryBounds } from '~/utils/map';
+import { getQueryString } from '~/utils/getQueryString';
+import { getMapBounds, getQueryBounds } from '~/utils/map';
 import { Map } from './Map';
 import { Panel } from './Panel';
 
@@ -10,34 +11,48 @@ export const MapPage: React.FC = () => {
   const [map, setMap] = useState<naver.maps.Map>();
   const {
     searchedVenues,
-    searchBasedOnBounds,
-    updateMapDataBasedOnBounds,
-    updateMapDataBySearch,
-    updateMapDataByVenueId,
     handleChangeVenueListPage,
+    handleMapDataUpdateWithBounds,
+    handleMapDataWithWord,
+    handleMapDataWithVenueId,
   } = useMapDataUpdater(map);
   const mapElement = useRef<HTMLDivElement>(null);
 
   const { search } = useLocation();
+  const navigate = useNavigate();
   const word = new URLSearchParams(search).get('word');
   const venueId = new URLSearchParams(search).get('venueId');
 
+  const navigateWithMapBounds = () => {
+    if (!map) {
+      return;
+    }
+
+    const bounds = getMapBounds(map);
+
+    if (!bounds) {
+      return;
+    }
+
+    navigate(`/map${getQueryString(bounds)}`);
+  };
+
   useEffect(() => {
     if (word) {
-      updateMapDataBySearch(word);
+      handleMapDataWithWord(word);
 
       return;
     }
 
     if (venueId) {
-      updateMapDataByVenueId(venueId);
+      handleMapDataWithVenueId(venueId);
 
       return;
     }
 
     const bounds = getQueryBounds(search);
 
-    updateMapDataBasedOnBounds(bounds);
+    handleMapDataUpdateWithBounds(bounds);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [map, word, venueId, search]);
 
@@ -46,7 +61,7 @@ export const MapPage: React.FC = () => {
       <Map
         mapElement={mapElement}
         onMapInitialized={(map: naver.maps.Map) => setMap(map)}
-        onCurrentViewSearchClick={searchBasedOnBounds}
+        onCurrentViewSearchClick={navigateWithMapBounds}
       />
       <Panel
         mapElement={mapElement}

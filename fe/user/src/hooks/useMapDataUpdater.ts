@@ -9,7 +9,6 @@ import {
 } from '~/apis/venue';
 import { Pin, SearchedVenues } from '~/types/api.types';
 import { CoordinateBoundary } from '~/types/map.types';
-import { getQueryString } from '~/utils/getQueryString';
 import {
   addMarkersOnMap,
   addPinsOnMap,
@@ -29,38 +28,9 @@ export const useMapDataUpdater = (map?: naver.maps.Map) => {
   const pinsOnMap = useRef<naver.maps.Marker[]>();
   const markersOnMap = useRef<naver.maps.Marker[]>();
 
-  const enableFitBounds = useRef(false);
-  const boundary = useRef<CoordinateBoundary>();
-
   const selectedVenueId = venueId ? Number(venueId) : -1;
 
-  const searchBasedOnBounds = () => {
-    if (!map) {
-      return;
-    }
-
-    const bounds = getMapBounds(map);
-
-    if (!bounds) {
-      return;
-    }
-
-    navigate(`/map${getQueryString(bounds)}`);
-  };
-
-  const updateMapDataBasedOnBounds = async (
-    queryBounds?: CoordinateBoundary,
-  ) => {
-    if (!map) {
-      return;
-    }
-
-    const bounds = queryBounds === undefined ? getMapBounds(map) : queryBounds;
-
-    if (!bounds) {
-      return;
-    }
-
+  const updateMapDataBasedOnBounds = async (bounds: CoordinateBoundary) => {
     const [pins, venueList] = await Promise.all([
       getVenuePinsByMapBounds(bounds),
       getVenuesByMapBounds(bounds),
@@ -68,8 +38,6 @@ export const useMapDataUpdater = (map?: naver.maps.Map) => {
 
     setPins(pins);
     setSearchedVenues(venueList);
-    boundary.current = bounds;
-    enableFitBounds.current = false;
   };
 
   const updateMapDataBySearch = async (word: string) => {
@@ -80,7 +48,10 @@ export const useMapDataUpdater = (map?: naver.maps.Map) => {
 
     setPins(pins);
     setSearchedVenues(venueList);
-    enableFitBounds.current = true;
+
+    return {
+      pins,
+    };
   };
 
   const updateMapDataByVenueId = async (venueId: string) => {
@@ -88,7 +59,10 @@ export const useMapDataUpdater = (map?: naver.maps.Map) => {
 
     setPins([]);
     setSearchedVenues(venueList);
-    enableFitBounds.current = true;
+
+    return {
+      searchedVenues: venueList,
+    };
   };
 
   const handleChangeVenueListPage = async (page: number) => {
@@ -107,7 +81,44 @@ export const useMapDataUpdater = (map?: naver.maps.Map) => {
     setSearchedVenues(venueList);
   };
 
-  // pins, searchedVenues가 변경될 때 렌더링 한다.
+  const handleMapDataUpdateWithBounds = async (
+    queryBounds?: CoordinateBoundary,
+  ) => {
+    if (!map) {
+      return;
+    }
+
+    const bounds = queryBounds === undefined ? getMapBounds(map) : queryBounds;
+
+    if (!bounds) {
+      return;
+    }
+
+    updateMapDataBasedOnBounds(bounds);
+
+    fitBoundsToBoundary(bounds, map);
+  };
+
+  const handleMapDataWithWord = async (word: string) => {
+    if (!map) {
+      return;
+    }
+
+    const { pins } = await updateMapDataBySearch(word);
+
+    fitBoundsToCoordinates(pins, map);
+  };
+
+  const handleMapDataWithVenueId = async (venueId: string) => {
+    if (!map) {
+      return;
+    }
+
+    const { searchedVenues } = await updateMapDataByVenueId(venueId);
+
+    fitBoundsToCoordinates(searchedVenues.venues, map);
+  };
+
   useEffect(() => {
     if (!map || !pins || !searchedVenues) {
       return;
@@ -142,19 +153,6 @@ export const useMapDataUpdater = (map?: naver.maps.Map) => {
       onMarkerClick: (venueId) => goToVenueDetail(venueId),
     });
 
-    if (enableFitBounds.current) {
-      fitBoundsToCoordinates([...filteredPins, ...searchedVenues.venues], map);
-      enableFitBounds.current = false;
-      return;
-    }
-
-    if (boundary.current) {
-      console.log('boundary.current', boundary.current);
-      fitBoundsToBoundary(boundary.current, map);
-
-      boundary.current = undefined;
-    }
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [map, pins, searchedVenues, selectedVenueId]);
 
@@ -180,10 +178,9 @@ export const useMapDataUpdater = (map?: naver.maps.Map) => {
 
   return {
     searchedVenues,
-    searchBasedOnBounds,
-    updateMapDataBasedOnBounds,
-    updateMapDataBySearch,
-    updateMapDataByVenueId,
     handleChangeVenueListPage,
+    handleMapDataUpdateWithBounds,
+    handleMapDataWithWord,
+    handleMapDataWithVenueId,
   };
 };
