@@ -3,9 +3,9 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import {
   getSingleVenue,
   getVenuePinsByMapBounds,
-  getVenuePinsBySearch,
-  getVenuesByKeyword,
+  getVenuePinsByWord,
   getVenuesByMapBounds,
+  getVenuesByWord,
 } from '~/apis/venue';
 import { Pin, SearchedVenues } from '~/types/api.types';
 import { CoordinateBoundary } from '~/types/map.types';
@@ -30,41 +30,6 @@ export const useMapDataUpdater = (map?: naver.maps.Map) => {
 
   const selectedVenueId = venueId ? Number(venueId) : -1;
 
-  const updateMapDataBasedOnBounds = async (bounds: CoordinateBoundary) => {
-    const [pins, venueList] = await Promise.all([
-      getVenuePinsByMapBounds(bounds),
-      getVenuesByMapBounds(bounds),
-    ]);
-
-    setPins(pins);
-    setSearchedVenues(venueList);
-  };
-
-  const updateMapDataBySearch = async (word: string) => {
-    const [pins, venueList] = await Promise.all([
-      getVenuePinsBySearch(word),
-      getVenuesByKeyword({ word }),
-    ]);
-
-    setPins(pins);
-    setSearchedVenues(venueList);
-
-    return {
-      pins,
-    };
-  };
-
-  const updateMapDataByVenueId = async (venueId: string) => {
-    const venueList = await getSingleVenue(venueId);
-
-    setPins([]);
-    setSearchedVenues(venueList);
-
-    return {
-      searchedVenues: venueList,
-    };
-  };
-
   const handleChangeVenueListPage = async (page: number) => {
     if (!map) {
       return;
@@ -88,13 +53,16 @@ export const useMapDataUpdater = (map?: naver.maps.Map) => {
       return;
     }
 
-    const bounds = queryBounds === undefined ? getMapBounds(map) : queryBounds;
+    const bounds = queryBounds ?? getMapBounds(map);
 
     if (!bounds) {
       return;
     }
 
-    updateMapDataBasedOnBounds(bounds);
+    const { pins, searchedVenues } = await getMapDataBasedOnBounds(bounds);
+
+    setPins(pins);
+    setSearchedVenues(searchedVenues);
 
     fitBoundsToBoundary(bounds, map);
   };
@@ -104,7 +72,10 @@ export const useMapDataUpdater = (map?: naver.maps.Map) => {
       return;
     }
 
-    const { pins } = await updateMapDataBySearch(word);
+    const { pins, searchedVenues } = await getMapDataByWord(word);
+
+    setPins(pins);
+    setSearchedVenues(searchedVenues);
 
     fitBoundsToCoordinates(pins, map);
   };
@@ -114,7 +85,10 @@ export const useMapDataUpdater = (map?: naver.maps.Map) => {
       return;
     }
 
-    const { searchedVenues } = await updateMapDataByVenueId(venueId);
+    const { searchedVenues } = await getMapDataByVenueId(venueId);
+
+    setPins([]);
+    setSearchedVenues(searchedVenues);
 
     fitBoundsToCoordinates(searchedVenues.venues, map);
   };
@@ -157,21 +131,16 @@ export const useMapDataUpdater = (map?: naver.maps.Map) => {
   }, [map, pins, searchedVenues, selectedVenueId]);
 
   useEffect(() => {
-    if (!map || !pins) {
+    if (!map || !pins || selectedVenueId === -1) {
       return;
     }
 
-    if (selectedVenueId !== -1) {
-      const selectedVenue = pins.find((pin) => pin.id === selectedVenueId);
+    const selectedVenue = pins.find((pin) => pin.id === selectedVenueId);
 
-      if (selectedVenue) {
-        map.panTo(
-          new naver.maps.LatLng(
-            selectedVenue.latitude,
-            selectedVenue.longitude,
-          ),
-        );
-      }
+    if (selectedVenue) {
+      map.panTo(
+        new naver.maps.LatLng(selectedVenue.latitude, selectedVenue.longitude),
+      );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedVenueId]);
@@ -182,5 +151,37 @@ export const useMapDataUpdater = (map?: naver.maps.Map) => {
     handleMapDataUpdateWithBounds,
     handleMapDataWithWord,
     handleMapDataWithVenueId,
+  };
+};
+
+const getMapDataBasedOnBounds = async (bounds: CoordinateBoundary) => {
+  const [pins, venueList] = await Promise.all([
+    getVenuePinsByMapBounds(bounds),
+    getVenuesByMapBounds(bounds),
+  ]);
+
+  return {
+    pins,
+    searchedVenues: venueList,
+  };
+};
+
+const getMapDataByWord = async (word: string) => {
+  const [pins, venueList] = await Promise.all([
+    getVenuePinsByWord(word),
+    getVenuesByWord({ word }),
+  ]);
+
+  return {
+    pins,
+    searchedVenues: venueList,
+  };
+};
+
+const getMapDataByVenueId = async (venueId: string) => {
+  const venueList = await getSingleVenue(venueId);
+
+  return {
+    searchedVenues: venueList,
   };
 };
