@@ -12,18 +12,22 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.DeleteObjectsRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 
 import kr.codesquad.jazzmeet.global.error.CustomException;
 import kr.codesquad.jazzmeet.global.error.statuscode.ImageErrorCode;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @RequiredArgsConstructor
 @Component
+@Slf4j
 public class S3ImageHandler {
 
-	private static final String IMAGE_DIRECTORY = "/images";
+	private static final String IMAGE_DIRECTORY = "images/";
+	public static final int FILE_NAME_SEPARATE_INDEX = 4;
 
 	private final AmazonS3Client amazonS3Client;
 
@@ -47,9 +51,9 @@ public class S3ImageHandler {
 			objectMetadata.setContentType(file.getContentType());
 
 			amazonS3Client.putObject(
-				new PutObjectRequest(bucket + dir, fileName, inputStream, objectMetadata)
+				new PutObjectRequest(bucket, dir + fileName, inputStream, objectMetadata)
 					.withCannedAcl(CannedAccessControlList.PublicRead));	// PublicRead 권한으로 업로드
-			return amazonS3Client.getUrl(bucket + dir, fileName).toString();
+			return amazonS3Client.getUrl(bucket, dir + fileName).toString();
 		} catch (IOException e) {
 			throw new CustomException(ImageErrorCode.IMAGE_UPLOAD_ERROR);
 		}
@@ -84,5 +88,19 @@ public class S3ImageHandler {
 			throw new CustomException(ImageErrorCode.WRONG_IMAGE_FORMAT);
 		}
 		return fileName.substring(lastDotIndex + 1).toLowerCase();
+	}
+
+	public List<String> deleteImages(List<String> imageUrls) {
+		try {
+			String[] urls = imageUrls.stream()
+				.map(url -> IMAGE_DIRECTORY + url.split("/")[FILE_NAME_SEPARATE_INDEX])
+				.toArray(String[]::new);
+			DeleteObjectsRequest deleteObjectsRequest = new DeleteObjectsRequest(bucket).withKeys(urls);
+
+			amazonS3Client.deleteObjects(deleteObjectsRequest);
+		} catch (Exception e) {
+			throw new CustomException(ImageErrorCode.IMAGE_DELETE_ERROR);
+		}
+		return imageUrls;
 	}
 }

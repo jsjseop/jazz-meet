@@ -1,9 +1,9 @@
 package kr.codesquad.jazzmeet.fixture;
 
-import kr.codesquad.jazzmeet.inquiry.dto.request.InquiryAnswerSaveRequest;
-import kr.codesquad.jazzmeet.inquiry.dto.request.InquiryAnswerUpdateRequest;
 import kr.codesquad.jazzmeet.inquiry.dto.request.InquiryDeleteRequest;
 import kr.codesquad.jazzmeet.inquiry.dto.request.InquirySaveRequest;
+import kr.codesquad.jazzmeet.inquiry.dto.request.answer.InquiryAnswerSaveRequest;
+import kr.codesquad.jazzmeet.inquiry.dto.request.answer.InquiryAnswerUpdateRequest;
 import kr.codesquad.jazzmeet.inquiry.entity.Answer;
 import kr.codesquad.jazzmeet.inquiry.entity.Inquiry;
 import kr.codesquad.jazzmeet.inquiry.util.InquiryCategory;
@@ -97,7 +97,7 @@ public class InquiryFixture {
 			.build();
 	}
 
-	public static InquirySaveRequest createInquiryRequest(String category, String nickname, String password,
+	public static InquirySaveRequest createInquirySaveRequest(String category, String nickname, String password,
 		String content) {
 		return InquirySaveRequest.builder()
 			.category(category)
@@ -117,5 +117,9 @@ public class InquiryFixture {
 
 	public static InquiryAnswerUpdateRequest createInquiryAnswerUpdateRequest(String content) {
 		return new InquiryAnswerUpdateRequest(content);
+	}
+
+	public static InquiryAnswerSaveRequest createInquiryAnswerSaveRequest(Long inquiryId) {
+		return new InquiryAnswerSaveRequest(inquiryId, "답변 내용");
 	}
 }

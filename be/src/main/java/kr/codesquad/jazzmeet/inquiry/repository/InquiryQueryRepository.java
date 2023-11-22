@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
 
+import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
@@ -38,8 +39,7 @@ public class InquiryQueryRepository {
 					inquiry.createdAt
 				))
 			.from(inquiry)
-			.where(isContainWordInNickname(word)
-				.or(isContainWordInContent(word))
+			.where(isContainNickNameOrContent(word)
 				.and(isEqualsCategory(category))
 				.and(isNotDeleted()))
 			.limit(pageable.getPageSize())
@@ -58,14 +58,28 @@ public class InquiryQueryRepository {
 	private JPAQuery<Long> countInquiries(String word) {
 		return query.select(inquiry.count())
 			.from(inquiry)
-			.where(isContainWordInNickname(word).or(isContainWordInContent(word)));
+			.where(isContainNickNameOrContent(word));
+	}
+
+	private BooleanBuilder isContainNickNameOrContent(String word) {
+		BooleanBuilder booleanBuilder = new BooleanBuilder();
+		booleanBuilder.or(isContainWordInContent(word));
+		booleanBuilder.or(isContainWordInNickname(word));
+
+		return booleanBuilder;
 	}
 
 	private BooleanExpression isContainWordInNickname(String word) {
+		if (word == null || word.equals("")) {
+			return null;
+		}
 		return inquiry.nickname.contains(word);
 	}
 
 	private BooleanExpression isContainWordInContent(String word) {
+		if (word == null || word.equals("")) {
+			return null;
+		}
 		return inquiry.content.contains(word);
 	}
 

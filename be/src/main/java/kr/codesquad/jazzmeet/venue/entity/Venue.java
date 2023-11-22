@@ -12,6 +12,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import kr.codesquad.jazzmeet.image.entity.Image;
 import kr.codesquad.jazzmeet.show.entity.Show;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -71,9 +72,17 @@ public class Venue {
 		this.description = description;
 		this.location = location;
 		this.thumbnailUrl = thumbnailUrl;
-		this.images.clear();
 		this.links.clear();
 		this.venueHours.clear();
+		deleteImages();
+		this.images.clear();
+	}
+
+	public void deleteImages() {
+		for (VenueImage venueImage : images) {
+			Image image = venueImage.getImage();
+			image.delete();
+		}
 	}
 
 	// 연관관계 편의 메서드

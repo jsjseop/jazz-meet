@@ -56,7 +56,7 @@ public class Inquiry extends BaseTimeEntity {
 	}
 
 	@PrePersist
-	public void PrePersist() { // DB에 default 값 넣어주는 역할
+	private void PrePersist() { // DB에 default 값 넣어주는 역할
 		if (this.status == null) {
 			this.status = InquiryStatus.WAITING;
 		}
@@ -71,10 +71,16 @@ public class Inquiry extends BaseTimeEntity {
 		this.answer = answer;
 	}
 
+	public void updateStatusToWaiting() {
+		this.status = InquiryStatus.WAITING;
+		this.answer = null;
+	}
+
 	public Inquiry inspectExistAnswer() {
 		if (this.status == InquiryStatus.REPLIED || this.answer != null) {
 			throw new CustomException(InquiryErrorCode.ALREADY_REPLIED);
 		}
 		return this;
 	}
+
 }
