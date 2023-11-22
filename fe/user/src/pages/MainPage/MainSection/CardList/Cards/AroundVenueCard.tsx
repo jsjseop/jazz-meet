@@ -11,7 +11,7 @@ export const AroundVenueCard: React.FC<Props> = ({ aroundVenue }) => {
   const navigate = useNavigate();
 
   return (
-    <StyledCard onClick={() => navigate(`/map?venueId=${id}`)}>
+    <StyledCard onClick={() => navigate(`/map/venues/${id}?venueId=${id}`)}>
       <StyledCardImage src={thumbnailUrl} alt="around-venue" />
       <StyledTitleContainer>
         <StyledTitle>{name}</StyledTitle>
