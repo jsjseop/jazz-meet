@@ -12,9 +12,9 @@ export const MapPage: React.FC = () => {
   const {
     searchedVenues,
     handleChangeVenueListPage,
-    handleMapDataUpdateWithBounds,
-    handleMapDataWithWord,
-    handleMapDataWithVenueId,
+    handleUpdateMapDataWithBounds,
+    handleUpdateMapDataWithWord,
+    handleUpdateMapDataWithVenueId,
   } = useMapDataUpdater(map);
   const mapElement = useRef<HTMLDivElement>(null);
 
@@ -39,20 +39,20 @@ export const MapPage: React.FC = () => {
 
   useEffect(() => {
     if (word) {
-      handleMapDataWithWord(word);
+      handleUpdateMapDataWithWord(word);
 
       return;
     }
 
     if (venueId) {
-      handleMapDataWithVenueId(venueId);
+      handleUpdateMapDataWithVenueId(venueId);
 
       return;
     }
 
     const bounds = getQueryBounds(search);
 
-    handleMapDataUpdateWithBounds(bounds);
+    handleUpdateMapDataWithBounds(bounds);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [map, word, venueId, search]);
 

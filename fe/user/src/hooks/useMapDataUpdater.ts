@@ -46,7 +46,7 @@ export const useMapDataUpdater = (map?: naver.maps.Map) => {
     setSearchedVenues(venueList);
   };
 
-  const handleMapDataUpdateWithBounds = async (
+  const handleUpdateMapDataWithBounds = async (
     queryBounds?: CoordinateBoundary,
   ) => {
     if (!map) {
@@ -67,7 +67,7 @@ export const useMapDataUpdater = (map?: naver.maps.Map) => {
     fitBoundsToBoundary(bounds, map);
   };
 
-  const handleMapDataWithWord = async (word: string) => {
+  const handleUpdateMapDataWithWord = async (word: string) => {
     if (!map) {
       return;
     }
@@ -80,7 +80,7 @@ export const useMapDataUpdater = (map?: naver.maps.Map) => {
     fitBoundsToCoordinates(pins, map);
   };
 
-  const handleMapDataWithVenueId = async (venueId: string) => {
+  const handleUpdateMapDataWithVenueId = async (venueId: string) => {
     if (!map) {
       return;
     }
@@ -148,9 +148,9 @@ export const useMapDataUpdater = (map?: naver.maps.Map) => {
   return {
     searchedVenues,
     handleChangeVenueListPage,
-    handleMapDataUpdateWithBounds,
-    handleMapDataWithWord,
-    handleMapDataWithVenueId,
+    handleUpdateMapDataWithBounds,
+    handleUpdateMapDataWithWord,
+    handleUpdateMapDataWithVenueId,
   };
 };
 
