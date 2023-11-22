@@ -108,7 +108,7 @@ export const SearchBox: React.FC = () => {
       >
         <InputBase
           sx={{ ml: 1, flex: 1 }}
-          placeholder="함께 맞는 주말 햇살, 나란히 듣는 재즈."
+          placeholder="지역 또는 공연장 명을 입력해주세요."
           autoComplete="off"
           value={searchText || word || ''}
           onChange={(e) => setSearchText(e.target.value)}
