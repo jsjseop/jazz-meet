@@ -38,6 +38,10 @@ export const MapPage: React.FC = () => {
   };
 
   useEffect(() => {
+    if (!map) {
+      return;
+    }
+
     if (word) {
       handleUpdateMapDataWithWord(word);
 
@@ -46,6 +50,7 @@ export const MapPage: React.FC = () => {
 
     if (venueId) {
       handleUpdateMapDataWithVenueId(venueId);
+      navigate(`/map/venues/${venueId}${search}`);
 
       return;
     }
