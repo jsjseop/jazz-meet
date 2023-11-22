@@ -1,45 +1,76 @@
 import styled from '@emotion/styled';
 import { useEffect, useRef, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useMapDataUpdater } from '~/hooks/useMapDataUpdater';
+import { getQueryString } from '~/utils/getQueryString';
+import { getMapBounds, getQueryBounds } from '~/utils/map';
 import { Map } from './Map';
 import { Panel } from './Panel';
 
 export const MapPage: React.FC = () => {
-  const mapElement = useRef<HTMLDivElement>(null);
   const [map, setMap] = useState<naver.maps.Map>();
   const {
-    searchedVenus,
-    updateMapDataBasedOnBounds,
-    updateMapDataBySearch,
+    searchedVenues,
     handleChangeVenueListPage,
+    handleUpdateMapDataWithBounds,
+    handleUpdateMapDataWithWord,
+    handleUpdateMapDataWithVenueId,
   } = useMapDataUpdater(map);
+  const mapElement = useRef<HTMLDivElement>(null);
 
   const { search } = useLocation();
+  const navigate = useNavigate();
   const word = new URLSearchParams(search).get('word');
+  const venueId = new URLSearchParams(search).get('venueId');
 
-  // 지도가 첫 렌더링 될 때
+  const navigateWithMapBounds = () => {
+    if (!map) {
+      return;
+    }
+
+    const bounds = getMapBounds(map);
+
+    if (!bounds) {
+      return;
+    }
+
+    navigate(`/map${getQueryString(bounds)}`);
+  };
+
   useEffect(() => {
+    if (!map) {
+      return;
+    }
+
     if (word) {
-      updateMapDataBySearch(word);
+      handleUpdateMapDataWithWord(word);
 
       return;
     }
 
-    updateMapDataBasedOnBounds();
+    if (venueId) {
+      handleUpdateMapDataWithVenueId(venueId);
+      navigate(`/map/venues/${venueId}${search}`);
+
+      return;
+    }
+
+    const bounds = getQueryBounds(search);
+
+    handleUpdateMapDataWithBounds(bounds);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [map, word, venueId, search]);
 
   return (
     <StyledMapPage>
       <Map
         mapElement={mapElement}
         onMapInitialized={(map: naver.maps.Map) => setMap(map)}
-        onCurrentViewSearchClick={updateMapDataBasedOnBounds}
+        onCurrentViewSearchClick={navigateWithMapBounds}
       />
       <Panel
         mapElement={mapElement}
-        searchedVenus={searchedVenus}
+        searchedVenus={searchedVenues}
         handleChangeVenueListPage={handleChangeVenueListPage}
       />
     </StyledMapPage>

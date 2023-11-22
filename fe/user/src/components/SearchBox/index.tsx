@@ -48,10 +48,9 @@ export const SearchBox: React.FC = () => {
     }
   };
 
-  const changeActiveSuggstion = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const changeActiveSuggestion = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'ArrowDown') {
       e.preventDefault();
-
       setActiveSuggestionIndex((asi) =>
         asi === searchSuggestions.length - 1 ? -1 : asi + 1,
       );
@@ -60,7 +59,6 @@ export const SearchBox: React.FC = () => {
 
     if (e.key === 'ArrowUp') {
       e.preventDefault();
-
       setActiveSuggestionIndex((asi) =>
         asi === -1 ? searchSuggestions.length - 1 : asi - 1,
       );
@@ -114,7 +112,7 @@ export const SearchBox: React.FC = () => {
           autoComplete="off"
           value={searchText || word || ''}
           onChange={(e) => setSearchText(e.target.value)}
-          onKeyDown={changeActiveSuggstion}
+          onKeyDown={changeActiveSuggestion}
           onFocus={onInputBaseFocus}
         />
         <IconButton type="button" sx={{ p: '10px' }} aria-label="search">

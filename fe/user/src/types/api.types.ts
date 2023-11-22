@@ -60,9 +60,7 @@ export type VenueData = {
   address: string;
   description: string;
   showInfo: ShowTime[];
-  latitude: number;
-  longitude: number;
-};
+} & Coordinate;
 
 export type ShowTime = {
   startTime: string;

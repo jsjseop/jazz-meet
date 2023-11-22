@@ -1,9 +1,9 @@
 import styled from '@emotion/styled';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { PaginationBox } from '~/components/PaginationBox';
-import { VenueItem } from './VenueItem';
 import { SearchedVenues } from '~/types/api.types';
+import { VenueItem } from './VenueItem';
 
 type Props = {
   searchedVenus?: SearchedVenues;
@@ -14,6 +14,8 @@ export const VenueList: React.FC<Props> = ({
   searchedVenus,
   handleChangeVenueListPage,
 }) => {
+  const { search } = useLocation();
+
   const onVenueListPageChange = (
     _: React.ChangeEvent<unknown>,
     value: number,
@@ -32,7 +34,7 @@ export const VenueList: React.FC<Props> = ({
         <>
           <StyledVenues>
             {searchedVenus.venues.map((venue) => (
-              <Link to={`/map/venues/${venue.id}`} key={venue.id}>
+              <Link to={`/map/venues/${venue.id}${search}`} key={venue.id}>
                 <VenueItem {...venue} />
               </Link>
             ))}
