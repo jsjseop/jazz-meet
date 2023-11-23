@@ -1,8 +1,11 @@
 import styled from '@emotion/styled';
-import { VenueData } from '~/types/api.types';
+import { VenueItemData } from '~/types/api.types';
 import { isoToTimeFormat } from '~/utils/formatTime';
 
-type Props = Omit<VenueData, 'id' | 'thumbnailUrl' | 'latitude' | 'longitude'>;
+type Props = Omit<
+  VenueItemData,
+  'id' | 'thumbnailUrl' | 'latitude' | 'longitude'
+>;
 
 export const Description: React.FC<Props> = ({
   name,

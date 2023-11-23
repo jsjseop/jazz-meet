@@ -1,17 +1,43 @@
 import { Inquiry, InquiryCategories } from './inquiry.types';
 import { Coordinate } from './map.types';
 
-export type AroundVenue = {
+type Venue = {
   id: number;
-  thumbnailUrl: string;
   name: string;
   address: string;
-} & Coordinate;
+};
 
-export type Pin = {
-  id: number;
-  name: string;
-} & Coordinate;
+export type AroundVenue = {
+  thumbnailUrl: string;
+} & Venue &
+  Coordinate;
+
+export type VenueItemData = {
+  thumbnailUrl: string;
+  description: string;
+  showInfo: ShowTime[];
+} & Venue &
+  Coordinate;
+
+export type VenueDetailData = {
+  images: {
+    id: number;
+    url: string;
+  }[];
+  roadNameAddress: string;
+  lotNumberAddress: string;
+  phoneNumber: string;
+  links: {
+    type: string;
+    url: string;
+  }[];
+  venueHours: {
+    day: string;
+    businessHours: string;
+  }[];
+  description: string;
+} & Omit<Venue, 'address'> &
+  Coordinate;
 
 export type UpcomingShow = {
   venueId: number;
@@ -29,9 +55,7 @@ export type ShowDetail = {
   posterUrl: string;
   teamName: string;
   description: string;
-  startTime: string;
-  endTime: string;
-};
+} & ShowTime;
 
 export type SearchParams = {
   word?: string | null;
@@ -47,65 +71,24 @@ export type SearchBoundsParams = {
 };
 
 export type SearchedVenues = {
-  venues: VenueData[];
-  totalCount: number;
-  currentPage: number;
-  maxPage: number;
-};
+  venues: VenueItemData[];
+} & Pagination;
 
-export type VenueData = {
-  id: number;
-  thumbnailUrl: string;
-  name: string;
-  address: string;
-  description: string;
-  showInfo: ShowTime[];
-  latitude: number;
-  longitude: number;
-};
-
-export type ShowTime = {
+type ShowTime = {
   startTime: string;
   endTime: string;
 };
 
-export type SearchSuggestion = {
-  id: number;
-  name: string;
-  address: string;
-} & Coordinate;
-
-export type VenueDetailData = {
-  id: number;
-  images: {
-    id: number;
-    url: string;
-  }[];
-  name: string;
-  roadNameAddress: string;
-  lotNumberAddress: string;
-  phoneNumber: string;
-  links: {
-    type: string;
-    url: string;
-  }[];
-  venueHours: {
-    day: string;
-    businessHours: string;
-  }[];
-  description: string;
-} & Coordinate;
+export type SearchSuggestion = Venue & Coordinate;
 
 export type ShowRegion = {
   region: string;
   venues: ShowVenue[];
 };
 
-export type ShowVenue = {
-  id: number;
-  name: string;
+type ShowVenue = {
   shows: Omit<ShowDetail, 'description'>[];
-};
+} & Omit<Venue, 'address'>;
 
 export type GetInquiryParams = {
   category?: InquiryCategories;

@@ -1,9 +1,9 @@
 import styled from '@emotion/styled';
+import { VenueItemData } from '~/types/api.types';
 import { Description } from './Description';
 import { Thumbnail } from './Thumbnail';
-import { VenueData } from '~/types/api.types';
 
-type Props = VenueData;
+type Props = VenueItemData;
 
 export const VenueItem: React.FC<Props> = (venueData) => {
   return (

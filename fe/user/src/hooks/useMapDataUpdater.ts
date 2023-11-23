@@ -6,7 +6,8 @@ import {
   getVenuesByKeyword,
   getVenuesByMapBounds,
 } from '~/apis/venue';
-import { Pin, SearchedVenues } from '~/types/api.types';
+import { SearchedVenues } from '~/types/api.types';
+import { Pin } from '~/types/map.types';
 import {
   addMarkersOnMap,
   addPinsOnMap,

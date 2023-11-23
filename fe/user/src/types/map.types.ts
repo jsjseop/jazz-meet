@@ -9,3 +9,8 @@ export type CoordinateBoundary = {
   lowLongitude: number;
   highLongitude: number;
 };
+
+export type Pin = {
+  id: number;
+  name: string;
+} & Coordinate;

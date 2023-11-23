@@ -1,13 +1,12 @@
 import {
   AroundVenue,
-  Pin,
   SearchBoundsParams,
   SearchParams,
   SearchSuggestion,
   SearchedVenues,
   VenueDetailData,
 } from '~/types/api.types';
-import { Coordinate, CoordinateBoundary } from '~/types/map.types';
+import { Coordinate, CoordinateBoundary, Pin } from '~/types/map.types';
 import { getQueryString } from '~/utils/getQueryString';
 import { fetchData } from './fetchData';
 

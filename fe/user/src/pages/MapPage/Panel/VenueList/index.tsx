@@ -2,7 +2,6 @@ import styled from '@emotion/styled';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import { Link } from 'react-router-dom';
 import { PaginationBox } from '~/components/PaginationBox';
-import { VenueItem } from './VenueItem';
 import { SearchedVenues } from '~/types/api.types';
 
 type Props = {
