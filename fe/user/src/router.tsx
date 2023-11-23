@@ -33,7 +33,7 @@ export const router = createBrowserRouter(
           <Route path="shows" element={<div>공연 목록</div>} />
           <Route path="shows/post" element={<div>공연 생성 및 수정</div>} />
           <Route
-            path="inquiry"
+            path="inquiries"
             element={<div>문의 목록, 답변, 수정, 삭제</div>}
           />
         </Route>
