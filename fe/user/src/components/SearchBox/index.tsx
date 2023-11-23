@@ -136,6 +136,7 @@ export const SearchBox: React.FC = () => {
 
       <SuggestionBox
         suggestions={searchSuggestions}
+        searchText={searchText}
         open={isSuggestionBoxOpen}
         searchBoxRef={searchBoxRef}
         activeIndex={activeSuggestionIndex}

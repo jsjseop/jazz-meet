@@ -5,12 +5,14 @@ import { SearchSuggestion } from '~/types/api.types';
 
 type Props = {
   suggestion: SearchSuggestion;
+  searchText: string;
   active: boolean;
   onClose: () => void;
 };
 
 export const SuggestionItem: React.FC<Props> = ({
   suggestion,
+  searchText,
   active,
   onClose,
 }) => {
@@ -25,11 +27,25 @@ export const SuggestionItem: React.FC<Props> = ({
     <StyledSuggestionItem onClick={navigateToVenueDetail} $active={active}>
       <RoomRoundedIcon />
       <StyledInformation>
-        <h4>{suggestion.name}</h4>
-        <p>{suggestion.address}</p>
+        <h4>{highlightText(suggestion.name, searchText)}</h4>
+        <p>{highlightText(suggestion.address, searchText)}</p>
       </StyledInformation>
     </StyledSuggestionItem>
   );
+};
+
+const highlightText = (text: string, target: string) => {
+  const regex = new RegExp(`(${target})`, 'gi');
+
+  return text
+    .split(regex)
+    .map((word, index) =>
+      word === target ? (
+        <StyledHighlight key={index}>{word}</StyledHighlight>
+      ) : (
+        word
+      ),
+    );
 };
 
 const StyledSuggestionItem = styled.li<{ $active: boolean }>`
@@ -60,4 +76,9 @@ const StyledInformation = styled.div`
     font-size: 14px;
     color: #757575;
   }
+`;
+
+const StyledHighlight = styled.mark`
+  color: #ff5019;
+  background-color: transparent;
 `;
