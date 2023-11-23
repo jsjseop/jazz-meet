@@ -11,31 +11,30 @@ import { getInquiryData } from '~/apis/inquiry';
 import { PaginationBox } from '~/components/PaginationBox';
 import { INQUIRY_CATEGORIES } from '~/constants/INQUIRY';
 import { clickableStyle } from '~/styles/designSystem';
-import { GetInquiryParams, InquiryData } from '~/types/api.types';
+import { InquiryData, InquiryParams } from '~/types/api.types';
 import { InquiryCategories } from '~/types/inquiry.types';
 
 export const InquiriesPage: React.FC = () => {
   const [inquiryList, setInquiryList] = useState<InquiryData>();
-  const [getInquiryListParams, setGetInquiryListParams] =
-    useState<GetInquiryParams>({
-      category: '서비스',
-      page: 1,
-    });
+  const [inquiryListParams, setInquiryListParams] = useState<InquiryParams>({
+    category: '서비스',
+    page: 1,
+  });
 
   useEffect(() => {
     (async () => {
-      const inquiryList = await getInquiryData(getInquiryListParams);
+      const inquiryList = await getInquiryData(inquiryListParams);
 
       setInquiryList(inquiryList);
     })();
-  }, [getInquiryListParams]);
+  }, [inquiryListParams]);
 
   const selectCategory = (category: InquiryCategories) => {
-    setGetInquiryListParams((prev) => ({ ...prev, category, page: 1 }));
+    setInquiryListParams((prev) => ({ ...prev, category, page: 1 }));
   };
 
   const onPageChange = (_: React.ChangeEvent<unknown>, page: number) => {
-    setGetInquiryListParams((prev) => ({ ...prev, page }));
+    setInquiryListParams((prev) => ({ ...prev, page }));
   };
 
   return (

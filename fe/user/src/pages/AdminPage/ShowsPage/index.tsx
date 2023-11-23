@@ -13,20 +13,20 @@ import { SearchParams, ShowList } from '~/types/api.types';
 
 export const ShowsPage: React.FC = () => {
   const [showList, setShowList] = useState<ShowList>();
-  const [getShowListParams, setGetShowListParams] = useState<SearchParams>({
+  const [showListParams, setShowListParams] = useState<SearchParams>({
     page: 1,
   });
 
   useEffect(() => {
     (async () => {
-      const showList = await getShowList(getShowListParams);
+      const showList = await getShowList(showListParams);
 
       setShowList(showList);
     })();
-  }, [getShowListParams]);
+  }, [showListParams]);
 
   const onPageChange = (_: React.ChangeEvent<unknown>, page: number) => {
-    setGetShowListParams((prev) => ({ ...prev, page }));
+    setShowListParams((prev) => ({ ...prev, page }));
   };
 
   return (

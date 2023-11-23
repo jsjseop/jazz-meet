@@ -92,6 +92,7 @@ export type SearchedVenues = {
 } & Pagination;
 
 export type SearchSuggestion = Venue & Coordinate;
+
 export type VenueData = {
   id: number;
   thumbnailUrl: string;
@@ -110,7 +111,7 @@ type ShowVenue = {
   shows: Omit<ShowDetail, 'description'>[];
 } & Omit<Venue, 'address'>;
 
-export type GetInquiryParams = {
+export type InquiryParams = {
   category?: InquiryCategories;
 } & SearchParams;
 

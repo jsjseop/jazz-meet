@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 import { useEffect, useState } from 'react';
 import { getInquiryData } from '~/apis/inquiry';
 import { PaginationBox } from '~/components/PaginationBox';
-import { GetInquiryParams, InquiryData } from '~/types/api.types';
+import { InquiryData, InquiryParams } from '~/types/api.types';
 import { InquiryCategories } from '~/types/inquiry.types';
 import { Categories } from './Categories';
 import { InquiryEditor } from './Editor';
@@ -10,7 +10,7 @@ import { Header } from './Header';
 import { InquiryList } from './InquiryList';
 
 export const InquiryPage: React.FC = () => {
-  const [inquiryParams, setInquiryParams] = useState<GetInquiryParams>({
+  const [inquiryParams, setInquiryParams] = useState<InquiryParams>({
     category: '서비스',
     page: 1,
   });

@@ -13,20 +13,20 @@ import { SearchParams, VenueList } from '~/types/api.types';
 
 export const VenuesPage: React.FC = () => {
   const [venueList, setVenueList] = useState<VenueList>();
-  const [getVenueListParams, setGetVenueListParams] = useState<SearchParams>({
+  const [venueListParams, setVenueListParams] = useState<SearchParams>({
     page: 1,
   });
 
   useEffect(() => {
     (async () => {
-      const venueList = await getVenueList(getVenueListParams);
+      const venueList = await getVenueList(venueListParams);
 
       setVenueList(venueList);
     })();
-  }, [getVenueListParams]);
+  }, [venueListParams]);
 
   const onPageChange = (_: React.ChangeEvent<unknown>, page: number) => {
-    setGetVenueListParams((prev) => ({ ...prev, page }));
+    setVenueListParams((prev) => ({ ...prev, page }));
   };
 
   return (
