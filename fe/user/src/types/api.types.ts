@@ -92,6 +92,14 @@ export type SearchedVenues = {
 } & Pagination;
 
 export type SearchSuggestion = Venue & Coordinate;
+export type VenueData = {
+  id: number;
+  thumbnailUrl: string;
+  name: string;
+  address: string;
+  description: string;
+  showInfo: ShowTime[];
+} & Coordinate;
 
 export type ShowRegion = {
   region: string;
