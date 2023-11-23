@@ -6,6 +6,7 @@ import {
 } from 'react-router-dom';
 import { AdminLayout } from './layouts/AdminLayout';
 import { BaseLayout } from './layouts/BaseLayout';
+import { VenuesPage } from './pages/AdminPage/VenuesPage';
 import { InquiryPage } from './pages/InquiryPage';
 import { MainPage } from './pages/MainPage';
 import { MapPage } from './pages/MapPage';
@@ -28,7 +29,7 @@ export const router = createBrowserRouter(
       </Route>
       <Route element={<AdminLayout />}>
         <Route path="admin" element={<Outlet />}>
-          <Route path="venues" element={<div>공연장 목록</div>} />
+          <Route path="venues" element={<VenuesPage />} />
           <Route path="venues/post" element={<div>공연장 생성 및 수정</div>} />
           <Route path="shows" element={<div>공연 목록</div>} />
           <Route path="shows/post" element={<div>공연 생성 및 수정</div>} />

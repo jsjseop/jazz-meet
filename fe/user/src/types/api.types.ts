@@ -7,6 +7,10 @@ type Venue = {
   address: string;
 };
 
+export type VenueList = {
+  venues: Venue[];
+} & Pagination;
+
 export type AroundVenue = {
   thumbnailUrl: string;
 } & Venue &

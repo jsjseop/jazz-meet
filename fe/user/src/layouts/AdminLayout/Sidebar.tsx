@@ -20,7 +20,7 @@ export const Sidebar: React.FC = () => {
 };
 
 const StyledSideBar = styled.div`
-  width: 230px;
+  min-width: 230px;
   border-right: 1px solid #000000;
   display: flex;
   flex-direction: column;
