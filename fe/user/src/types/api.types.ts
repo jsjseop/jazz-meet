@@ -104,9 +104,7 @@ type ShowVenue = {
 
 export type GetInquiryParams = {
   category?: InquiryCategories;
-  word?: string;
-  page?: number;
-};
+} & SearchParams;
 
 export type InquiryData = {
   inquiries: Inquiry[];
