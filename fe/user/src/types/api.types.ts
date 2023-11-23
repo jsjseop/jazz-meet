@@ -55,11 +55,24 @@ export type HasShowDates = {
 };
 
 export type ShowDetail = {
-  id: number;
   posterUrl: string;
-  teamName: string;
   description: string;
+} & Omit<Show, 'venueName'>;
+
+type Show = {
+  id: number;
+  teamName: string;
+  venueName: string;
 } & ShowTime;
+
+type ShowTime = {
+  startTime: string;
+  endTime: string;
+};
+
+export type ShowList = {
+  shows: Show[];
+} & Pagination;
 
 export type SearchParams = {
   word?: string | null;
@@ -77,11 +90,6 @@ export type SearchBoundsParams = {
 export type SearchedVenues = {
   venues: VenueItemData[];
 } & Pagination;
-
-type ShowTime = {
-  startTime: string;
-  endTime: string;
-};
 
 export type SearchSuggestion = Venue & Coordinate;
 
