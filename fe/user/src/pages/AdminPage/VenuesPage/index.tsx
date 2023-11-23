@@ -19,9 +19,9 @@ export const VenuesPage: React.FC = () => {
 
   useEffect(() => {
     (async () => {
-      const venues = await getVenueList(getVenueListParams);
+      const venueList = await getVenueList(getVenueListParams);
 
-      setVenueList(venues);
+      setVenueList(venueList);
     })();
   }, [getVenueListParams]);
 
