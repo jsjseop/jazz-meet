@@ -47,7 +47,7 @@ export const VenuesPage: React.FC = () => {
               <TableBody>
                 {venueList.venues.map((venue) => (
                   <TableRow
-                    key={venue.name}
+                    key={venue.id}
                     sx={{
                       '&:last-child td, &:last-child th': { border: 0 },
                       ':hover': {
