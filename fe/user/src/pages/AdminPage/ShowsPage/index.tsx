@@ -61,10 +61,10 @@ export const ShowsPage: React.FC = () => {
                     <TableCell>{venue.id}</TableCell>
                     <TableCell>{venue.teamName}</TableCell>
                     <TableCell align="center">
-                      {venue.startTime.replace('T', ' ')}
+                      {new Date(venue.startTime).toLocaleString()}
                     </TableCell>
                     <TableCell align="center">
-                      {venue.endTime.replace('T', ' ')}
+                      {new Date(venue.endTime).toLocaleString()}
                     </TableCell>
                     <TableCell align="center">{venue.venueName}</TableCell>
                   </TableRow>
