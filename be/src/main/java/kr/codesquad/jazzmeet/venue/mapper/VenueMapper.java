@@ -45,13 +45,22 @@ public interface VenueMapper {
 	@Mapping(target = "longitude", source = "location.x")
 	VenuePinsResponse toVenuePinsBySearchResponse(VenuePins venuePinsByWord);
 
-	@Mapping(target = "venues", source = "venueSearchList.content")
+	default VenueSearchResponse toVenueSearchResponse(Page<VenueSearchData> venueSearchList, int currentPage) {
+		List<VenueSearchData> content = venueSearchList.getContent();
+		if (!venueSearchList.hasContent()) {
+			content = new ArrayList<>();
+		}
+		return toVenueSearchResponse(content, venueSearchList, currentPage);
+	}
+
 	@Mapping(target = "totalCount", source = "venueSearchList.totalElements")
 	@Mapping(target = "maxPage", source = "venueSearchList.totalPages")
-	VenueSearchResponse toVenueSearchResponse(Page<VenueSearchData> venueSearchList, int currentPage);
+	VenueSearchResponse toVenueSearchResponse(List<VenueSearchData> venues, Page<VenueSearchData> venueSearchList,
+		int currentPage);
 
 	@Mapping(target = "venues", source = "venueSearchList")
-	VenueSearchResponse toVenueSearchResponse(List<VenueSearchData> venueSearchList, int totalCount, int currentPage, int maxPage);
+	VenueSearchResponse toVenueSearchResponse(List<VenueSearchData> venueSearchList, int totalCount, int currentPage,
+		int maxPage);
 
 	default VenueSearch toVenueSearch(VenueSearchData venueSearchData) {
 		List<ShowInfo> showInfo = venueSearchData.getShowInfo();
