@@ -3,8 +3,9 @@ import Backpack from '~/assets/icons/Backpack.svg?react';
 import BeerBottle from '~/assets/icons/BeerBottle.svg?react';
 import Buildings from '~/assets/icons/Buildings.svg?react';
 import { VenueDetailData } from '~/types/api.types';
-import { Tabs } from './Tabs';
-import { Tab } from './Tabs/Tab';
+import { Tabs } from '../Tabs';
+import { Tab } from '../Tabs/Tab';
+import { VenueHours } from './VenueHours';
 
 type Props = Pick<
   VenueDetailData,
@@ -34,13 +35,7 @@ export const BasicInfo: React.FC<Props> = ({
           </StyledContent>
           <StyledContent>
             <BeerBottle />
-            <div>
-              {venueHours.map((venueHour, index) => (
-                <StyledBasicInfoText
-                  key={index}
-                >{`${venueHour.day} | ${venueHour.businessHours}`}</StyledBasicInfoText>
-              ))}
-            </div>
+            <VenueHours venueHours={venueHours} />
           </StyledContent>
           <StyledContent>
             <Buildings />
