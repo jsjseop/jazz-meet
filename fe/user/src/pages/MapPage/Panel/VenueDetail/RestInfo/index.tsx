@@ -12,8 +12,6 @@ export const RestInfo: React.FC<Props> = ({ description }) => {
     <StyledRestInfo>
       <Tabs>
         <Tab isSelected>공연정보</Tab>
-        <Tab>판매정보</Tab>
-        <Tab>공연장정보</Tab>
       </Tabs>
 
       <StyledRestInfoContent>
