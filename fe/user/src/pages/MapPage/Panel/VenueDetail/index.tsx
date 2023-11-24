@@ -8,7 +8,6 @@ import {
   useParams,
 } from 'react-router-dom';
 import { getVenueDetail } from '~/apis/venue';
-import { usePathHistoryStore } from '~/stores/usePathHistoryStore';
 import { VenueDetailData } from '~/types/api.types';
 import { BasicInfo } from './BasicInfo';
 import { Header } from './Header';
@@ -22,17 +21,10 @@ export const VenueDetail: React.FC = () => {
   const mapElement = useOutletContext<React.RefObject<HTMLDivElement>>();
   const [isRender, setRender] = useState(false);
   const [data, setData] = useState<VenueDetailData>();
-  const { setPreviousPath } = usePathHistoryStore((state) => ({
-    setPreviousPath: state.setPreviousPath,
-  }));
 
   const backToVenueList = () => {
     navigate(`/map?${currentLocation.search}`);
   };
-
-  useEffect(() => {
-    return () => setPreviousPath(currentLocation.pathname);
-  }, []);
 
   useEffect(() => {
     if (!venueId) {
