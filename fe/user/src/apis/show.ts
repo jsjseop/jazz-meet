@@ -1,10 +1,13 @@
 import {
   HasShowDates,
+  SearchParams,
   ShowDetail,
+  ShowList,
   ShowRegion,
   UpcomingShow,
 } from '~/types/api.types';
 import { getFormattedDate, getFormattedYearMonth } from '~/utils/dateUtils';
+import { getQueryString } from '~/utils/getQueryString';
 import { fetchData } from './fetchData';
 
 export const getUpcomingShows = async (): Promise<UpcomingShow[]> => {
@@ -60,6 +63,16 @@ export const getShowsByDate = async (date: Date): Promise<ShowRegion[]> => {
   const response = await fetchData(
     `/api/shows/by-region?date=${formattedDate}`,
   );
+
+  return response.json();
+};
+
+export const getShowList = async ({
+  word,
+  page,
+}: SearchParams): Promise<ShowList> => {
+  const queryString = getQueryString({ word, page });
+  const response = await fetchData(`/api/shows${queryString}`);
 
   return response.json();
 };

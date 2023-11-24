@@ -7,26 +7,23 @@ export const getKoreanWeekdayName = (day: number) => {
 export const getFormattedYearMonth = (date: Date) => {
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, '0');
-  const formattedDate = `${year}${month}`;
 
-  return formattedDate;
+  return `${year}${month}`;
 }; // ex) 202301
 
 export const getFormattedDate = (date: Date) => {
   const datePart = getFormattedYearMonth(date);
   const day = String(date.getDate()).padStart(2, '0');
-  const formattedDate = `${datePart}${day}`;
 
-  return formattedDate;
+  return `${datePart}${day}`;
 }; // ex) 20230101
 
 export const getFormattedDateTime = (date: Date) => {
   const datePart = getFormattedDate(date);
   const hours = String(date.getHours()).padStart(2, '0');
   const minutes = String(date.getMinutes()).padStart(2, '0');
-  const formattedDateTime = `${datePart}${hours}${minutes}`;
 
-  return formattedDateTime;
+  return `${datePart}${hours}${minutes}`;
 }; // ex) 202301011230
 
 export const getFormattedDateString = (date: string | Date) => {
@@ -40,21 +37,20 @@ export const getFormattedDateString = (date: string | Date) => {
 export const getFormattedTime = (date: Date) => {
   const hours = String(date.getHours()).padStart(2, '0');
   const minutes = String(date.getMinutes()).padStart(2, '0');
-  const formattedTime = `${hours}:${minutes}`;
 
-  return formattedTime;
-};
+  return `${hours}:${minutes}`;
+}; // ex) 12:30
 
 export const getFormattedTimeRange = (start: Date, end: Date) => {
   const startTime = getFormattedTime(start);
   const endTime = getFormattedTime(end);
 
   return `${startTime}-${endTime}`;
-};
+}; // ex) 12:30-14:00
 
 export const getFirstDay = (year: number, month: number) => {
   return new Date(year, month - 1, 1).getDay();
-};
+}; // 0: 일요일, 1: 월요일, ..., 6: 토요일
 
 export const getLastDate = (year: number, month: number) => {
   return new Date(year, month, 0).getDate(); // 0일은 지난 달의 마지막 날을 의미합니다.

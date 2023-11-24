@@ -7,8 +7,8 @@ import {
   getVenuesByMapBounds,
   getVenuesByWord,
 } from '~/apis/venue';
-import { Pin, SearchedVenues } from '~/types/api.types';
-import { CoordinateBoundary } from '~/types/map.types';
+import { SearchedVenues } from '~/types/api.types';
+import { CoordinateBoundary, Pin } from '~/types/map.types';
 import {
   addMarkersOnMap,
   addPinsOnMap,

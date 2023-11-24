@@ -1,3 +1,5 @@
+import { css } from '@emotion/react';
+
 const colors = {
   white: '#FFFFFF',
   grey50: '#FAFAFA',
@@ -76,3 +78,14 @@ export const designSystem = {
   },
   font: fonts,
 };
+
+export const clickableStyle = css`
+  &:hover {
+    cursor: pointer;
+    opacity: 0.7;
+  }
+
+  &:active {
+    opacity: 0.5;
+  }
+`;
