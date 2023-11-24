@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import {
   Outlet,
   useLocation,
+  useNavigate,
   useOutletContext,
   useParams,
 } from 'react-router-dom';
@@ -17,12 +18,17 @@ import { RestInfo } from './RestInfo';
 export const VenueDetail: React.FC = () => {
   const { venueId } = useParams();
   const currentLocation = useLocation();
+  const navigate = useNavigate();
   const mapElement = useOutletContext<React.RefObject<HTMLDivElement>>();
   const [isRender, setRender] = useState(false);
   const [data, setData] = useState<VenueDetailData>();
   const { setPreviousPath } = usePathHistoryStore((state) => ({
     setPreviousPath: state.setPreviousPath,
   }));
+
+  const backToVenueList = () => {
+    navigate(`/map?${currentLocation.search}`);
+  };
 
   useEffect(() => {
     return () => setPreviousPath(currentLocation.pathname);
@@ -53,7 +59,7 @@ export const VenueDetail: React.FC = () => {
     <>
       {data && (
         <StyledVenueDetail isRender={isRender}>
-          <Images images={data.images} />
+          <Images images={data.images} onReturnButtonClick={backToVenueList} />
           <Header name={data.name} links={data.links} />
           <BasicInfo
             roadNameAddress={data.roadNameAddress}

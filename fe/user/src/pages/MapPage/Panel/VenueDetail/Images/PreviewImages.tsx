@@ -1,11 +1,19 @@
 import styled from '@emotion/styled';
+import { IconButton } from '@mui/material';
+import CaretLeft from '~/assets/icons/CaretLeft.svg?react';
 import { VenueDetailData } from '~/types/api.types';
 
 const PREVIEW_IMAGE_COUNT = 5;
 
-type Props = Pick<VenueDetailData, 'images'>;
+type Props = { onReturnButtonClick: () => void } & Pick<
+  VenueDetailData,
+  'images'
+>;
 
-export const PreviewImages: React.FC<Props> = ({ images }) => {
+export const PreviewImages: React.FC<Props> = ({
+  images,
+  onReturnButtonClick,
+}) => {
   return (
     <StyledImages>
       {images.slice(0, PREVIEW_IMAGE_COUNT).map((image) => (
@@ -13,11 +21,19 @@ export const PreviewImages: React.FC<Props> = ({ images }) => {
           <StyledImage src={image.url} />
         </StyledImageWrapper>
       ))}
+      <IconButton
+        type="button"
+        sx={{ position: 'absolute' }}
+        onClick={onReturnButtonClick}
+      >
+        <CaretLeft />
+      </IconButton>
     </StyledImages>
   );
 };
 
 const StyledImages = styled.div`
+  position: relative;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   grid-template-rows: repeat(2, 1fr);
@@ -46,12 +62,12 @@ const StyledImageWrapper = styled.div<{ imagesLength: number }>`
         const count = imagesLength - PREVIEW_IMAGE_COUNT;
 
         return count > 0 ? `+${count}` : count;
-      }}};
-      cursor: pointer;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      }};
     }
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 `;
 

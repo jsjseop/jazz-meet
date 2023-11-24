@@ -3,12 +3,18 @@ import { VenueDetailData } from '~/types/api.types';
 import { PreviewImages } from './PreviewImages';
 // import { ImageDetail } from './ImageDetail';
 
-type Props = Pick<VenueDetailData, 'images'>;
+type Props = { onReturnButtonClick: () => void } & Pick<
+  VenueDetailData,
+  'images'
+>;
 
-export const Images: React.FC<Props> = ({ images }) => {
+export const Images: React.FC<Props> = ({ images, onReturnButtonClick }) => {
   return (
     <>
-      <PreviewImages images={images} />
+      <PreviewImages
+        images={images}
+        onReturnButtonClick={onReturnButtonClick}
+      />
       {/* {createPortal(<ImageDetail />, document.body)} */}
     </>
   );
