@@ -1,8 +1,8 @@
 import styled from '@emotion/styled';
-import { Tabs } from '../Tabs';
-import { Tab } from '../Tabs/Tab';
 import LocalCafeOutlinedIcon from '@mui/icons-material/LocalCafeOutlined';
 import { VenueDetailData } from '~/types/api.types';
+import { Tabs } from '../Tabs';
+import { Tab } from '../Tabs/Tab';
 import { ShowInfo } from './ShowInfo';
 
 type Props = Pick<VenueDetailData, 'description'>;
@@ -68,4 +68,5 @@ const StyledContent = styled.div`
 const StyledBasicInfoText = styled.div`
   font-size: 20px;
   line-height: 150%;
+  white-space: pre-wrap;
 `;
