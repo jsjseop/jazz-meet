@@ -2,9 +2,9 @@ import styled from '@emotion/styled';
 import Backpack from '~/assets/icons/Backpack.svg?react';
 import BeerBottle from '~/assets/icons/BeerBottle.svg?react';
 import Buildings from '~/assets/icons/Buildings.svg?react';
+import { VenueDetailData } from '~/types/api.types';
 import { Tabs } from './Tabs';
 import { Tab } from './Tabs/Tab';
-import { VenueDetailData } from '~/types/api.types';
 
 type Props = Pick<
   VenueDetailData,

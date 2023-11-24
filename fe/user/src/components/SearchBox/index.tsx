@@ -9,7 +9,7 @@ import { SuggestionBox } from './SuggestionBox';
 
 export const SearchBox: React.FC = () => {
   const navigate = useNavigate();
-  const { search: queryString } = useLocation();
+  const location = useLocation();
   const [searchText, setSearchText] = useState('');
   const [searchSuggestions, setSearchSuggestions] = useState<
     SearchSuggestion[]
@@ -18,8 +18,9 @@ export const SearchBox: React.FC = () => {
   const [activeSuggestionIndex, setActiveSuggestionIndex] =
     useState<number>(-1);
   const searchBoxRef = useRef<HTMLDivElement>(null);
+  const shouldOpenSuggestionBox = useRef(true);
 
-  const query = new URLSearchParams(queryString);
+  const query = new URLSearchParams(location.search);
   const word = query.get('word');
   const isSearchTextEmpty = searchText.trim().length === 0;
 
@@ -66,24 +67,34 @@ export const SearchBox: React.FC = () => {
   };
 
   useEffect(() => {
+    if (word) {
+      setSearchText(word);
+      shouldOpenSuggestionBox.current = false;
+    }
+  }, [word]);
+
+  useEffect(() => {
     if (isSearchTextEmpty) {
       setSearchSuggestions([]);
+      hideSuggestionBox();
       return;
     }
 
     const timer = setTimeout(async () => {
       const suggestions = await getSearchSuggestions(searchText);
       setSearchSuggestions(suggestions);
+
+      if (shouldOpenSuggestionBox.current && suggestions.length > 0) {
+        showSuggestionBox();
+      } else {
+        hideSuggestionBox();
+      }
     }, 120);
 
     return () => {
       clearTimeout(timer);
     };
   }, [searchText, isSearchTextEmpty]);
-
-  useEffect(() => {
-    setIsSuggestionBoxOpen(searchSuggestions.length > 0);
-  }, [searchSuggestions]);
 
   useEffect(() => {
     if (isSuggestionBoxOpen === false) {
@@ -108,10 +119,13 @@ export const SearchBox: React.FC = () => {
       >
         <InputBase
           sx={{ ml: 1, flex: 1 }}
-          placeholder="함께 맞는 주말 햇살, 나란히 듣는 재즈."
+          placeholder="지역 또는 공연장 명을 입력해주세요."
           autoComplete="off"
-          value={searchText || word || ''}
-          onChange={(e) => setSearchText(e.target.value)}
+          value={searchText}
+          onChange={(e) => {
+            setSearchText(e.target.value);
+            shouldOpenSuggestionBox.current = true;
+          }}
           onKeyDown={changeActiveSuggestion}
           onFocus={onInputBaseFocus}
         />
@@ -122,6 +136,7 @@ export const SearchBox: React.FC = () => {
 
       <SuggestionBox
         suggestions={searchSuggestions}
+        searchText={searchText}
         open={isSuggestionBoxOpen}
         searchBoxRef={searchBoxRef}
         activeIndex={activeSuggestionIndex}
