@@ -1,3 +1,4 @@
+import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { IconButton } from '@mui/material';
 import CaretLeft from '~/assets/icons/CaretLeft.svg?react';
@@ -14,9 +15,12 @@ export const PreviewImages: React.FC<Props> = ({
   images,
   onReturnButtonClick,
 }) => {
+  const displayedImages = images.slice(0, PREVIEW_IMAGE_COUNT);
+  const defaultImages = Array(5 - displayedImages.length).fill('default');
+
   return (
     <StyledImages>
-      {images.slice(0, PREVIEW_IMAGE_COUNT).map((image, index) => (
+      {displayedImages.map((image, index) => (
         <StyledImageWrapper key={image.id}>
           <StyledImage src={image.url} />
           {index === PREVIEW_IMAGE_COUNT - 1 && (
@@ -26,6 +30,12 @@ export const PreviewImages: React.FC<Props> = ({
               더보기
             </StyledMoreImagesButton>
           )}
+        </StyledImageWrapper>
+      ))}
+      {defaultImages.map((text, index) => (
+        <StyledImageWrapper key={`${text}-${index}`}>
+          <StyledDefaultImage src={'/src/assets/icons/JazzMeet.svg'} />
+          <StyledDefaultText>사진이 없어요</StyledDefaultText>
         </StyledImageWrapper>
       ))}
       <IconButton
@@ -71,7 +81,17 @@ const StyledImage = styled.img`
   }
 `;
 
-const StyledMoreImagesButton = styled.button`
+const StyledDefaultImage = styled.img`
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: #eeeeee;
+  opacity: 0.3;
+`;
+
+const textOnImageStyle = css`
   position: absolute;
   inset: 0;
   width: 100%;
@@ -79,6 +99,16 @@ const StyledMoreImagesButton = styled.button`
   display: flex;
   justify-content: center;
   align-items: center;
+`;
+
+const StyledDefaultText = styled.div`
+  ${textOnImageStyle}
+  font-size: 18px;
+  font-weight: bold;
+`;
+
+const StyledMoreImagesButton = styled.button`
+  ${textOnImageStyle}
   font-size: 28px;
   color: #fff;
   background: rgba(0, 0, 0, 0.3);
