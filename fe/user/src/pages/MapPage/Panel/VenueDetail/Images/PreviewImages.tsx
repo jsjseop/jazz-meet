@@ -16,9 +16,16 @@ export const PreviewImages: React.FC<Props> = ({
 }) => {
   return (
     <StyledImages>
-      {images.slice(0, PREVIEW_IMAGE_COUNT).map((image) => (
-        <StyledImageWrapper key={image.id} imagesLength={images.length}>
+      {images.slice(0, PREVIEW_IMAGE_COUNT).map((image, index) => (
+        <StyledImageWrapper key={image.id}>
           <StyledImage src={image.url} />
+          {index === PREVIEW_IMAGE_COUNT - 1 && (
+            <StyledMoreImagesButton
+              onClick={() => console.log('이미지 더보기')}
+            >
+              더보기
+            </StyledMoreImagesButton>
+          )}
         </StyledImageWrapper>
       ))}
       <IconButton
@@ -40,7 +47,7 @@ const StyledImages = styled.div`
   gap: 4px;
 `;
 
-const StyledImageWrapper = styled.div<{ imagesLength: number }>`
+const StyledImageWrapper = styled.div`
   position: relative;
   width: 100%;
   padding-top: 100%;
@@ -48,26 +55,6 @@ const StyledImageWrapper = styled.div<{ imagesLength: number }>`
   &:first-of-type {
     grid-column: 1 / 3;
     grid-row: 1 / 3;
-  }
-
-  &:last-of-type {
-    &::after {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      color: #fff;
-      background: rgba(0, 0, 0, 0.3);
-      content: ${({ imagesLength }) => {
-        const count = imagesLength - PREVIEW_IMAGE_COUNT;
-
-        return count > 0 ? `+${count}` : count;
-      }};
-    }
-    cursor: pointer;
-    display: flex;
-    justify-content: center;
-    align-items: center;
   }
 `;
 
@@ -82,4 +69,18 @@ const StyledImage = styled.img`
   &:hover {
     opacity: 0.7;
   }
+`;
+
+const StyledMoreImagesButton = styled.button`
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 28px;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.3);
+  cursor: pointer;
 `;
