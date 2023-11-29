@@ -43,6 +43,10 @@ const StyledTodayBusinessHours = styled.summary`
   &::marker {
     display: none;
   }
+
+  &:hover {
+    cursor: pointer;
+  }
 `;
 
 const StyledBasicInfoText = styled.div<{ $highlight: boolean }>`
