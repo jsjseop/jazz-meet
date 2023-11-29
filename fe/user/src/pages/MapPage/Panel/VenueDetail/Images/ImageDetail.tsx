@@ -1,7 +1,8 @@
 import styled from '@emotion/styled';
-import CloseIcon from '@mui/icons-material/Close';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import CloseIcon from '@mui/icons-material/Close';
+import { IMAGE_DETAIL_MODAL_Z_INDEX } from '~/constants/Z_INDEX';
 
 export const ImageDetail: React.FC = () => {
   return (
@@ -31,10 +32,10 @@ export const ImageDetail: React.FC = () => {
 
 const StyledImageDetail = styled.div`
   position: fixed;
-  z-index: 101;
+  z-index: ${IMAGE_DETAIL_MODAL_Z_INDEX};
   top: 73px;
   width: 100vw;
-  height: 100vh;
+  height: calc(100vh - 73px);
   background-color: #00000099;
 `;
 

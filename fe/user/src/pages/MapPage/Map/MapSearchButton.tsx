@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import RefreshIcon from '@mui/icons-material/Refresh';
+import { MAP_SEARCH_BUTTON_Z_INDEX } from '~/constants/Z_INDEX';
 
 type Props = {
   hideMapSearchButton: () => void;
@@ -28,7 +29,7 @@ const StyledMapSearchButton = styled.button`
   bottom: 8%;
   left: 50%;
   transform: translateX(-50%);
-  z-index: 1000;
+  z-index: ${MAP_SEARCH_BUTTON_Z_INDEX};
   padding: 12px 16px;
   border-radius: 50px;
   display: flex;
