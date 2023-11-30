@@ -6,14 +6,15 @@ import { VenueDetailData } from '~/types/api.types';
 
 const PREVIEW_IMAGE_COUNT = 5;
 
-type Props = { onReturnButtonClick: () => void } & Pick<
-  VenueDetailData,
-  'images'
->;
+type Props = {
+  onReturnButtonClick: () => void;
+  onImageClick: () => void;
+} & Pick<VenueDetailData, 'images'>;
 
 export const PreviewImages: React.FC<Props> = ({
   images,
   onReturnButtonClick,
+  onImageClick,
 }) => {
   const displayedImages = images.slice(0, PREVIEW_IMAGE_COUNT);
   const defaultImages = Array(5 - displayedImages.length).fill('default');
@@ -22,7 +23,7 @@ export const PreviewImages: React.FC<Props> = ({
     <StyledImages>
       {displayedImages.map((image, index) => (
         <StyledImageWrapper key={image.id}>
-          <StyledImage src={image.url} />
+          <StyledImage src={image.url} onClick={onImageClick} />
           {index === PREVIEW_IMAGE_COUNT - 1 && (
             <StyledMoreImagesButton
               onClick={() => console.log('이미지 더보기')}

@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { createPortal } from 'react-dom';
 import { VenueDetailData } from '~/types/api.types';
 import { ImageDetail } from './ImageDetail';
@@ -9,13 +10,23 @@ type Props = { onReturnButtonClick: () => void } & Pick<
 >;
 
 export const Images: React.FC<Props> = ({ images, onReturnButtonClick }) => {
+  const [imageDetailOpen, setImageDetailOpen] = useState(false);
+
   return (
     <>
       <PreviewImages
         images={images}
         onReturnButtonClick={onReturnButtonClick}
+        onImageClick={() => setImageDetailOpen(true)}
       />
-      {createPortal(<ImageDetail />, document.body)}
+      {imageDetailOpen &&
+        createPortal(
+          <ImageDetail
+            images={images}
+            onClose={() => setImageDetailOpen(false)}
+          />,
+          document.body,
+        )}
     </>
   );
 };
