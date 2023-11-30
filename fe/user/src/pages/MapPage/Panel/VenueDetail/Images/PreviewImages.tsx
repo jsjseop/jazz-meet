@@ -26,7 +26,7 @@ export const PreviewImages: React.FC<Props> = ({
           <StyledImage src={image.url} onClick={() => onImageClick(index)} />
           {index === PREVIEW_IMAGE_COUNT - 1 && (
             <StyledMoreImagesButton
-              onClick={() => console.log('이미지 더보기')}
+              onClick={() => onImageClick(PREVIEW_IMAGE_COUNT)}
             >
               더보기
             </StyledMoreImagesButton>
