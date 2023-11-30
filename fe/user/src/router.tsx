@@ -1,14 +1,9 @@
 import {
-  Outlet,
   Route,
   createBrowserRouter,
   createRoutesFromElements,
 } from 'react-router-dom';
-import { AdminLayout } from './layouts/AdminLayout';
 import { BaseLayout } from './layouts/BaseLayout';
-import { InquiriesPage } from './pages/AdminPage/InquiriesPage';
-import { ShowsPage } from './pages/AdminPage/ShowsPage';
-import { VenuesPage } from './pages/AdminPage/VenuesPage';
 import { InquiryPage } from './pages/InquiryPage';
 import { MainPage } from './pages/MainPage';
 import { MapPage } from './pages/MapPage';
@@ -28,15 +23,6 @@ export const router = createBrowserRouter(
         </Route>
         <Route path="show" element={<ShowPage />} />
         <Route path="inquiry" element={<InquiryPage />} />
-      </Route>
-      <Route element={<AdminLayout />}>
-        <Route path="admin" element={<Outlet />}>
-          <Route path="venues" element={<VenuesPage />} />
-          <Route path="venues/post" element={<div>공연장 생성 및 수정</div>} />
-          <Route path="shows" element={<ShowsPage />} />
-          <Route path="shows/post" element={<div>공연 생성 및 수정</div>} />
-          <Route path="inquiries" element={<InquiriesPage />} />
-        </Route>
       </Route>
     </Route>,
   ),
