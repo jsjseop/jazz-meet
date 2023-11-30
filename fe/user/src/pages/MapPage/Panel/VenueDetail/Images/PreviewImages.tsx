@@ -8,7 +8,7 @@ const PREVIEW_IMAGE_COUNT = 5;
 
 type Props = {
   onReturnButtonClick: () => void;
-  onImageClick: () => void;
+  onImageClick: (index: number) => void;
 } & Pick<VenueDetailData, 'images'>;
 
 export const PreviewImages: React.FC<Props> = ({
@@ -23,7 +23,7 @@ export const PreviewImages: React.FC<Props> = ({
     <StyledImages>
       {displayedImages.map((image, index) => (
         <StyledImageWrapper key={image.id}>
-          <StyledImage src={image.url} onClick={onImageClick} />
+          <StyledImage src={image.url} onClick={() => onImageClick(index)} />
           {index === PREVIEW_IMAGE_COUNT - 1 && (
             <StyledMoreImagesButton
               onClick={() => console.log('이미지 더보기')}

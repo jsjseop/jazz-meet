@@ -1,5 +1,7 @@
 import styled from '@emotion/styled';
 import CloseIcon from '@mui/icons-material/Close';
+import { useEffect, useState } from 'react';
+import SwiperCore from 'swiper';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import { Navigation, Pagination } from 'swiper/modules';
@@ -8,10 +10,21 @@ import { IMAGE_DETAIL_MODAL_Z_INDEX } from '~/constants/Z_INDEX';
 import { VenueDetailData } from '~/types/api.types';
 
 type Props = {
+  currentIndex: number;
   onClose: () => void;
 } & Pick<VenueDetailData, 'images'>;
 
-export const ImageDetail: React.FC<Props> = ({ images, onClose }) => {
+export const ImageDetail: React.FC<Props> = ({
+  currentIndex,
+  images,
+  onClose,
+}) => {
+  const [swiper, setSwiper] = useState<SwiperCore>();
+
+  useEffect(() => {
+    swiper?.slideTo(currentIndex, 0);
+  }, [currentIndex, swiper]);
+
   return (
     <StyledImageDetail>
       <StyledImageDetailHeader>
@@ -31,6 +44,7 @@ export const ImageDetail: React.FC<Props> = ({ images, onClose }) => {
       <StyledImageDetailContent>
         <Swiper
           modules={[Pagination, Navigation]}
+          onSwiper={setSwiper}
           pagination={{
             type: 'fraction',
           }}
