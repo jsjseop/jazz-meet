@@ -63,6 +63,7 @@ export const VenueDetail: React.FC = () => {
           </IconButton>
           <Header name={data.name} links={data.links} />
           <BasicInfo
+            id={data.id}
             roadNameAddress={data.roadNameAddress}
             lotNumberAddress={data.lotNumberAddress}
             venueHours={data.venueHours}

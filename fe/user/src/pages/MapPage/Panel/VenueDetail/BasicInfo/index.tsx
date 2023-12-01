@@ -11,10 +11,11 @@ import { VenueHours } from './VenueHours';
 
 type Props = Pick<
   VenueDetailData,
-  'roadNameAddress' | 'lotNumberAddress' | 'venueHours' | 'phoneNumber'
+  'id' | 'roadNameAddress' | 'lotNumberAddress' | 'venueHours' | 'phoneNumber'
 > & { naverMapUrl?: string };
 
 export const BasicInfo: React.FC<Props> = ({
+  id: venueId,
   roadNameAddress,
   lotNumberAddress,
   venueHours,
@@ -51,7 +52,7 @@ export const BasicInfo: React.FC<Props> = ({
           </StyledContent>
           <StyledContent>
             <BeerBottle />
-            <VenueHours venueHours={venueHours} />
+            <VenueHours key={venueId} venueHours={venueHours} />
           </StyledContent>
           <StyledContent>
             <Buildings />
