@@ -1,21 +1,14 @@
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
-import { IconButton } from '@mui/material';
-import CaretLeft from '~/assets/icons/CaretLeft.svg?react';
 import { VenueDetailData } from '~/types/api.types';
 
 const PREVIEW_IMAGE_COUNT = 5;
 
 type Props = {
-  onReturnButtonClick: () => void;
   onImageClick: (index: number) => void;
 } & Pick<VenueDetailData, 'images'>;
 
-export const PreviewImages: React.FC<Props> = ({
-  images,
-  onReturnButtonClick,
-  onImageClick,
-}) => {
+export const PreviewImages: React.FC<Props> = ({ images, onImageClick }) => {
   const displayedImages = images.slice(0, PREVIEW_IMAGE_COUNT);
   const defaultImages = Array(5 - displayedImages.length).fill('default');
 
@@ -39,13 +32,6 @@ export const PreviewImages: React.FC<Props> = ({
           <StyledDefaultText>사진이 없어요</StyledDefaultText>
         </StyledImageWrapper>
       ))}
-      <IconButton
-        type="button"
-        sx={{ position: 'absolute' }}
-        onClick={onReturnButtonClick}
-      >
-        <CaretLeft />
-      </IconButton>
     </StyledImages>
   );
 };

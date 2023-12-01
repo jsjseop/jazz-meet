@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { IconButton } from '@mui/material';
 import { useEffect, useState } from 'react';
 import {
   Outlet,
@@ -8,6 +9,7 @@ import {
   useParams,
 } from 'react-router-dom';
 import { getVenueDetail } from '~/apis/venue';
+import CaretLeft from '~/assets/icons/CaretLeft.svg?react';
 import { VenueDetailData } from '~/types/api.types';
 import { BasicInfo } from './BasicInfo';
 import { Header } from './Header';
@@ -51,7 +53,14 @@ export const VenueDetail: React.FC = () => {
     <>
       {data && (
         <StyledVenueDetail isRender={isRender}>
-          <Images images={data.images} onReturnButtonClick={backToVenueList} />
+          <Images images={data.images} />
+          <IconButton
+            type="button"
+            sx={{ position: 'absolute', top: '0' }}
+            onClick={backToVenueList}
+          >
+            <CaretLeft />
+          </IconButton>
           <Header name={data.name} links={data.links} />
           <BasicInfo
             roadNameAddress={data.roadNameAddress}
