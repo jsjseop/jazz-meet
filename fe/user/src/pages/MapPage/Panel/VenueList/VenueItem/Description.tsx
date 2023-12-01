@@ -40,7 +40,7 @@ const StyledDescription = styled.article`
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 75px;
+  gap: 32px;
 `;
 
 const StyledHeader = styled.header`
@@ -56,7 +56,7 @@ const StyledName = styled.h3`
 `;
 
 const StyledAddress = styled.span`
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 500;
   color: #848484;
 `;
