@@ -16,7 +16,7 @@ export const VenueHours: React.FC<Props> = ({ venueHours }) => {
   return (
     <StyledVenueHours>
       <StyledTodayBusinessHours>
-        {todayBusinessHours || '영업시간 정보가 없습니다.'}
+        {todayBusinessHours || '오늘의 영업시간 정보가 없습니다.'}
         <ExpandMoreOutlinedIcon />
       </StyledTodayBusinessHours>
 
