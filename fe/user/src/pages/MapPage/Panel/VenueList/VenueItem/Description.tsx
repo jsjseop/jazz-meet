@@ -22,14 +22,18 @@ export const Description: React.FC<Props> = ({
       <StyledMainContent>
         <StyledIntroduction>{description}</StyledIntroduction>
         <StyledSchedule>
-          {showInfo.map(({ startTime, endTime }, index) => (
-            <StyledShowTime key={index}>
-              <span>{index + 1}부</span>
-              <span>
-                {isoToTimeFormat(startTime)}~{isoToTimeFormat(endTime)}
-              </span>
-            </StyledShowTime>
-          ))}
+          {showInfo.length > 0 ? (
+            showInfo.map(({ startTime, endTime }, index) => (
+              <StyledShowTime key={index}>
+                <span>{index + 1}부</span>
+                <span>
+                  {isoToTimeFormat(startTime)}~{isoToTimeFormat(endTime)}
+                </span>
+              </StyledShowTime>
+            ))
+          ) : (
+            <StyledShowTime>공연없음</StyledShowTime>
+          )}
         </StyledSchedule>
       </StyledMainContent>
     </StyledDescription>
