@@ -32,7 +32,7 @@ class ImageRepositoryTest extends IntegrationTestSupport {
 	@Test
 	@DisplayName("이미지의 상태가 DELETED 이거나 상태가 UNREGISTERED 이면서 생성일자가 오늘이 아닌 이미지를 모두 조회한다")
 	void findAllStatusNotRegistered() {
-	    // given
+		// given
 		Image image1 = ImageFixture.createImage("url1", ImageStatus.REGISTERED);
 		Image image2 = ImageFixture.createImage("url2", ImageStatus.UNREGISTERED);
 		Image image3 = ImageFixture.createImage("url3", ImageStatus.DELETED);
@@ -40,7 +40,7 @@ class ImageRepositoryTest extends IntegrationTestSupport {
 		imageRepository.saveAll(List.of(image1, image2, image3));
 
 		LocalDate today = LocalDate.now();
-		LocalDate yesterday = LocalDate.of(today.getYear(), today.getMonth(), today.getDayOfMonth() - 1);
+		LocalDate yesterday = today.minusDays(1);
 
 		// when
 		List<Image> images = imageQueryRepository.findAllNotRegistered(yesterday);
@@ -54,7 +54,7 @@ class ImageRepositoryTest extends IntegrationTestSupport {
 	@DisplayName("URL의 리스트를 입력 받아서 URL에 해당하는 이미지를 모두 삭제한다")
 	@Transactional
 	void deleteImagesByUrls() {
-	    // given
+		// given
 		Image image1 = ImageFixture.createImage("url1");
 		Image image2 = ImageFixture.createImage("url2");
 		Image image3 = ImageFixture.createImage("url3");
@@ -65,7 +65,7 @@ class ImageRepositoryTest extends IntegrationTestSupport {
 		// when
 		imageQueryRepository.deleteAllInUrls(imageUrls);
 
-	    // then
+		// then
 		List<Image> images = imageRepository.findAll();
 		assertThat(images).extracting("url")
 			.containsExactly("url3");
