@@ -16,9 +16,9 @@ export const VenueList: React.FC<Props> = ({
   handleChangeVenueListPage,
 }) => {
   const { search } = useLocation();
-  const scrollTargetRef = useRef<HTMLDivElement>(null);
+  const venueListRef = useRef<HTMLDivElement>(null);
 
-  const scrollToTop = () => scrollTargetRef.current?.scrollIntoView();
+  const scrollToTop = () => venueListRef.current?.scrollTo({ top: 0 });
 
   const onVenueListPageChange = (
     _: React.ChangeEvent<unknown>,
@@ -29,8 +29,7 @@ export const VenueList: React.FC<Props> = ({
   };
 
   return (
-    <StyledVenueList>
-      <StyledScrollTarget ref={scrollTargetRef} />
+    <StyledVenueList ref={venueListRef}>
       <StyledTotalCount>
         <h2>전체</h2>
         <span>{searchedVenus?.totalCount ?? 0}</span>
@@ -82,11 +81,6 @@ const StyledVenueList = styled.div`
   &::-webkit-scrollbar-track {
     background-color: transparent;
   }
-`;
-
-const StyledScrollTarget = styled.div`
-  position: absolute;
-  top: 0;
 `;
 
 const StyledTotalCount = styled.div`
