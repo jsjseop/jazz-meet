@@ -8,4 +8,6 @@ export const CardList: React.FC<Props> = ({ children }) => {
   return <StyledCardList>{children}</StyledCardList>;
 };
 
-const StyledCardList = styled.div``;
+const StyledCardList = styled.div`
+  padding: 0 60px;
+`;
