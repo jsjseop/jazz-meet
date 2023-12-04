@@ -1,23 +1,33 @@
+import { css } from '@emotion/react';
 import styled from '@emotion/styled';
+import ContentCopyRoundedIcon from '@mui/icons-material/ContentCopyRounded';
 import Backpack from '~/assets/icons/Backpack.svg?react';
 import BeerBottle from '~/assets/icons/BeerBottle.svg?react';
 import Buildings from '~/assets/icons/Buildings.svg?react';
 import { VenueDetailData } from '~/types/api.types';
-import { Tabs } from './Tabs';
-import { Tab } from './Tabs/Tab';
+import { Tabs } from '../Tabs';
+import { Tab } from '../Tabs/Tab';
+import { VenueHours } from './VenueHours';
 
 type Props = Pick<
   VenueDetailData,
-  'roadNameAddress' | 'lotNumberAddress' | 'venueHours' | 'phoneNumber'
+  'id' | 'roadNameAddress' | 'lotNumberAddress' | 'venueHours' | 'phoneNumber'
 > & { naverMapUrl?: string };
 
 export const BasicInfo: React.FC<Props> = ({
+  id: venueId,
   roadNameAddress,
   lotNumberAddress,
   venueHours,
   phoneNumber,
   naverMapUrl,
 }) => {
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard
+      .writeText(text)
+      .then(() => alert('클립보드에 복사되었습니다.'));
+  };
+
   return (
     <>
       <StyledBasicInfo>
@@ -28,23 +38,31 @@ export const BasicInfo: React.FC<Props> = ({
           <StyledContent>
             <Backpack />
             <StyledBasicInfoAddress>
-              <StyledBasicInfoText>{roadNameAddress}</StyledBasicInfoText>
+              <StyledBasicInfoText>
+                {roadNameAddress}
+                <StyledCopyButton
+                  onClick={() => copyToClipboard(roadNameAddress)}
+                >
+                  <ContentCopyRoundedIcon />
+                  복사
+                </StyledCopyButton>
+              </StyledBasicInfoText>
               <StyledBasicInfoText>{`지번 | ${lotNumberAddress}`}</StyledBasicInfoText>
             </StyledBasicInfoAddress>
           </StyledContent>
           <StyledContent>
             <BeerBottle />
-            <div>
-              {venueHours.map((venueHour, index) => (
-                <StyledBasicInfoText
-                  key={index}
-                >{`${venueHour.day} | ${venueHour.businessHours}`}</StyledBasicInfoText>
-              ))}
-            </div>
+            <VenueHours key={venueId} venueHours={venueHours} />
           </StyledContent>
           <StyledContent>
             <Buildings />
-            <StyledBasicInfoText>{phoneNumber}</StyledBasicInfoText>
+            <StyledBasicInfoText>
+              {phoneNumber}
+              <StyledCopyButton onClick={() => copyToClipboard(phoneNumber)}>
+                <ContentCopyRoundedIcon />
+                복사
+              </StyledCopyButton>
+            </StyledBasicInfoText>
           </StyledContent>
         </StyledContentContainer>
       </StyledBasicInfo>
@@ -85,6 +103,17 @@ const StyledBasicInfoText = styled.div`
 
 const StyledBasicInfoAddress = styled.div``;
 
+const buttonStyle = css`
+  &:hover {
+    cursor: pointer;
+    opacity: 0.7;
+  }
+
+  &:active {
+    opacity: 0.5;
+  }
+`;
+
 const StyledButtonWrapper = styled.div`
   padding: 0 24px;
 `;
@@ -99,4 +128,16 @@ const StyledButton = styled.div`
   font-weight: 500;
   display: flex;
   justify-content: center;
+
+  ${buttonStyle}
+`;
+
+const StyledCopyButton = styled.button`
+  padding: 0 4px;
+  display: flex;
+  align-items: center;
+  color: #60bf48;
+  font-size: 14px;
+
+  ${buttonStyle}
 `;

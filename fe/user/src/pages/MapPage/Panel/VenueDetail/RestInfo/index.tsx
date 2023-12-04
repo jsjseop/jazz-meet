@@ -1,8 +1,8 @@
 import styled from '@emotion/styled';
-import { Tabs } from '../Tabs';
-import { Tab } from '../Tabs/Tab';
 import LocalCafeOutlinedIcon from '@mui/icons-material/LocalCafeOutlined';
 import { VenueDetailData } from '~/types/api.types';
+import { Tabs } from '../Tabs';
+import { Tab } from '../Tabs/Tab';
 import { ShowInfo } from './ShowInfo';
 
 type Props = Pick<VenueDetailData, 'description'>;
@@ -12,8 +12,6 @@ export const RestInfo: React.FC<Props> = ({ description }) => {
     <StyledRestInfo>
       <Tabs>
         <Tab isSelected>공연정보</Tab>
-        <Tab>판매정보</Tab>
-        <Tab>공연장정보</Tab>
       </Tabs>
 
       <StyledRestInfoContent>
@@ -68,4 +66,5 @@ const StyledContent = styled.div`
 const StyledBasicInfoText = styled.div`
   font-size: 20px;
   line-height: 150%;
+  white-space: pre-wrap;
 `;
