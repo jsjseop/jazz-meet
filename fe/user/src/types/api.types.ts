@@ -7,6 +7,11 @@ type Venue = {
   address: string;
 };
 
+export type VenueHour = {
+  day: string;
+  businessHours: string;
+};
+
 export type VenueList = {
   venues: Venue[];
 } & Pagination;
@@ -35,10 +40,7 @@ export type VenueDetailData = {
     type: string;
     url: string;
   }[];
-  venueHours: {
-    day: string;
-    businessHours: string;
-  }[];
+  venueHours: VenueHour[];
   description: string;
 } & Omit<Venue, 'address'> &
   Coordinate;
