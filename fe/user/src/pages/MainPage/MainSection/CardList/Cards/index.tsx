@@ -16,7 +16,7 @@ export const Cards: React.FC<Props> = ({ children }) => {
 
   return (
     <StyledCards>
-      {Array.isArray(children) && children.length > 0 ? (
+      {Children.count(children) > 0 ? (
         <>
           <Swiper
             navigation={{
@@ -47,7 +47,7 @@ export const Cards: React.FC<Props> = ({ children }) => {
               },
             }}
           >
-            {children}
+            {Children.toArray(children)}
           </Swiper>
           <StyledArrowButton className={`swiper-prev ${cardsId}`}>
             <CaretLeft />
