@@ -8,7 +8,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import kr.codesquad.jazzmeet.global.error.CustomException;
 import kr.codesquad.jazzmeet.global.error.statuscode.ImageErrorCode;
-import kr.codesquad.jazzmeet.image.dto.response.ImageIdsResponse;
+import kr.codesquad.jazzmeet.image.dto.response.ImageCreateResponse;
+import kr.codesquad.jazzmeet.image.dto.response.ImageSaveResponse;
 import kr.codesquad.jazzmeet.image.entity.Image;
 import kr.codesquad.jazzmeet.image.entity.ImageStatus;
 import kr.codesquad.jazzmeet.image.mapper.ImageMapper;
@@ -25,17 +26,17 @@ public class ImageService {
 	private final ImageQueryRepository imageQueryRepository;
 
 	@Transactional
-	public ImageIdsResponse saveImages(List<String> imageUrls) {
+	public ImageCreateResponse saveImages(List<String> imageUrls) {
 		List<Image> images = imageUrls.stream()
 			.map(url -> ImageMapper.INSTANCE.toImage(url, ImageStatus.UNREGISTERED))
 			.toList();
 
 		List<Image> saveImages = imageRepository.saveAll(images);
-		List<Long> ids = saveImages.stream()
-			.map(Image::getId)
+		List<ImageSaveResponse> imageSaveResponses = saveImages.stream()
+			.map(ImageMapper.INSTANCE::toImageSaveResponse)
 			.toList();
 
-		return new ImageIdsResponse(ids);
+		return new ImageCreateResponse(imageSaveResponses);
 	}
 
 	@Transactional
