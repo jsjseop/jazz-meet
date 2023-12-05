@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { Children, useId } from 'react';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import { Navigation } from 'swiper/modules';
@@ -11,14 +12,16 @@ type Props = {
 };
 
 export const Cards: React.FC<Props> = ({ children }) => {
+  const cardsId = useId().split(':')[1];
+
   return (
     <StyledCards>
       {Array.isArray(children) && children.length > 0 ? (
         <>
           <Swiper
             navigation={{
-              prevEl: '.swiper-prev',
-              nextEl: '.swiper-next',
+              prevEl: `.swiper-prev.${cardsId}`,
+              nextEl: `.swiper-next.${cardsId}`,
             }}
             modules={[Navigation]}
             breakpoints={{
@@ -46,10 +49,10 @@ export const Cards: React.FC<Props> = ({ children }) => {
           >
             {children}
           </Swiper>
-          <StyledArrowButton className="swiper-prev">
+          <StyledArrowButton className={`swiper-prev ${cardsId}`}>
             <CaretLeft />
           </StyledArrowButton>
-          <StyledArrowButton className="swiper-next">
+          <StyledArrowButton className={`swiper-next ${cardsId}`}>
             <CaretRight />
           </StyledArrowButton>
         </>
