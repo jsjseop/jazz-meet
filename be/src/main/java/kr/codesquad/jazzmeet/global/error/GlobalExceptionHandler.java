@@ -3,6 +3,7 @@ package kr.codesquad.jazzmeet.global.error;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
@@ -45,7 +46,8 @@ public class GlobalExceptionHandler {
 
 	// 400 BAD REQUEST
 	// @Valid 검증 실패
-	@ExceptionHandler({MethodArgumentNotValidException.class, ValidationException.class})
+	@ExceptionHandler({MethodArgumentNotValidException.class, ValidationException.class,
+		MissingServletRequestParameterException.class})
 	protected ResponseEntity<ErrorResponse> handleValidateException(Exception ex) {
 		ErrorCode errorCode = ErrorCode.VALIDATION_FAILED;
 		log.warn("ValidException handling: {}", ex.getMessage());
