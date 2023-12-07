@@ -6,6 +6,8 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import { Navigation, Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
+import CaretLeft from '~/assets/icons/CaretLeft.svg?react';
+import CaretRight from '~/assets/icons/CaretRight.svg?react';
 import { IMAGE_DETAIL_MODAL_Z_INDEX } from '~/constants/Z_INDEX';
 import { VenueDetailData } from '~/types/api.types';
 
@@ -48,7 +50,10 @@ export const ImageDetail: React.FC<Props> = ({
           pagination={{
             type: 'fraction',
           }}
-          navigation={true}
+          navigation={{
+            prevEl: '.swiper-prev',
+            nextEl: '.swiper-next',
+          }}
         >
           {images.map((image, index) => (
             <SwiperSlide key={`${image.url}-${index}`}>
@@ -59,6 +64,12 @@ export const ImageDetail: React.FC<Props> = ({
             </SwiperSlide>
           ))}
         </Swiper>
+        <StyledArrowButton className="swiper-prev">
+          <CaretLeft />
+        </StyledArrowButton>
+        <StyledArrowButton className="swiper-next">
+          <CaretRight />
+        </StyledArrowButton>
       </StyledImageDetailContent>
     </StyledImageDetail>
   );
@@ -103,16 +114,36 @@ const StyledImageDetailContent = styled.div`
   .swiper-pagination-fraction {
     color: #ffffff;
   }
-
-  .swiper-button-prev,
-  .swiper-button-next {
-    position: absolute;
-    color: #ffffff !important;
-  }
 `;
 
 const SlideImage = styled.img`
   width: 100%;
   height: 100%;
   object-fit: contain;
+`;
+
+const StyledArrowButton = styled.button`
+  position: absolute;
+  top: 45%;
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  > svg {
+    width: 60px;
+    height: 88px;
+  }
+
+  &.swiper-prev {
+    left: 20px;
+  }
+
+  &.swiper-next {
+    right: 20px;
+  }
+
+  &.swiper-button-disabled {
+    opacity: 0.2;
+  }
 `;

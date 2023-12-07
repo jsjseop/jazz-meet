@@ -1,11 +1,11 @@
-import { Cards } from './CardList/Cards';
-import { CardListHeader } from './CardList/CardListHeader';
-import { CardList } from './CardList';
 import { useEffect, useState } from 'react';
 import { SwiperSlide } from 'swiper/react';
-import { UpcomingShowCard } from './CardList/Cards/UpcomingShowCard';
-import { UpcomingShow } from '~/types/api.types';
 import { getUpcomingShows } from '~/apis/show';
+import { UpcomingShow } from '~/types/api.types';
+import { CardList } from './CardList';
+import { CardListHeader } from './CardList/CardListHeader';
+import { Cards } from './CardList/Cards';
+import { UpcomingShowCard } from './CardList/Cards/UpcomingShowCard';
 
 export const UpcomingShows: React.FC = () => {
   const [upcomingShows, setUpcomingShows] = useState<UpcomingShow[]>();
@@ -21,7 +21,7 @@ export const UpcomingShows: React.FC = () => {
 
   return (
     <CardList>
-      <CardListHeader title="진행 중인 공연" />
+      <CardListHeader title="다가오는 공연" />
 
       <Cards>
         {upcomingShows &&
