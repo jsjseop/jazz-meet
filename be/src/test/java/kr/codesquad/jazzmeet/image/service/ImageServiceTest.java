@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import kr.codesquad.jazzmeet.IntegrationTestSupport;
 import kr.codesquad.jazzmeet.fixture.ImageFixture;
 import kr.codesquad.jazzmeet.global.error.CustomException;
-import kr.codesquad.jazzmeet.image.dto.response.ImageIdsResponse;
+import kr.codesquad.jazzmeet.image.dto.response.ImageCreateResponse;
 import kr.codesquad.jazzmeet.image.entity.Image;
 import kr.codesquad.jazzmeet.image.entity.ImageStatus;
 import kr.codesquad.jazzmeet.image.repository.ImageRepository;
@@ -33,27 +33,27 @@ class ImageServiceTest extends IntegrationTestSupport {
 	@Test
 	@DisplayName("이미지 URL의 리스트를 받아서 저장하고 이미지 ID의 리스트를 반환한다")
 	void saveImages() {
-	    // given
+		// given
 		List<String> imageUrls = List.of("imgUrl1", "imgUrl2", "imgUrl3");
 
 		// when
-		ImageIdsResponse imageIdsResponse = imageService.saveImages(imageUrls);
+		ImageCreateResponse imageCreateResponse = imageService.saveImages(imageUrls);
 
 		// then
-		assertThat(imageIdsResponse.ids()).hasSize(imageUrls.size());
+		assertThat(imageCreateResponse.images()).hasSize(imageUrls.size());
 	}
 
 	@Test
 	@DisplayName("이미지의 상태를 삭제 상태로 변경한다")
 	void deleteImage() {
-	    // given
+		// given
 		Image image = ImageFixture.createImage("imgUrl");
 		Image savedImage = imageRepository.save(image);
 
 		// when
 		imageService.deleteImage(savedImage.getId());
 
-	    // then
+		// then
 		Image deletedImage = imageRepository.findById(savedImage.getId()).get();
 		assertThat(deletedImage).extracting("status").isEqualTo(ImageStatus.DELETED);
 	}

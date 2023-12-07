@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
+import { useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { PaginationBox } from '~/components/PaginationBox';
 import { SearchedVenues } from '~/types/api.types';
@@ -15,16 +16,20 @@ export const VenueList: React.FC<Props> = ({
   handleChangeVenueListPage,
 }) => {
   const { search } = useLocation();
+  const venueListRef = useRef<HTMLDivElement>(null);
+
+  const scrollToTop = () => venueListRef.current?.scrollTo({ top: 0 });
 
   const onVenueListPageChange = (
     _: React.ChangeEvent<unknown>,
     value: number,
   ) => {
     handleChangeVenueListPage(value);
+    scrollToTop();
   };
 
   return (
-    <StyledVenueList>
+    <StyledVenueList ref={venueListRef}>
       <StyledTotalCount>
         <h2>전체</h2>
         <span>{searchedVenus?.totalCount ?? 0}</span>
@@ -56,6 +61,7 @@ export const VenueList: React.FC<Props> = ({
 };
 
 const StyledVenueList = styled.div`
+  position: relative;
   width: 100%;
   background-color: #fff;
   padding: 20px;

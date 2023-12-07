@@ -22,14 +22,18 @@ export const Description: React.FC<Props> = ({
       <StyledMainContent>
         <StyledIntroduction>{description}</StyledIntroduction>
         <StyledSchedule>
-          {showInfo.map(({ startTime, endTime }, index) => (
-            <StyledShowTime key={index}>
-              <span>{index + 1}부</span>
-              <span>
-                {isoToTimeFormat(startTime)}~{isoToTimeFormat(endTime)}
-              </span>
-            </StyledShowTime>
-          ))}
+          {showInfo.length > 0 ? (
+            showInfo.map(({ startTime, endTime }, index) => (
+              <StyledShowTime key={index}>
+                <span>{index + 1}부</span>
+                <span>
+                  {isoToTimeFormat(startTime)}~{isoToTimeFormat(endTime)}
+                </span>
+              </StyledShowTime>
+            ))
+          ) : (
+            <StyledShowTime>공연없음</StyledShowTime>
+          )}
         </StyledSchedule>
       </StyledMainContent>
     </StyledDescription>
@@ -40,7 +44,7 @@ const StyledDescription = styled.article`
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 75px;
+  gap: 32px;
 `;
 
 const StyledHeader = styled.header`
@@ -56,7 +60,7 @@ const StyledName = styled.h3`
 `;
 
 const StyledAddress = styled.span`
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 500;
   color: #848484;
 `;

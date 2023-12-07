@@ -4,7 +4,7 @@ import {
   HOVER_MARKER_Z_INDEX,
   MARKER_Z_INDEX,
   SELECTED_MARKER_Z_INDEX,
-} from '~/constants/MAP';
+} from '~/constants/Z_INDEX';
 import { getInitMap } from '~/utils/map';
 import { MapSearchButton } from './MapSearchButton';
 

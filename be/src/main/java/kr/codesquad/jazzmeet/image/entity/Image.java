@@ -10,14 +10,17 @@ import jakarta.persistence.Id;
 import kr.codesquad.jazzmeet.global.time.BaseTimeEntity;
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class Image extends BaseTimeEntity {
+	@Getter
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	@Getter
 	@Column(nullable = false, length = 500)
 	private String url;
 	@Enumerated(value = EnumType.STRING)
@@ -28,14 +31,6 @@ public class Image extends BaseTimeEntity {
 	public Image(String url, ImageStatus status) {
 		this.url = url;
 		this.status = status;
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public String getUrl() {
-		return url;
 	}
 
 	public void delete() {

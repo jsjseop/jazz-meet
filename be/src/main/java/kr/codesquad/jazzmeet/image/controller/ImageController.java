@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import kr.codesquad.jazzmeet.image.dto.response.ImageIdsResponse;
+import kr.codesquad.jazzmeet.image.dto.response.ImageCreateResponse;
 import kr.codesquad.jazzmeet.image.service.CloudService;
 import kr.codesquad.jazzmeet.image.service.ImageService;
 import lombok.RequiredArgsConstructor;
@@ -27,11 +27,11 @@ public class ImageController {
 	 * 이미지 업로드 API
 	 */
 	@PostMapping("/api/images")
-	public ResponseEntity<ImageIdsResponse> uploadImages(@RequestPart("image") List<MultipartFile> multipartFiles) {
+	public ResponseEntity<ImageCreateResponse> uploadImages(@RequestPart("image") List<MultipartFile> multipartFiles) {
 		List<String> imageUrls = cloudService.uploadImages(multipartFiles);
-		ImageIdsResponse imageIdsResponse = imageService.saveImages(imageUrls);
+		ImageCreateResponse imageCreateResponse = imageService.saveImages(imageUrls);
 
-		return ResponseEntity.status(HttpStatus.CREATED).body(imageIdsResponse);
+		return ResponseEntity.status(HttpStatus.CREATED).body(imageCreateResponse);
 	}
 
 	/**
