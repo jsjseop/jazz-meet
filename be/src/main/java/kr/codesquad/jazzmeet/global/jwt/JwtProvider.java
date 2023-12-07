@@ -28,10 +28,6 @@ public class JwtProvider {
 			.build();
 	}
 
-	public String reissueAccessToken(Map<String, Object> claims) {
-		return createToken(claims, getExpireDateAccessToken());
-	}
-
 	public String createToken(Map<String, Object> claims, Date expiration) {
 		return Jwts.builder()
 			.setClaims(claims)
@@ -41,12 +37,16 @@ public class JwtProvider {
 			.compact();
 	}
 
-	public Date getExpireDateAccessToken() {
+	private Date getExpireDateAccessToken() {
 		return new Date(System.currentTimeMillis() + jwtProperties.getAccessTokenExpiration());
 	}
 
-	public Date getExpireDateRefreshToken() {
+	private Date getExpireDateRefreshToken() {
 		return new Date(System.currentTimeMillis() + jwtProperties.getRefreshTokenExpiration());
+	}
+
+	public String reissueAccessToken(Map<String, Object> claims) {
+		return createToken(claims, getExpireDateAccessToken());
 	}
 
 	public Claims getClaims(String token) {
