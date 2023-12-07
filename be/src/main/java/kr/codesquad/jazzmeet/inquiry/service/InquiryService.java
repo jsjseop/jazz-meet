@@ -63,10 +63,10 @@ public class InquiryService {
 	public InquiryDetailResponse getInquiryDetail(Long inquiryId) {
 		InquiryDetail inquiry = inquiryQueryRepository.findInquiryAndAnswerByInquiryId(inquiryId)
 			.orElseThrow(() -> new CustomException(InquiryErrorCode.NOT_FOUND_INQUIRY));
-		InquiryAnswerDetail inquiryAnswer = InquiryMapper.INSTANCE.toInquiryAnswerDetail(inquiry);
+		InquiryAnswerDetail inquiryAnswer = InquiryMapper.INSTANCE.toInquiryAnswerDetail(inquiry)
+			.checkAndSetToNull();
 
-		return InquiryMapper.INSTANCE.toInquiryDetailResponse(inquiry.getInquiryId(), inquiry.getInquiryContent(),
-			inquiryAnswer);
+		return InquiryMapper.INSTANCE.toInquiryDetailResponse(inquiry, inquiryAnswer);
 	}
 
 	@Transactional

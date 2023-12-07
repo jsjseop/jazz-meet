@@ -92,12 +92,15 @@ public class InquiryQueryRepository {
 
 	public Optional<InquiryDetail> findInquiryAndAnswerByInquiryId(Long inquiryId) {
 		InquiryDetail inquiryDetail = query.select(Projections.fields(InquiryDetail.class,
-				inquiry.id.as("inquiryId"),
-				inquiry.content.as("inquiryContent"),
-				answer.id,
-				answer.content,
-				answer.createdAt,
-				answer.modifiedAt
+				inquiry.id,
+				inquiry.status,
+				inquiry.content,
+				inquiry.nickname,
+				inquiry.createdAt,
+				answer.id.as("answerId"),
+				answer.content.as("answerContent"),
+				answer.createdAt.as("answerCreatedAt"),
+				answer.modifiedAt.as("answerModifiedAt")
 			))
 			.from(inquiry)
 			.leftJoin(answer).on(answer.inquiry.id.eq(inquiryId))

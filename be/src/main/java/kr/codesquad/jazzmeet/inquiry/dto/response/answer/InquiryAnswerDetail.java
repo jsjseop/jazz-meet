@@ -8,4 +8,14 @@ public record InquiryAnswerDetail(
 	LocalDateTime createdAt,
 	LocalDateTime modifiedAt
 ) {
+	private boolean isAllFieldsNull() {
+		return this.id == null && this.content == null && this.createdAt == null && this.modifiedAt == null;
+	}
+
+	public InquiryAnswerDetail checkAndSetToNull() {
+		if (this.isAllFieldsNull()) {
+			return null;
+		}
+		return this;
+	}
 }

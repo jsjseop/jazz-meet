@@ -40,13 +40,17 @@ public interface InquiryMapper {
 	@Mapping(target = "status", source = "status.koName")
 	InquirySearch toInquirySearch(InquirySearchData inquirySearchData);
 
-	InquiryAnswerDetail toInquiryAnswerDetail(InquiryDetail inquiry);
+	@Mapping(target = "id", source = "inquiryDetail.answerId")
+	@Mapping(target = "content", source = "inquiryDetail.answerContent")
+	@Mapping(target = "createdAt", source = "inquiryDetail.answerCreatedAt")
+	@Mapping(target = "modifiedAt", source = "inquiryDetail.answerModifiedAt")
+	InquiryAnswerDetail toInquiryAnswerDetail(InquiryDetail inquiryDetail);
 
-	@Mapping(target = "id", source = "inquiryId")
-	@Mapping(target = "content", source = "inquiryContent")
-	@Mapping(target = "answer", source = "answer")
-	InquiryDetailResponse toInquiryDetailResponse(Long inquiryId, String inquiryContent,
-		InquiryAnswerDetail answer);
+	@Mapping(target = "id", source = "inquiry.id")
+	@Mapping(target = "status", source = "inquiry.status.koName")
+	@Mapping(target = "content", source = "inquiry.content")
+	@Mapping(target = "createdAt", source = "inquiry.createdAt")
+	InquiryDetailResponse toInquiryDetailResponse(InquiryDetail inquiry, InquiryAnswerDetail answer);
 
 	@Mapping(target = "category", source = "inquiryCategory")
 	@Mapping(target = "password", source = "encryptedPwd")
