@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import SubdirectoryArrowRightIcon from '@mui/icons-material/SubdirectoryArrowRight';
+import JazzMeet from '~/assets/icons/JazzMeet.svg?react';
 
 type Props = {
   updateTime: string;
@@ -11,7 +12,7 @@ export const Answer: React.FC<Props> = ({ updateTime, content }) => {
     <StyledDiv>
       <Header>
         <SubdirectoryArrowRightIcon />
-        <LogoImage src="https://github.com/jsh3418/js-calculator-bonobono/assets/57666791/07da94d4-01b3-4e70-8973-db44780f6d6e" />
+        <JazzMeet fill="#ff4d00" />
         <UpdateTime>{updateTime}</UpdateTime>
       </Header>
       <Description>{content}</Description>
@@ -26,19 +27,13 @@ const StyledDiv = styled.div`
   gap: 8px;
   padding: 24px;
   margin-top: 24px;
-  background-color: #EBEBEB;
+  background-color: #ebebeb;
 `;
 
 const Header = styled.div`
   display: flex;
   align-items: center;
   gap: 8px;
-`;
-
-const LogoImage = styled.img`
-  width: 146px;
-  height: 27px;
-  object-fit: cover;
 `;
 
 const UpdateTime = styled.span`
