@@ -31,7 +31,6 @@ export const PreviewImages: React.FC<Props> = ({ images, onImageClick }) => {
         <StyledImageWrapper key={`${text}-${index}`}>
           <StyledDefaultImage>
             <JazzMeet fill="#fff" />
-            {/* src={'/src/assets/icons/JazzMeet.svg'}  */}
           </StyledDefaultImage>
           <StyledDefaultText>사진이 없어요</StyledDefaultText>
         </StyledImageWrapper>
