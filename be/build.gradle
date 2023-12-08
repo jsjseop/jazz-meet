@@ -58,6 +58,9 @@ dependencies {
     // security-core
     implementation 'org.springframework.security:spring-security-core'
 
+    // json
+    implementation 'org.json:json:20230227'
+
 }
 
 // Querydsl: 설정부
