@@ -129,13 +129,16 @@ type Pagination = {
 
 export type InquiryDetail = {
   id: number;
+  status: string;
+  nickname: string;
+  createdAt: string;
   content: string;
   answer: {
     id: number;
     content: string;
     createdAt: string;
     modifiedAt: string;
-  };
+  } | null;
 };
 
 export type PostInquiryParams = {
