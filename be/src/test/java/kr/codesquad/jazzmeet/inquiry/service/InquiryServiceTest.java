@@ -66,10 +66,11 @@ class InquiryServiceTest extends IntegrationTestSupport {
 
 		// when
 		String category = InquiryCategory.SERVICE.getKoName();
+		String status = InquiryStatus.WAITING.getKoName();
 		String word = null;
 		int page = 1;
 
-		InquirySearchResponse inquirySearchResponse = inquiryService.getInquiries(category, word, page);
+		InquirySearchResponse inquirySearchResponse = inquiryService.getInquiries(category, word, status, page);
 
 		// then
 		assertThat(inquirySearchResponse.inquiries()).hasSize(2);
@@ -89,10 +90,11 @@ class InquiryServiceTest extends IntegrationTestSupport {
 
 		// when
 		String category = InquiryCategory.SERVICE.getKoName();
+		String status = InquiryStatus.WAITING.getKoName();
 		String word = "수정";
 		int page = 1;
 
-		InquirySearchResponse inquirySearchResponse = inquiryService.getInquiries(category, word, page);
+		InquirySearchResponse inquirySearchResponse = inquiryService.getInquiries(category, word, status, page);
 		// then
 		assertThat(inquirySearchResponse.inquiries())
 			.hasSize(2)
@@ -118,10 +120,11 @@ class InquiryServiceTest extends IntegrationTestSupport {
 
 		// when
 		String category = InquiryCategory.SERVICE.getKoName();
+		String status = InquiryStatus.WAITING.getKoName();
 		String word = "지안";
 		int page = 1;
 
-		InquirySearchResponse inquirySearchResponse = inquiryService.getInquiries(category, word, page);
+		InquirySearchResponse inquirySearchResponse = inquiryService.getInquiries(category, word, status, page);
 		// then
 		assertThat(inquirySearchResponse.inquiries())
 			.hasSize(2)
@@ -130,6 +133,33 @@ class InquiryServiceTest extends IntegrationTestSupport {
 			.doesNotContain(inquiry3.getNickname())
 			.contains(inquiry1.getNickname())
 			.contains(inquiry4.getNickname());
+	}
+
+	@Test
+	@DisplayName("문의 상태에 해당되는 문의 목록을 조회한다.")
+	void searchInquiriesByStatus() {
+		// given
+		Inquiry inquiry1 = InquiryFixture.createInquiry(InquiryCategory.SERVICE);
+		Inquiry inquiry2 = InquiryFixture.createInquiry(InquiryCategory.SERVICE);
+
+		inquiryRepository.save(inquiry1);
+		inquiryRepository.save(inquiry2);
+		InquiryAnswerSaveRequest request = InquiryFixture.createInquiryAnswerSaveRequest(inquiry1.getId());
+		inquiryService.saveAnswer(request);
+
+		// when
+		String category = InquiryCategory.SERVICE.getKoName();
+		String status = InquiryStatus.WAITING.getKoName();
+		String word = null;
+		int page = 1;
+
+		InquirySearchResponse inquirySearchResponse = inquiryService.getInquiries(category, word, status, page);
+		// then
+		assertThat(inquirySearchResponse.inquiries())
+			.hasSize(1)
+			.extracting(InquirySearch::id)
+			.doesNotContain(inquiry1.getId())
+			.contains(inquiry2.getId());
 	}
 
 	@Test
