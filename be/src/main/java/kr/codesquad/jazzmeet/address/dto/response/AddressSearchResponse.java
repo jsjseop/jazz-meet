@@ -1,4 +1,4 @@
-package kr.codesquad.jazzmeet.location.dto.response;
+package kr.codesquad.jazzmeet.address.dto.response;
 
 import java.util.List;
 

@@ -1,11 +1,11 @@
-package kr.codesquad.jazzmeet.location.dto.response;
+package kr.codesquad.jazzmeet.address.dto.response;
 
 import lombok.Builder;
 
 @Builder
 public record AddressResponse(
 	String roadNameAddress,
-	String lotNameAddress,
+	String lotNumberAddress,
 	Double latitude,
 	Double longitude
 ) {

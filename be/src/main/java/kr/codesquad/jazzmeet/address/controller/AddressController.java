@@ -1,4 +1,4 @@
-package kr.codesquad.jazzmeet.location.controller;
+package kr.codesquad.jazzmeet.address.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -6,8 +6,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.constraints.Min;
-import kr.codesquad.jazzmeet.location.dto.response.AddressSearchResponse;
-import kr.codesquad.jazzmeet.location.service.AddressService;
+import kr.codesquad.jazzmeet.address.dto.response.AddressSearchResponse;
+import kr.codesquad.jazzmeet.address.service.AddressService;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
