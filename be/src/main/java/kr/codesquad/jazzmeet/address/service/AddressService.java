@@ -1,4 +1,4 @@
-package kr.codesquad.jazzmeet.location.service;
+package kr.codesquad.jazzmeet.address.service;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -15,10 +15,10 @@ import org.json.JSONTokener;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import kr.codesquad.jazzmeet.address.dto.response.AddressResponse;
+import kr.codesquad.jazzmeet.address.dto.response.AddressSearchResponse;
 import kr.codesquad.jazzmeet.global.error.CustomException;
 import kr.codesquad.jazzmeet.global.error.statuscode.AddressErrorCode;
-import kr.codesquad.jazzmeet.location.dto.response.AddressResponse;
-import kr.codesquad.jazzmeet.location.dto.response.AddressSearchResponse;
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2
@@ -129,13 +129,13 @@ public class AddressService {
 		for (int i = 0; i < arr.length(); i++) {
 			JSONObject temp = (JSONObject)arr.get(i);
 			String roadNameAddress = (String)temp.get("roadAddress");
-			String lotNameAddress = (String)temp.get("jibunAddress");
+			String lotNumberAddress = (String)temp.get("jibunAddress");
 			Double latitude = Double.parseDouble((String)temp.get("y"));
 			Double longitude = Double.parseDouble((String)temp.get("x"));
 
 			AddressResponse address = AddressResponse.builder()
 				.roadNameAddress(roadNameAddress)
-				.lotNameAddress(lotNameAddress)
+				.lotNumberAddress(lotNumberAddress)
 				.latitude(latitude)
 				.longitude(longitude)
 				.build();
