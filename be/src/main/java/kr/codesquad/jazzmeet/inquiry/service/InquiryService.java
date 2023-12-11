@@ -45,13 +45,17 @@ public class InquiryService {
 	private final InquiryAnswerRepository answerRepository;
 	private final InquiryRepository inquiryRepository;
 
-	public InquirySearchResponse getInquiries(String category, String word, int page) {
+	public InquirySearchResponse getInquiries(String category, String word, String status, int page) {
 		// request는 한글, DB 저장은 영어로 되어있기 때문에 변환 필요.
 		InquiryCategory inquiryCategory = InquiryCategory.toInquiryCategory(category);
+		InquiryStatus inquiryStatus = null;
+		if (status != null) {
+			inquiryStatus = InquiryStatus.toInquiryStatus(status);
+		}
 		PageRequest pageRequest = PageRequest.of(page - PAGE_NUMBER_OFFSET, PAGE_SIZE);
 
-		Page<InquirySearchData> inquirySearchData = inquiryQueryRepository.searchInquiries(word, inquiryCategory,
-			pageRequest);
+		Page<InquirySearchData> inquirySearchData = inquiryQueryRepository.searchInquiries(inquiryCategory,
+			word, inquiryStatus, pageRequest);
 		List<InquirySearch> inquirySearches = inquirySearchData.getContent()
 			.stream()
 			.map(InquiryMapper.INSTANCE::toInquirySearch).toList();
