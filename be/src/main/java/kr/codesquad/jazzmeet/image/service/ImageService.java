@@ -50,6 +50,11 @@ public class ImageService {
 			.orElseThrow(() -> new CustomException(ImageErrorCode.NOT_FOUND_IMAGE));
 	}
 
+	public Image findByIdExistDeleted(Long imageId) {
+		return imageRepository.findById(imageId)
+			.orElseThrow(() -> new CustomException(ImageErrorCode.NOT_FOUND_IMAGE));
+	}
+
 	public List<String> findNotRegisteredImageUrls() {
 		LocalDate today = LocalDate.now();
 		// UNREGISTERED 상태는 created_at이 today와 다른 데이터 조회
