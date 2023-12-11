@@ -1,5 +1,6 @@
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
+import JazzMeet from '~/assets/icons/JazzMeet.svg?react';
 import { VenueDetailData } from '~/types/api.types';
 
 const PREVIEW_IMAGE_COUNT = 5;
@@ -28,7 +29,9 @@ export const PreviewImages: React.FC<Props> = ({ images, onImageClick }) => {
       ))}
       {defaultImages.map((text, index) => (
         <StyledImageWrapper key={`${text}-${index}`}>
-          <StyledDefaultImage src={'/src/assets/icons/JazzMeet.svg'} />
+          <StyledDefaultImage>
+            <JazzMeet fill="#fff" />
+          </StyledDefaultImage>
           <StyledDefaultText>사진이 없어요</StyledDefaultText>
         </StyledImageWrapper>
       ))}
@@ -68,14 +71,21 @@ const StyledImage = styled.img`
   }
 `;
 
-const StyledDefaultImage = styled.img`
+const StyledDefaultImage = styled.div`
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   object-fit: contain;
-  background: #eeeeee;
+  background: #000000;
   opacity: 0.3;
+
+  svg {
+    width: 100%;
+    height: 100%;
+    padding: 0 10px;
+    box-sizing: border-box;
+  }
 `;
 
 const textOnImageStyle = css`
