@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import SubdirectoryArrowRightIcon from '@mui/icons-material/SubdirectoryArrowRight';
 import JazzMeet from '~/assets/icons/JazzMeet.svg?react';
+import { getFormattedDateString } from '~/utils/dateUtils';
 
 type Props = {
   updateTime: string;
@@ -13,7 +14,7 @@ export const Answer: React.FC<Props> = ({ updateTime, content }) => {
       <Header>
         <SubdirectoryArrowRightIcon />
         <JazzMeet fill="#ff4d00" />
-        <UpdateTime>{updateTime}</UpdateTime>
+        <UpdateTime>{getFormattedDateString(updateTime)}</UpdateTime>
       </Header>
       <Description>{content}</Description>
     </StyledDiv>
