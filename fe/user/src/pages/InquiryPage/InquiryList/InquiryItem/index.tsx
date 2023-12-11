@@ -40,7 +40,7 @@ export const InquiryItem: React.FC<Props> = ({
         {inquiryDetail && (
           <>
             <StyledDetailContent>{inquiryDetail.content}</StyledDetailContent>
-            {inquiryDetail.answer.id && (
+            {inquiryDetail.answer?.id && (
               <Answer
                 updateTime={inquiryDetail.answer.modifiedAt}
                 content={inquiryDetail.answer.content}
