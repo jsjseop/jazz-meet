@@ -107,7 +107,7 @@ public class VenueFacade {
 	private void addVenueImages(Venue venue, List<Long> imageIds) {
 		AtomicLong imageOrder = new AtomicLong();
 		imageIds.forEach(imageId -> {
-			Image image = imageService.findById(imageId);
+			Image image = imageService.findByIdExistDeleted(imageId);
 			image.register();
 			VenueImage venueImage = VenueImage.builder()
 				.imageOrder(imageOrder.incrementAndGet())
