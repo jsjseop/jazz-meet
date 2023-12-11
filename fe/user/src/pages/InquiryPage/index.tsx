@@ -12,6 +12,7 @@ import { InquiryList } from './InquiryList';
 export const InquiryPage: React.FC = () => {
   const [inquiryParams, setInquiryParams] = useState<InquiryParams>({
     category: '서비스',
+    word: '',
     page: 1,
   });
   const [inquiryData, setInquiryData] = useState<InquiryData>();
@@ -22,6 +23,10 @@ export const InquiryPage: React.FC = () => {
 
   const onWordChange = (word: string) => {
     setInquiryParams((prev) => ({ ...prev, word }));
+  };
+
+  const onSearchClear = () => {
+    setInquiryParams((prev) => ({ ...prev, word: '' }));
   };
 
   const onPageChange = (_: React.ChangeEvent<unknown>, page: number) => {
@@ -38,7 +43,11 @@ export const InquiryPage: React.FC = () => {
 
   return (
     <StyledDiv>
-      <Header onWordChange={onWordChange} />
+      <Header
+        hasSearchWord={!!inquiryParams.word}
+        onWordChange={onWordChange}
+        onSearchClear={onSearchClear}
+      />
 
       <Categories
         currentCategory={inquiryParams.category!}
