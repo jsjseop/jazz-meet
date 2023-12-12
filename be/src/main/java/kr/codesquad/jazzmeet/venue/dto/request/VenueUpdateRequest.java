@@ -23,7 +23,7 @@ public record VenueUpdateRequest(
 	String lotNumberAddress,
 	@Size(max = 20)
 	String phoneNumber,
-	@Size(max = 500)
+	@Size(max = 1000)
 	String description,
 	List<VenueLinkRequest> links,
 	List<VenueHourRequest> venueHours,
