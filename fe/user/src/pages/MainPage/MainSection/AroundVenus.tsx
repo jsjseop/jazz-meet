@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { SwiperSlide } from 'swiper/react';
 import { getAroundVenues } from '~/apis/venue';
-import { BASIC_COORDINATE } from '~/constants/COORDINATE';
+import { BASIC_COORDINATE } from '~/constants/MAP';
 import { AroundVenue } from '~/types/api.types';
 import { CardList } from './CardList';
 import { CardListHeader } from './CardList/CardListHeader';
