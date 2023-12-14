@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import { useEffect, useState } from 'react';
+import MyLocation from '~/assets/icons/MyLocation.svg';
 import {
   HOVER_MARKER_Z_INDEX,
   MARKER_Z_INDEX,
@@ -32,6 +33,15 @@ export const Map: React.FC<Props> = ({
       'dragend',
       showMapSearchButton,
     );
+
+    const currentLocationButton = `<div class='my-location-button'><img src=${MyLocation} alt='현재 위치로 이동' /></div>`;
+    const customControl = new naver.maps.CustomControl(currentLocationButton, {
+      position: naver.maps.Position.RIGHT_BOTTOM,
+    });
+
+    naver.maps.Event.once(map, 'init', () => {
+      customControl.setMap(map);
+    });
 
     return () => {
       naver.maps.Event.removeListener(dragendEventListener);
@@ -99,6 +109,29 @@ const StyledMap = styled.div`
       .marker--text {
         color: #ffffff;
       }
+    }
+  }
+
+  .my-location-button {
+    width: 35px;
+    height: 35px;
+    user-select: none;
+    background-color: #ffffff;
+    border-radius: 5px;
+    border: 1px solid #dbdbdb;
+    padding: 5px;
+    box-sizing: border-box;
+    margin: 30px 10px;
+    cursor: pointer;
+    background-clip: padding-box;
+
+    &:active {
+      background-color: #dbdbdb;
+    }
+
+    & img {
+      width: 100%;
+      height: 100%;
     }
   }
 `;
