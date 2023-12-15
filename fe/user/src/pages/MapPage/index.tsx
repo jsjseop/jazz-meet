@@ -8,9 +8,9 @@ import { useUserCoordinate } from '~/hooks/useUserCoordinate';
 import { getQueryString } from '~/utils/getQueryString';
 import {
   addMapButton,
-  fitBoundsToCoordinates,
   getMapBounds,
   getQueryBounds,
+  panToCoordinates,
 } from '~/utils/map';
 import { Map } from './Map';
 import { Panel } from './Panel';
@@ -80,7 +80,7 @@ export const MapPage: React.FC = () => {
     const position = naver.maps.Position.RIGHT_BOTTOM;
     const coordinate = userCoordinate ?? BASIC_COORDINATE;
     const onClick = () => {
-      fitBoundsToCoordinates([coordinate], map);
+      panToCoordinates([coordinate], map);
     };
 
     addMapButton({ map, buttonHTMLString, position, onClick });

@@ -1,7 +1,7 @@
 import { BASIC_COORDINATE, PIN_SVG } from '~/constants/MAP';
 import { Coordinate, CoordinateBoundary, Pin } from '~/types/map.types';
 
-export const fitBoundsToCoordinates = (
+export const panToCoordinates = (
   coordinates: Coordinate[],
   map: naver.maps.Map,
 ) => {
