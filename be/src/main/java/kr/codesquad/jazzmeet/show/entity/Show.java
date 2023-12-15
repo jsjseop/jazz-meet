@@ -44,8 +44,10 @@ public class Show {
 	private Long adminId;
 
 	@Builder
-	public Show(String teamName, LocalDateTime startTime, LocalDateTime endTime, Venue venue, Image poster) {
+	public Show(String teamName, String description, LocalDateTime startTime, LocalDateTime endTime, Venue venue,
+		Image poster) {
 		this.teamName = teamName;
+		this.description = description;
 		this.startTime = startTime;
 		this.endTime = endTime;
 		this.venue = venue;

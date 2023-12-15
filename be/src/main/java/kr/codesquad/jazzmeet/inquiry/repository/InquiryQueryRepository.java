@@ -29,7 +29,8 @@ public class InquiryQueryRepository {
 
 	private final JPAQueryFactory query;
 
-	public Page<InquirySearchData> searchInquiries(String word, InquiryCategory category, Pageable pageable) {
+	public Page<InquirySearchData> searchInquiries(InquiryCategory category, String word, InquiryStatus status,
+		Pageable pageable) {
 		List<InquirySearchData> inquiries = query.select(
 				Projections.fields(InquirySearchData.class,
 					inquiry.id,
@@ -41,6 +42,7 @@ public class InquiryQueryRepository {
 			.from(inquiry)
 			.where(isContainNickNameOrContent(word)
 				.and(isEqualsCategory(category))
+				.and(isEqualsStatus(status))
 				.and(isNotDeleted()))
 			.limit(pageable.getPageSize())
 			.offset(pageable.getOffset())
@@ -88,6 +90,13 @@ public class InquiryQueryRepository {
 			return null;
 		}
 		return inquiry.category.eq(category);
+	}
+
+	private BooleanExpression isEqualsStatus(InquiryStatus status) {
+		if (status == null || status.equals("")) {
+			return null;
+		}
+		return inquiry.status.eq(status);
 	}
 
 	public Optional<InquiryDetail> findInquiryAndAnswerByInquiryId(Long inquiryId) {

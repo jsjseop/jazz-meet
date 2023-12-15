@@ -2,15 +2,14 @@ import styled from '@emotion/styled';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import TelegramIcon from '@mui/icons-material/Telegram';
+import JazzMeet from '~/assets/icons/JazzMeet.svg?react';
 
 export const Footer: React.FC = () => {
   return (
     <StyledFooter>
       <StyledFooterContent>
-        <img
-          src="https://github.com/jazz-meet/jazz-meet/assets/57666791/55a430ea-4249-4e9a-966f-2fc71c0bd7d7"
-          alt="logo"
-        />
+        <JazzMeet id="footer-logo" fill="#fff" />
+
         <StyledIcons>
           <GitHubIcon
             onClick={() =>
@@ -50,8 +49,9 @@ const StyledFooterContent = styled.div`
   align-items: center;
   gap: 26px;
 
-  img {
-    width: 150px;
+  #footer-logo {
+    width: 200px;
+    height: 48px;
   }
 `;
 
@@ -61,6 +61,7 @@ const StyledIcons = styled.div`
 
   svg {
     width: 20px;
+    height: 20px;
     cursor: pointer;
   }
 `;

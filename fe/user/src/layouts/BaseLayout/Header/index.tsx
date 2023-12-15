@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import { Link, useLocation } from 'react-router-dom';
+import JazzMeet from '~/assets/icons/JazzMeet.svg?react';
 import { SearchBox } from '~/components/SearchBox';
 
 export const Header: React.FC = () => {
@@ -9,7 +10,7 @@ export const Header: React.FC = () => {
     <StyledHeader>
       <StyledLeftContainer>
         <Link to="/">
-          <StyledLogoImage src="https://github.com/jsh3418/js-calculator-bonobono/assets/57666791/07da94d4-01b3-4e70-8973-db44780f6d6e" />
+          <JazzMeet fill="#ff4d00" />
         </Link>
         <StyledButtons>
           <Link to="/map" reloadDocument={pathname.slice(0, 4) === '/map'}>
@@ -37,14 +38,13 @@ const StyledHeader = styled.header`
 `;
 
 const StyledLeftContainer = styled.div`
+  > a > svg {
+    width: 140px;
+    height: auto;
+  }
+
   display: flex;
   gap: 34px;
-`;
-
-const StyledLogoImage = styled.img`
-  width: 146px;
-  height: 27px;
-  object-fit: cover;
 `;
 
 const StyledButtons = styled.nav`

@@ -38,8 +38,9 @@ public class InquiryController {
 	public ResponseEntity<InquirySearchResponse> getInquiries(
 		@RequestParam(defaultValue = "서비스") String category,
 		@RequestParam(required = false) String word,
+		@RequestParam(required = false) String status,
 		@RequestParam(defaultValue = "1") @Min(value = 1) int page) {
-		InquirySearchResponse inquiries = inquiryService.getInquiries(category, word, page);
+		InquirySearchResponse inquiries = inquiryService.getInquiries(category, word, status, page);
 
 		return ResponseEntity.ok(inquiries);
 	}
