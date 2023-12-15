@@ -174,13 +174,11 @@ const addMarkerMouseOutEvent = (
   naver.maps.Event.addListener(marker, 'mouseout', callBack);
 };
 
-export const getInitMap = (userCoordinate: Coordinate | null) => {
-  const initCoordinate = userCoordinate ?? BASIC_COORDINATE;
-
+export const getInitMap = () => {
   return new naver.maps.Map('map', {
     center: new naver.maps.LatLng(
-      initCoordinate.latitude,
-      initCoordinate.longitude,
+      BASIC_COORDINATE.latitude,
+      BASIC_COORDINATE.longitude,
     ),
     mapDataControl: false,
     tileTransition: false,
