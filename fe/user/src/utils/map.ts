@@ -235,3 +235,29 @@ export const isSameCoordinate = (
     coord1.highLongitude === coord2.highLongitude
   );
 };
+
+export const addMapButton = ({
+  map,
+  buttonHTMLString,
+  position,
+  onClick,
+}: {
+  map: naver.maps.Map;
+  buttonHTMLString: string;
+  position: naver.maps.Position;
+  onClick: () => void;
+}) => {
+  const customControl = new naver.maps.CustomControl(buttonHTMLString, {
+    position,
+  });
+
+  naver.maps.Event.once(map, 'init', () => {
+    customControl.setMap(map);
+
+    naver.maps.Event.addDOMListener(
+      customControl.getElement(),
+      'click',
+      onClick,
+    );
+  });
+};
