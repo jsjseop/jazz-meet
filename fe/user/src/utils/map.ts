@@ -1,8 +1,7 @@
-import { BASIC_COORDINATE } from '~/constants/COORDINATE';
-import { PIN_SVG } from '~/constants/MAP';
+import { BASIC_COORDINATE, PIN_SVG } from '~/constants/MAP';
 import { Coordinate, CoordinateBoundary, Pin } from '~/types/map.types';
 
-export const fitBoundsToCoordinates = (
+export const panToCoordinates = (
   coordinates: Coordinate[],
   map: naver.maps.Map,
 ) => {
@@ -175,13 +174,11 @@ const addMarkerMouseOutEvent = (
   naver.maps.Event.addListener(marker, 'mouseout', callBack);
 };
 
-export const getInitMap = (userCoordinate: Coordinate | null) => {
-  const initCoordinate = userCoordinate ?? BASIC_COORDINATE;
-
+export const getInitMap = () => {
   return new naver.maps.Map('map', {
     center: new naver.maps.LatLng(
-      initCoordinate.latitude,
-      initCoordinate.longitude,
+      BASIC_COORDINATE.latitude,
+      BASIC_COORDINATE.longitude,
     ),
     mapDataControl: false,
     tileTransition: false,
@@ -237,4 +234,30 @@ export const isSameCoordinate = (
     coord1.lowLongitude === coord2.lowLongitude &&
     coord1.highLongitude === coord2.highLongitude
   );
+};
+
+export const addMapButton = ({
+  map,
+  buttonHTMLString,
+  position,
+  onClick,
+}: {
+  map: naver.maps.Map;
+  buttonHTMLString: string;
+  position: naver.maps.Position;
+  onClick: () => void;
+}) => {
+  const customControl = new naver.maps.CustomControl(buttonHTMLString, {
+    position,
+  });
+
+  naver.maps.Event.once(map, 'init', () => {
+    customControl.setMap(map);
+
+    naver.maps.Event.addDOMListener(
+      customControl.getElement(),
+      'click',
+      onClick,
+    );
+  });
 };

@@ -13,8 +13,8 @@ import {
   addMarkersOnMap,
   addPinsOnMap,
   fitBoundsToBoundary,
-  fitBoundsToCoordinates,
   getMapBounds,
+  panToCoordinates,
 } from '~/utils/map';
 
 export const useMapDataUpdater = (map?: naver.maps.Map) => {
@@ -77,7 +77,7 @@ export const useMapDataUpdater = (map?: naver.maps.Map) => {
     setPins(pins);
     setSearchedVenues(searchedVenues);
 
-    fitBoundsToCoordinates(pins, map);
+    panToCoordinates(pins, map);
   };
 
   const handleUpdateMapDataWithVenueId = async (venueId: string) => {
@@ -90,7 +90,7 @@ export const useMapDataUpdater = (map?: naver.maps.Map) => {
     setPins([]);
     setSearchedVenues(searchedVenues);
 
-    fitBoundsToCoordinates(searchedVenues.venues, map);
+    panToCoordinates(searchedVenues.venues, map);
   };
 
   useEffect(() => {
