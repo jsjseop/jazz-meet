@@ -31,10 +31,11 @@ const StyledHeader = styled.header`
   height: 73px;
   padding: 0 42px;
   box-sizing: border-box;
+  background-color: #000;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #000;
+  gap: 34px;
 `;
 
 const StyledLeftContainer = styled.div`
