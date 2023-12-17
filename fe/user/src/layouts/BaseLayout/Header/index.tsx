@@ -51,6 +51,7 @@ const StyledButtons = styled.nav`
   display: flex;
   align-items: center;
   gap: 34px;
+  white-space: nowrap;
 
   > a {
     color: #fff;
