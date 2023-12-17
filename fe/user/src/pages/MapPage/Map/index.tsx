@@ -24,7 +24,7 @@ export const Map: React.FC<Props> = ({
   const hideMapSearchButton = () => setIsMapShowSearchButton(false);
 
   useEffect(() => {
-    const map = getInitMap(null);
+    const map = getInitMap();
     onMapInitialized(map);
 
     const dragendEventListener = naver.maps.Event.addListener(
