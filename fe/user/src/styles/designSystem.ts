@@ -90,7 +90,7 @@ export const clickableStyle = css`
   }
 `;
 
-const colorChange = keyframes`
+const skeletonColorChange = keyframes`
   0% {
     background-color: #DBE1E4;
   }
@@ -100,5 +100,5 @@ const colorChange = keyframes`
 `;
 
 export const paintSkeleton = css`
-  animation: ${colorChange} 1s ease-in-out infinite alternate;
+  animation: ${skeletonColorChange} 1s ease-in-out infinite alternate;
 `;
