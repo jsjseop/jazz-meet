@@ -1,4 +1,4 @@
-import { css } from '@emotion/react';
+import { css, keyframes } from '@emotion/react';
 
 const colors = {
   white: '#FFFFFF',
@@ -88,4 +88,17 @@ export const clickableStyle = css`
   &:active {
     opacity: 0.5;
   }
+`;
+
+const skeletonColorChange = keyframes`
+  0% {
+    background-color: #DBE1E4;
+  }
+  100% {
+    background-color: #A3A4A9;
+  }
+`;
+
+export const paintSkeleton = css`
+  animation: ${skeletonColorChange} 1s ease-in-out infinite alternate;
 `;
