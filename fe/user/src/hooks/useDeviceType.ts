@@ -1,12 +1,10 @@
-import { useEffect, useState } from 'react';
-import { DeviceType } from '~/types/device.types';
+import { useEffect } from 'react';
+import { useDeviceTypeStore } from '~/stores/useDeviceTypeStore';
 
 const MOBILE_MAX_WIDTH = 1023;
 
 export const useDeviceType = () => {
-  const [deviceType, setDeviceType] = useState<DeviceType>({
-    isMobile: false,
-  });
+  const { deviceType, setDeviceType } = useDeviceTypeStore();
 
   useEffect(() => {
     const handleResize = () => {
@@ -21,6 +19,7 @@ export const useDeviceType = () => {
     return () => {
       window.removeEventListener('resize', handleResize);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return deviceType;
