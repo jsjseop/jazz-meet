@@ -3,8 +3,8 @@ import { useDeviceTypeStore } from '~/stores/useDeviceTypeStore';
 
 const MOBILE_MAX_WIDTH = 1023;
 
-export const useDeviceType = () => {
-  const { deviceType, setDeviceType } = useDeviceTypeStore();
+export const DeviceTypeChecker: React.FC = () => {
+  const { setDeviceType } = useDeviceTypeStore();
 
   useEffect(() => {
     const handleResize = () => {
@@ -22,5 +22,5 @@ export const useDeviceType = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return deviceType;
+  return null;
 };
