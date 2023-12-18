@@ -9,6 +9,7 @@ type Props = {
   selectedDate: Date;
   selectPreviousDate: () => void;
   selectNextDate: () => void;
+  onShowListClick: (showInfo: ShowDetail) => void;
 };
 
 export const ShowList: React.FC<Props> = ({
@@ -16,6 +17,7 @@ export const ShowList: React.FC<Props> = ({
   selectedDate,
   selectPreviousDate,
   selectNextDate,
+  onShowListClick,
 }) => {
   const month = selectedDate.getMonth() + 1;
   const date = selectedDate.getDate();
@@ -40,7 +42,10 @@ export const ShowList: React.FC<Props> = ({
 
         {showList &&
           showList.map((show, index) => (
-            <StyledShowListItem key={show.id}>
+            <StyledShowListItem
+              key={show.id}
+              onClick={() => onShowListClick(show)}
+            >
               <StyledShowListItemIndex>
                 {String(index + 1).padStart(2, '0')}
               </StyledShowListItemIndex>

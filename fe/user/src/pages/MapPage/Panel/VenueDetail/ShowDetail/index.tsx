@@ -1,20 +1,26 @@
 import styled from '@emotion/styled';
-import { useEffect, useState } from 'react';
-import { createPortal } from 'react-dom';
-import { useOutletContext } from 'react-router-dom';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import CloseIcon from '@mui/icons-material/Close';
+import { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
+import { useOutletContext } from 'react-router-dom';
+import { ShowDetail as ShowDetailType } from '~/types/api.types';
 
-export const ShowDetail: React.FC = () => {
-  // const { id: showId } = useParams();
+type Props = {
+  showDetailInfo: ShowDetailType;
+  onCloseClick: () => void;
+};
+
+export const ShowDetail: React.FC<Props> = ({
+  showDetailInfo,
+  onCloseClick,
+}) => {
   const mapElement = useOutletContext<React.RefObject<HTMLDivElement>>();
   const [src, setSrc] = useState('');
 
   useEffect(() => {
-    setSrc(
-      'https://github.com/jazz-meet/jazz-meet/assets/57666791/7beb1dbf-54cb-407a-9494-9ee45e0bb38d',
-    );
+    setSrc(showDetailInfo.posterUrl);
   }, []);
 
   return (
@@ -24,6 +30,7 @@ export const ShowDetail: React.FC = () => {
           <StyledShowDetailHeader>
             <CloseIcon
               sx={{ width: '64px', height: '64px', fill: '#B5BEC6' }}
+              onClick={onCloseClick}
             />
           </StyledShowDetailHeader>
           <StyledShowDetailBody>
@@ -35,12 +42,7 @@ export const ShowDetail: React.FC = () => {
                 <img src={src} alt="poster" />
               </StyledShowDetailImage>
               <StyledShowDetailText>
-                올댓재즈는 1976년부터 한국의 재즈씬을 이끌어온 한국의
-                대표브랜드로서 재즈 매니아들의 성지와도 같은 공간입니다.
-                올댓재즈는 1976년부터 한국의 재즈씬을 이끌어온 한국의
-                대표브랜드로서 재즈 매니아들의 성지와도 같은 공간입니다.
-                올댓재즈는 1976년부터 한국의 재즈씬을 이끌어온 한국의
-                대표브랜드로서 재즈 매니아들의 성지와도 같은 공간입니다.
+                {showDetailInfo.description}
               </StyledShowDetailText>
             </StyledShowDetailContent>
             <ChevronRightIcon

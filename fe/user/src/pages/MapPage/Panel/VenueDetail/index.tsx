@@ -10,11 +10,15 @@ import {
 } from 'react-router-dom';
 import { getVenueDetail } from '~/apis/venue';
 import CaretLeft from '~/assets/icons/CaretLeft.svg?react';
-import { VenueDetailData } from '~/types/api.types';
+import {
+  ShowDetail as ShowDetailType,
+  VenueDetailData,
+} from '~/types/api.types';
 import { BasicInfo } from './BasicInfo';
 import { Header } from './Header';
 import { Images } from './Images';
 import { RestInfo } from './RestInfo';
+import { ShowDetail } from './ShowDetail';
 
 export const VenueDetail: React.FC = () => {
   const { venueId } = useParams();
@@ -23,9 +27,20 @@ export const VenueDetail: React.FC = () => {
   const mapElement = useOutletContext<React.RefObject<HTMLDivElement>>();
   const [isRender, setRender] = useState(false);
   const [data, setData] = useState<VenueDetailData>();
+  const [isShowDetailOpen, setIsShowDetailOpen] = useState(false);
+  const [showDetailInfo, setShowDetailInfo] = useState<ShowDetailType>();
 
   const backToVenueList = () => {
     navigate(`/map?${currentLocation.search}`);
+  };
+
+  const openShowDetail = (showInfo: ShowDetailType) => {
+    setShowDetailInfo(showInfo);
+    setIsShowDetailOpen(true);
+  };
+
+  const hideShowDetail = () => {
+    setIsShowDetailOpen(false);
   };
 
   useEffect(() => {
@@ -72,9 +87,18 @@ export const VenueDetail: React.FC = () => {
               data.links.find((link) => link.type === 'naverMap')?.url
             }
           />
-          <RestInfo description={data.description} />
+          <RestInfo
+            description={data.description}
+            onShowListClick={openShowDetail}
+          />
           <Outlet context={mapElement} />
-          {/* {showInfoDetail && createPortal(<Images />)} */}
+          {isShowDetailOpen && showDetailInfo && (
+            <ShowDetail
+              key={showDetailInfo.id}
+              showDetailInfo={showDetailInfo}
+              onCloseClick={hideShowDetail}
+            />
+          )}
         </StyledVenueDetail>
       )}
     </>

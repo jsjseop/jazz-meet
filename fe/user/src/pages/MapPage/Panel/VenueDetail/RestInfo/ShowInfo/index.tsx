@@ -6,7 +6,9 @@ import { Calendar } from './Calendar';
 import { ShowList } from './ShowList';
 import { useCalendar } from './useCalendar';
 
-export const ShowInfo: React.FC = () => {
+type Props = { onShowListClick: (showInfo: ShowDetail) => void };
+
+export const ShowInfo: React.FC<Props> = ({ onShowListClick }) => {
   const [showList, setShowList] = useState<ShowDetail[]>();
   const [hasShowDates, setHasShowDates] = useState<HasShowDates>();
   const {
@@ -55,7 +57,13 @@ export const ShowInfo: React.FC = () => {
         }}
       />
       <ShowList
-        {...{ showList, selectedDate, selectPreviousDate, selectNextDate }}
+        {...{
+          showList,
+          selectedDate,
+          selectPreviousDate,
+          selectNextDate,
+          onShowListClick,
+        }}
       />
     </>
   );
