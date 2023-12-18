@@ -1,10 +1,7 @@
 import { useEffect, useState } from 'react';
+import { DeviceType } from '~/types/device.types';
 
 const MOBILE_MAX_WIDTH = 1023;
-
-type DeviceType = {
-  isMobile: boolean;
-};
 
 export const useDeviceType = () => {
   const [deviceType, setDeviceType] = useState<DeviceType>({
