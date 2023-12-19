@@ -140,8 +140,8 @@ const StyledInquiryInputSection = styled.div<{ $isMobile: boolean }>`
 
   & textarea {
     flex: 1;
-    min-height: 96px;
-    padding: 16px 24px;
+    min-height: ${({ $isMobile }) => ($isMobile ? '64px' : '80px')};
+    padding: ${({ $isMobile }) => ($isMobile ? '8px 12px' : '16px 24px')};
     resize: none;
   }
 `;
@@ -153,8 +153,8 @@ const StyledUserInfoInput = styled.div<{ $isMobile: boolean }>`
 
   & input {
     width: ${({ $isMobile }) => ($isMobile ? `50%` : '180px')};
-    height: 44px;
-    padding: 8px 24px;
+    height: ${({ $isMobile }) => ($isMobile ? `36px` : '44px')};
+    padding: ${({ $isMobile }) => ($isMobile ? `8px 12px;` : '8px 24px;')};
     border-radius: 2px;
 
     &::placeholder {
