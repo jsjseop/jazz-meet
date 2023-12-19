@@ -1,9 +1,15 @@
 import styled from '@emotion/styled';
 import SearchIcon from '@mui/icons-material/Search';
+import { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { Link } from 'react-router-dom';
 import JazzMeet from '~/assets/icons/JazzMeet.svg?react';
+import { SearchBox } from '~/components/SearchBox';
+import { SEARCH_BOX_Z_INDEX } from '~/constants/Z_INDEX';
 
 export const Header: React.FC = () => {
+  const [showSearchBox, setShowSearchBox] = useState(false);
+
   return (
     <StyledHeader>
       <div></div>
@@ -11,10 +17,17 @@ export const Header: React.FC = () => {
         <JazzMeet fill="#ff4d00" />
       </Link>
 
-      {/* <SearchBox /> */}
-      <StyledSearchButton>
-        <SearchIcon />
-      </StyledSearchButton>
+      <StyledSearchContainer>
+        <SearchIcon onClick={() => setShowSearchBox((prev) => !prev)} />
+      </StyledSearchContainer>
+
+      {showSearchBox &&
+        createPortal(
+          <StyledSearchBoxContainer>
+            <SearchBox />
+          </StyledSearchBoxContainer>,
+          document.body,
+        )}
     </StyledHeader>
   );
 };
@@ -38,7 +51,7 @@ const StyledHeader = styled.header`
   }
 `;
 
-const StyledSearchButton = styled.button`
+const StyledSearchContainer = styled.div`
   width: 56px;
   height: 100%;
   cursor: pointer;
@@ -49,4 +62,15 @@ const StyledSearchButton = styled.button`
   svg {
     fill: #fff;
   }
+`;
+
+const StyledSearchBoxContainer = styled.div`
+  width: 90%;
+  z-index: ${SEARCH_BOX_Z_INDEX};
+  position: fixed;
+  top: 100px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 8px;
+  box-shadow: 0 2px 4px 0 rgb(0 0 0 / 50%);
 `;
