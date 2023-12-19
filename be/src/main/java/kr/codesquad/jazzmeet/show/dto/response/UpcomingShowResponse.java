@@ -6,7 +6,7 @@ public record UpcomingShowResponse(
 	Long venueId,
 	Long showId,
 	String posterUrl,
-	String showName,
+	String teamName,
 	LocalDateTime startTime,
 	LocalDateTime endTime) {
 }
