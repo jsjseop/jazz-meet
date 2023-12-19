@@ -22,7 +22,6 @@ public interface ShowMapper {
 	@Mapping(target = "venueId", source = "venue.id")
 	@Mapping(target = "showId", source = "id")
 	@Mapping(target = "posterUrl", source = "poster.url")
-	@Mapping(target = "showName", source = "teamName")
 	UpcomingShowResponse toUpcomingShowResponse(Show show);
 
 	@Mapping(target = "posterUrl", source = "poster.url")
