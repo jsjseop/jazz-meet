@@ -7,7 +7,7 @@ type Props = {
 };
 
 export const UpcomingShowCard: React.FC<Props> = ({ upcomingShow }) => {
-  const { venueId, showId, posterUrl, showName, startTime, endTime } =
+  const { venueId, showId, posterUrl, teamName, startTime, endTime } =
     upcomingShow;
   const navigate = useNavigate();
 
@@ -15,7 +15,7 @@ export const UpcomingShowCard: React.FC<Props> = ({ upcomingShow }) => {
     <StyledCard onClick={() => navigate(`/venues/${venueId}/shows/${showId}`)}>
       <StyledCardImage src={posterUrl} alt="poster" />
       <StyledTitleContainer>
-        <StyledTitle>{showName}</StyledTitle>
+        <StyledTitle>{teamName}</StyledTitle>
         <StyledSubTitle>{`${formatTime(startTime)} ~ ${formatTime(
           endTime,
         )}`}</StyledSubTitle>
