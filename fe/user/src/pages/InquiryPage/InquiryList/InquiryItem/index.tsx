@@ -12,7 +12,7 @@ type Props = {
 };
 
 export const InquiryItem: React.FC<Props> = ({ inquiry }) => {
-  const { isMobile } = useDeviceTypeStore().deviceType;
+  const { isMobile } = useDeviceTypeStore((state) => state.deviceType);
   const [inquiryDetail, setInquiryDetail] = useState<InquiryDetail>();
 
   const updateInquiryDetail = async () => {

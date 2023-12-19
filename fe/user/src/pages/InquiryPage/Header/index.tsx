@@ -16,7 +16,7 @@ export const Header: React.FC<Props> = ({
   onWordChange,
   onSearchClear,
 }) => {
-  const { isMobile } = useDeviceTypeStore().deviceType;
+  const { isMobile } = useDeviceTypeStore((state) => state.deviceType);
   const onSearchSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
