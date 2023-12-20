@@ -3,10 +3,8 @@ import CommentIcon from '@mui/icons-material/Comment';
 import CommentOutlinedIcon from '@mui/icons-material/CommentOutlined';
 import HomeIcon from '@mui/icons-material/Home';
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
-import MapIcon from '@mui/icons-material/Map';
 import MapOutlinedIcon from '@mui/icons-material/MapOutlined';
 import PianoIcon from '@mui/icons-material/Piano';
-import PianoTwoToneIcon from '@mui/icons-material/PianoTwoTone';
 import { NavLink } from 'react-router-dom';
 import { BOTTOM_NAVIGATION_Z_INDEX } from '~/constants/Z_INDEX';
 
@@ -14,17 +12,35 @@ export const BottomNavigation: React.FC = () => {
   return (
     <StyledBottomNavigation>
       <NavLink to="/">
-        {({ isActive }) => (isActive ? <HomeIcon /> : <HomeOutlinedIcon />)}
+        {({ isActive }) =>
+          isActive ? (
+            <HomeIcon sx={{ fill: '#ff4d00' }} />
+          ) : (
+            <HomeOutlinedIcon />
+          )
+        }
       </NavLink>
       <NavLink to="/map">
-        {({ isActive }) => (isActive ? <MapIcon /> : <MapOutlinedIcon />)}
+        {({ isActive }) =>
+          isActive ? (
+            <MapOutlinedIcon sx={{ fill: '#ff4d00' }} />
+          ) : (
+            <MapOutlinedIcon />
+          )
+        }
       </NavLink>
       <NavLink to="/show">
-        {({ isActive }) => (isActive ? <PianoTwoToneIcon /> : <PianoIcon />)}
+        {({ isActive }) =>
+          isActive ? <PianoIcon sx={{ fill: '#ff4d00' }} /> : <PianoIcon />
+        }
       </NavLink>
       <NavLink to="/inquiry">
         {({ isActive }) =>
-          isActive ? <CommentIcon /> : <CommentOutlinedIcon />
+          isActive ? (
+            <CommentIcon sx={{ fill: '#ff4d00' }} />
+          ) : (
+            <CommentOutlinedIcon />
+          )
         }
       </NavLink>
     </StyledBottomNavigation>
@@ -48,5 +64,14 @@ const StyledBottomNavigation = styled.nav`
   a {
     color: #fff;
     text-decoration: none;
+
+    svg {
+      width: 32px;
+      height: 32px;
+
+      &.active {
+        fill: #ff4d00;
+      }
+    }
   }
 `;
