@@ -113,6 +113,11 @@ const StyledShowListItem = styled.div`
   display: flex;
   align-items: center;
   gap: 14px;
+
+  &:hover {
+    background-color: #f2f2f2;
+    cursor: pointer;
+  }
 `;
 
 const StyledShowListItemIndex = styled.div`

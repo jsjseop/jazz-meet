@@ -29,7 +29,12 @@ export const ShowDetail: React.FC<Props> = ({
         <StyledShowDetail>
           <StyledShowDetailHeader>
             <CloseIcon
-              sx={{ width: '64px', height: '64px', fill: '#B5BEC6' }}
+              sx={{
+                width: '32px',
+                height: '32px',
+                fill: '#B5BEC6',
+                '&:hover': { cursor: 'pointer', opacity: 0.7 },
+              }}
               onClick={onCloseClick}
             />
           </StyledShowDetailHeader>
@@ -87,6 +92,21 @@ const StyledShowDetailContent = styled.div`
   flex-direction: column;
   align-items: center;
   gap: 20px;
+
+  &::-webkit-scrollbar {
+    width: 18px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-clip: padding-box;
+    background-color: #c1c1c1;
+    border-radius: 10px;
+    border: 6px solid transparent;
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
 `;
 
 const StyledShowDetailImage = styled.div`
