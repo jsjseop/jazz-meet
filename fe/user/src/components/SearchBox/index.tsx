@@ -7,7 +7,11 @@ import { getSearchSuggestions } from '~/apis/venue';
 import { SearchSuggestion } from '~/types/api.types';
 import { SuggestionBox } from './SuggestionBox';
 
-export const SearchBox: React.FC = () => {
+type Props = {
+  onSearchSubmit?: () => void;
+};
+
+export const SearchBox: React.FC<Props> = ({ onSearchSubmit }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [searchText, setSearchText] = useState('');
@@ -40,12 +44,14 @@ export const SearchBox: React.FC = () => {
       const { id } = searchSuggestions[activeSuggestionIndex];
       navigate(`/map?venueId=${id}`);
       hideSuggestionBox();
+      onSearchSubmit?.();
       return;
     }
 
     if (!isSearchTextEmpty) {
       navigate(`/map?word=${searchText}`);
       hideSuggestionBox();
+      onSearchSubmit?.();
     }
   };
 

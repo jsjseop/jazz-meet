@@ -2,13 +2,20 @@ import styled from '@emotion/styled';
 import SearchIcon from '@mui/icons-material/Search';
 import { useState } from 'react';
 import { createPortal } from 'react-dom';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import JazzMeet from '~/assets/icons/JazzMeet.svg?react';
 import { SearchBox } from '~/components/SearchBox';
 import { SEARCH_BOX_Z_INDEX } from '~/constants/Z_INDEX';
 
 export const Header: React.FC = () => {
   const [showSearchBox, setShowSearchBox] = useState(false);
+  const [prevPath, setPrevPath] = useState<string>();
+  const location = useLocation();
+
+  if (prevPath !== location.pathname) {
+    setPrevPath(location.pathname);
+    setShowSearchBox(false);
+  }
 
   return (
     <StyledHeader>
