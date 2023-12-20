@@ -49,7 +49,7 @@ export type UpcomingShow = {
   venueId: number;
   showId: number;
   posterUrl: string;
-  showName: string;
+  teamName: string;
 } & ShowTime;
 
 export type HasShowDates = {
