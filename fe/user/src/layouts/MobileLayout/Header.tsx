@@ -9,11 +9,12 @@ import { SEARCH_BOX_Z_INDEX } from '~/constants/Z_INDEX';
 
 export const Header: React.FC = () => {
   const [showSearchBox, setShowSearchBox] = useState(false);
-  const [prevPath, setPrevPath] = useState<string>();
-  const location = useLocation();
+  const { pathname, search } = useLocation();
+  const path = pathname + search;
+  const [prevPath, setPrevPath] = useState(() => path);
 
-  if (prevPath !== location.pathname) {
-    setPrevPath(location.pathname);
+  if (prevPath !== path) {
+    setPrevPath(path);
     setShowSearchBox(false);
   }
 
