@@ -5,10 +5,9 @@ import { Tabs } from '../Tabs';
 import { Tab } from '../Tabs/Tab';
 import { ShowInfo } from './ShowInfo';
 
-type Props = { onShowListClick: (showInfo: ShowDetail) => void } & Pick<
-  VenueDetailData,
-  'description'
->;
+type Props = {
+  onShowListClick: (shows: ShowDetail[], showIndex: number) => void;
+} & Pick<VenueDetailData, 'description'>;
 
 export const RestInfo: React.FC<Props> = ({ onShowListClick, description }) => {
   return (

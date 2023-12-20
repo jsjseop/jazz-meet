@@ -11,7 +11,7 @@ import {
 import { getVenueDetail } from '~/apis/venue';
 import CaretLeft from '~/assets/icons/CaretLeft.svg?react';
 import {
-  ShowDetail as ShowDetailType,
+  ShowDetail as ShowDetailData,
   VenueDetailData,
 } from '~/types/api.types';
 import { BasicInfo } from './BasicInfo';
@@ -27,20 +27,21 @@ export const VenueDetail: React.FC = () => {
   const mapElement = useOutletContext<React.RefObject<HTMLDivElement>>();
   const [isRender, setRender] = useState(false);
   const [data, setData] = useState<VenueDetailData>();
-  const [isShowDetailOpen, setIsShowDetailOpen] = useState(false);
-  const [showDetailInfo, setShowDetailInfo] = useState<ShowDetailType>();
+  const [showList, setShowList] = useState<ShowDetailData[]>([]);
+  const [currentShowIndex, setCurrentShowIndex] = useState(-1);
 
   const backToVenueList = () => {
     navigate(`/map?${currentLocation.search}`);
   };
 
-  const openShowDetail = (showInfo: ShowDetailType) => {
-    setShowDetailInfo(showInfo);
-    setIsShowDetailOpen(true);
+  const openShowDetail = (shows: ShowDetailData[], showIndex: number) => {
+    setShowList(shows);
+    setCurrentShowIndex(showIndex);
   };
 
   const hideShowDetail = () => {
-    setIsShowDetailOpen(false);
+    setShowList([]);
+    setCurrentShowIndex(-1);
   };
 
   useEffect(() => {
@@ -92,10 +93,10 @@ export const VenueDetail: React.FC = () => {
             onShowListClick={openShowDetail}
           />
           <Outlet context={mapElement} />
-          {isShowDetailOpen && showDetailInfo && (
+          {showList.length > 0 && currentShowIndex !== -1 && (
             <ShowDetail
-              key={showDetailInfo.id}
-              showDetailInfo={showDetailInfo}
+              showList={showList}
+              currentIndex={currentShowIndex}
               onCloseClick={hideShowDetail}
             />
           )}

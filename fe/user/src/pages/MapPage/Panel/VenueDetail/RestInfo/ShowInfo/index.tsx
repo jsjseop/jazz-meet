@@ -6,7 +6,9 @@ import { Calendar } from './Calendar';
 import { ShowList } from './ShowList';
 import { useCalendar } from './useCalendar';
 
-type Props = { onShowListClick: (showInfo: ShowDetail) => void };
+type Props = {
+  onShowListClick: (shows: ShowDetail[], showIndex: number) => void;
+};
 
 export const ShowInfo: React.FC<Props> = ({ onShowListClick }) => {
   const [showList, setShowList] = useState<ShowDetail[]>();

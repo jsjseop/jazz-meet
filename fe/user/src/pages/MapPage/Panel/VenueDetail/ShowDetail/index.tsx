@@ -5,23 +5,28 @@ import CloseIcon from '@mui/icons-material/Close';
 import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useOutletContext } from 'react-router-dom';
-import { ShowDetail as ShowDetailType } from '~/types/api.types';
+import SwiperCore from 'swiper';
+import { Navigation } from 'swiper/modules';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { ShowDetail as ShowDetailData } from '~/types/api.types';
 
 type Props = {
-  showDetailInfo: ShowDetailType;
+  showList: ShowDetailData[];
+  currentIndex: number;
   onCloseClick: () => void;
 };
 
 export const ShowDetail: React.FC<Props> = ({
-  showDetailInfo,
+  showList,
+  currentIndex,
   onCloseClick,
 }) => {
   const mapElement = useOutletContext<React.RefObject<HTMLDivElement>>();
-  const [src, setSrc] = useState('');
+  const [swiper, setSwiper] = useState<SwiperCore>();
 
   useEffect(() => {
-    setSrc(showDetailInfo.posterUrl);
-  }, []);
+    swiper?.slideTo(currentIndex, 0);
+  }, [currentIndex, swiper]);
 
   return (
     <>
@@ -39,20 +44,36 @@ export const ShowDetail: React.FC<Props> = ({
             />
           </StyledShowDetailHeader>
           <StyledShowDetailBody>
-            <ChevronLeftIcon
-              sx={{ width: '64px', height: '64px', fill: '#B5BEC6' }}
-            />
-            <StyledShowDetailContent>
-              <StyledShowDetailImage>
-                <img src={src} alt="poster" />
-              </StyledShowDetailImage>
-              <StyledShowDetailText>
-                {showDetailInfo.description}
-              </StyledShowDetailText>
-            </StyledShowDetailContent>
-            <ChevronRightIcon
-              sx={{ width: '64px', height: '64px', fill: '#B5BEC6' }}
-            />
+            <Swiper
+              modules={[Navigation]}
+              onSwiper={setSwiper}
+              navigation={{
+                prevEl: '.swiper-prev',
+                nextEl: '.swiper-next',
+              }}
+            >
+              {showList.map((show, index) => (
+                <SwiperSlide key={`${show.id}-${index}`}>
+                  <StyledShowDetailContent>
+                    <StyledShowDetailImage>
+                      <img
+                        src={show.posterUrl}
+                        alt={`${show.teamName} 공연 포스터`}
+                      />
+                    </StyledShowDetailImage>
+                    <StyledShowDetailText>
+                      {show.description}
+                    </StyledShowDetailText>
+                  </StyledShowDetailContent>
+                </SwiperSlide>
+              ))}
+            </Swiper>
+            <StyledArrowButton className="swiper-prev">
+              <ChevronLeftIcon sx={{ fill: '#B5BEC6' }} />
+            </StyledArrowButton>
+            <StyledArrowButton className="swiper-next">
+              <ChevronRightIcon sx={{ fill: '#B5BEC6' }} />
+            </StyledArrowButton>
           </StyledShowDetailBody>
         </StyledShowDetail>,
         mapElement.current ?? document.body,
@@ -77,10 +98,14 @@ const StyledShowDetailHeader = styled.div`
 `;
 
 const StyledShowDetailBody = styled.div`
+  position: relative;
   height: 100%;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  justify-content: center;
+
+  & > .swiper {
+    width: 80%;
+  }
 `;
 
 const StyledShowDetailContent = styled.div`
@@ -122,4 +147,30 @@ const StyledShowDetailText = styled.div`
   font-size: 20px;
   line-height: 130%;
   margin-bottom: 100px;
+`;
+
+const StyledArrowButton = styled.button`
+  position: absolute;
+  top: 40%;
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  > svg {
+    width: 64px;
+    height: 64px;
+  }
+
+  &.swiper-prev {
+    left: -3%;
+  }
+
+  &.swiper-next {
+    right: -3%;
+  }
+
+  &.swiper-button-disabled {
+    opacity: 0.2;
+  }
 `;
