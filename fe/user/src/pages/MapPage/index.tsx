@@ -5,9 +5,11 @@ import { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import MyLocation from '~/assets/icons/MyLocation.svg';
 import { BASIC_COORDINATE } from '~/constants/MAP';
+import { BOTTOM_NAVIGATION_Z_INDEX } from '~/constants/Z_INDEX';
 import { useMapDataUpdater } from '~/hooks/useMapDataUpdater';
 import { useUserCoordinate } from '~/hooks/useUserCoordinate';
 import { useDeviceTypeStore } from '~/stores/useDeviceTypeStore';
+import { RenderType } from '~/types/device.types';
 import { getQueryString } from '~/utils/getQueryString';
 import {
   addMapButton,
@@ -21,7 +23,7 @@ import { Panel } from './Panel';
 export const MapPage: React.FC = () => {
   const [map, setMap] = useState<naver.maps.Map>();
   const isMobile = useDeviceTypeStore((state) => state.deviceType.isMobile);
-  const [renderType, setRenderType] = useState<'map' | 'list' | 'all'>(
+  const [renderType, setRenderType] = useState<RenderType>(
     isMobile ? 'map' : 'all',
   );
   const {
@@ -95,20 +97,19 @@ export const MapPage: React.FC = () => {
 
   return (
     <StyledMapPage isMobile={isMobile}>
-      {(renderType === 'all' || renderType === 'map') && (
-        <Map
-          mapElement={mapElement}
-          onMapInitialized={(map: naver.maps.Map) => setMap(map)}
-          onCurrentViewSearchClick={navigateWithMapBounds}
-        />
-      )}
-      {(renderType === 'all' || renderType === 'list') && (
-        <Panel
-          mapElement={mapElement}
-          searchedVenus={searchedVenues}
-          handleChangeVenueListPage={handleChangeVenueListPage}
-        />
-      )}
+      <Map
+        mapElement={mapElement}
+        renderType={renderType}
+        onMapInitialized={(map: naver.maps.Map) => setMap(map)}
+        onCurrentViewSearchClick={navigateWithMapBounds}
+      />
+
+      <Panel
+        mapElement={mapElement}
+        searchedVenus={searchedVenues}
+        renderType={renderType}
+        handleChangeVenueListPage={handleChangeVenueListPage}
+      />
 
       {renderType !== 'all' ? (
         renderType === 'map' ? (
@@ -175,5 +176,5 @@ const StyledRenderToggleButton = styled.div`
   bottom: 65px;
   left: 50%;
   transform: translateX(-50%);
-  z-index: 100000;
+  z-index: ${BOTTOM_NAVIGATION_Z_INDEX};
 `;
