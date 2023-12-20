@@ -40,6 +40,7 @@ export const SearchBox: React.FC = () => {
       const { id } = searchSuggestions[activeSuggestionIndex];
       navigate(`/map?venueId=${id}`);
       hideSuggestionBox();
+
       return;
     }
 
