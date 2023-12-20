@@ -13,8 +13,7 @@ export const DeviceTypeChecker: React.FC = () => {
     return () => {
       window.removeEventListener('resize', updateDeviceType);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [updateDeviceType]);
 
   return null;
 };
