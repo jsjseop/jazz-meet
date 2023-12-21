@@ -61,9 +61,11 @@ export const ShowDetail: React.FC<Props> = ({
                         alt={`${show.teamName} 공연 포스터`}
                       />
                     </StyledShowDetailImage>
-                    <StyledShowDetailText>
-                      {show.description}
-                    </StyledShowDetailText>
+                    {show.description && (
+                      <StyledShowDetailText>
+                        {show.description}
+                      </StyledShowDetailText>
+                    )}
                   </StyledShowDetailContent>
                 </SwiperSlide>
               ))}
@@ -105,6 +107,11 @@ const StyledShowDetailBody = styled.div`
 
   & > .swiper {
     width: 80%;
+  }
+
+  .swiper-slide {
+    display: flex;
+    justify-content: center;
   }
 `;
 

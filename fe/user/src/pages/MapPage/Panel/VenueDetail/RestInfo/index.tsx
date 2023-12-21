@@ -1,15 +1,13 @@
 import styled from '@emotion/styled';
 import LocalCafeOutlinedIcon from '@mui/icons-material/LocalCafeOutlined';
-import { ShowDetail, VenueDetailData } from '~/types/api.types';
+import { VenueDetailData } from '~/types/api.types';
 import { Tabs } from '../Tabs';
 import { Tab } from '../Tabs/Tab';
 import { ShowInfo } from './ShowInfo';
 
-type Props = {
-  onShowListClick: (shows: ShowDetail[], showIndex: number) => void;
-} & Pick<VenueDetailData, 'description'>;
+type Props = Pick<VenueDetailData, 'description'>;
 
-export const RestInfo: React.FC<Props> = ({ onShowListClick, description }) => {
+export const RestInfo: React.FC<Props> = ({ description }) => {
   return (
     <StyledRestInfo>
       <Tabs>
@@ -17,7 +15,7 @@ export const RestInfo: React.FC<Props> = ({ onShowListClick, description }) => {
       </Tabs>
 
       <StyledRestInfoContent>
-        <ShowInfo onShowListClick={onShowListClick} />
+        <ShowInfo />
       </StyledRestInfoContent>
 
       <Tabs>
