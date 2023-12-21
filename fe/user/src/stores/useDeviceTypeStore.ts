@@ -3,12 +3,20 @@ import { DeviceType } from '~/types/device.types';
 
 type DeviceTypeState = {
   deviceType: DeviceType;
-  setDeviceType: (deviceType: DeviceType) => void;
+  updateDeviceType: () => void;
 };
+
+const MOBILE_MAX_WIDTH = 1023;
 
 export const useDeviceTypeStore = create<DeviceTypeState>((set) => ({
   deviceType: {
     isMobile: false,
   },
-  setDeviceType: (deviceType: DeviceType) => set(() => ({ deviceType })),
+  updateDeviceType: () =>
+    set((state) => {
+      const { innerWidth } = window;
+      const isMobile = innerWidth <= MOBILE_MAX_WIDTH;
+
+      return { deviceType: { ...state.deviceType, isMobile } };
+    }),
 }));
