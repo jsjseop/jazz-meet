@@ -74,6 +74,7 @@ const StyledSearchContainer = styled.div`
 
 const StyledSearchBoxContainer = styled.div`
   width: 90%;
+  max-width: 490px;
   z-index: ${SEARCH_BOX_Z_INDEX};
   position: fixed;
   top: 100px;
