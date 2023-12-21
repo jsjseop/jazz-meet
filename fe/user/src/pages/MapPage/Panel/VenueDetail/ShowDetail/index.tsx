@@ -1,21 +1,32 @@
 import styled from '@emotion/styled';
-import { useEffect, useState } from 'react';
-import { createPortal } from 'react-dom';
-import { useOutletContext } from 'react-router-dom';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import CloseIcon from '@mui/icons-material/Close';
+import { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
+import { useOutletContext } from 'react-router-dom';
+import SwiperCore from 'swiper';
+import { Navigation } from 'swiper/modules';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { ShowDetail as ShowDetailData } from '~/types/api.types';
 
-export const ShowDetail: React.FC = () => {
-  // const { id: showId } = useParams();
+type Props = {
+  showList: ShowDetailData[];
+  currentIndex: number;
+  onCloseClick: () => void;
+};
+
+export const ShowDetail: React.FC<Props> = ({
+  showList,
+  currentIndex,
+  onCloseClick,
+}) => {
   const mapElement = useOutletContext<React.RefObject<HTMLDivElement>>();
-  const [src, setSrc] = useState('');
+  const [swiper, setSwiper] = useState<SwiperCore>();
 
   useEffect(() => {
-    setSrc(
-      'https://github.com/jazz-meet/jazz-meet/assets/57666791/7beb1dbf-54cb-407a-9494-9ee45e0bb38d',
-    );
-  }, []);
+    swiper?.slideTo(currentIndex, 0);
+  }, [currentIndex, swiper]);
 
   return (
     <>
@@ -23,29 +34,48 @@ export const ShowDetail: React.FC = () => {
         <StyledShowDetail>
           <StyledShowDetailHeader>
             <CloseIcon
-              sx={{ width: '64px', height: '64px', fill: '#B5BEC6' }}
+              sx={{
+                width: '32px',
+                height: '32px',
+                fill: '#B5BEC6',
+                '&:hover': { cursor: 'pointer', opacity: 0.7 },
+              }}
+              onClick={onCloseClick}
             />
           </StyledShowDetailHeader>
           <StyledShowDetailBody>
-            <ChevronLeftIcon
-              sx={{ width: '64px', height: '64px', fill: '#B5BEC6' }}
-            />
-            <StyledShowDetailContent>
-              <StyledShowDetailImage>
-                <img src={src} alt="poster" />
-              </StyledShowDetailImage>
-              <StyledShowDetailText>
-                올댓재즈는 1976년부터 한국의 재즈씬을 이끌어온 한국의
-                대표브랜드로서 재즈 매니아들의 성지와도 같은 공간입니다.
-                올댓재즈는 1976년부터 한국의 재즈씬을 이끌어온 한국의
-                대표브랜드로서 재즈 매니아들의 성지와도 같은 공간입니다.
-                올댓재즈는 1976년부터 한국의 재즈씬을 이끌어온 한국의
-                대표브랜드로서 재즈 매니아들의 성지와도 같은 공간입니다.
-              </StyledShowDetailText>
-            </StyledShowDetailContent>
-            <ChevronRightIcon
-              sx={{ width: '64px', height: '64px', fill: '#B5BEC6' }}
-            />
+            <Swiper
+              modules={[Navigation]}
+              onSwiper={setSwiper}
+              navigation={{
+                prevEl: '.swiper-prev',
+                nextEl: '.swiper-next',
+              }}
+            >
+              {showList.map((show, index) => (
+                <SwiperSlide key={`${show.id}-${index}`}>
+                  <StyledShowDetailContent>
+                    <StyledShowDetailImage>
+                      <img
+                        src={show.posterUrl}
+                        alt={`${show.teamName} 공연 포스터`}
+                      />
+                    </StyledShowDetailImage>
+                    {show.description && (
+                      <StyledShowDetailText>
+                        {show.description}
+                      </StyledShowDetailText>
+                    )}
+                  </StyledShowDetailContent>
+                </SwiperSlide>
+              ))}
+            </Swiper>
+            <StyledArrowButton className="swiper-prev">
+              <ChevronLeftIcon sx={{ fill: '#B5BEC6' }} />
+            </StyledArrowButton>
+            <StyledArrowButton className="swiper-next">
+              <ChevronRightIcon sx={{ fill: '#B5BEC6' }} />
+            </StyledArrowButton>
           </StyledShowDetailBody>
         </StyledShowDetail>,
         mapElement.current ?? document.body,
@@ -70,10 +100,19 @@ const StyledShowDetailHeader = styled.div`
 `;
 
 const StyledShowDetailBody = styled.div`
+  position: relative;
   height: 100%;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  justify-content: center;
+
+  & > .swiper {
+    width: 80%;
+  }
+
+  .swiper-slide {
+    display: flex;
+    justify-content: center;
+  }
 `;
 
 const StyledShowDetailContent = styled.div`
@@ -85,6 +124,21 @@ const StyledShowDetailContent = styled.div`
   flex-direction: column;
   align-items: center;
   gap: 20px;
+
+  &::-webkit-scrollbar {
+    width: 18px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-clip: padding-box;
+    background-color: #c1c1c1;
+    border-radius: 10px;
+    border: 6px solid transparent;
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
 `;
 
 const StyledShowDetailImage = styled.div`
@@ -100,4 +154,30 @@ const StyledShowDetailText = styled.div`
   font-size: 20px;
   line-height: 130%;
   margin-bottom: 100px;
+`;
+
+const StyledArrowButton = styled.button`
+  position: absolute;
+  top: 40%;
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  > svg {
+    width: 64px;
+    height: 64px;
+  }
+
+  &.swiper-prev {
+    left: -3%;
+  }
+
+  &.swiper-next {
+    right: -3%;
+  }
+
+  &.swiper-button-disabled {
+    opacity: 0.2;
+  }
 `;

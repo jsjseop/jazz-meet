@@ -74,7 +74,6 @@ export const VenueDetail: React.FC = () => {
           />
           <RestInfo description={data.description} />
           <Outlet context={mapElement} />
-          {/* {showInfoDetail && createPortal(<Images />)} */}
         </StyledVenueDetail>
       )}
     </>
