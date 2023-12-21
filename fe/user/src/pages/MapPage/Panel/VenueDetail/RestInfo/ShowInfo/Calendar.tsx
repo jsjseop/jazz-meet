@@ -44,7 +44,7 @@ export const Calendar: React.FC<Props> = ({
         <ChevronRightIcon onClick={goToNextMonth} sx={{ fill: '#B5BEC6' }} />
       </StyledCalendarHeader>
       <StyledDaysOfTheWeek>
-        <div>SAN</div>
+        <div>SUN</div>
         <div>MON</div>
         <div>TUE</div>
         <div>WED</div>
