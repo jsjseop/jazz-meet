@@ -26,13 +26,18 @@ export const MapPage: React.FC = () => {
   const [renderType, setRenderType] = useState<RenderType>(
     isMobile ? 'map' : 'all',
   );
+  const renderTypeToList = () => {
+    if (isMobile) {
+      setRenderType('list');
+    }
+  };
   const {
     searchedVenues,
     handleChangeVenueListPage,
     handleUpdateMapDataWithBounds,
     handleUpdateMapDataWithWord,
     handleUpdateMapDataWithVenueId,
-  } = useMapDataUpdater(map);
+  } = useMapDataUpdater({ map, onPinClick: renderTypeToList });
   const mapElement = useRef<HTMLDivElement>(null);
 
   const { userCoordinate } = useUserCoordinate();
