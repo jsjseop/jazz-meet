@@ -19,10 +19,10 @@ import {
 
 export const useMapDataUpdater = ({
   map,
-  onPinClick,
+  renderTypeToList,
 }: {
   map?: naver.maps.Map;
-  onPinClick: () => void;
+  renderTypeToList: () => void;
 }) => {
   const navigate = useNavigate();
   const { venueId } = useParams();
@@ -126,7 +126,7 @@ export const useMapDataUpdater = ({
       selectedVenueId,
       onPinClick: (venueId) => {
         goToVenueDetail(venueId);
-        onPinClick();
+        renderTypeToList();
       },
     });
     markersOnMap.current = addMarkersOnMap({
@@ -135,7 +135,7 @@ export const useMapDataUpdater = ({
       selectedVenueId,
       onMarkerClick: (venueId) => {
         goToVenueDetail(venueId);
-        onPinClick();
+        renderTypeToList();
       },
     });
 

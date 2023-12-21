@@ -37,7 +37,7 @@ export const MapPage: React.FC = () => {
     handleUpdateMapDataWithBounds,
     handleUpdateMapDataWithWord,
     handleUpdateMapDataWithVenueId,
-  } = useMapDataUpdater({ map, onPinClick: renderTypeToList });
+  } = useMapDataUpdater({ map, renderTypeToList });
   const mapElement = useRef<HTMLDivElement>(null);
 
   const { userCoordinate } = useUserCoordinate();
