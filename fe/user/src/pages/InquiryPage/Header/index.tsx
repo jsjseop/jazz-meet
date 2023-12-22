@@ -2,6 +2,7 @@ import styled from '@emotion/styled';
 import ClearIcon from '@mui/icons-material/Clear';
 import SearchIcon from '@mui/icons-material/Search';
 import { IconButton, InputBase, Paper, Typography } from '@mui/material';
+import { useDeviceTypeStore } from '~/stores/useDeviceTypeStore';
 import { clickableStyle } from '~/styles/designSystem';
 
 type Props = {
@@ -15,6 +16,7 @@ export const Header: React.FC<Props> = ({
   onWordChange,
   onSearchClear,
 }) => {
+  const { isMobile } = useDeviceTypeStore((state) => state.deviceType);
   const onSearchSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -30,12 +32,12 @@ export const Header: React.FC<Props> = ({
   };
 
   return (
-    <StyledHeader>
+    <StyledHeader $isMobile={isMobile}>
       <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
         문의사항
       </Typography>
 
-      <StyledSearchContainer>
+      <StyledSearchContainer $isMobile={isMobile}>
         {hasSearchWord && (
           <StyledSearchClear onClick={onSearchClear}>
             <ClearIcon fontSize="small" />
@@ -50,7 +52,7 @@ export const Header: React.FC<Props> = ({
             p: '2px 4px',
             display: 'flex',
             alignItems: 'center',
-            width: 490,
+            width: isMobile ? '100%' : 490,
             backgroundColor: '#EBEBEB',
             backgroundImage: '#EBEBEB',
           }}
@@ -71,15 +73,23 @@ export const Header: React.FC<Props> = ({
 
 const SEARCH_INPUT_NAME = 'word';
 
-const StyledHeader = styled.header`
+const StyledHeader = styled.header<{ $isMobile: boolean }>`
   width: 100%;
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: ${({ $isMobile }) => !$isMobile && 'center'};
   margin: 47px 0;
+
+  ${({ $isMobile }) =>
+    $isMobile &&
+    `
+    flex-direction: column;
+    gap : 8px;
+  `}
 `;
 
-const StyledSearchContainer = styled.div`
+const StyledSearchContainer = styled.div<{ $isMobile: boolean }>`
+  ${({ $isMobile }) => $isMobile && 'width: 100%;'}
   display: flex;
   gap: 20px;
 `;

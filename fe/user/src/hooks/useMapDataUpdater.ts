@@ -17,7 +17,13 @@ import {
   panToCoordinates,
 } from '~/utils/map';
 
-export const useMapDataUpdater = (map?: naver.maps.Map) => {
+export const useMapDataUpdater = ({
+  map,
+  renderTypeToList,
+}: {
+  map?: naver.maps.Map;
+  renderTypeToList: () => void;
+}) => {
   const navigate = useNavigate();
   const { venueId } = useParams();
   const { search } = useLocation();
@@ -118,13 +124,19 @@ export const useMapDataUpdater = (map?: naver.maps.Map) => {
       pins: filteredPins,
       map,
       selectedVenueId,
-      onPinClick: (venueId) => goToVenueDetail(venueId),
+      onPinClick: (venueId) => {
+        goToVenueDetail(venueId);
+        renderTypeToList();
+      },
     });
     markersOnMap.current = addMarkersOnMap({
       pins: searchedVenues.venues,
       map,
       selectedVenueId,
-      onMarkerClick: (venueId) => goToVenueDetail(venueId),
+      onMarkerClick: (venueId) => {
+        goToVenueDetail(venueId);
+        renderTypeToList();
+      },
     });
 
     // eslint-disable-next-line react-hooks/exhaustive-deps

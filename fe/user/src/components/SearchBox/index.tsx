@@ -40,6 +40,7 @@ export const SearchBox: React.FC = () => {
       const { id } = searchSuggestions[activeSuggestionIndex];
       navigate(`/map?venueId=${id}`);
       hideSuggestionBox();
+
       return;
     }
 
@@ -112,7 +113,6 @@ export const SearchBox: React.FC = () => {
           p: '2px 4px',
           display: 'flex',
           alignItems: 'center',
-          width: 490,
           backgroundColor: '#FFFFFF',
           backgroundImage: '#FFFFFF',
         }}
@@ -147,6 +147,8 @@ export const SearchBox: React.FC = () => {
 };
 
 const StyledSearchBox = styled.div`
+  width: 100%;
+  max-width: 490px;
   position: relative;
   z-index: 2;
 `;
