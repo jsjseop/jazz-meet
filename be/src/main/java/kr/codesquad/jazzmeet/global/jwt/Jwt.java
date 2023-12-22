@@ -1,5 +1,7 @@
 package kr.codesquad.jazzmeet.global.jwt;
 
+import org.springframework.stereotype.Component;
+
 import lombok.Builder;
 import lombok.Getter;
 

@@ -8,8 +8,11 @@ import java.util.Map;
 import org.springframework.stereotype.Component;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import kr.codesquad.jazzmeet.global.error.CustomException;
+import kr.codesquad.jazzmeet.global.error.statuscode.ErrorCode;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -49,10 +52,15 @@ public class JwtProvider {
 		return createToken(claims, getExpireDateAccessToken());
 	}
 
-	public Claims getClaims(String token) {
-		return Jwts.parser()
-			.setSigningKey(Base64.getEncoder().encodeToString(jwtProperties.getSecretKey().getBytes()))
-			.parseClaimsJws(token)
-			.getBody();
+	public Claims validateAndGetClaims(String token) {
+		try {
+			return Jwts.parser()
+				.setSigningKey(Base64.getEncoder().encodeToString(jwtProperties.getSecretKey().getBytes()))
+				.parseClaimsJws(token)
+				.getBody();
+		} catch (JwtException e) {
+			throw new CustomException(ErrorCode.from(e));
+		}
+
 	}
 }
