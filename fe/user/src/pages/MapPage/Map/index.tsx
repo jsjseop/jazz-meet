@@ -5,17 +5,20 @@ import {
   MARKER_Z_INDEX,
   SELECTED_MARKER_Z_INDEX,
 } from '~/constants/Z_INDEX';
+import { RenderType } from '~/types/device.types';
 import { getInitMap } from '~/utils/map';
 import { MapSearchButton } from './MapSearchButton';
 
 type Props = {
   mapElement: React.RefObject<HTMLDivElement>;
+  renderType: RenderType;
   onMapInitialized: (map: naver.maps.Map) => void;
   onCurrentViewSearchClick: () => void;
 };
 
 export const Map: React.FC<Props> = ({
   mapElement,
+  renderType,
   onMapInitialized,
   onCurrentViewSearchClick,
 }) => {
@@ -24,7 +27,7 @@ export const Map: React.FC<Props> = ({
   const hideMapSearchButton = () => setIsMapShowSearchButton(false);
 
   useEffect(() => {
-    const map = getInitMap(null);
+    const map = getInitMap();
     onMapInitialized(map);
 
     const dragendEventListener = naver.maps.Event.addListener(
@@ -40,7 +43,7 @@ export const Map: React.FC<Props> = ({
   }, []);
 
   return (
-    <StyledMap id="map" ref={mapElement}>
+    <StyledMap id="map" ref={mapElement} renderType={renderType}>
       {isShowMapSearchButton && (
         <MapSearchButton
           hideMapSearchButton={hideMapSearchButton}
@@ -51,7 +54,10 @@ export const Map: React.FC<Props> = ({
   );
 };
 
-const StyledMap = styled.div`
+const StyledMap = styled.div<{ renderType: RenderType }>`
+  ${({ renderType }) =>
+    renderType === 'all' || renderType === 'map' ? '' : 'display: none;'};
+
   width: 100%;
   height: inherit;
 

@@ -1,45 +1,47 @@
 import { useEffect, useState } from 'react';
 import { SwiperSlide } from 'swiper/react';
 import { getAroundVenues } from '~/apis/venue';
-import { BASIC_COORDINATE } from '~/constants/COORDINATE';
+import { BASIC_COORDINATE } from '~/constants/MAP';
+import { useUserCoordinate } from '~/hooks/useUserCoordinate';
 import { AroundVenue } from '~/types/api.types';
 import { CardList } from './CardList';
 import { CardListHeader } from './CardList/CardListHeader';
+import { CardListSkeleton } from './CardList/CardListSkeleton';
 import { Cards } from './CardList/Cards';
 import { AroundVenueCard } from './CardList/Cards/AroundVenueCard';
 
 export const AroundVenus: React.FC = () => {
+  const { userCoordinate } = useUserCoordinate();
   const [aroundVenues, setAroundVenues] = useState<AroundVenue[]>();
-
-  const updateAroundVenues = async (position: GeolocationPosition) => {
-    const { latitude, longitude } = position.coords;
-    const aroundVenues = await getAroundVenues({ latitude, longitude });
-    setAroundVenues(aroundVenues);
-  };
-
-  const handlePermissionDenied = async () => {
-    const aroundVenues = await getAroundVenues(BASIC_COORDINATE);
-    setAroundVenues(aroundVenues);
-  };
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    navigator.geolocation.getCurrentPosition(
-      updateAroundVenues,
-      handlePermissionDenied,
-    );
-  }, []);
+    setIsLoading(false);
+    const updateAroundVenues = async () => {
+      const aroundVenues = await getAroundVenues(
+        userCoordinate ?? BASIC_COORDINATE,
+      );
+      setAroundVenues(aroundVenues);
+      setIsLoading(true);
+    };
+
+    updateAroundVenues();
+  }, [userCoordinate]);
 
   return (
     <CardList>
       <CardListHeader title="주변 공연장" />
 
       <Cards>
-        {aroundVenues &&
-          aroundVenues.map((aroundVenue) => (
+        {isLoading ? (
+          aroundVenues?.map((aroundVenue) => (
             <SwiperSlide key={aroundVenue.id}>
               <AroundVenueCard aroundVenue={aroundVenue} />
             </SwiperSlide>
-          ))}
+          ))
+        ) : (
+          <CardListSkeleton />
+        )}
       </Cards>
     </CardList>
   );

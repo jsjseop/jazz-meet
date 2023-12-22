@@ -2,6 +2,7 @@ import styled from '@emotion/styled';
 import { useEffect, useState } from 'react';
 import { getInquiryData } from '~/apis/inquiry';
 import { PaginationBox } from '~/components/PaginationBox';
+import { useDeviceTypeStore } from '~/stores/useDeviceTypeStore';
 import { InquiryData, InquiryParams } from '~/types/api.types';
 import { InquiryCategories } from '~/types/inquiry.types';
 import { Categories } from './Categories';
@@ -10,6 +11,8 @@ import { Header } from './Header';
 import { InquiryList } from './InquiryList';
 
 export const InquiryPage: React.FC = () => {
+  const { isMobile } = useDeviceTypeStore((state) => state.deviceType);
+
   const [inquiryParams, setInquiryParams] = useState<InquiryParams>({
     category: '서비스',
     word: '',
@@ -42,7 +45,7 @@ export const InquiryPage: React.FC = () => {
   }, [inquiryParams]);
 
   return (
-    <StyledDiv>
+    <StyledDiv $isMobile={isMobile}>
       <Header
         hasSearchWord={!!inquiryParams.word}
         onWordChange={onWordChange}
@@ -65,11 +68,17 @@ export const InquiryPage: React.FC = () => {
   );
 };
 
-const StyledDiv = styled.div`
+const StyledDiv = styled.div<{ $isMobile: boolean }>`
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
   align-items: center;
+  ${({ $isMobile }) =>
+    $isMobile &&
+    `  
+    padding: 0 16px;
+    box-sizing: border-box;
+  `}
 `;

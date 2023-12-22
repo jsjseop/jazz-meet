@@ -55,7 +55,12 @@ export const ShowInfo: React.FC = () => {
         }}
       />
       <ShowList
-        {...{ showList, selectedDate, selectPreviousDate, selectNextDate }}
+        {...{
+          showList,
+          selectedDate,
+          selectPreviousDate,
+          selectNextDate,
+        }}
       />
     </>
   );

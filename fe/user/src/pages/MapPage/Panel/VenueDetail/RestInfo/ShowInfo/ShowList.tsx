@@ -1,11 +1,13 @@
 import styled from '@emotion/styled';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import { ShowDetail } from '~/types/api.types';
+import { useState } from 'react';
+import { ShowDetail as ShowDetailData } from '~/types/api.types';
 import { getKoreanWeekdayName } from '~/utils/dateUtils';
+import { ShowDetail } from '../../ShowDetail';
 
 type Props = {
-  showList?: ShowDetail[];
+  showList?: ShowDetailData[];
   selectedDate: Date;
   selectPreviousDate: () => void;
   selectNextDate: () => void;
@@ -17,10 +19,20 @@ export const ShowList: React.FC<Props> = ({
   selectPreviousDate,
   selectNextDate,
 }) => {
+  const [currentShowIndex, setCurrentShowIndex] = useState(-1);
+
   const month = selectedDate.getMonth() + 1;
   const date = selectedDate.getDate();
   const weekName = getKoreanWeekdayName(selectedDate.getDay());
   const dateString = `${month}월 ${date}일 ${weekName}요일`;
+
+  const openShowDetail = (index: number) => {
+    setCurrentShowIndex(index);
+  };
+
+  const hideShowDetail = () => {
+    setCurrentShowIndex(-1);
+  };
 
   return (
     <StyledShowList>
@@ -40,7 +52,10 @@ export const ShowList: React.FC<Props> = ({
 
         {showList &&
           showList.map((show, index) => (
-            <StyledShowListItem key={show.id}>
+            <StyledShowListItem
+              key={show.id}
+              onClick={() => openShowDetail(index)}
+            >
               <StyledShowListItemIndex>
                 {String(index + 1).padStart(2, '0')}
               </StyledShowListItemIndex>
@@ -53,6 +68,13 @@ export const ShowList: React.FC<Props> = ({
               </StyledShowListItemTime>
             </StyledShowListItem>
           ))}
+        {showList && currentShowIndex !== -1 && (
+          <ShowDetail
+            showList={showList}
+            currentIndex={currentShowIndex}
+            onCloseClick={hideShowDetail}
+          />
+        )}
       </StyledShowListContent>
     </StyledShowList>
   );
@@ -108,6 +130,11 @@ const StyledShowListItem = styled.div`
   display: flex;
   align-items: center;
   gap: 14px;
+
+  &:hover {
+    background-color: #f2f2f2;
+    cursor: pointer;
+  }
 `;
 
 const StyledShowListItemIndex = styled.div`
