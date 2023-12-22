@@ -1,22 +1,38 @@
 import { create } from 'zustand';
-import { DeviceType } from '~/types/device.types';
 
 type DeviceTypeState = {
-  deviceType: DeviceType;
+  isMobile: boolean;
+
   updateDeviceType: () => void;
 };
 
-const MOBILE_MAX_WIDTH = 1023;
-
 export const useDeviceTypeStore = create<DeviceTypeState>((set) => ({
-  deviceType: {
-    isMobile: false,
-  },
-  updateDeviceType: () =>
-    set((state) => {
-      const { innerWidth } = window;
-      const isMobile = innerWidth <= MOBILE_MAX_WIDTH;
+  isMobile: false,
 
-      return { deviceType: { ...state.deviceType, isMobile } };
+  updateDeviceType: () =>
+    set(() => {
+      const mobileWidthInRange = { max: 1023 };
+
+      return {
+        isMobile: isWidthInRange(mobileWidthInRange),
+      };
     }),
 }));
+
+const isWidthInRange = ({ min, max }: { min?: number; max?: number }) => {
+  const windowWidth = window.innerWidth;
+
+  if (min !== undefined && max !== undefined) {
+    return windowWidth >= min && windowWidth <= max;
+  }
+
+  if (min !== undefined) {
+    return windowWidth >= min;
+  }
+
+  if (max !== undefined) {
+    return windowWidth <= max;
+  }
+
+  return false;
+};

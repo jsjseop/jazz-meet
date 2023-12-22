@@ -21,7 +21,7 @@ import { ToggleRenderTypeButton } from './ToggleRenderTypeButton';
 
 export const MapPage: React.FC = () => {
   const [map, setMap] = useState<naver.maps.Map>();
-  const isMobile = useDeviceTypeStore((state) => state.deviceType.isMobile);
+  const isMobile = useDeviceTypeStore((state) => state.isMobile);
   const [renderType, setRenderType] = useState<RenderType>(
     isMobile ? 'map' : 'all',
   );

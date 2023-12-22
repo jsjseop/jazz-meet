@@ -3,7 +3,7 @@ import { MobileLayout } from './MobileLayout';
 import { PCLayout } from './PCLayout';
 
 export const Layout: React.FC = () => {
-  const isMobile = useDeviceTypeStore((state) => state.deviceType.isMobile);
+  const isMobile = useDeviceTypeStore((state) => state.isMobile);
 
   return <>{isMobile ? <MobileLayout /> : <PCLayout />}</>;
 };
