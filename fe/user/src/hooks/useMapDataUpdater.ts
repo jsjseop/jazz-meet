@@ -8,6 +8,7 @@ import {
   getVenuesByWord,
 } from '~/apis/venue';
 import { SearchedVenues } from '~/types/api.types';
+import { RenderType } from '~/types/device.types';
 import { CoordinateBoundary, Pin } from '~/types/map.types';
 import {
   addMarkersOnMap,
@@ -19,10 +20,10 @@ import {
 
 export const useMapDataUpdater = ({
   map,
-  renderTypeToList,
+  changeRenderType,
 }: {
   map?: naver.maps.Map;
-  renderTypeToList: () => void;
+  changeRenderType: (type: RenderType) => void;
 }) => {
   const navigate = useNavigate();
   const { venueId } = useParams();
@@ -126,7 +127,7 @@ export const useMapDataUpdater = ({
       selectedVenueId,
       onPinClick: (venueId) => {
         goToVenueDetail(venueId);
-        renderTypeToList();
+        changeRenderType('list');
       },
     });
     markersOnMap.current = addMarkersOnMap({
@@ -135,7 +136,7 @@ export const useMapDataUpdater = ({
       selectedVenueId,
       onMarkerClick: (venueId) => {
         goToVenueDetail(venueId);
-        renderTypeToList();
+        changeRenderType('list');
       },
     });
 
