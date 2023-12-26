@@ -11,7 +11,7 @@ import { Header } from './Header';
 import { InquiryList } from './InquiryList';
 
 export const InquiryPage: React.FC = () => {
-  const { isMobile } = useDeviceTypeStore((state) => state.deviceType);
+  const isMobile = useDeviceTypeStore((state) => state.isMobile);
 
   const [inquiryParams, setInquiryParams] = useState<InquiryParams>({
     category: '서비스',

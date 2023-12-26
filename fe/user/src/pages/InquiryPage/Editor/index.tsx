@@ -17,7 +17,7 @@ type Props = {
 };
 
 export const InquiryEditor: React.FC<Props> = ({ currentCategory }) => {
-  const { isMobile } = useDeviceTypeStore((state) => state.deviceType);
+  const isMobile = useDeviceTypeStore((state) => state.isMobile);
 
   const [inquiryContent, setInquiryContent] = useState('');
 
