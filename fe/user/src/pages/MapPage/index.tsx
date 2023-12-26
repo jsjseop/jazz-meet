@@ -116,7 +116,7 @@ export const MapPage: React.FC = () => {
         handleChangeVenueListPage={handleChangeVenueListPage}
       />
 
-      {!isMobile && (
+      {isMobile && (
         <ToggleRenderTypeButton
           renderType={renderType}
           changeRenderType={changeRenderType}
