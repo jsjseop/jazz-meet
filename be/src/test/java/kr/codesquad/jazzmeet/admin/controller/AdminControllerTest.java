@@ -1,5 +1,6 @@
 package kr.codesquad.jazzmeet.admin.controller;
 
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -14,8 +15,11 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import kr.codesquad.jazzmeet.admin.dto.request.LoginAdminRequest;
 import kr.codesquad.jazzmeet.admin.dto.request.SignUpAdminRequest;
 import kr.codesquad.jazzmeet.admin.service.AdminService;
+import kr.codesquad.jazzmeet.global.jwt.Jwt;
+import kr.codesquad.jazzmeet.global.jwt.JwtProperties;
 
 @WebMvcTest(controllers = AdminController.class)
 class AdminControllerTest {
@@ -28,6 +32,9 @@ class AdminControllerTest {
 
 	@MockBean
 	AdminService adminService;
+
+	@MockBean
+	JwtProperties jwtProperties;
 
 	@DisplayName("루트 관리자가 관리자 계정을 생성한다.")
 	@Test
@@ -175,6 +182,72 @@ class AdminControllerTest {
 		mockMvc.perform(
 				post("/api/admins/sign-up")
 					.requestAttr("id", root)
+					.content(objectMapper.writeValueAsString(request))
+					.contentType(MediaType.APPLICATION_JSON)
+			)
+			.andDo(print())
+			.andExpect(status().isBadRequest());
+	}
+
+	@DisplayName("관리자 계정으로 로그인을 한다.")
+	@Test
+	void loginAdmin() throws Exception {
+	    //given
+		LoginAdminRequest request = LoginAdminRequest.builder()
+			.loginId("admin1")
+			.password("12345")
+			.build();
+
+		when(adminService.login(request)).thenReturn(Jwt.builder()
+				.accessToken("accessToken")
+				.refreshToken("refreshToken")
+				.build());
+
+
+		//when //then
+		mockMvc.perform(
+				post("/api/admins/login")
+					.content(objectMapper.writeValueAsString(request))
+					.contentType(MediaType.APPLICATION_JSON)
+			)
+			.andDo(print())
+			.andExpect(status().isOk())
+			.andExpect(cookie().httpOnly("refreshToken", true))
+			.andExpect(cookie().value("refreshToken", "refreshToken"))
+			.andExpect(jsonPath("$.accessToken").value("accessToken"));
+	}
+
+	@DisplayName("관리자 계정으로 로그인할 때 아이디는 5자 이상 , 20자 이하여야 한다.")
+	@Test
+	void failLoginAdmin_wrongIdSize() throws Exception {
+	    //given
+		LoginAdminRequest request = LoginAdminRequest.builder()
+			.loginId("admi")
+			.password("12345")
+			.build();
+
+	    //when //then
+		mockMvc.perform(
+				post("/api/admins/login")
+					.content(objectMapper.writeValueAsString(request))
+					.contentType(MediaType.APPLICATION_JSON)
+			)
+			.andDo(print())
+			.andExpect(status().isBadRequest());
+	}
+
+	@DisplayName("관리자 계정으로 로그인할 때 비밀번호는 5자 이상 , 20자 이하여야 한다.")
+	@Test
+	void failLoginAdmin_wrongPasswordSize() throws Exception {
+	    //given
+		LoginAdminRequest request = LoginAdminRequest.builder()
+			.loginId("admin")
+			.password("1234")
+			.build();
+
+	    //when //then
+		mockMvc.perform(
+				post("/api/admins/login")
 					.content(objectMapper.writeValueAsString(request))
 					.contentType(MediaType.APPLICATION_JSON)
 			)

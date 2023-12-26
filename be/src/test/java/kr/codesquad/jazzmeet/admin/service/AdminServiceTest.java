@@ -2,12 +2,15 @@ package kr.codesquad.jazzmeet.admin.service;
 
 import static org.assertj.core.api.Assertions.*;
 
+import org.apache.juli.logging.Log;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import kr.codesquad.jazzmeet.IntegrationTestSupport;
+import kr.codesquad.jazzmeet.admin.dto.request.LoginAdminRequest;
 import kr.codesquad.jazzmeet.admin.dto.request.SignUpAdminRequest;
 import kr.codesquad.jazzmeet.admin.entity.Admin;
 import kr.codesquad.jazzmeet.admin.entity.UserRole;
@@ -15,6 +18,9 @@ import kr.codesquad.jazzmeet.admin.repository.AdminRepository;
 import kr.codesquad.jazzmeet.fixture.AdminFixture;
 import kr.codesquad.jazzmeet.global.error.CustomException;
 import kr.codesquad.jazzmeet.global.error.statuscode.AdminErrorCode;
+import kr.codesquad.jazzmeet.global.error.statuscode.ErrorCode;
+import kr.codesquad.jazzmeet.global.jwt.Jwt;
+import kr.codesquad.jazzmeet.global.util.PasswordEncoder;
 
 class AdminServiceTest extends IntegrationTestSupport {
 
@@ -88,5 +94,74 @@ class AdminServiceTest extends IntegrationTestSupport {
 		assertThatThrownBy(() -> adminService.signUp(rootId, request))
 			.isInstanceOf(CustomException.class)
 			.hasMessage(AdminErrorCode.ALREADY_EXIST_ADMIN.getMessage());
+	}
+
+	@DisplayName("관리자가 아이디와 비밀번호로 로그인을 한다.")
+	@Test
+	void loginAdmin() throws Exception {
+	    //given
+		String loginId = "admin1";
+		String password = "12345";
+
+		Admin admin = AdminFixture.createAdmin(loginId, PasswordEncoder.encode(password), UserRole.ADMIN);
+		adminRepository.save(admin);
+
+		LoginAdminRequest request = LoginAdminRequest.builder()
+			.loginId(loginId)
+			.password(password)
+			.build();
+
+	    //when
+		Jwt jwt = adminService.login(request);
+
+		//then
+		assertThat(jwt).isNotNull();
+		assertThat(jwt.getAccessToken()).isNotNull();
+		assertThat(jwt.getRefreshToken()).isNotNull();
+
+		Admin updatedAdmin = adminRepository.findByLoginId(loginId).get();
+		assertThat(updatedAdmin.getRefreshToken()).isEqualTo(jwt.getRefreshToken());
+	}
+
+	@DisplayName("관리자가 존재하지 않는 아이디로 로그인할 경우 예외가 발생한다.")
+	@Test
+	void failLoginAdmin_notExistId() throws Exception {
+	    //given
+		String loginId = "admin1";
+		String password = "12345";
+
+		Admin admin = AdminFixture.createAdmin(loginId, PasswordEncoder.encode(password), UserRole.ADMIN);
+		adminRepository.save(admin);
+
+		LoginAdminRequest request = LoginAdminRequest.builder()
+			.loginId("admin2")
+			.password(password)
+			.build();
+
+	    //when //then
+		assertThatThrownBy(() -> adminService.login(request))
+			.isInstanceOf(CustomException.class)
+			.hasMessage(AdminErrorCode.NOT_FOUND_ADMIN.getMessage());
+	}
+
+	@DisplayName("관리자가 틀린 비밀번호로 로그인할 경우 예외가 발생한다.")
+	@Test
+	void failLoginAdmin_wrongPassword() throws Exception {
+	    //given
+		String loginId = "admin1";
+		String password = "12345";
+
+		Admin admin = AdminFixture.createAdmin(loginId, PasswordEncoder.encode(password), UserRole.ADMIN);
+		adminRepository.save(admin);
+
+		LoginAdminRequest request = LoginAdminRequest.builder()
+			.loginId(loginId)
+			.password("wrong")
+			.build();
+
+	    //when //then
+		assertThatThrownBy(() -> adminService.login(request))
+			.isInstanceOf(CustomException.class)
+			.hasMessage(ErrorCode.WRONG_PASSWORD.getMessage());
 	}
 }
