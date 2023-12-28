@@ -43,8 +43,8 @@
 ![](https://img.shields.io/badge/Amazon_AWS-232F3E?style=flat&logo=amazonaws)
 
 - Java: `JDK 17`
-- SpringBoot: `ver. 2.7.14`
-- MySQL: `ver. 8.0.32`
+- SpringBoot: `ver. 3.1.5`
+- MySQL: `ver. 8.0.33`
 - Amazon AWS: `EC2`, `RDS`, `S3`
 
 
