@@ -1,11 +1,9 @@
 import styled from '@emotion/styled';
-import ListAltIcon from '@mui/icons-material/ListAlt';
-import MapOutlinedIcon from '@mui/icons-material/MapOutlined';
+
 import { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import MyLocation from '~/assets/icons/MyLocation.svg';
 import { BASIC_COORDINATE } from '~/constants/MAP';
-import { BOTTOM_NAVIGATION_Z_INDEX } from '~/constants/Z_INDEX';
 import { useMapDataUpdater } from '~/hooks/useMapDataUpdater';
 import { useUserCoordinate } from '~/hooks/useUserCoordinate';
 import { useDeviceTypeStore } from '~/stores/useDeviceTypeStore';
@@ -19,25 +17,27 @@ import {
 } from '~/utils/map';
 import { Map } from './Map';
 import { Panel } from './Panel';
+import { ToggleRenderTypeButton } from './ToggleRenderTypeButton';
 
 export const MapPage: React.FC = () => {
   const [map, setMap] = useState<naver.maps.Map>();
-  const isMobile = useDeviceTypeStore((state) => state.deviceType.isMobile);
+  const isMobile = useDeviceTypeStore((state) => state.isMobile);
   const [renderType, setRenderType] = useState<RenderType>(
     isMobile ? 'map' : 'all',
   );
-  const renderTypeToList = () => {
+  const changeRenderType = (type: RenderType) => {
     if (isMobile) {
-      setRenderType('list');
+      setRenderType(type);
     }
   };
+
   const {
     searchedVenues,
     handleChangeVenueListPage,
     handleUpdateMapDataWithBounds,
     handleUpdateMapDataWithWord,
     handleUpdateMapDataWithVenueId,
-  } = useMapDataUpdater({ map, renderTypeToList });
+  } = useMapDataUpdater({ map, changeRenderType });
   const mapElement = useRef<HTMLDivElement>(null);
 
   const { userCoordinate } = useUserCoordinate();
@@ -116,19 +116,12 @@ export const MapPage: React.FC = () => {
         handleChangeVenueListPage={handleChangeVenueListPage}
       />
 
-      {renderType !== 'all' ? (
-        renderType === 'map' ? (
-          <StyledRenderToggleButton onClick={() => setRenderType('list')}>
-            <div>리스트 보기</div>
-            <ListAltIcon />
-          </StyledRenderToggleButton>
-        ) : (
-          <StyledRenderToggleButton onClick={() => setRenderType('map')}>
-            <div>지도 보기</div>
-            <MapOutlinedIcon />
-          </StyledRenderToggleButton>
-        )
-      ) : null}
+      {isMobile && (
+        <ToggleRenderTypeButton
+          renderType={renderType}
+          changeRenderType={changeRenderType}
+        />
+      )}
     </StyledMapPage>
   );
 };
@@ -162,24 +155,4 @@ const StyledMapPage = styled.div<{ isMobile: boolean }>`
       height: 100%;
     }
   }
-`;
-
-const StyledRenderToggleButton = styled.div`
-  border-radius: 5px;
-  background-color: #47484e;
-  border: 1px solid #dbdbdb;
-  padding: 10px;
-  box-sizing: border-box;
-  color: #ffffff;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 5px;
-
-  position: fixed;
-  bottom: 65px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: ${BOTTOM_NAVIGATION_Z_INDEX};
 `;
