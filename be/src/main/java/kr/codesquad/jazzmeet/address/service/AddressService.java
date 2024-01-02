@@ -26,7 +26,7 @@ import lombok.extern.log4j.Log4j2;
 public class AddressService {
 
 	@Value("${address.endpoint}")
-	private String ENDPOINT;
+	private String endpoint;
 	@Value("${address.client.id}")
 	private String clientId;
 	@Value("${address.client.secret}")
@@ -37,18 +37,18 @@ public class AddressService {
 			throw new CustomException(AddressErrorCode.WORD_IS_EMPTY);
 		}
 		// 네이버에 요청을 보낸다.
-		StringBuffer response = sendRequestAndGetResponse(word, page);
+		StringBuffer response = sendRequest(word, page);
 		// 받은 response를 원하는 response 형태로 만들기.
 		return toLocationSearchResponse(response);
 	}
 
-	private StringBuffer sendRequestAndGetResponse(String word, int page) {
+	private StringBuffer sendRequest(String word, int page) {
 		HttpURLConnection conn = null;
 
 		try {
 			String address = URLEncoder.encode(word, StandardCharsets.UTF_8);
 			String pageNum = URLEncoder.encode(String.valueOf(page), StandardCharsets.UTF_8);
-			String apiUrl = ENDPOINT + "?query=" + address + "&page=" + pageNum;
+			String apiUrl = endpoint + "?query=" + address + "&page=" + pageNum;
 
 			URL url = new URL(apiUrl);
 			conn = (HttpURLConnection)url.openConnection();
