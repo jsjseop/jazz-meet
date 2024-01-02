@@ -65,8 +65,12 @@ dependencies {
 
     // configuring annotation processor
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+
     // json
     implementation 'org.json:json:20230227'
+
+    // selenium
+    implementation 'org.seleniumhq.selenium:selenium-java:4.8.3'
 
 }
 

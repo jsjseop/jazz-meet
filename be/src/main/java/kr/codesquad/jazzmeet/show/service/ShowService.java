@@ -7,6 +7,7 @@ import java.time.format.DateTimeParseException;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
@@ -137,7 +138,11 @@ public class ShowService {
 	@Transactional
 	public RegisterShowResponse registerShow(Long venueId, RegisterShowRequest registerShowRequest) {
 		Venue venue = venueService.findById(venueId);
-		Image poster = imageService.findById(registerShowRequest.posterId());
+		Long posterId = registerShowRequest.posterId();
+		Image poster = null;
+		if (posterId != null) {
+			poster = imageService.findById(posterId);
+		}
 		Show show = ShowMapper.INSTANCE.toShow(registerShowRequest, venue, poster);
 
 		Show savedShow = showRepository.save(show);
@@ -162,5 +167,9 @@ public class ShowService {
 
 		show.deletePoster();
 		showRepository.delete(show);
+	}
+
+	public Optional<Show> getLatestShowBy(Long venueId) {
+		return showRepository.findLatestShowByVenueId(venueId);
 	}
 }
