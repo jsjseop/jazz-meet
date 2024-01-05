@@ -36,7 +36,7 @@ public class WebCrawler {
 	@Value("${instagram.password}")
 	private String instagramPassword;
 
-	public List<String> getShowImageUrl(String venueInstagramUrl, LocalDate latestShowDate) {
+	public List<String> getShowImageUrls(String venueInstagramUrl, LocalDate latestShowDate) {
 		List<String> showImageUrls = null;
 		WebDriver driver = WebDriverUtil.getChromeDriver();
 

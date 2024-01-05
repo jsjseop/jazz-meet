@@ -40,6 +40,7 @@ public class WebDriverUtil {
 		// ⭐️ WebDriver를 크롬으로 생각하고 사용한다.
 		WebDriver driver = new ChromeDriver(chromeOptions);
 		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+
 		return driver;
 	}
 

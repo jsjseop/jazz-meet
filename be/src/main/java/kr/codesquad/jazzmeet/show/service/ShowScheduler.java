@@ -41,7 +41,7 @@ public class ShowScheduler {
 			.orElse(null);
 
 		// 1. 인스타그램에서 (공연 스케줄이 담겨있는) 이미지 url을 크롤링 해 온다.
-		List<String> showImageUrls = crawler.getShowImageUrl(venueInstagramUrl, latestShowDate);
+		List<String> showImageUrls = crawler.getShowImageUrls(venueInstagramUrl, latestShowDate);
 
 		for (String showImageUrl : showImageUrls) {
 			// 2. 네이버 ocr에 텍스트 추출 요청을 보내고 response를 파싱해 공연 등록 request로 만든다.
