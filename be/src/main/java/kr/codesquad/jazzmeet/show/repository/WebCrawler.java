@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 import org.openqa.selenium.By;
@@ -29,15 +30,17 @@ public class WebCrawler {
 
 	private static final String NEXT_ARTICLE_BUTTON_CLASS_NAME = "_abl-";
 	public static final String NEXT_PHOTO_BUTTON_CLASS_NAME = "_9zm2";
-	public static final int MAX_FIXED_ARTICLE_NUMBER = 2;
+	public static final int MAX_FIXED_ARTICLE_NUMBER = 1;
 
 	@Value("${instagram.id}")
 	private String instagramId;
 	@Value("${instagram.password}")
 	private String instagramPassword;
 
-	public List<String> getShowImageUrls(String venueInstagramUrl, LocalDate latestShowDate) {
-		List<String> showImageUrls = null;
+	public HashMap<String, List<String>> getShowImageUrls(String venueInstagramUrl, LocalDate latestShowDate) {
+		// key: 공연 스케줄 이미지 url
+		// value: 공연 포스터 이미지 urls
+		HashMap<String, List<String>> showImageUrls = null;
 		WebDriver driver = WebDriverUtil.getChromeDriver();
 
 		try {
@@ -58,11 +61,11 @@ public class WebCrawler {
 		return showImageUrls;
 	}
 
-	private List<String> getImageUrl(WebDriver driver, String venueInstagramUrl, LocalDate latestShowDate) throws
-		InterruptedException {
+	private HashMap<String, List<String>> getImageUrl(WebDriver driver,
+		String venueInstagramUrl, LocalDate latestShowDate) throws InterruptedException {
 		// 대기 시간 지정하기
 		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-		List<String> imageUrls = new ArrayList<>();
+		HashMap<String, List<String>> imageUrls = new HashMap<>();
 
 		if (!ObjectUtils.isEmpty(driver)) {
 			// url로 이동
@@ -131,10 +134,41 @@ public class WebCrawler {
 				// 1,2,3번 이미지는 "_aagu _aato"(3번은 스케줄), 4,5번 이미지는 "_aagu _aa20 _aato", 6,7번 이미지는 ...
 				WebElement img = driver.findElements(
 					By.cssSelector("div._aagu._aato > div > img")).get(1); // 이미지 선택
+				// 포스터 이미지
+				// div._aagu _aa20 _aato > div._aagv > img .get(0)
+				// 클릭해서 이동 1, 2
 				String imageUrl = img.getAttribute("src");
 				log.debug("Instagram Image URL: {}", imageUrl);
-				// TODO: 공연 포스터 크롤링하기
-				imageUrls.add(imageUrl);
+
+				List<String> posterImgUrls = new ArrayList<>();
+				while (true) {
+					boolean existNextPhotoButton = driver.findElements(
+							By.className(NEXT_ARTICLE_BUTTON_CLASS_NAME))
+						.isEmpty();
+					List<WebElement> elements = driver.findElements(
+						By.cssSelector("div._aagu._aa20._aato > div._aagv > img"));// 이미지 선택
+					int elementLastIndex = 0;
+					if (!elements.isEmpty()) {
+						elementLastIndex = elements.size() - 1;
+					}
+					String currentPosterImg = elements.get(elementLastIndex).getAttribute("src");
+
+					if (!posterImgUrls.isEmpty()) {
+						String lastPosterImg = posterImgUrls.get(posterImgUrls.size() - 1);
+						// 맨 마지막 사진에 도달해 오른쪽 버튼이 존재하지 않거나,
+						// 현재 읽은 img와 마지막으로 저장된 이미지 url이 동일하면 루프를 빠져나온다.
+						if (existNextPhotoButton || currentPosterImg.equals(lastPosterImg)) {
+							break;
+						}
+					}
+					posterImgUrls.add(currentPosterImg);
+					// 오른쪽 화살표를 클릭해 다음 이미지로 넘어간다.
+					driver.findElements(By.className(NEXT_PHOTO_BUTTON_CLASS_NAME))
+						.get(0)
+						.click();
+				}
+
+				imageUrls.put(imageUrl, posterImgUrls);
 
 				driver.findElements(By.className(NEXT_ARTICLE_BUTTON_CLASS_NAME))
 					.get(nextBtnIndex)

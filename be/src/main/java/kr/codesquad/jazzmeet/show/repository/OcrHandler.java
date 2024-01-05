@@ -1,7 +1,10 @@
 package kr.codesquad.jazzmeet.show.repository;
 
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -15,15 +18,24 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
+import javax.imageio.ImageIO;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import kr.codesquad.jazzmeet.global.error.CustomException;
 import kr.codesquad.jazzmeet.global.error.statuscode.ShowErrorCode;
+import kr.codesquad.jazzmeet.global.util.CustomMultipartFile;
+import kr.codesquad.jazzmeet.image.dto.response.ImageCreateResponse;
+import kr.codesquad.jazzmeet.image.dto.response.ImageSaveResponse;
+import kr.codesquad.jazzmeet.image.entity.ImageStatus;
+import kr.codesquad.jazzmeet.image.repository.S3ImageHandler;
+import kr.codesquad.jazzmeet.image.service.ImageService;
 import kr.codesquad.jazzmeet.show.dto.request.RegisterShowRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -47,11 +59,14 @@ public class OcrHandler {
 	private String apiURL;
 	@Value("${naver.clova.secretKey}")
 	private String secretKey;
+	private final S3ImageHandler s3imageHandler;
+	private final ImageService imageService;
 
 	@Transactional
-	public List<RegisterShowRequest> getShows(String venueName, String imageUrl, LocalDate latestShowDate) {
-		StringBuffer response = sendRequest(imageUrl);
-		List<RegisterShowRequest> requests = toRegisterShowRequest(venueName, response, latestShowDate);
+	public List<RegisterShowRequest> getShows(String venueName, String scheduleUrl, List<String> posterUrls,
+		LocalDate latestShowDate) {
+		StringBuffer response = sendRequest(scheduleUrl);
+		List<RegisterShowRequest> requests = toRegisterShowRequest(venueName, response, posterUrls, latestShowDate);
 		if (requests.isEmpty()) {
 			throw new CustomException(ShowErrorCode.OBJECT_TRANSFORMATION_FAILD);
 		}
@@ -110,7 +125,7 @@ public class OcrHandler {
 	}
 
 	private List<RegisterShowRequest> toRegisterShowRequest(String venueName, StringBuffer response,
-		LocalDate latestShowDate) {
+		List<String> posterUrls, LocalDate latestShowDate) {
 		// JSON 파싱
 		JSONTokener tokener = new JSONTokener(response.toString());
 		JSONObject object = new JSONObject(tokener);
@@ -159,7 +174,7 @@ public class OcrHandler {
 		}
 
 		// response가 최신 데이터라면 파싱해서 공연 등록 request로 만든다.
-		return makeRegisterShowRequest(firstShowDate, teamsText);
+		return makeRegisterShowRequest(firstShowDate, teamsText, posterUrls);
 	}
 
 	private LocalDate makeShowStartLocalDate(String showStartEndDateText) {
@@ -185,15 +200,23 @@ public class OcrHandler {
 		return LocalDate.of(showYear, showStartMonth, showStartDay);
 	}
 
-	private List<RegisterShowRequest> makeRegisterShowRequest(LocalDate firstShowDate, String teams) {
+	private List<RegisterShowRequest> makeRegisterShowRequest(LocalDate firstShowDate, String teams,
+		List<String> posterUrls) {
 		List<RegisterShowRequest> requests = new ArrayList<>();
 		String[] splitedArtists = teams.split("\n");
 		LocalDate showDate = firstShowDate;
 		boolean isSatFirstShow = false;
+		List<Long> posterIds = uploadPosters(posterUrls);
+
+		if ((splitedArtists.length / 2) != posterIds.size()) { // 팀(+설명)과 포스터의 수가 맞지 않으면 예외 발생
+			throw new CustomException(ShowErrorCode.OCR_NOT_EQUAL_TEAMS_AND_POSTER_NUMBERS);
+		}
 
 		for (int i = 0; i < splitedArtists.length; i += 2) {
 			String teamName = splitedArtists[i];
 			String teamMusician = splitedArtists[i + 1];
+			// 포스터 index는 순차적으로 올라간다.
+			Long posterId = posterIds.get(i / 2);
 
 			if (isSatFirstShow) { // 토요일만 스케줄이 다르다.
 				LocalDateTime specialShowStartTime = LocalDateTime.of(showDate, ENTRY55_START_TIME_SAT_SPECIAL);
@@ -201,6 +224,7 @@ public class OcrHandler {
 				RegisterShowRequest request = RegisterShowRequest.builder()
 					.teamName(teamName)
 					.description(teamMusician)
+					.posterId(posterId)
 					.startTime(specialShowStartTime)
 					.endTime(specialShowEndTime).build();
 				requests.add(request);
@@ -217,12 +241,14 @@ public class OcrHandler {
 			RegisterShowRequest firstShowRequest = RegisterShowRequest.builder()
 				.teamName(teamName)
 				.description(teamMusician)
+				.posterId(posterId)
 				.startTime(firstShowStartTime)
 				.endTime(firstShowEndTime)
 				.build();
 			RegisterShowRequest secondShowRequest = RegisterShowRequest.builder()
 				.teamName(teamName)
 				.description(teamMusician)
+				.posterId(posterId)
 				.startTime(secondShowStartTime)
 				.endTime(secondShowEndTime)
 				.build();
@@ -239,6 +265,38 @@ public class OcrHandler {
 		}
 
 		return requests;
+	}
+
+	private List<Long> uploadPosters(List<String> posterUrls) {
+		// Image 가져오기
+		List<MultipartFile> multipartFiles = convertImageUrlToMultipartFile(posterUrls);
+		// S3에 사진 저장
+		List<String> uploadedImageUrls = s3imageHandler.uploadImages(multipartFiles);
+		// DB에 저장
+		ImageStatus imageStatus = ImageStatus.REGISTERED;
+		ImageCreateResponse imageCreateResponse = imageService.saveImages(uploadedImageUrls, imageStatus);
+
+		return imageCreateResponse.images().stream().map(ImageSaveResponse::id).toList();
+	}
+
+	private List<MultipartFile> convertImageUrlToMultipartFile(List<String> imageUrls) {
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		List<MultipartFile> multipartFiles = new ArrayList<>();
+		for (int i = 0; i < imageUrls.size(); i++) {
+			try {
+				BufferedImage image = ImageIO.read(new URL(imageUrls.get(i)));
+				ImageIO.write(image, "jpeg", out);
+			} catch (IOException e) {
+				log.error("IO Error", e);
+				return null;
+			}
+			byte[] bytes = out.toByteArray();
+			CustomMultipartFile customMultipartFile = new CustomMultipartFile(bytes, "image" + i,
+				"posterImage" + i + ".jpeg",
+				"jpeg", bytes.length);
+			multipartFiles.add(customMultipartFile);
+		}
+		return multipartFiles;
 	}
 
 }

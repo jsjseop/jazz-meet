@@ -1,6 +1,7 @@
 package kr.codesquad.jazzmeet.show.service;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.stereotype.Component;
@@ -41,11 +42,12 @@ public class ShowScheduler {
 			.orElse(null);
 
 		// 1. 인스타그램에서 (공연 스케줄이 담겨있는) 이미지 url을 크롤링 해 온다.
-		List<String> showImageUrls = crawler.getShowImageUrls(venueInstagramUrl, latestShowDate);
+		HashMap<String, List<String>> showImageUrls = crawler.getShowImageUrls(venueInstagramUrl, latestShowDate);
 
-		for (String showImageUrl : showImageUrls) {
+		for (String showImageUrl : showImageUrls.keySet()) {
 			// 2. 네이버 ocr에 텍스트 추출 요청을 보내고 response를 파싱해 공연 등록 request로 만든다.
-			List<RegisterShowRequest> requests = ocrHandler.getShows(venue.getName(), showImageUrl, latestShowDate);
+			List<RegisterShowRequest> requests = ocrHandler.getShows(venue.getName(), showImageUrl,
+				showImageUrls.get(showImageUrl), latestShowDate);
 			// 3. DB에 새로운 공연을 넣는다.
 			for (RegisterShowRequest request : requests) {
 				showService.registerShow(venue.getId(), request);

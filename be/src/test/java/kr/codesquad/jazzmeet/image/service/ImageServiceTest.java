@@ -35,9 +35,10 @@ class ImageServiceTest extends IntegrationTestSupport {
 	void saveImages() {
 		// given
 		List<String> imageUrls = List.of("imgUrl1", "imgUrl2", "imgUrl3");
+		ImageStatus imageStatus = ImageStatus.UNREGISTERED;
 
 		// when
-		ImageCreateResponse imageCreateResponse = imageService.saveImages(imageUrls);
+		ImageCreateResponse imageCreateResponse = imageService.saveImages(imageUrls, imageStatus);
 
 		// then
 		assertThat(imageCreateResponse.images()).hasSize(imageUrls.size());

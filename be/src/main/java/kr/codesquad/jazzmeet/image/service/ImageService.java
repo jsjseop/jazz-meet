@@ -26,9 +26,9 @@ public class ImageService {
 	private final ImageQueryRepository imageQueryRepository;
 
 	@Transactional
-	public ImageCreateResponse saveImages(List<String> imageUrls) {
+	public ImageCreateResponse saveImages(List<String> imageUrls, ImageStatus imageStatus) {
 		List<Image> images = imageUrls.stream()
-			.map(url -> ImageMapper.INSTANCE.toImage(url, ImageStatus.UNREGISTERED))
+			.map(url -> ImageMapper.INSTANCE.toImage(url, imageStatus))
 			.toList();
 
 		List<Image> saveImages = imageRepository.saveAll(images);
