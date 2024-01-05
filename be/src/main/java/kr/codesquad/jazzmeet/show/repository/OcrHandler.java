@@ -38,9 +38,9 @@ public class OcrHandler {
 	public static final String TEAMS = "Teams";
 	public static final String INFER_TEXT = "inferText";
 	private static final String SCHEDULE = "스케줄";
-	private static final LocalTime ENTRY55_START_TIME_1ST = LocalTime.of(7, 30);
-	private static final LocalTime ENTRY55_START_TIME_2ND = LocalTime.of(9, 40);
-	private static final LocalTime ENTRY55_START_TIME_SAT_SPECIAL = LocalTime.of(4, 20);
+	private static final LocalTime ENTRY55_START_TIME_1ST = LocalTime.of(19, 30);
+	private static final LocalTime ENTRY55_START_TIME_2ND = LocalTime.of(21, 40);
+	private static final LocalTime ENTRY55_START_TIME_SAT_SPECIAL = LocalTime.of(16, 20);
 	private static final int ENTRY55_RUNTIME = 55;
 
 	@Value("${naver.clova.endpoint}")
@@ -177,6 +177,11 @@ public class OcrHandler {
 			showYear += 1;
 		}
 
+		// 오늘이 1월이고, 공연 날짜가 12월이면 공연의 연도를 작년으로 설정.
+		if (now.getMonth().equals(Month.JANUARY) && showStartMonth.equals(Month.DECEMBER)) {
+			showYear -= 1;
+		}
+
 		return LocalDate.of(showYear, showStartMonth, showStartDay);
 	}
 
@@ -184,20 +189,23 @@ public class OcrHandler {
 		List<RegisterShowRequest> requests = new ArrayList<>();
 		String[] splitedArtists = teams.split("\n");
 		LocalDate showDate = firstShowDate;
+		boolean isSatFirstShow = false;
 
 		for (int i = 0; i < splitedArtists.length; i += 2) {
 			String teamName = splitedArtists[i];
 			String teamMusician = splitedArtists[i + 1];
 
-			if (showDate.getDayOfWeek().equals(DayOfWeek.SATURDAY)) { // 토요일만 스케줄이 다르다.
+			if (isSatFirstShow) { // 토요일만 스케줄이 다르다.
 				LocalDateTime specialShowStartTime = LocalDateTime.of(showDate, ENTRY55_START_TIME_SAT_SPECIAL);
-				LocalDateTime specialShowEndTime = specialShowStartTime.minusMinutes(ENTRY55_RUNTIME);
+				LocalDateTime specialShowEndTime = specialShowStartTime.plusMinutes(ENTRY55_RUNTIME);
 				RegisterShowRequest request = RegisterShowRequest.builder()
 					.teamName(teamName)
 					.description(teamMusician)
 					.startTime(specialShowStartTime)
 					.endTime(specialShowEndTime).build();
 				requests.add(request);
+				// 첫번째 공연 플래그 변경
+				isSatFirstShow = false;
 				continue;
 			}
 
@@ -224,6 +232,10 @@ public class OcrHandler {
 
 			// 다음 날로 변경
 			showDate = showDate.plusDays(1);
+			// 토요일 공연이면 첫번째 공연 플래그를 변경해준다.
+			if (showDate.getDayOfWeek().equals(DayOfWeek.SATURDAY)) {
+				isSatFirstShow = true;
+			}
 		}
 
 		return requests;
