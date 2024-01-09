@@ -38,6 +38,7 @@ import kr.codesquad.jazzmeet.image.entity.ImageStatus;
 import kr.codesquad.jazzmeet.image.repository.S3ImageHandler;
 import kr.codesquad.jazzmeet.image.service.ImageService;
 import kr.codesquad.jazzmeet.show.dto.request.RegisterShowRequest;
+import kr.codesquad.jazzmeet.show.mapper.ShowMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -208,14 +209,10 @@ public class OcrHandler {
 			Long posterId = posterIds.get(i / 2);
 
 			if (isSatFirstShow) { // 토요일만 스케줄이 다르다.
-				LocalDateTime specialShowStartTime = LocalDateTime.of(showDate, ENTRY55_START_TIME_SAT_SPECIAL);
-				LocalDateTime specialShowEndTime = specialShowStartTime.plusMinutes(ENTRY55_RUNTIME);
-				RegisterShowRequest request = RegisterShowRequest.builder()
-					.teamName(teamName)
-					.description(teamMusician)
-					.posterId(posterId)
-					.startTime(specialShowStartTime)
-					.endTime(specialShowEndTime).build();
+				LocalDateTime saturdayShowStartTime = LocalDateTime.of(showDate, ENTRY55_START_TIME_SAT_SPECIAL);
+				LocalDateTime saturdayShowEndTime = saturdayShowStartTime.plusMinutes(ENTRY55_RUNTIME);
+				RegisterShowRequest request = ShowMapper.INSTANCE.toRegisterShowRequest(teamName, teamMusician,
+					posterId, saturdayShowStartTime, saturdayShowEndTime);
 				requests.add(request);
 				// 첫번째 공연 플래그 변경
 				isSatFirstShow = false;
@@ -227,20 +224,10 @@ public class OcrHandler {
 			LocalDateTime secondShowStartTime = LocalDateTime.of(showDate, ENTRY55_START_TIME_2ND);
 			LocalDateTime secondShowEndTime = secondShowStartTime.plusMinutes(ENTRY55_RUNTIME);
 
-			RegisterShowRequest firstShowRequest = RegisterShowRequest.builder()
-				.teamName(teamName)
-				.description(teamMusician)
-				.posterId(posterId)
-				.startTime(firstShowStartTime)
-				.endTime(firstShowEndTime)
-				.build();
-			RegisterShowRequest secondShowRequest = RegisterShowRequest.builder()
-				.teamName(teamName)
-				.description(teamMusician)
-				.posterId(posterId)
-				.startTime(secondShowStartTime)
-				.endTime(secondShowEndTime)
-				.build();
+			RegisterShowRequest firstShowRequest = ShowMapper.INSTANCE.toRegisterShowRequest(teamName, teamMusician,
+				posterId, firstShowStartTime, firstShowEndTime);
+			RegisterShowRequest secondShowRequest = ShowMapper.INSTANCE.toRegisterShowRequest(teamName, teamMusician,
+				posterId, secondShowStartTime, secondShowEndTime);
 
 			requests.add(firstShowRequest);
 			requests.add(secondShowRequest);
