@@ -139,11 +139,4 @@ public class ShowController {
 
 		return ResponseEntity.noContent().build();
 	}
-
-	@GetMapping("/api/crawling-test")
-	public ResponseEntity<Void> crawling_test() {
-		showScheduler.autoInsertShowSchedule();
-
-		return ResponseEntity.ok().build();
-	}
 }

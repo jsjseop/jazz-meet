@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,6 +28,11 @@ public class ShowScheduler {
 	private final OcrHandler ocrHandler;
 	private final WebCrawler crawler;
 
+	/**
+	 * Cron 표현식을 사용한 작업 예약
+	 * 초(0-59) 분(0-59) 시간(0-23) 일(1-31) 월(1-12) 요일(0-7)
+	 */
+	@Scheduled(cron = "0 0 4 ? * SAT")    // 매주 토요일 오전 4시 00분 00초
 	@Transactional
 	public void autoInsertShowSchedule() {
 		// 	// TODO: 모든 공연장에 대한 인스타그램 링크를 가져온다.
