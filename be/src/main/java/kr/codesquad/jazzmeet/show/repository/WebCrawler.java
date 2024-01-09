@@ -19,6 +19,7 @@ import org.springframework.util.ObjectUtils;
 
 import kr.codesquad.jazzmeet.global.error.CustomException;
 import kr.codesquad.jazzmeet.global.error.statuscode.ShowErrorCode;
+import kr.codesquad.jazzmeet.global.util.CustomLocalDate;
 import kr.codesquad.jazzmeet.global.util.WebDriverUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -184,22 +185,14 @@ public class WebCrawler {
 			return true;
 		}
 
-		LocalDate now = LocalDate.now();
 		// articleText.replace(" ", "").split("-")[0] = "12.28"
-		List<Integer> showStartMonthDay = Arrays.stream(articleText.replace(" ", "").split("-")[0].split("\\."))
+		String[] showStartEndDate = articleText.replace(" ", "").split("-");
+		List<Integer> showStartMonthDay = Arrays.stream(showStartEndDate[0].split("\\."))
 			.map(Integer::parseInt).toList();
-		// 추출해 온 공연 날짜를 LocalDate 형식으로 만들기
-		Month showStartMonth = Month.of(showStartMonthDay.get(0));
-		Integer showStartDay = showStartMonthDay.get(1);
-		int showYear = now.getYear();
+		Month month = Month.of(showStartMonthDay.get(0));
+		Integer dayOfMonth = showStartMonthDay.get(1);
 
-		// 오늘이 11월이나 12월이고, (추출해 온) 공연 날짜가 1월이나 2월이면 공연의 연도를 내년으로 설정.
-		if ((now.getMonth().equals(Month.NOVEMBER) || now.getMonth().equals(Month.DECEMBER))
-			&& (showStartMonth.equals(Month.JANUARY) || showStartMonth.equals(Month.FEBRUARY))) {
-			showYear += 1;
-		}
-
-		LocalDate showDate = LocalDate.of(showYear, showStartMonth, showStartDay);
+		LocalDate showDate = CustomLocalDate.of(month, dayOfMonth);
 
 		return showDate.isAfter(latestShowDate);
 	}

@@ -30,6 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import kr.codesquad.jazzmeet.global.error.CustomException;
 import kr.codesquad.jazzmeet.global.error.statuscode.ShowErrorCode;
+import kr.codesquad.jazzmeet.global.util.CustomLocalDate;
 import kr.codesquad.jazzmeet.global.util.CustomMultipartFile;
 import kr.codesquad.jazzmeet.image.dto.response.ImageCreateResponse;
 import kr.codesquad.jazzmeet.image.dto.response.ImageSaveResponse;
@@ -182,22 +183,10 @@ public class OcrHandler {
 		String[] showStartEndDate = showStartEndDateText.replace(" ", "").split("-");
 		List<Integer> showStartMonthDay = Arrays.stream(showStartEndDate[0].split("\\."))
 			.map(Integer::parseInt).toList();
-		Month showStartMonth = Month.of(showStartMonthDay.get(0));
-		Integer showStartDay = showStartMonthDay.get(1);
-		LocalDate now = LocalDate.now();
-		int showYear = now.getYear();
-		// 오늘이 11월이나 12월이고, 공연 날짜가 1월이나 2월이면 공연의 연도를 내년으로 설정.
-		if ((now.getMonth().equals(Month.NOVEMBER) || now.getMonth().equals(Month.DECEMBER))
-			&& (showStartMonth.equals(Month.JANUARY) || showStartMonth.equals(Month.FEBRUARY))) {
-			showYear += 1;
-		}
+		Month month = Month.of(showStartMonthDay.get(0));
+		Integer dayOfMonth = showStartMonthDay.get(1);
 
-		// 오늘이 1월이고, 공연 날짜가 12월이면 공연의 연도를 작년으로 설정.
-		if (now.getMonth().equals(Month.JANUARY) && showStartMonth.equals(Month.DECEMBER)) {
-			showYear -= 1;
-		}
-
-		return LocalDate.of(showYear, showStartMonth, showStartDay);
+		return CustomLocalDate.of(month, dayOfMonth);
 	}
 
 	private List<RegisterShowRequest> makeRegisterShowRequest(LocalDate firstShowDate, String teams,
