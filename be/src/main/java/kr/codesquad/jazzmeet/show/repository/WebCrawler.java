@@ -185,8 +185,8 @@ public class WebCrawler {
 		}
 
 		LocalDate now = LocalDate.now();
-		// articleText.split(" ")[0] = "12.28"
-		List<Integer> showStartMonthDay = Arrays.stream(articleText.split(" ")[0].split("."))
+		// articleText.replace(" ", "").split("-")[0] = "12.28"
+		List<Integer> showStartMonthDay = Arrays.stream(articleText.replace(" ", "").split("-")[0].split("\\."))
 			.map(Integer::parseInt).toList();
 		// 추출해 온 공연 날짜를 LocalDate 형식으로 만들기
 		Month showStartMonth = Month.of(showStartMonthDay.get(0));
