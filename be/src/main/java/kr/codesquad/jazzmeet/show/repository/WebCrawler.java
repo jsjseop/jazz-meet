@@ -30,7 +30,7 @@ public class WebCrawler {
 
 	private static final String NEXT_ARTICLE_BUTTON_CLASS_NAME = "_abl-";
 	public static final String NEXT_PHOTO_BUTTON_CLASS_NAME = "_9zm2";
-	public static final int MAX_FIXED_ARTICLE_NUMBER = 1;
+	public static final int MAX_FIXED_ARTICLE_NUMBER = 3;
 
 	@Value("${instagram.id}")
 	private String instagramId;
@@ -126,9 +126,9 @@ public class WebCrawler {
 				driver.findElements(By.className(NEXT_PHOTO_BUTTON_CLASS_NAME))
 					.get(0)
 					.click();
-				// driver.findElements(By.className(NEXT_PHOTO_BUTTON_CLASS_NAME))
-				// 	.get(0)
-				// 	.click();
+				driver.findElements(By.className(NEXT_PHOTO_BUTTON_CLASS_NAME))
+					.get(0)
+					.click();
 				Thread.sleep(2000); // 대기 시간
 
 				// 1,2,3번 이미지는 "_aagu _aato"(3번은 스케줄), 4,5번 이미지는 "_aagu _aa20 _aato", 6,7번 이미지는 ...

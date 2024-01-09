@@ -280,9 +280,9 @@ public class OcrHandler {
 	}
 
 	private List<MultipartFile> convertImageUrlToMultipartFile(List<String> imageUrls) {
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		List<MultipartFile> multipartFiles = new ArrayList<>();
 		for (int i = 0; i < imageUrls.size(); i++) {
+			ByteArrayOutputStream out = new ByteArrayOutputStream();
 			try {
 				BufferedImage image = ImageIO.read(new URL(imageUrls.get(i)));
 				ImageIO.write(image, "jpeg", out);
