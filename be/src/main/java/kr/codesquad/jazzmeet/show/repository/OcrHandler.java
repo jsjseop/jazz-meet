@@ -14,7 +14,6 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Month;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -32,6 +31,7 @@ import kr.codesquad.jazzmeet.global.error.CustomException;
 import kr.codesquad.jazzmeet.global.error.statuscode.ShowErrorCode;
 import kr.codesquad.jazzmeet.global.util.CustomLocalDate;
 import kr.codesquad.jazzmeet.global.util.CustomMultipartFile;
+import kr.codesquad.jazzmeet.global.util.TextParser;
 import kr.codesquad.jazzmeet.image.dto.response.ImageCreateResponse;
 import kr.codesquad.jazzmeet.image.dto.response.ImageSaveResponse;
 import kr.codesquad.jazzmeet.image.entity.ImageStatus;
@@ -180,12 +180,8 @@ public class OcrHandler {
 	}
 
 	private LocalDate makeShowStartLocalDate(String showStartEndDateText) {
-		// inferText = "12.27 - 12.31"
-		String[] showStartEndDate = showStartEndDateText.replace(" ", "").split("-");
-		List<Integer> showStartMonthDay = Arrays.stream(showStartEndDate[0].split("\\."))
-			.map(Integer::parseInt).toList();
-		Month month = Month.of(showStartMonthDay.get(0));
-		Integer dayOfMonth = showStartMonthDay.get(1);
+		Month month = TextParser.getMonth(showStartEndDateText);
+		Integer dayOfMonth = TextParser.getDayOfMonth(showStartEndDateText);
 
 		return CustomLocalDate.of(month, dayOfMonth);
 	}

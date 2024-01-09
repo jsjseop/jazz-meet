@@ -4,7 +4,6 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -20,6 +19,7 @@ import org.springframework.util.ObjectUtils;
 import kr.codesquad.jazzmeet.global.error.CustomException;
 import kr.codesquad.jazzmeet.global.error.statuscode.ShowErrorCode;
 import kr.codesquad.jazzmeet.global.util.CustomLocalDate;
+import kr.codesquad.jazzmeet.global.util.TextParser;
 import kr.codesquad.jazzmeet.global.util.WebDriverUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -185,13 +185,8 @@ public class WebCrawler {
 			return true;
 		}
 
-		// articleText.replace(" ", "").split("-")[0] = "12.28"
-		String[] showStartEndDate = articleText.replace(" ", "").split("-");
-		List<Integer> showStartMonthDay = Arrays.stream(showStartEndDate[0].split("\\."))
-			.map(Integer::parseInt).toList();
-		Month month = Month.of(showStartMonthDay.get(0));
-		Integer dayOfMonth = showStartMonthDay.get(1);
-
+		Month month = TextParser.getMonth(articleText);
+		Integer dayOfMonth = TextParser.getDayOfMonth(articleText);
 		LocalDate showDate = CustomLocalDate.of(month, dayOfMonth);
 
 		return showDate.isAfter(latestShowDate);
