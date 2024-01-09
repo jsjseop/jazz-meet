@@ -47,16 +47,16 @@ public class WebCrawler {
 			showImageUrls = getImageUrl(driver, venueInstagramUrl, latestShowDate);
 		} catch (InterruptedException e) {
 			throw new CustomException(ShowErrorCode.CRAWLING_REQUEST_FAILED);
+		} finally {
+			//드라이버 연결 종료
+			driver.close(); //드라이버 연결 해제
+			//프로세스 종료
+			driver.quit();
 		}
 
 		if (showImageUrls.isEmpty()) {
 			throw new CustomException(ShowErrorCode.NOT_FOUND_SHOW_IMAGE_URL);
 		}
-
-		//드라이버 연결 종료
-		driver.close(); //드라이버 연결 해제
-		//프로세스 종료
-		driver.quit();
 
 		return showImageUrls;
 	}
