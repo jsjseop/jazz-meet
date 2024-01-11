@@ -90,7 +90,10 @@ const formatTime = (time: string) => {
 };
 
 const StyledShowList = styled.div`
+  min-width: 300px;
+  max-width: 400px;
   width: 100%;
+
   padding: 24px;
   border: 1px solid #dbdbdb;
   border-radius: 8px;
