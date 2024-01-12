@@ -44,6 +44,7 @@ const StyledRestInfoContent = styled.div`
 
   @media screen and (max-width: 1500px) {
     flex-direction: column;
+    align-items: center;
   }
 `;
 

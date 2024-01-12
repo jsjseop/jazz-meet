@@ -83,6 +83,8 @@ export const Calendar: React.FC<Props> = ({
 
 const StyledCalendar = styled.div`
   min-width: 300px;
+  max-width: 400px;
+  width: 100%;
 
   border: 1px solid #dbdbdb;
   border-radius: 8px;
