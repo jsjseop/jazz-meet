@@ -52,9 +52,6 @@ public class OcrHandler {
 	public static final String TEAMS = "Teams";
 	public static final String INFER_TEXT = "inferText";
 	private static final String SCHEDULE = "스케줄";
-	private static final LocalTime ENTRY55_START_TIME_1ST = LocalTime.of(19, 30);
-	private static final LocalTime ENTRY55_START_TIME_2ND = LocalTime.of(21, 40);
-	private static final LocalTime ENTRY55_START_TIME_SAT_SPECIAL = LocalTime.of(16, 20);
 	private static final int ENTRY55_RUNTIME = 55;
 
 	@Value("${naver.clova.endpoint}")
@@ -138,6 +135,7 @@ public class OcrHandler {
 		if (!templateName.equals(venueNameSchedule)) {
 			throw new CustomException(ShowErrorCode.OCR_NOT_MATCHED_VENUE_AND_IMAGE);
 		}
+
 		JSONArray fields = images.getJSONArray("fields");
 		LocalDate firstShowDate = null;
 		// 아티스트의 이름, 상세(=연주자들)
@@ -205,31 +203,38 @@ public class OcrHandler {
 			Long posterId = posterIds.get(i / 2);
 
 			if (isSatFirstShow) { // 토요일만 스케줄이 다르다.
-				LocalDateTime saturdayShowStartTime = LocalDateTime.of(showDate, ENTRY55_START_TIME_SAT_SPECIAL);
+				LocalDateTime saturdayShowStartTime = LocalDateTime.of(showDate, LocalTime.of(16, 20));
 				LocalDateTime saturdayShowEndTime = saturdayShowStartTime.plusMinutes(ENTRY55_RUNTIME);
 				RegisterShowRequest request = ShowMapper.INSTANCE.toRegisterShowRequest(teamName, teamMusician,
 					posterId, saturdayShowStartTime, saturdayShowEndTime);
+
 				requests.add(request);
 				// 첫번째 공연 플래그 변경
 				isSatFirstShow = false;
 				continue;
 			}
 
-			LocalDateTime firstShowStartTime = LocalDateTime.of(showDate, ENTRY55_START_TIME_1ST);
-			LocalDateTime firstShowEndTime = firstShowStartTime.plusMinutes(ENTRY55_RUNTIME);
-			LocalDateTime secondShowStartTime = LocalDateTime.of(showDate, ENTRY55_START_TIME_2ND);
-			LocalDateTime secondShowEndTime = secondShowStartTime.plusMinutes(ENTRY55_RUNTIME);
+			// 공연 시작 시간 설정
+			LocalTime firstShowStartTime = setFirstShowTime(showDate.getDayOfWeek());
+			LocalTime secondShowStartTime = setSecondShowTime(showDate.getDayOfWeek());
+
+			// 공연 날짜 + 시간(시작, 끝) 설정
+			LocalDateTime firstShowStartDateTime = LocalDateTime.of(showDate, firstShowStartTime);
+			LocalDateTime firstShowEndTime = firstShowStartDateTime.plusMinutes(ENTRY55_RUNTIME);
+			LocalDateTime secondShowStartDateTime = LocalDateTime.of(showDate, secondShowStartTime);
+			LocalDateTime secondShowEndTime = secondShowStartDateTime.plusMinutes(ENTRY55_RUNTIME);
 
 			RegisterShowRequest firstShowRequest = ShowMapper.INSTANCE.toRegisterShowRequest(teamName, teamMusician,
-				posterId, firstShowStartTime, firstShowEndTime);
+				posterId, firstShowStartDateTime, firstShowEndTime);
 			RegisterShowRequest secondShowRequest = ShowMapper.INSTANCE.toRegisterShowRequest(teamName, teamMusician,
-				posterId, secondShowStartTime, secondShowEndTime);
+				posterId, secondShowStartDateTime, secondShowEndTime);
 
 			requests.add(firstShowRequest);
 			requests.add(secondShowRequest);
 
 			// 다음 날로 변경
 			showDate = showDate.plusDays(1);
+
 			// 토요일 공연이면 첫번째 공연 플래그를 변경해준다.
 			if (showDate.getDayOfWeek().equals(DayOfWeek.SATURDAY)) {
 				isSatFirstShow = true;
@@ -269,6 +274,30 @@ public class OcrHandler {
 			multipartFiles.add(customMultipartFile);
 		}
 		return multipartFiles;
+	}
+
+	private LocalTime setFirstShowTime(DayOfWeek dayOfWeek) {
+		// 토요일 첫번째 공연 시작 시간
+		if (dayOfWeek.equals(DayOfWeek.SATURDAY)) {
+			return LocalTime.of(19, 15);
+		}
+		// 일요일 첫번째 공연 시작 시간
+		if (dayOfWeek.equals(DayOfWeek.SUNDAY)) {
+			return LocalTime.of(18, 30);
+		}
+
+		// 평일 첫번째 공연 시작 시간 (월~금)
+		return LocalTime.of(19, 30);
+	}
+
+	private LocalTime setSecondShowTime(DayOfWeek dayOfWeek) {
+		// 일요일 두번째 공연 시작 시간
+		if (dayOfWeek.equals(DayOfWeek.SUNDAY)) {
+			return LocalTime.of(20, 40);
+		}
+
+		// 평일 + 토요일 두번째 공연 시작 시간 (월~토)
+		return LocalTime.of(21, 40);
 	}
 
 }
