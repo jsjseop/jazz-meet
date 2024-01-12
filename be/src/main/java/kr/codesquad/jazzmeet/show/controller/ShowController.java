@@ -24,6 +24,7 @@ import kr.codesquad.jazzmeet.show.dto.response.ShowByDateResponse;
 import kr.codesquad.jazzmeet.show.dto.response.ShowDetailResponse;
 import kr.codesquad.jazzmeet.show.dto.response.ShowResponse;
 import kr.codesquad.jazzmeet.show.dto.response.UpcomingShowResponse;
+import kr.codesquad.jazzmeet.show.service.ShowScheduler;
 import kr.codesquad.jazzmeet.show.service.ShowService;
 import lombok.RequiredArgsConstructor;
 
@@ -32,6 +33,7 @@ import lombok.RequiredArgsConstructor;
 public class ShowController {
 
 	private final ShowService showService;
+	private final ShowScheduler showScheduler;
 
 	/**
 	 * 진행 중인 공연 조회 API

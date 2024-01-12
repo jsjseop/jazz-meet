@@ -20,8 +20,12 @@ import kr.codesquad.jazzmeet.venue.dto.response.VenueDetailResponse;
 import kr.codesquad.jazzmeet.venue.dto.response.VenueListResponse;
 import kr.codesquad.jazzmeet.venue.dto.response.VenuePinsResponse;
 import kr.codesquad.jazzmeet.venue.dto.response.VenueSearchResponse;
+import kr.codesquad.jazzmeet.venue.entity.Link;
+import kr.codesquad.jazzmeet.venue.entity.LinkType;
 import kr.codesquad.jazzmeet.venue.entity.Venue;
 import kr.codesquad.jazzmeet.venue.mapper.VenueMapper;
+import kr.codesquad.jazzmeet.venue.repository.LinkRepository;
+import kr.codesquad.jazzmeet.venue.repository.LinkTypeRepository;
 import kr.codesquad.jazzmeet.venue.repository.VenueQueryRepository;
 import kr.codesquad.jazzmeet.venue.repository.VenueRepository;
 import kr.codesquad.jazzmeet.venue.util.LocationUtil;
@@ -38,9 +42,12 @@ public class VenueService {
 	private static final int PAGE_NUMBER_OFFSET = 1; // 페이지를 1부터 시작하게 하기 위한 offset
 	private static final int PAGE_SIZE = 10;
 	private static final int ADMIN_PAGE_SIZE = 20;
+	public static final String LINK_TYPE_NAME_INSTAGRAM = "instagram";
 
 	private final VenueRepository venueRepository;
 	private final VenueQueryRepository venueQueryRepository;
+	private final LinkRepository linkRepository;
+	private final LinkTypeRepository linkTypeRepository;
 
 	public List<VenueAutocompleteResponse> searchAutocompleteList(String word) {
 		// word가 "" 이면 공연장 목록 전부 조회
@@ -100,7 +107,8 @@ public class VenueService {
 		LocalDate curDate = LocalDate.now();
 		Page<VenueSearchData> venuesByLocation = venueQueryRepository.findVenuesByLocation(range, pageRequest, curDate);
 
-		return VenueMapper.INSTANCE.toVenueSearchResponse(venuesByLocation, venuesByLocation.getNumber() + PAGE_NUMBER_OFFSET);
+		return VenueMapper.INSTANCE.toVenueSearchResponse(venuesByLocation,
+			venuesByLocation.getNumber() + PAGE_NUMBER_OFFSET);
 	}
 
 	public Venue findById(Long venueId) {
@@ -153,5 +161,16 @@ public class VenueService {
 	@Transactional
 	public void deleteById(Long venueId) {
 		venueRepository.deleteById(venueId);
+	}
+
+	public List<Link> findAllByLinkTypeEqualsInstagram() {
+		LinkType linkType = linkTypeRepository.findByName(LINK_TYPE_NAME_INSTAGRAM)
+			.orElseThrow(() -> new CustomException(VenueErrorCode.NOT_FOUND_LINK_TYPE));
+		return linkRepository.findByVenueIsNotNullAndLinkType(linkType);
+	}
+
+	public Venue findByName(String venueName) {
+		return venueRepository.findByName(venueName)
+			.orElseThrow(() -> new CustomException(VenueErrorCode.NOT_FOUND_VENUE));
 	}
 }

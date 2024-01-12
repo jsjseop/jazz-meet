@@ -1,5 +1,7 @@
 package kr.codesquad.jazzmeet.show.mapper;
 
+import java.time.LocalDateTime;
+
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
@@ -38,4 +40,7 @@ public interface ShowMapper {
 
 	@Mapping(target = "description", source = "registerShowRequest.description")
 	Show toShow(RegisterShowRequest registerShowRequest, Venue venue, Image poster);
+
+	RegisterShowRequest toRegisterShowRequest(String teamName, String description, Long posterId,
+		LocalDateTime startTime, LocalDateTime endTime);
 }

@@ -23,4 +23,7 @@ public interface ShowRepository extends JpaRepository<Show, Long> {
 
 	@Query("select s from Show s join fetch s.venue join fetch s.poster where s.id = :showId")
 	Optional<Show> findEntireShowById(@Param("showId") Long showId);
+
+	@Query("select s from Show s where s.startTime = (select MAX(s2.startTime) from Show s2) and s.venue.id = :venueId")
+	Optional<Show> findLatestShowByVenueId(Long venueId);
 }
