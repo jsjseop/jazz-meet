@@ -30,14 +30,15 @@ export const Map: React.FC<Props> = ({
     const map = getInitMap();
     onMapInitialized(map);
 
-    const dragendEventListener = naver.maps.Event.addListener(
-      map,
-      'dragend',
-      showMapSearchButton,
+    const events = ['dragend', 'mousewheel', 'pinch'];
+    const eventListeners = events.map((event) =>
+      naver.maps.Event.addListener(map, event, showMapSearchButton),
     );
 
     return () => {
-      naver.maps.Event.removeListener(dragendEventListener);
+      eventListeners.forEach((eventListener) =>
+        naver.maps.Event.removeListener(eventListener),
+      );
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
