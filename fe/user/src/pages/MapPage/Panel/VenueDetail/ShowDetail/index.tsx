@@ -4,29 +4,28 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import CloseIcon from '@mui/icons-material/Close';
 import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { useOutletContext } from 'react-router-dom';
-import SwiperCore from 'swiper';
+import { useOutletContext, useParams } from 'react-router-dom';
 import { Navigation } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
+import { getVenueShowsByDate } from '~/apis/show';
 import { ShowDetail as ShowDetailData } from '~/types/api.types';
 
-type Props = {
-  showList: ShowDetailData[];
-  currentIndex: number;
-  onCloseClick: () => void;
-};
+export const ShowDetail: React.FC = () => {
+  const { venueId } = useParams();
 
-export const ShowDetail: React.FC<Props> = ({
-  showList,
-  currentIndex,
-  onCloseClick,
-}) => {
   const mapElement = useOutletContext<React.RefObject<HTMLDivElement>>();
-  const [swiper, setSwiper] = useState<SwiperCore>();
+  const [showList, setShowList] = useState<ShowDetailData[]>([]);
 
   useEffect(() => {
-    swiper?.slideTo(currentIndex, 0);
-  }, [currentIndex, swiper]);
+    if (!venueId) return;
+
+    const updateShowList = async () => {
+      const shows = await getVenueShowsByDate({ venueId, date: new Date() });
+      setShowList(shows);
+    };
+
+    updateShowList();
+  }, [venueId]);
 
   return (
     <>
@@ -40,13 +39,11 @@ export const ShowDetail: React.FC<Props> = ({
                 fill: '#B5BEC6',
                 '&:hover': { cursor: 'pointer', opacity: 0.7 },
               }}
-              onClick={onCloseClick}
             />
           </StyledShowDetailHeader>
           <StyledShowDetailBody>
             <Swiper
               modules={[Navigation]}
-              onSwiper={setSwiper}
               navigation={{
                 prevEl: '.swiper-prev',
                 nextEl: '.swiper-next',

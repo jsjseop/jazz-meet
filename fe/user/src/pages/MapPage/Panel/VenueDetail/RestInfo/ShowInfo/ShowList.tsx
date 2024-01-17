@@ -1,10 +1,9 @@
 import styled from '@emotion/styled';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { ShowDetail as ShowDetailData } from '~/types/api.types';
-import { getKoreanWeekdayName } from '~/utils/dateUtils';
-import { ShowDetail } from '../../ShowDetail';
+import { getFormattedDate, getKoreanWeekdayName } from '~/utils/dateUtils';
 
 type Props = {
   showList?: ShowDetailData[];
@@ -19,19 +18,15 @@ export const ShowList: React.FC<Props> = ({
   selectPreviousDate,
   selectNextDate,
 }) => {
-  const [currentShowIndex, setCurrentShowIndex] = useState(-1);
+  const navigate = useNavigate();
 
   const month = selectedDate.getMonth() + 1;
   const date = selectedDate.getDate();
   const weekName = getKoreanWeekdayName(selectedDate.getDay());
   const dateString = `${month}월 ${date}일 ${weekName}요일`;
 
-  const openShowDetail = (index: number) => {
-    setCurrentShowIndex(index);
-  };
-
-  const hideShowDetail = () => {
-    setCurrentShowIndex(-1);
+  const openShowDetail = (showId: number) => {
+    navigate(`shows/${showId}?date=${getFormattedDate(selectedDate)}`);
   };
 
   return (
@@ -54,7 +49,7 @@ export const ShowList: React.FC<Props> = ({
           showList.map((show, index) => (
             <StyledShowListItem
               key={show.id}
-              onClick={() => openShowDetail(index)}
+              onClick={() => openShowDetail(show.id)}
             >
               <StyledShowListItemIndex>
                 {String(index + 1).padStart(2, '0')}
@@ -68,13 +63,6 @@ export const ShowList: React.FC<Props> = ({
               </StyledShowListItemTime>
             </StyledShowListItem>
           ))}
-        {showList && currentShowIndex !== -1 && (
-          <ShowDetail
-            showList={showList}
-            currentIndex={currentShowIndex}
-            onCloseClick={hideShowDetail}
-          />
-        )}
       </StyledShowListContent>
     </StyledShowList>
   );

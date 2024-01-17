@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import { useNavigate } from 'react-router-dom';
 import { UpcomingShow } from '~/types/api.types';
+import { getFormattedDate } from '~/utils/dateUtils';
 
 type Props = {
   upcomingShow: UpcomingShow;
@@ -12,7 +13,15 @@ export const UpcomingShowCard: React.FC<Props> = ({ upcomingShow }) => {
   const navigate = useNavigate();
 
   return (
-    <StyledCard onClick={() => navigate(`/venues/${venueId}/shows/${showId}`)}>
+    <StyledCard
+      onClick={() =>
+        navigate(
+          `map/venues/${venueId}/shows/${showId}?date=${getFormattedDate(
+            new Date(startTime),
+          )}`,
+        )
+      }
+    >
       <StyledCardImage src={posterUrl} alt="poster" />
       <StyledTitleContainer>
         <StyledTitle>{teamName}</StyledTitle>
