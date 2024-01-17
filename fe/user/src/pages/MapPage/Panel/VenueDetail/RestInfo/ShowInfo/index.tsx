@@ -1,14 +1,14 @@
 import { getVenueShowDates, getVenueShowsByDate } from 'apis/show';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { HasShowDates, ShowDetail } from 'types/api.types';
+import { HasShowDates } from 'types/api.types';
 import { useDateFromSearchParams } from '~/hooks/useDateFromSearchParams';
+import { useShowDetailStore } from '~/stores/useShowDetailStore';
 import { Calendar } from './Calendar';
 import { ShowList } from './ShowList';
 import { useCalendar } from './useCalendar';
 
 export const ShowInfo: React.FC = () => {
-  const [showList, setShowList] = useState<ShowDetail[]>();
   const [hasShowDates, setHasShowDates] = useState<HasShowDates>();
   const dateFromSearchParams = useDateFromSearchParams();
   const {
@@ -21,6 +21,7 @@ export const ShowInfo: React.FC = () => {
     selectNextDate,
   } = useCalendar(dateFromSearchParams);
   const { venueId } = useParams();
+  const { showDetails, setShowDetails } = useShowDetailStore();
 
   useEffect(() => {
     if (!venueId) return;
@@ -30,11 +31,11 @@ export const ShowInfo: React.FC = () => {
         venueId,
         date: selectedDate,
       });
-      setShowList(shows);
+      setShowDetails(shows);
     };
 
     updateShowList();
-  }, [venueId, selectedDate]);
+  }, [venueId, selectedDate, setShowDetails]);
 
   useEffect(() => {
     if (!venueId) return;
@@ -61,7 +62,7 @@ export const ShowInfo: React.FC = () => {
       />
       <ShowList
         {...{
-          showList,
+          showList: showDetails,
           selectedDate,
           selectPreviousDate,
           selectNextDate,

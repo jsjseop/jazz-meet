@@ -2,30 +2,15 @@ import styled from '@emotion/styled';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import CloseIcon from '@mui/icons-material/Close';
-import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { useOutletContext, useParams } from 'react-router-dom';
+import { useOutletContext } from 'react-router-dom';
 import { Navigation } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { getVenueShowsByDate } from '~/apis/show';
-import { ShowDetail as ShowDetailData } from '~/types/api.types';
+import { useShowDetailStore } from '~/stores/useShowDetailStore';
 
 export const ShowDetail: React.FC = () => {
-  const { venueId } = useParams();
-
   const mapElement = useOutletContext<React.RefObject<HTMLDivElement>>();
-  const [showList, setShowList] = useState<ShowDetailData[]>([]);
-
-  useEffect(() => {
-    if (!venueId) return;
-
-    const updateShowList = async () => {
-      const shows = await getVenueShowsByDate({ venueId, date: new Date() });
-      setShowList(shows);
-    };
-
-    updateShowList();
-  }, [venueId]);
+  const showList = useShowDetailStore((state) => state.showDetails);
 
   return (
     <>
