@@ -1,6 +1,4 @@
-import { useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
-import { getFormattedDate } from '~/utils/dateUtils';
+import { useState } from 'react';
 
 export const useCalendar = (initialDate?: Date) => {
   const [calendarDate, setCalendarDate] = useState(
@@ -9,7 +7,6 @@ export const useCalendar = (initialDate?: Date) => {
   const [selectedDate, setSelectedDate] = useState(
     () => initialDate ?? new Date(),
   );
-  const [, setSearchParams] = useSearchParams();
 
   const goToPreviousMonth = () => {
     calendarDate.setDate(1); // calendarDate가 31일일 때, 2개월 넘어가는 현상 방지
@@ -24,7 +21,7 @@ export const useCalendar = (initialDate?: Date) => {
   };
 
   const selectDate = (date: Date) => {
-    setSearchParams({ date: getFormattedDate(date) });
+    setSelectedDate(date);
   };
 
   const selectPreviousDate = () => {
@@ -38,12 +35,6 @@ export const useCalendar = (initialDate?: Date) => {
     setCalendarDate(new Date(selectedDate));
     setSelectedDate(new Date(selectedDate));
   };
-
-  useEffect(() => {
-    if (initialDate) {
-      setSelectedDate(initialDate);
-    }
-  }, [initialDate]);
 
   return {
     calendarDate,

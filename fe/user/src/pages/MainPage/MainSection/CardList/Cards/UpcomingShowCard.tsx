@@ -2,7 +2,6 @@ import styled from '@emotion/styled';
 import { useNavigate } from 'react-router-dom';
 import { useShowDetailStore } from '~/stores/useShowDetailStore';
 import { UpcomingShow } from '~/types/api.types';
-import { getFormattedDate } from '~/utils/dateUtils';
 
 type Props = {
   upcomingShow: UpcomingShow;
@@ -15,7 +14,7 @@ export const UpcomingShowCard: React.FC<Props> = ({ upcomingShow }) => {
   const { setShowId, setShowDate } = useShowDetailStore();
   const goToShowDetail = () => {
     setShowId(showId);
-    setShowDate(getFormattedDate(new Date(startTime)));
+    setShowDate(new Date(startTime));
     navigate(`map/venues/${venueId}`);
   };
 

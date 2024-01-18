@@ -92,11 +92,3 @@ export const equalDates = (date1: Date, date2: Date) => {
 
   return year1 === year2 && month1 === month2 && day1 === day2;
 };
-
-export const getDateFromFormattedDate = (formattedDate: string) => {
-  const year = Number(formattedDate.slice(0, 4));
-  const month = Number(formattedDate.slice(4, 6));
-  const day = Number(formattedDate.slice(6, 8));
-
-  return new Date(year, month - 1, day);
-};
