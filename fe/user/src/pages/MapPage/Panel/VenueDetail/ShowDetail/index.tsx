@@ -2,15 +2,31 @@ import styled from '@emotion/styled';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import CloseIcon from '@mui/icons-material/Close';
+import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useOutletContext } from 'react-router-dom';
+import SwiperCore from 'swiper';
 import { Navigation } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { useShowDetailStore } from '~/stores/useShowDetailStore';
+import { ShowDetail as ShowDetailData } from '~/types/api.types';
 
-export const ShowDetail: React.FC = () => {
+type Props = {
+  showList: ShowDetailData[];
+  currentIndex: number;
+  closeShowDetail: () => void;
+};
+
+export const ShowDetail: React.FC<Props> = ({
+  showList,
+  currentIndex,
+  closeShowDetail,
+}) => {
   const mapElement = useOutletContext<React.RefObject<HTMLDivElement>>();
-  const showList = useShowDetailStore((state) => state.showDetails);
+  const [swiper, setSwiper] = useState<SwiperCore>();
+
+  useEffect(() => {
+    swiper?.slideTo(currentIndex, 0);
+  }, [swiper, currentIndex]);
 
   return (
     <>
@@ -24,6 +40,7 @@ export const ShowDetail: React.FC = () => {
                 fill: '#B5BEC6',
                 '&:hover': { cursor: 'pointer', opacity: 0.7 },
               }}
+              onClick={closeShowDetail}
             />
           </StyledShowDetailHeader>
           <StyledShowDetailBody>
@@ -33,6 +50,7 @@ export const ShowDetail: React.FC = () => {
                 prevEl: '.swiper-prev',
                 nextEl: '.swiper-next',
               }}
+              onSwiper={setSwiper}
             >
               {showList.map((show, index) => (
                 <SwiperSlide key={`${show.id}-${index}`}>

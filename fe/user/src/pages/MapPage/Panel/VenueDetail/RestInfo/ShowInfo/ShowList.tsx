@@ -1,12 +1,15 @@
+import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useShowDetailStore } from '~/stores/useShowDetailStore';
 import { ShowDetail as ShowDetailData } from '~/types/api.types';
-import { getFormattedDate, getKoreanWeekdayName } from '~/utils/dateUtils';
+import { getKoreanWeekdayName } from '~/utils/dateUtils';
+import { ShowDetail } from '../../ShowDetail';
 
 type Props = {
-  showList?: ShowDetailData[];
+  showList: ShowDetailData[];
   selectedDate: Date;
   selectPreviousDate: () => void;
   selectNextDate: () => void;
@@ -18,16 +21,30 @@ export const ShowList: React.FC<Props> = ({
   selectPreviousDate,
   selectNextDate,
 }) => {
-  const navigate = useNavigate();
+  const { showId, setShowId } = useShowDetailStore();
+  const [currentShowIndex, setCurrentShowIndex] = useState(-1);
 
   const month = selectedDate.getMonth() + 1;
   const date = selectedDate.getDate();
   const weekName = getKoreanWeekdayName(selectedDate.getDay());
   const dateString = `${month}월 ${date}일 ${weekName}요일`;
 
-  const openShowDetail = (showId: number) => {
-    navigate(`shows/${showId}?date=${getFormattedDate(selectedDate)}`);
+  const openShowDetail = (index: number) => {
+    setCurrentShowIndex(index);
   };
+
+  const closeShowDetail = () => {
+    setCurrentShowIndex(-1);
+  };
+
+  useEffect(() => {
+    if (showList.length === 0 || showId === 0) {
+      return;
+    }
+
+    setCurrentShowIndex(getShowIndexFromId(showList, showId));
+    setShowId(0);
+  }, [showList, showId, setShowId]);
 
   return (
     <StyledShowList>
@@ -49,7 +66,8 @@ export const ShowList: React.FC<Props> = ({
           showList.map((show, index) => (
             <StyledShowListItem
               key={show.id}
-              onClick={() => openShowDetail(show.id)}
+              onClick={() => openShowDetail(index)}
+              $active={currentShowIndex === index}
             >
               <StyledShowListItemIndex>
                 {String(index + 1).padStart(2, '0')}
@@ -64,6 +82,14 @@ export const ShowList: React.FC<Props> = ({
             </StyledShowListItem>
           ))}
       </StyledShowListContent>
+
+      {showList.length > 0 && currentShowIndex !== -1 && (
+        <ShowDetail
+          showList={showList}
+          closeShowDetail={closeShowDetail}
+          currentIndex={currentShowIndex}
+        />
+      )}
     </StyledShowList>
   );
 };
@@ -75,6 +101,10 @@ const formatTime = (time: string) => {
     .getMinutes()
     .toString()
     .padStart(2, '0')}`;
+};
+
+const getShowIndexFromId = (showList: ShowDetailData[], showId: number) => {
+  return showList.findIndex((show) => show.id === showId);
 };
 
 const StyledShowList = styled.div`
@@ -117,10 +147,16 @@ const StyledShowListContentHeader = styled.div`
   }
 `;
 
-const StyledShowListItem = styled.div`
+const StyledShowListItem = styled.div<{ $active: boolean }>`
   display: flex;
   align-items: center;
   gap: 14px;
+  ${({ $active }) =>
+    $active
+      ? css`
+          background-color: #f2f2f2;
+        `
+      : ''};
 
   &:hover {
     background-color: #f2f2f2;

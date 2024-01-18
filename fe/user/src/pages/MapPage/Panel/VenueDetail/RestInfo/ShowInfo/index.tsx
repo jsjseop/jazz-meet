@@ -9,7 +9,7 @@ import { useCalendar } from './useCalendar';
 
 export const ShowInfo: React.FC = () => {
   const [hasShowDates, setHasShowDates] = useState<HasShowDates>();
-  const showDate = useShowDetailStore((state) => state.showDate);
+  const { showDate, setShowDate } = useShowDetailStore();
   const {
     calendarDate,
     selectedDate,
@@ -31,10 +31,11 @@ export const ShowInfo: React.FC = () => {
         date: selectedDate,
       });
       setShowList(shows);
+      setShowDate(new Date());
     };
 
     updateShowList();
-  }, [venueId, selectedDate]);
+  }, [venueId, selectedDate, setShowDate]);
 
   useEffect(() => {
     if (!venueId) return;
