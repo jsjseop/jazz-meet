@@ -1,12 +1,15 @@
 import { create } from 'zustand';
-import { ShowDetail } from '~/types/api.types';
 
 type ShowDetailState = {
-  showDetails: ShowDetail[];
-  setShowDetails: (showDetails: ShowDetail[]) => void;
+  showId: number;
+  showDate: string;
+  setShowId: (showId: number) => void;
+  setShowDate: (showDate: string) => void;
 };
 
 export const useShowDetailStore = create<ShowDetailState>((set) => ({
-  showDetails: [],
-  setShowDetails: (showDetails: ShowDetail[]) => set({ showDetails }),
+  showId: 0,
+  showDate: '',
+  setShowId: (showId: number) => set({ showId }),
+  setShowDate: (showDate: string) => set({ showDate }),
 }));
