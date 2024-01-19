@@ -72,6 +72,8 @@ dependencies {
     // selenium
     implementation 'org.seleniumhq.selenium:selenium-java:4.8.3'
 
+    // auto update web driver
+    implementation "io.github.bonigarcia:webdrivermanager:5.6.3"
 }
 
 // Querydsl: 설정부
