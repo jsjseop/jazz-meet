@@ -28,29 +28,24 @@ export const ShowList: React.FC<Props> = ({
       setShowDetailId: state.setShowDetailId,
     })),
   );
-  const [currentShowIndex, setCurrentShowIndex] = useState(-1);
+  const [isShowDetailOpen, setIsShowDetailOpen] = useState(false);
 
   const month = selectedDate.getMonth() + 1;
   const date = selectedDate.getDate();
   const weekName = getKoreanWeekdayName(selectedDate.getDay());
   const dateString = `${month}월 ${date}일 ${weekName}요일`;
 
-  const openShowDetail = (index: number) => {
-    setCurrentShowIndex(index);
-  };
-
-  const closeShowDetail = () => {
-    setCurrentShowIndex(-1);
-  };
-
   useEffect(() => {
-    if (showList.length === 0 || showDetailId === 0) {
-      return;
-    }
+    setIsShowDetailOpen(showDetailId !== 0);
+  }, [showDetailId]);
 
-    setCurrentShowIndex(getShowIndexFromId(showList, showDetailId));
-    setShowDetailId(0);
-  }, [showList, showDetailId, setShowDetailId]);
+  // 선택된 날짜가 바뀌고 showList가 업데이트되면 첫번째 show를 선택
+  useEffect(() => {
+    if (showList.length > 0 && isShowDetailOpen) {
+      setShowDetailId(showList[0].id);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [showList]);
 
   return (
     <StyledShowList>
@@ -68,34 +63,27 @@ export const ShowList: React.FC<Props> = ({
           <div>종료</div>
         </StyledShowListContentHeader>
 
-        {showList &&
-          showList.map((show, index) => (
-            <StyledShowListItem
-              key={show.id}
-              onClick={() => openShowDetail(index)}
-              $active={currentShowIndex === index}
-            >
-              <StyledShowListItemIndex>
-                {String(index + 1).padStart(2, '0')}
-              </StyledShowListItemIndex>
-              <StyledShowListItemName>{show.teamName}</StyledShowListItemName>
-              <StyledShowListItemTime>
-                {formatTime(show.startTime)}
-              </StyledShowListItemTime>
-              <StyledShowListItemTime>
-                {formatTime(show.endTime)}
-              </StyledShowListItemTime>
-            </StyledShowListItem>
-          ))}
+        {showList.map((show, index) => (
+          <StyledShowListItem
+            key={show.id}
+            onClick={() => setShowDetailId(show.id)}
+            $active={show.id === showDetailId}
+          >
+            <StyledShowListItemIndex>
+              {String(index + 1).padStart(2, '0')}
+            </StyledShowListItemIndex>
+            <StyledShowListItemName>{show.teamName}</StyledShowListItemName>
+            <StyledShowListItemTime>
+              {formatTime(show.startTime)}
+            </StyledShowListItemTime>
+            <StyledShowListItemTime>
+              {formatTime(show.endTime)}
+            </StyledShowListItemTime>
+          </StyledShowListItem>
+        ))}
       </StyledShowListContent>
 
-      {showList && currentShowIndex !== -1 && (
-        <ShowDetail
-          showList={showList}
-          closeShowDetail={closeShowDetail}
-          currentIndex={currentShowIndex}
-        />
-      )}
+      {isShowDetailOpen && <ShowDetail showList={showList} />}
     </StyledShowList>
   );
 };
@@ -107,10 +95,6 @@ const formatTime = (time: string) => {
     .getMinutes()
     .toString()
     .padStart(2, '0')}`;
-};
-
-const getShowIndexFromId = (showList: ShowDetailData[], showId: number) => {
-  return showList.findIndex((show) => show.id === showId);
 };
 
 const StyledShowList = styled.div`
