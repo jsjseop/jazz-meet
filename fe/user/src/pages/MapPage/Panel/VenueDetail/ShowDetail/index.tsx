@@ -31,15 +31,12 @@ export const ShowDetail: React.FC<Props> = ({ showList }) => {
   );
 
   const onClickPrevButton = () => {
-    const prevIndex = currentSwiperIndex - 1 < 0 ? 0 : currentSwiperIndex - 1;
+    const prevIndex = Math.max(currentSwiperIndex - 1, 0);
     setShowDetailId(showList[prevIndex].id);
   };
 
   const onClickNextButton = () => {
-    const nextIndex =
-      currentSwiperIndex + 1 > showList.length - 1
-        ? showList.length - 1
-        : currentSwiperIndex + 1;
+    const nextIndex = Math.min(currentSwiperIndex + 1, showList.length - 1);
     setShowDetailId(showList[nextIndex].id);
   };
 
