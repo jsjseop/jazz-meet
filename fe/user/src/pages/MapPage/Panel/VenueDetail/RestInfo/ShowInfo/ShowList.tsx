@@ -89,7 +89,7 @@ export const ShowList: React.FC<Props> = ({
           ))}
       </StyledShowListContent>
 
-      {showList.length > 0 && currentShowIndex !== -1 && (
+      {showList && currentShowIndex !== -1 && (
         <ShowDetail
           showList={showList}
           closeShowDetail={closeShowDetail}
