@@ -3,6 +3,7 @@ import styled from '@emotion/styled';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { useEffect, useState } from 'react';
+import { useShallow } from 'zustand/react/shallow';
 import { useShowDetailStore } from '~/stores/useShowDetailStore';
 import { ShowDetail as ShowDetailData } from '~/types/api.types';
 import { getKoreanWeekdayName } from '~/utils/dateUtils';
@@ -21,7 +22,12 @@ export const ShowList: React.FC<Props> = ({
   selectPreviousDate,
   selectNextDate,
 }) => {
-  const { showId, setShowId } = useShowDetailStore();
+  const { showDetailId, setShowDetailId } = useShowDetailStore(
+    useShallow((state) => ({
+      showDetailId: state.showDetailId,
+      setShowDetailId: state.setShowDetailId,
+    })),
+  );
   const [currentShowIndex, setCurrentShowIndex] = useState(-1);
 
   const month = selectedDate.getMonth() + 1;
@@ -38,13 +44,13 @@ export const ShowList: React.FC<Props> = ({
   };
 
   useEffect(() => {
-    if (showList.length === 0 || showId === 0) {
+    if (showList.length === 0 || showDetailId === 0) {
       return;
     }
 
-    setCurrentShowIndex(getShowIndexFromId(showList, showId));
-    setShowId(0);
-  }, [showList, showId, setShowId]);
+    setCurrentShowIndex(getShowIndexFromId(showList, showDetailId));
+    setShowDetailId(0);
+  }, [showList, showDetailId, setShowDetailId]);
 
   return (
     <StyledShowList>

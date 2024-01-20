@@ -1,15 +1,15 @@
 import { create } from 'zustand';
 
 type ShowDetailState = {
-  showId: number;
-  showDate: Date;
-  setShowId: (showId: number) => void;
-  setShowDate: (showDate: Date) => void;
+  showDetailId: number;
+  showDetailDate: Date;
+  setShowDetailId: (showDetailId: number) => void;
+  setShowDetailDate: (showDetailDate: Date) => void;
 };
 
 export const useShowDetailStore = create<ShowDetailState>((set) => ({
-  showId: 0,
-  showDate: new Date(),
-  setShowId: (showId: number) => set({ showId }),
-  setShowDate: (showDate: Date) => set({ showDate }),
+  showDetailId: 0,
+  showDetailDate: new Date(),
+  setShowDetailId: (showDetailId: number) => set({ showDetailId }),
+  setShowDetailDate: (showDetailDate: Date) => set({ showDetailDate }),
 }));
