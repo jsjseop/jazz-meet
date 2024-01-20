@@ -1,4 +1,3 @@
-import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
@@ -141,12 +140,7 @@ const StyledShowListItem = styled.div<{ $active: boolean }>`
   display: flex;
   align-items: center;
   gap: 14px;
-  ${({ $active }) =>
-    $active
-      ? css`
-          background-color: #f2f2f2;
-        `
-      : ''};
+  ${({ $active }) => $active && `background-color: #f2f2f2;`};
 
   &:hover {
     background-color: #f2f2f2;
