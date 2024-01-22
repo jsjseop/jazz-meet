@@ -17,10 +17,6 @@ export const VenueCard: React.FC<Props> = ({ id, name, shows }) => {
     (state) => state.setShowDetailDate,
   );
 
-  const setDateOfVenueCalendar = (shows: Omit<ShowDetail, 'description'>[]) => {
-    setShowDetailDate(new Date(shows[0].startTime));
-  };
-
   const navigateToVenueDetail = () => {
     navigate(`/map/venues/${id}`);
   };
@@ -29,7 +25,7 @@ export const VenueCard: React.FC<Props> = ({ id, name, shows }) => {
     <StyledVenueCard>
       <StyledCardHeader
         onClick={() => {
-          setDateOfVenueCalendar(shows);
+          setShowDetailDate(new Date(shows[0].startTime));
           navigateToVenueDetail();
         }}
       >
