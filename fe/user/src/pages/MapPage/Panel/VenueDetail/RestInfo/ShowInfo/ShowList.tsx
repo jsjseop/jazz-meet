@@ -1,13 +1,15 @@
 import styled from '@emotion/styled';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useShallow } from 'zustand/react/shallow';
+import { useShowDetailStore } from '~/stores/useShowDetailStore';
 import { ShowDetail as ShowDetailData } from '~/types/api.types';
 import { getKoreanWeekdayName } from '~/utils/dateUtils';
 import { ShowDetail } from '../../ShowDetail';
 
 type Props = {
-  showList?: ShowDetailData[];
+  showList: ShowDetailData[];
   selectedDate: Date;
   selectPreviousDate: () => void;
   selectNextDate: () => void;
@@ -19,20 +21,30 @@ export const ShowList: React.FC<Props> = ({
   selectPreviousDate,
   selectNextDate,
 }) => {
-  const [currentShowIndex, setCurrentShowIndex] = useState(-1);
+  const { showDetailId, setShowDetailId } = useShowDetailStore(
+    useShallow((state) => ({
+      showDetailId: state.showDetailId,
+      setShowDetailId: state.setShowDetailId,
+    })),
+  );
+  const [isShowDetailOpen, setIsShowDetailOpen] = useState(false);
 
   const month = selectedDate.getMonth() + 1;
   const date = selectedDate.getDate();
   const weekName = getKoreanWeekdayName(selectedDate.getDay());
   const dateString = `${month}월 ${date}일 ${weekName}요일`;
 
-  const openShowDetail = (index: number) => {
-    setCurrentShowIndex(index);
-  };
+  useEffect(() => {
+    setIsShowDetailOpen(showDetailId !== 0);
+  }, [showDetailId]);
 
-  const hideShowDetail = () => {
-    setCurrentShowIndex(-1);
-  };
+  // 선택된 날짜가 바뀌고 showList가 업데이트되면 첫번째 show를 선택
+  useEffect(() => {
+    if (showList.length > 0 && isShowDetailOpen) {
+      setShowDetailId(showList[0].id);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [showList]);
 
   return (
     <StyledShowList>
@@ -50,32 +62,27 @@ export const ShowList: React.FC<Props> = ({
           <div>종료</div>
         </StyledShowListContentHeader>
 
-        {showList &&
-          showList.map((show, index) => (
-            <StyledShowListItem
-              key={show.id}
-              onClick={() => openShowDetail(index)}
-            >
-              <StyledShowListItemIndex>
-                {String(index + 1).padStart(2, '0')}
-              </StyledShowListItemIndex>
-              <StyledShowListItemName>{show.teamName}</StyledShowListItemName>
-              <StyledShowListItemTime>
-                {formatTime(show.startTime)}
-              </StyledShowListItemTime>
-              <StyledShowListItemTime>
-                {formatTime(show.endTime)}
-              </StyledShowListItemTime>
-            </StyledShowListItem>
-          ))}
-        {showList && currentShowIndex !== -1 && (
-          <ShowDetail
-            showList={showList}
-            currentIndex={currentShowIndex}
-            onCloseClick={hideShowDetail}
-          />
-        )}
+        {showList.map((show, index) => (
+          <StyledShowListItem
+            key={show.id}
+            onClick={() => setShowDetailId(show.id)}
+            $active={show.id === showDetailId}
+          >
+            <StyledShowListItemIndex>
+              {String(index + 1).padStart(2, '0')}
+            </StyledShowListItemIndex>
+            <StyledShowListItemName>{show.teamName}</StyledShowListItemName>
+            <StyledShowListItemTime>
+              {formatTime(show.startTime)}
+            </StyledShowListItemTime>
+            <StyledShowListItemTime>
+              {formatTime(show.endTime)}
+            </StyledShowListItemTime>
+          </StyledShowListItem>
+        ))}
       </StyledShowListContent>
+
+      {isShowDetailOpen && <ShowDetail showList={showList} />}
     </StyledShowList>
   );
 };
@@ -129,10 +136,11 @@ const StyledShowListContentHeader = styled.div`
   }
 `;
 
-const StyledShowListItem = styled.div`
+const StyledShowListItem = styled.div<{ $active: boolean }>`
   display: flex;
   align-items: center;
   gap: 14px;
+  ${({ $active }) => $active && `background-color: #f2f2f2;`};
 
   &:hover {
     background-color: #f2f2f2;

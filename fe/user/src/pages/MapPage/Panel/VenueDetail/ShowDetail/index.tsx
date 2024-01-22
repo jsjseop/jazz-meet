@@ -8,25 +8,44 @@ import { useOutletContext } from 'react-router-dom';
 import SwiperCore from 'swiper';
 import { Navigation } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
+import { useShallow } from 'zustand/react/shallow';
+import { useShowDetailStore } from '~/stores/useShowDetailStore';
 import { ShowDetail as ShowDetailData } from '~/types/api.types';
 
 type Props = {
   showList: ShowDetailData[];
-  currentIndex: number;
-  onCloseClick: () => void;
 };
 
-export const ShowDetail: React.FC<Props> = ({
-  showList,
-  currentIndex,
-  onCloseClick,
-}) => {
+export const ShowDetail: React.FC<Props> = ({ showList }) => {
   const mapElement = useOutletContext<React.RefObject<HTMLDivElement>>();
   const [swiper, setSwiper] = useState<SwiperCore>();
+  const { showDetailId, setShowDetailId } = useShowDetailStore(
+    useShallow((state) => ({
+      showDetailId: state.showDetailId,
+      setShowDetailId: state.setShowDetailId,
+    })),
+  );
 
+  const currentSwiperIndex = showList.findIndex(
+    (show) => show.id === showDetailId,
+  );
+
+  const onClickPrevButton = () => {
+    const prevIndex = Math.max(currentSwiperIndex - 1, 0);
+    setShowDetailId(showList[prevIndex].id);
+  };
+
+  const onClickNextButton = () => {
+    const nextIndex = Math.min(currentSwiperIndex + 1, showList.length - 1);
+    setShowDetailId(showList[nextIndex].id);
+  };
+
+  const onCloseButtonClick = () => setShowDetailId(0);
+
+  // ShowDetail이 열린 상태에서(mount된 상태에서) 날짜가 바뀌면 첫번째 slide로 이동
   useEffect(() => {
-    swiper?.slideTo(currentIndex, 0);
-  }, [currentIndex, swiper]);
+    swiper?.slideTo(currentSwiperIndex, 0);
+  }, [swiper, currentSwiperIndex]);
 
   return (
     <>
@@ -40,17 +59,17 @@ export const ShowDetail: React.FC<Props> = ({
                 fill: '#B5BEC6',
                 '&:hover': { cursor: 'pointer', opacity: 0.7 },
               }}
-              onClick={onCloseClick}
+              onClick={onCloseButtonClick}
             />
           </StyledShowDetailHeader>
           <StyledShowDetailBody>
             <Swiper
               modules={[Navigation]}
-              onSwiper={setSwiper}
               navigation={{
                 prevEl: '.swiper-prev',
                 nextEl: '.swiper-next',
               }}
+              onSwiper={setSwiper}
             >
               {showList.map((show, index) => (
                 <SwiperSlide key={`${show.id}-${index}`}>
@@ -70,10 +89,16 @@ export const ShowDetail: React.FC<Props> = ({
                 </SwiperSlide>
               ))}
             </Swiper>
-            <StyledArrowButton className="swiper-prev">
+            <StyledArrowButton
+              className="swiper-prev"
+              onClick={onClickPrevButton}
+            >
               <ChevronLeftIcon sx={{ fill: '#B5BEC6' }} />
             </StyledArrowButton>
-            <StyledArrowButton className="swiper-next">
+            <StyledArrowButton
+              className="swiper-next"
+              onClick={onClickNextButton}
+            >
               <ChevronRightIcon sx={{ fill: '#B5BEC6' }} />
             </StyledArrowButton>
           </StyledShowDetailBody>

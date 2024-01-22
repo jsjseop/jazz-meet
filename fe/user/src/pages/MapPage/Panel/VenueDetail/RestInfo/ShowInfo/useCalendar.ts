@@ -1,8 +1,12 @@
 import { useState } from 'react';
 
-export const useCalendar = () => {
-  const [calendarDate, setCalendarDate] = useState(() => new Date());
-  const [selectedDate, setSelectedDate] = useState(() => new Date());
+export const useCalendar = (initialDate?: Date) => {
+  const [calendarDate, setCalendarDate] = useState(
+    () => initialDate ?? new Date(),
+  );
+  const [selectedDate, setSelectedDate] = useState(
+    () => initialDate ?? new Date(),
+  );
 
   const goToPreviousMonth = () => {
     calendarDate.setDate(1); // calendarDate가 31일일 때, 2개월 넘어가는 현상 방지

@@ -2,13 +2,20 @@ import { getVenueShowDates, getVenueShowsByDate } from 'apis/show';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { HasShowDates, ShowDetail } from 'types/api.types';
+import { useShallow } from 'zustand/react/shallow';
+import { useShowDetailStore } from '~/stores/useShowDetailStore';
 import { Calendar } from './Calendar';
 import { ShowList } from './ShowList';
 import { useCalendar } from './useCalendar';
 
 export const ShowInfo: React.FC = () => {
-  const [showList, setShowList] = useState<ShowDetail[]>();
   const [hasShowDates, setHasShowDates] = useState<HasShowDates>();
+  const { showDetailDate, setShowDetailDate } = useShowDetailStore(
+    useShallow((state) => ({
+      showDetailDate: state.showDetailDate,
+      setShowDetailDate: state.setShowDetailDate,
+    })),
+  );
   const {
     calendarDate,
     selectedDate,
@@ -17,19 +24,24 @@ export const ShowInfo: React.FC = () => {
     selectDate,
     selectPreviousDate,
     selectNextDate,
-  } = useCalendar();
+  } = useCalendar(showDetailDate);
   const { venueId } = useParams();
+  const [showList, setShowList] = useState<ShowDetail[]>([]);
 
   useEffect(() => {
     if (!venueId) return;
 
     const updateShowList = async () => {
-      const shows = await getVenueShowsByDate({ venueId, date: selectedDate });
+      const shows = await getVenueShowsByDate({
+        venueId,
+        date: selectedDate,
+      });
       setShowList(shows);
+      setShowDetailDate(new Date());
     };
 
     updateShowList();
-  }, [venueId, selectedDate]);
+  }, [venueId, selectedDate, setShowDetailDate]);
 
   useEffect(() => {
     if (!venueId) return;

@@ -1,5 +1,7 @@
 import styled from '@emotion/styled';
 import { useNavigate } from 'react-router-dom';
+import { useShallow } from 'zustand/react/shallow';
+import { useShowDetailStore } from '~/stores/useShowDetailStore';
 import { UpcomingShow } from '~/types/api.types';
 
 type Props = {
@@ -10,9 +12,20 @@ export const UpcomingShowCard: React.FC<Props> = ({ upcomingShow }) => {
   const { venueId, showId, posterUrl, teamName, startTime, endTime } =
     upcomingShow;
   const navigate = useNavigate();
+  const { setShowDetailId, setShowDetailDate } = useShowDetailStore(
+    useShallow((state) => ({
+      setShowDetailId: state.setShowDetailId,
+      setShowDetailDate: state.setShowDetailDate,
+    })),
+  );
+  const goToShowDetail = () => {
+    setShowDetailId(showId);
+    setShowDetailDate(new Date(startTime));
+    navigate(`map/venues/${venueId}`);
+  };
 
   return (
-    <StyledCard onClick={() => navigate(`/venues/${venueId}/shows/${showId}`)}>
+    <StyledCard onClick={() => goToShowDetail()}>
       <StyledCardImage src={posterUrl} alt="poster" />
       <StyledTitleContainer>
         <StyledTitle>{teamName}</StyledTitle>
