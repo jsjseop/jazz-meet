@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import { useNavigate } from 'react-router-dom';
 import CaretRight from '~/assets/icons/CaretRight.svg?react';
+import { useShowDetailStore } from '~/stores/useShowDetailStore';
 import { ShowDetail } from '~/types/api.types';
 import { getFormattedTimeRange } from '~/utils/dateUtils';
 
@@ -12,12 +13,26 @@ type Props = {
 
 export const VenueCard: React.FC<Props> = ({ id, name, shows }) => {
   const navigate = useNavigate();
+  const setShowDetailDate = useShowDetailStore(
+    (state) => state.setShowDetailDate,
+  );
 
-  const navigateToVenueDetail = () => navigate(`/map/venues/${id}`);
+  const setDateOfVenueCalendar = (shows: Omit<ShowDetail, 'description'>[]) => {
+    setShowDetailDate(new Date(shows[0].startTime));
+  };
+
+  const navigateToVenueDetail = () => {
+    navigate(`/map/venues/${id}`);
+  };
 
   return (
     <StyledVenueCard>
-      <StyledCardHeader onClick={navigateToVenueDetail}>
+      <StyledCardHeader
+        onClick={() => {
+          setDateOfVenueCalendar(shows);
+          navigateToVenueDetail();
+        }}
+      >
         <span>{name}</span>
         <CaretRight />
       </StyledCardHeader>
