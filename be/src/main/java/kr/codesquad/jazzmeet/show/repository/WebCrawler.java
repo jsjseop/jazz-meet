@@ -86,12 +86,13 @@ public class WebCrawler {
 			// driver.manage()
 			// 	.timeouts()
 			// 	.implicitlyWait(Duration.ofSeconds(10)); // 암묵적 대기. 지정한 시간보다 일찍 로드되면 바로 다음 작업으로 넘어간다.
-			Thread.sleep(5000); // 대기 시간
+			Thread.sleep(5000); // 로그인 대기 시간
 
 			// wait.until(ExpectedConditions.urlToBe(
 			// 	"https://www.instagram.com/accounts/onetap/?next=%2F")); // 로그인 완료 후 url 전환하기까지 대기
 			driver.get(venueInstagramUrl); // 공연장 instagram url로 이동
-
+			Thread.sleep(2000); // url 이동 대기 시간 (게시글)
+			
 			driver.findElements(
 					By.className("_aagw")) // 게시물 선택
 				.get(0).click();
