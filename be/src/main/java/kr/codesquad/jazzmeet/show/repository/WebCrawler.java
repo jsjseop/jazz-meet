@@ -10,7 +10,6 @@ import java.util.List;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -84,12 +83,13 @@ public class WebCrawler {
 			driver.findElements(
 					By.cssSelector("#loginForm > div > div:nth-child(3) > button > div"))
 				.get(0).click();
-			driver.manage()
-				.timeouts()
-				.implicitlyWait(Duration.ofSeconds(5)); // 암묵적 대기. 지정한 시간보다 일찍 로드되면 바로 다음 작업으로 넘어간다.
+			// driver.manage()
+			// 	.timeouts()
+			// 	.implicitlyWait(Duration.ofSeconds(10)); // 암묵적 대기. 지정한 시간보다 일찍 로드되면 바로 다음 작업으로 넘어간다.
+			Thread.sleep(5000); // 대기 시간
 
-			wait.until(ExpectedConditions.urlToBe(
-				"https://www.instagram.com/accounts/onetap/?next=%2F")); // 로그인 완료 후 url 전환하기까지 대기
+			// wait.until(ExpectedConditions.urlToBe(
+			// 	"https://www.instagram.com/accounts/onetap/?next=%2F")); // 로그인 완료 후 url 전환하기까지 대기
 			driver.get(venueInstagramUrl); // 공연장 instagram url로 이동
 
 			driver.findElements(
