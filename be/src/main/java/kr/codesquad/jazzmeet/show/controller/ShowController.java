@@ -139,4 +139,14 @@ public class ShowController {
 
 		return ResponseEntity.noContent().build();
 	}
+
+	/**
+	 * 공연 데이터 자동화 테스트 API
+	 */
+	@GetMapping("/api/crawling-test")
+	public ResponseEntity<Void> crawlingTest() {
+		showScheduler.autoInsertShowSchedule();
+
+		return ResponseEntity.ok().build();
+	}
 }
