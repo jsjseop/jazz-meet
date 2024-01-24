@@ -56,11 +56,7 @@ public class ShowService {
 
 	public List<UpcomingShowResponse> getUpcomingShows(LocalDateTime nowTime) {
 		// 10개 제한, 현재 시간 < 공연 시작 시간 , 현재 시간 < 공연 끝나는 시간, 공연 시작 시간 순으로 오름차순 정렬
-		// TODO: N+1 문제 해결 필요
-		List<Show> shows = showRepository.findTop10BystartTimeGreaterThanOrEndTimeGreaterThanOrderByStartTime(
-			nowTime, nowTime);
-
-		return shows.stream().map(ShowMapper.INSTANCE::toUpcomingShowResponse).toList();
+		return showQueryRepository.getUpcomingShows(nowTime);
 	}
 
 	public List<ShowByDateAndVenueResponse> getShowsByDate(Long venueId, String date) {
