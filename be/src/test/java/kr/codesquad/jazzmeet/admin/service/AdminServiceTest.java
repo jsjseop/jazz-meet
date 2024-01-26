@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import kr.codesquad.jazzmeet.IntegrationTestSupport;
+import kr.codesquad.jazzmeet.admin.AdminMapper;
 import kr.codesquad.jazzmeet.admin.dto.request.LoginAdminRequest;
 import kr.codesquad.jazzmeet.admin.dto.request.SignUpAdminRequest;
 import kr.codesquad.jazzmeet.admin.entity.Admin;
@@ -39,17 +40,13 @@ class AdminServiceTest extends IntegrationTestSupport {
 	@Test
 	void signUpAdmin() throws Exception {
 		//given
-		Admin root = AdminFixture.createAdmin("root1", "12345", UserRole.ROOT_ADMIN);
-		adminRepository.save(root);
-
-		Long rootId = root.getId();
 		SignUpAdminRequest request = SignUpAdminRequest.builder()
 			.loginId("admin1")
 			.password("12345")
 			.build();
 
 		//when
-		Admin savedAdmin = adminService.signUp(rootId, request);
+		Admin savedAdmin = adminService.signUp(AdminMapper.INSTANCE.toAdmin(request, "12345", UserRole.ADMIN), request);
 
 		//then
 		assertThat(savedAdmin)
@@ -61,17 +58,13 @@ class AdminServiceTest extends IntegrationTestSupport {
 	@Test
 	void signUpFailWhenNotRoot() throws Exception {
 		//given
-		Admin root = AdminFixture.createAdmin("root1", "12345", UserRole.ADMIN);
-		adminRepository.save(root);
-
-		Long rootId = root.getId();
 		SignUpAdminRequest request = SignUpAdminRequest.builder()
 			.loginId("admin1")
 			.password("12345")
 			.build();
 
 		//when //then
-		assertThatThrownBy(() -> adminService.signUp(rootId, request))
+		assertThatThrownBy(() -> adminService.signUp(AdminMapper.INSTANCE.toAdmin(request, "12345", UserRole.ADMIN), request))
 			.isInstanceOf(CustomException.class)
 			.hasMessage(AdminErrorCode.UNAUTHORIZED_ROLE.getMessage());
 	}
@@ -91,7 +84,7 @@ class AdminServiceTest extends IntegrationTestSupport {
 			.build();
 
 		//when //then
-		assertThatThrownBy(() -> adminService.signUp(rootId, request))
+		assertThatThrownBy(() -> adminService.signUp(AdminMapper.INSTANCE.toAdmin(request, "12345", UserRole.ADMIN), request))
 			.isInstanceOf(CustomException.class)
 			.hasMessage(AdminErrorCode.ALREADY_EXIST_ADMIN.getMessage());
 	}
