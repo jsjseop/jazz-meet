@@ -137,7 +137,7 @@ public class ShowQueryRepository {
 		).from(show)
 			.leftJoin(show.poster, image)
 			.leftJoin(show.venue, venue)
-			.where(show.startTime.goe(nowTime).or(show.endTime.goe(nowTime)))
+			.where(show.endTime.goe(nowTime))
 			.orderBy(show.startTime.asc())
 			.limit(10)
 			.fetch();

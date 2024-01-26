@@ -38,11 +38,10 @@ public class VenueFacade {
 
 	@Transactional
 	public VenueCreateResponse createVenue(VenueCreateRequest venueCreateRequest) {
-		Point location = LocationUtil.createPoint(venueCreateRequest.latitude(), venueCreateRequest.longitude());
-
 		List<Long> imageIds = venueCreateRequest.imageIds();
 		Image thumbnailImage = imageService.findById(imageIds.get(THUMBNAIL_IMAGE_INDEX));
 
+		Point location = LocationUtil.createPoint(venueCreateRequest.latitude(), venueCreateRequest.longitude());
 		Venue venue = VenueMapper.INSTANCE.toVenue(venueCreateRequest, location, thumbnailImage.getUrl());
 
 		addVenueImages(venue, imageIds);
