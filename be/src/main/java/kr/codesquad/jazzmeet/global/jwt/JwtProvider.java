@@ -13,6 +13,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import kr.codesquad.jazzmeet.global.error.CustomException;
 import kr.codesquad.jazzmeet.global.error.statuscode.ErrorCode;
+import kr.codesquad.jazzmeet.global.util.RedisUtil;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -20,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 public class JwtProvider {
 
 	private final JwtProperties jwtProperties;
+	private final RedisUtil redisUtil;
 
 	public Jwt createJwt(Map<String, Object> claims) {
 		String accessToken = createToken(claims, getExpireDateAccessToken());
@@ -62,5 +64,16 @@ public class JwtProvider {
 			throw new CustomException(ErrorCode.from(e));
 		}
 
+	}
+
+	public Long getExpiration(String accessToken) {
+		Claims claims = validateAndGetClaims(accessToken);
+		return claims.getExpiration().getTime();
+	}
+
+	public void validateBlackList(String token) {
+		if(redisUtil.hasKeyBlackList(token)){
+			throw new CustomException(ErrorCode.EXIST_LOGOUT_USER);
+		}
 	}
 }
