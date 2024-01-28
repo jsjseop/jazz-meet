@@ -92,10 +92,10 @@ public class S3ImageHandler {
 
 	public List<String> deleteImages(List<String> imageUrls) {
 		try {
-			String[] urls = imageUrls.stream()
+			String[] keys = imageUrls.stream()
 				.map(url -> IMAGE_DIRECTORY + url.split("/")[FILE_NAME_SEPARATE_INDEX])
 				.toArray(String[]::new);
-			DeleteObjectsRequest deleteObjectsRequest = new DeleteObjectsRequest(bucket).withKeys(urls);
+			DeleteObjectsRequest deleteObjectsRequest = new DeleteObjectsRequest(bucket).withKeys(keys);
 
 			amazonS3Client.deleteObjects(deleteObjectsRequest);
 		} catch (Exception e) {

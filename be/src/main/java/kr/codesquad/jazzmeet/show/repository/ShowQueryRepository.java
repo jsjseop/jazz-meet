@@ -1,10 +1,12 @@
 package kr.codesquad.jazzmeet.show.repository;
 
 import static com.querydsl.core.group.GroupBy.*;
+import static kr.codesquad.jazzmeet.image.entity.QImage.*;
 import static kr.codesquad.jazzmeet.show.entity.QShow.*;
 import static kr.codesquad.jazzmeet.venue.entity.QVenue.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
@@ -19,6 +21,7 @@ import com.querydsl.core.types.dsl.StringTemplate;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
+import kr.codesquad.jazzmeet.show.dto.response.UpcomingShowResponse;
 import kr.codesquad.jazzmeet.show.vo.ShowSummary;
 import kr.codesquad.jazzmeet.show.vo.ShowSummaryWithVenue;
 import kr.codesquad.jazzmeet.show.vo.ShowWithVenue;
@@ -119,5 +122,24 @@ public class ShowQueryRepository {
 			return null;
 		}
 		return show.teamName.contains(word).or(show.venue.name.contains(word));
+	}
+
+	public List<UpcomingShowResponse> getUpcomingShows(LocalDateTime nowTime) {
+		return query.select(
+			Projections.constructor(UpcomingShowResponse.class,
+				show.venue.id,
+				venue.name,
+				show.id,
+				image.url,
+				show.teamName,
+				show.startTime,
+				show.endTime)
+		).from(show)
+			.leftJoin(show.poster, image)
+			.leftJoin(show.venue, venue)
+			.where(show.endTime.goe(nowTime))
+			.orderBy(show.startTime.asc())
+			.limit(10)
+			.fetch();
 	}
 }

@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 public record UpcomingShowResponse(
 	Long venueId,
+	String venueName,
 	Long showId,
 	String posterUrl,
 	String teamName,
