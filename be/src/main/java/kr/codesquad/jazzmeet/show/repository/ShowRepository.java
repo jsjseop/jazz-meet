@@ -1,7 +1,6 @@
 package kr.codesquad.jazzmeet.show.repository;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,10 +14,7 @@ import kr.codesquad.jazzmeet.show.entity.Show;
 @Repository
 public interface ShowRepository extends JpaRepository<Show, Long> {
 
-	List<Show> findTop10BystartTimeGreaterThanOrEndTimeGreaterThanOrderByStartTime(LocalDateTime BeforeTime,
-		LocalDateTime upcomingTime);
-
-	@Query("select s from Show s where s.venue.id = :venueId and FUNCTION('DATE', s.startTime) = :date")
+	@Query("select s from Show s join fetch s.poster where s.venue.id = :venueId and FUNCTION('DATE', s.startTime) = :date")
 	List<Show> findByVenueIdAndDate(@Param("venueId") Long venueId, @Param("date") LocalDate date);
 
 	@Query("select s from Show s join fetch s.venue join fetch s.poster where s.id = :showId")
