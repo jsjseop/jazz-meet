@@ -186,9 +186,9 @@ public class WebCrawler {
 			return true;
 		}
 
-		Month month = TextParser.getMonth(articleText);
-		Integer dayOfMonth = TextParser.getDayOfMonth(articleText);
-		LocalDate showDate = CustomLocalDate.of(month, dayOfMonth);
+		boolean isStartShow = true; // 시작 공연 파싱
+		String showDateText = TextParser.parseDate(articleText, isStartShow);
+		LocalDate showDate = CustomLocalDate.of(showDateText);
 
 		return showDate.isAfter(latestShowDate);
 	}

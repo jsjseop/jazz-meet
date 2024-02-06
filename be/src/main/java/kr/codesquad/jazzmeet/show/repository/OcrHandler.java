@@ -12,7 +12,6 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -178,10 +177,10 @@ public class OcrHandler {
 	}
 
 	private LocalDate makeShowStartLocalDate(String showStartEndDateText) {
-		Month month = TextParser.getMonth(showStartEndDateText);
-		Integer dayOfMonth = TextParser.getDayOfMonth(showStartEndDateText);
+		boolean isStartShow = true; // 시작 공연 파싱
+		String showDateText = TextParser.parseDate(showStartEndDateText, isStartShow);
 
-		return CustomLocalDate.of(month, dayOfMonth);
+		return CustomLocalDate.of(showDateText);
 	}
 
 	private List<RegisterShowRequest> makeRegisterShowRequest(LocalDate firstShowDate, String teams,
