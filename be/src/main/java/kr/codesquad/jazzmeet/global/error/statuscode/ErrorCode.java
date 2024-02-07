@@ -30,7 +30,8 @@ public enum ErrorCode implements StatusCode {
 	INVALID_TOKEN(HttpStatus.BAD_REQUEST, "잘못된 토큰입니다."),
 	UNAUTHORIZED_ACCESS(HttpStatus.UNAUTHORIZED, "권한이 없습니다."),
 	TOKEN_MISSING(HttpStatus.BAD_REQUEST, "토큰이 누락되었습니다."),
-	INVALID_TOKEN_FORMAT(HttpStatus.BAD_REQUEST, "토큰 헤더의 형식이 잘못되었습니다.");
+	INVALID_TOKEN_FORMAT(HttpStatus.BAD_REQUEST, "토큰 헤더의 형식이 잘못되었습니다."),
+	EXIST_LOGOUT_USER(HttpStatus.BAD_REQUEST, "이미 로그아웃한 유저입니다.");
 
 	private final HttpStatus httpStatus;
 	private final String message;

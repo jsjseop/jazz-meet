@@ -17,6 +17,7 @@ import kr.codesquad.jazzmeet.global.error.statuscode.AdminErrorCode;
 import kr.codesquad.jazzmeet.global.jwt.Jwt;
 import kr.codesquad.jazzmeet.global.jwt.JwtProvider;
 import kr.codesquad.jazzmeet.global.util.PasswordEncoder;
+import kr.codesquad.jazzmeet.global.util.RedisUtil;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -29,6 +30,7 @@ public class AdminService {
 
 	private final AdminRepository adminRepository;
 	private final JwtProvider jwtProvider;
+	private final RedisUtil redisUtil;
 
 	@Transactional
 	public Admin signUp(Admin rootAdmin, SignUpAdminRequest signUpAdminRequest) {
@@ -88,7 +90,10 @@ public class AdminService {
 	}
 
 	@Transactional
-	public void logout(Admin admin) {
+	public void logout(Admin admin, String accessToken) {
 		adminRepository.deleteRefreshTokenById(admin.getId());
+
+		Long expiration = jwtProvider.getExpiration(accessToken);
+		redisUtil.setBlackList(accessToken, "accessToken", expiration);
 	}
 }

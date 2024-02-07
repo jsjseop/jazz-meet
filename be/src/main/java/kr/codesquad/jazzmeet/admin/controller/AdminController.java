@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,6 +21,7 @@ import kr.codesquad.jazzmeet.global.jwt.Jwt;
 import kr.codesquad.jazzmeet.global.jwt.JwtProperties;
 import kr.codesquad.jazzmeet.global.permission.AdminAuth;
 import kr.codesquad.jazzmeet.global.permission.Permission;
+import kr.codesquad.jazzmeet.global.util.PasswordEncoder;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -82,8 +84,8 @@ public class AdminController {
 	 */
 	@Permission
 	@PostMapping("/api/admins/logout")
-	public ResponseEntity<Void> logout(@AdminAuth Admin admin) {
-		adminService.logout(admin);
+	public ResponseEntity<Void> logout(@AdminAuth Admin admin, @RequestAttribute String accessToken) {
+		adminService.logout(admin, accessToken);
 		return ResponseEntity.ok().build();
 	}
 

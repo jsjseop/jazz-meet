@@ -35,8 +35,8 @@ class JwtProviderTest {
 	    //when
 		Jwt jwt = jwtProvider.createJwt(claims);
 
-		Claims accessToken = jwtProvider.getClaims(jwt.getAccessToken());
-		Claims refreshToken = jwtProvider.getClaims(jwt.getRefreshToken());
+		Claims accessToken = jwtProvider.validateAndGetClaims(jwt.getAccessToken());
+		Claims refreshToken = jwtProvider.validateAndGetClaims(jwt.getRefreshToken());
 
 		//then
 		assertThat(accessToken.get("adminId")).isEqualTo(1);
@@ -60,7 +60,7 @@ class JwtProviderTest {
 			.compact();
 
 		// then
-		assertThatThrownBy(() -> jwtProvider.getClaims(invalidToken))
+		assertThatThrownBy(() -> jwtProvider.validateAndGetClaims(invalidToken))
 			.isInstanceOf(SignatureException.class);
 	}
 
@@ -72,7 +72,7 @@ class JwtProviderTest {
 		String expiredToken = jwtProvider.createToken(expiredClaims, new Date(System.currentTimeMillis() - 1000)); // 과거 시간
 
 		// then
-		assertThatThrownBy(() -> jwtProvider.getClaims(expiredToken))
+		assertThatThrownBy(() -> jwtProvider.validateAndGetClaims(expiredToken))
 			.isInstanceOf(ExpiredJwtException.class);
 	}
 
