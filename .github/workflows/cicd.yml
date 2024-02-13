@@ -62,7 +62,8 @@ jobs:
       # docker build & push to devleop
       - name: Docker build & push to release
         if: contains(github.ref, 'release') ||
-          contains(github.ref, 'infra/#11-cicd')
+          contains(github.ref, 'infra/#11-cicd') ||
+          contains(github.ref, 'fix/be/#316-redis_로그아웃')
         run: |
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
           docker build -f Dockerfile -t ${{ secrets.DOCKER_USERNAME }}/jazz_meet_app_release .
@@ -83,7 +84,8 @@ jobs:
       - name: make ".env" file
         if: |
           contains(github.ref, 'release') ||
-          contains(github.ref, 'infra/#8-cicd')
+          contains(github.ref, 'infra/#8-cicd') ||
+          contains(github.ref, 'fix/be/#316-redis_로그아웃')
         run: |
           touch ./fe/user/.env
           echo "${{ secrets.DOT_ENV }}" > ./fe/user/.env
@@ -112,7 +114,8 @@ jobs:
       - name: copy nginx.conf file via ssh password
         uses: appleboy/scp-action@master
         if: contains(github.ref, 'release') ||
-          contains(github.ref, 'infra/#11-cicd')
+          contains(github.ref, 'infra/#11-cicd') ||
+          contains(github.ref, 'fix/be/#316-redis_로그아웃')
         with:
           host: ${{ secrets.HOST }}
           username: ubuntu
@@ -138,7 +141,8 @@ jobs:
       - name: Deploy to release
         uses: appleboy/ssh-action@master
         if: contains(github.ref, 'release') ||
-          contains(github.ref, 'infra/#11-cicd')
+          contains(github.ref, 'infra/#11-cicd') ||
+          contains(github.ref, 'fix/be/#316-redis_로그아웃')
         with:
           host: ${{ secrets.HOST }}  # EC2 인스턴스 퍼블릭 DNS
           username: ubuntu
