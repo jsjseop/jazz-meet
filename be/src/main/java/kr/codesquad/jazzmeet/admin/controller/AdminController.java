@@ -50,8 +50,7 @@ public class AdminController {
 	 */
 	@PostMapping("/api/admins/login")
 	public ResponseEntity<LoginAdminResponse> login(@RequestBody @Valid LoginAdminRequest loginAdminRequest) {
-		// Todo : refreshtoken이 재발급된 accesstoken인지 확인하는 절차 필요
-
+		log.info("login 진입 성공");
 		Jwt jwt = adminService.login(loginAdminRequest);
 
 		return ResponseEntity.ok()
