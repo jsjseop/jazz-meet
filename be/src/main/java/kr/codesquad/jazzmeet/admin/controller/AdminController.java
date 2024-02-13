@@ -23,7 +23,9 @@ import kr.codesquad.jazzmeet.global.permission.AdminAuth;
 import kr.codesquad.jazzmeet.global.permission.Permission;
 import kr.codesquad.jazzmeet.global.util.PasswordEncoder;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RequiredArgsConstructor
 @RestController
 public class AdminController {
@@ -85,6 +87,9 @@ public class AdminController {
 	@Permission
 	@PostMapping("/api/admins/logout")
 	public ResponseEntity<Void> logout(@AdminAuth Admin admin, @RequestAttribute String accessToken) {
+		log.info("logout controller 진입 성공");
+		log.info("admin : "+admin.getLoginId());
+		log.info("access token : "+ accessToken);
 		adminService.logout(admin, accessToken);
 		return ResponseEntity.ok().build();
 	}
