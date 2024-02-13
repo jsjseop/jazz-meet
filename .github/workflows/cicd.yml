@@ -9,7 +9,7 @@ name: ci-cd
 
 on:
   push:
-    branches: [ infra/#11-cicd, release ]
+    branches: [ infra/#11-cicd, release, fix/be/#316-redis_로그아웃 ]
 
 permissions:
   contents: read
