@@ -50,7 +50,6 @@ public class AdminController {
 	 */
 	@PostMapping("/api/admins/login")
 	public ResponseEntity<LoginAdminResponse> login(@RequestBody @Valid LoginAdminRequest loginAdminRequest) {
-		log.info("login 진입 성공");
 		Jwt jwt = adminService.login(loginAdminRequest);
 
 		return ResponseEntity.ok()
@@ -86,9 +85,6 @@ public class AdminController {
 	@Permission
 	@PostMapping("/api/admins/logout")
 	public ResponseEntity<Void> logout(@AdminAuth Admin admin, @RequestAttribute String accessToken) {
-		log.info("logout controller 진입 성공");
-		log.info("admin : "+admin.getLoginId());
-		log.info("access token : "+ accessToken);
 		adminService.logout(admin, accessToken);
 		return ResponseEntity.ok().build();
 	}
