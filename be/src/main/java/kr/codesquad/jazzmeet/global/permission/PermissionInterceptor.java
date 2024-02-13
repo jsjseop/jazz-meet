@@ -47,7 +47,6 @@ public class PermissionInterceptor implements HandlerInterceptor {
 
 		// Blacklist 존재하는지 확인
 		jwtProvider.validateBlackList(token);
-		log.info("blacklist 아님");
 
 		Claims claims = jwtProvider.validateAndGetClaims(token);
 		String role = String.valueOf(claims.get("role"));
