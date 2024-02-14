@@ -55,7 +55,7 @@ public class ShowService {
 	private static final String FIRST_DAY_OF_MONTH = "01";
 
 	public List<UpcomingShowResponse> getUpcomingShows(LocalDateTime nowTime) {
-		// 10개 제한, 현재 시간 < 공연 시작 시간 , 현재 시간 < 공연 끝나는 시간, 공연 시작 시간 순으로 오름차순 정렬
+		// 10개 제한, 현재 시간 < 공연 끝나는 시간, 공연 시작 시간 순으로 오름차순 정렬
 		return showQueryRepository.getUpcomingShows(nowTime);
 	}
 

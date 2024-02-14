@@ -12,7 +12,6 @@ import kr.codesquad.jazzmeet.show.dto.request.RegisterShowRequest;
 import kr.codesquad.jazzmeet.show.dto.response.ShowByDateAndVenueResponse;
 import kr.codesquad.jazzmeet.show.dto.response.ShowDetailResponse;
 import kr.codesquad.jazzmeet.show.dto.response.ShowResponse;
-import kr.codesquad.jazzmeet.show.dto.response.UpcomingShowResponse;
 import kr.codesquad.jazzmeet.show.entity.Show;
 import kr.codesquad.jazzmeet.show.vo.ShowSummaryWithVenue;
 import kr.codesquad.jazzmeet.venue.entity.Venue;
@@ -20,11 +19,6 @@ import kr.codesquad.jazzmeet.venue.entity.Venue;
 @Mapper
 public interface ShowMapper {
 	ShowMapper INSTANCE = Mappers.getMapper(ShowMapper.class);
-
-	@Mapping(target = "venueId", source = "venue.id")
-	@Mapping(target = "showId", source = "id")
-	@Mapping(target = "posterUrl", source = "poster.url")
-	UpcomingShowResponse toUpcomingShowResponse(Show show);
 
 	@Mapping(target = "posterUrl", source = "poster.url")
 	ShowByDateAndVenueResponse toShowByDateResponse(Show show);

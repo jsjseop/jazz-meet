@@ -1,6 +1,6 @@
 package kr.codesquad.jazzmeet.venue.vo;
 
-import java.util.List;
+import java.util.Set;
 
 import org.locationtech.jts.geom.Point;
 
@@ -18,14 +18,14 @@ public class VenueDetail {
 	private String phoneNumber;
 	private String description;
 	private Point location;
-	private List<VenueDetailImage> images;
-	private List<VenueDetailLink> links;
-	private List<VenueDetailVenueHour> venueHours;
+	private Set<VenueDetailImage> images;
+	private Set<VenueDetailLink> links;
+	private Set<VenueDetailVenueHour> venueHours;
 
 	@Builder
 	public VenueDetail(Long id, String name, String roadNameAddress, String lotNumberAddress, String phoneNumber,
-		String description, Point location, List<VenueDetailImage> images, List<VenueDetailLink> links,
-		List<VenueDetailVenueHour> venueHours) {
+		String description, Point location, Set<VenueDetailImage> images, Set<VenueDetailLink> links,
+		Set<VenueDetailVenueHour> venueHours) {
 		this.id = id;
 		this.name = name;
 		this.roadNameAddress = roadNameAddress;
