@@ -19,7 +19,9 @@ import kr.codesquad.jazzmeet.global.jwt.JwtProvider;
 import kr.codesquad.jazzmeet.global.util.PasswordEncoder;
 import kr.codesquad.jazzmeet.global.util.RedisUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -92,7 +94,6 @@ public class AdminService {
 	@Transactional
 	public void logout(Admin admin, String accessToken) {
 		adminRepository.deleteRefreshTokenById(admin.getId());
-
 		Long expiration = jwtProvider.getExpiration(accessToken);
 		redisUtil.setBlackList(accessToken, "accessToken", expiration);
 	}

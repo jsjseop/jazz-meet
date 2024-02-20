@@ -13,7 +13,9 @@ import kr.codesquad.jazzmeet.global.error.CustomException;
 import kr.codesquad.jazzmeet.global.error.statuscode.ErrorCode;
 import kr.codesquad.jazzmeet.global.jwt.JwtProvider;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class PermissionInterceptor implements HandlerInterceptor {

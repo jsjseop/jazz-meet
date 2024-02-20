@@ -23,7 +23,9 @@ import kr.codesquad.jazzmeet.global.permission.AdminAuth;
 import kr.codesquad.jazzmeet.global.permission.Permission;
 import kr.codesquad.jazzmeet.global.util.PasswordEncoder;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RequiredArgsConstructor
 @RestController
 public class AdminController {
@@ -48,8 +50,6 @@ public class AdminController {
 	 */
 	@PostMapping("/api/admins/login")
 	public ResponseEntity<LoginAdminResponse> login(@RequestBody @Valid LoginAdminRequest loginAdminRequest) {
-		// Todo : refreshtoken이 재발급된 accesstoken인지 확인하는 절차 필요
-
 		Jwt jwt = adminService.login(loginAdminRequest);
 
 		return ResponseEntity.ok()
