@@ -2,7 +2,7 @@ package kr.codesquad.jazzmeet.show.repository;
 
 import java.time.Duration;
 import java.time.LocalDate;
-import java.time.Month;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -10,6 +10,7 @@ import java.util.List;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -31,6 +32,7 @@ public class WebCrawler {
 	private static final String NEXT_ARTICLE_BUTTON_CLASS_NAME = "_abl-";
 	public static final String NEXT_PHOTO_BUTTON_CLASS_NAME = "_9zm2";
 	public static final int MAX_FIXED_ARTICLE_NUMBER = 3;
+	public static final int DEFAULT_SHOW_DAY_COUNT = 5;
 
 	@Value("${instagram.id}")
 	private String instagramId;
@@ -123,17 +125,21 @@ public class WebCrawler {
 				}
 
 				// 오른쪽 화살표로 img 탐색.
-				// TODO: 1월 둘째주부터 변경 2번째 -> 3번째로 변경.
-				// entry55인 경우 3번째 img가 주간 공연 스케줄, 4번째부터 공연 poster가 나열된다.
+				// 이벤트가 존재하는 주(week)는, 공연 날짜가 추가되어 2번째 img에 스케줄표가 위치해 있다.
 				driver.findElements(By.className(NEXT_PHOTO_BUTTON_CLASS_NAME))
 					.get(0)
 					.click();
-				driver.findElements(By.className(NEXT_PHOTO_BUTTON_CLASS_NAME))
-					.get(0)
-					.click();
+				// 이벤트가 없는 기본(default) 주(week)는, 3번째 img에 스케줄표가 위치해 있다.
+				// 공연 일(day)수가 기본(default) 일수와 동일한지 확인.
+				boolean isEqualsToDefaultShowDayCount = isEqualsToDefaultShowDayCount(articleText);
+				if (isEqualsToDefaultShowDayCount) {
+					driver.findElements(By.className(NEXT_PHOTO_BUTTON_CLASS_NAME))
+						.get(0)
+						.click();
+				}
 				Thread.sleep(2000); // 대기 시간
 
-				// 1,2,3번 이미지는 "_aagu _aato"(3번은 스케줄), 4,5번 이미지는 "_aagu _aa20 _aato", 6,7번 이미지는 ...
+				// entry55(default Schedule)인 경우 3번째 img가 주간 공연 스케줄, 4번째부터 공연 poster가 나열된다.
 				WebElement img = driver.findElements(
 					By.cssSelector("div._aagu._aato > div > img")).get(1); // 이미지 선택
 				// 포스터 이미지
@@ -141,6 +147,12 @@ public class WebCrawler {
 				// 클릭해서 이동 1, 2
 				String imageUrl = img.getAttribute("src");
 				log.debug("Instagram Image URL: {}", imageUrl);
+				if (!isEqualsToDefaultShowDayCount) {
+					// 오른쪽 화살표를 클릭해 다음 이미지로 넘어간다.
+					driver.findElements(By.className(NEXT_PHOTO_BUTTON_CLASS_NAME))
+						.get(0)
+						.click();
+				}
 
 				List<String> posterImgUrls = new ArrayList<>();
 				while (true) {
@@ -148,7 +160,7 @@ public class WebCrawler {
 							By.className(NEXT_ARTICLE_BUTTON_CLASS_NAME))
 						.isEmpty();
 					List<WebElement> elements = driver.findElements(
-						By.cssSelector("div._aagu._aa20._aato > div._aagv > img"));// 이미지 선택
+						By.cssSelector("div._aagu._aato > div._aagv > img"));// 이미지 선택
 					int elementLastIndex = 0;
 					if (!elements.isEmpty()) {
 						elementLastIndex = elements.size() - 1;
@@ -181,14 +193,25 @@ public class WebCrawler {
 		return imageUrls;
 	}
 
+	private boolean isEqualsToDefaultShowDayCount(String articleText) {
+		// articleText = "02.07 - 02.12 아티스트 라인업입니다!"
+		String startDateText = TextParser.parseDate(articleText, true);
+		LocalDate startDate = CustomLocalDate.of(startDateText);
+		String endDateText = TextParser.parseDate(articleText, false);
+		LocalDate endDate = CustomLocalDate.of(endDateText);
+		long daysDiff = ChronoUnit.DAYS.between(startDate, endDate) + 1;
+
+		return DEFAULT_SHOW_DAY_COUNT == daysDiff;
+	}
+
 	private boolean isNewShowDate(String articleText, LocalDate latestShowDate) {
 		if (latestShowDate == null) { // 저장된 공연이 없으므로 크롤링한 공연은 무조건 최신이다.
 			return true;
 		}
 
-		Month month = TextParser.getMonth(articleText);
-		Integer dayOfMonth = TextParser.getDayOfMonth(articleText);
-		LocalDate showDate = CustomLocalDate.of(month, dayOfMonth);
+		boolean isStartShow = true; // 시작 공연 파싱
+		String showDateText = TextParser.parseDate(articleText, isStartShow);
+		LocalDate showDate = CustomLocalDate.of(showDateText);
 
 		return showDate.isAfter(latestShowDate);
 	}

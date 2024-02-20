@@ -1,24 +1,36 @@
 package kr.codesquad.jazzmeet.global.util;
 
-import java.time.Month;
-import java.util.Arrays;
 import java.util.List;
 
 public class TextParser {
 
-	public static Month getMonth(String text) {
-		return Month.of(parse(text).get(0));
+	public static int getMonth(String text) {
+		// text = "12.2"
+		return Integer.parseInt(text.split("\\.")[0]);
 	}
 
-	public static Integer getDayOfMonth(String text) {
-		return parse(text).get(1);
+	public static int getDayOfMonth(String text) {
+		// text = "12.2"
+		return Integer.parseInt(text.split("\\.")[1]);
 	}
 
-	private static List<Integer> parse(String text) {
-		// text = "12.27 - 12.31"
+	public static String parseDate(String text, boolean isStartShow) {
+		int index = 0;
+		List<String> parsedDate = parseDate(text);
+		if (!isStartShow) {
+			index = 1;
+		}
+
+		return parsedDate.get(index);
+	}
+
+	private static List<String> parseDate(String text) {
+		// text = "12.27 - 12.31 아티스트 라인업입니다!"
+		int index = 0;
 		String[] showStartEndDate = text.replace(" ", "").split("-");
+		showStartEndDate[1] = showStartEndDate[1].substring(0, 5); // 날짜 뒤의 텍스트 제거
 
-		return Arrays.stream(showStartEndDate[0].split("\\."))
-			.map(Integer::parseInt).toList();
+		// 시작 공연, 끝 공연
+		return List.of(showStartEndDate[0], showStartEndDate[1]);
 	}
 }

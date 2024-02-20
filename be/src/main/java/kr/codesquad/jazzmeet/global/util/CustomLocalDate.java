@@ -5,6 +5,14 @@ import java.time.Month;
 
 public class CustomLocalDate {
 
+	public static LocalDate of(String text) {
+		// text = "12.2"
+		Month month = Month.of(TextParser.getMonth(text));
+		int dayOfMonth = TextParser.getDayOfMonth(text);
+
+		return CustomLocalDate.of(month, dayOfMonth);
+	}
+
 	// 파싱해 온 공연 날짜 생성
 	public static LocalDate of(Month month, Integer dayOfMonth) {
 		LocalDate now = LocalDate.now();
