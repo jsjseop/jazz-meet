@@ -15,6 +15,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import kr.codesquad.jazzmeet.admin.entity.Admin;
 import kr.codesquad.jazzmeet.global.permission.AdminAuth;
+import kr.codesquad.jazzmeet.global.permission.Permission;
 import kr.codesquad.jazzmeet.inquiry.dto.request.InquiryDeleteRequest;
 import kr.codesquad.jazzmeet.inquiry.dto.request.InquirySaveRequest;
 import kr.codesquad.jazzmeet.inquiry.dto.request.answer.InquiryAnswerSaveRequest;
@@ -91,6 +92,7 @@ public class InquiryController {
 	/**
 	 * 문의 답변 등록 API
 	 */
+	@Permission
 	@PostMapping("/api/inquiries/answers")
 	public ResponseEntity<InquiryAnswerSaveResponse> saveAnswer(@RequestBody @Valid InquiryAnswerSaveRequest request) {
 		InquiryAnswerSaveResponse answer = inquiryService.saveAnswer(request);
@@ -101,6 +103,7 @@ public class InquiryController {
 	/**
 	 * 문의 답변 수정 API
 	 */
+	@Permission
 	@PutMapping("/api/inquiries/answers/{answerId}")
 	public ResponseEntity<InquiryAnswerUpdateResponse> updateAnswer(@PathVariable Long answerId,
 		@RequestBody @Valid InquiryAnswerUpdateRequest request) {
@@ -111,6 +114,7 @@ public class InquiryController {
 	/**
 	 * 문의 답변 삭제 API
 	 */
+	@Permission
 	@DeleteMapping("/api/inquiries/answers/{answerId}")
 	public ResponseEntity<Void> deleteAnswer(@PathVariable Long answerId) {
 		// TODO: 로그인 구현 시, token과 answer의 adminId가 같은지 검증 후 삭제 가능.
