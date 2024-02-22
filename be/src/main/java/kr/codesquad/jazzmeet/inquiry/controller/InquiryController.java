@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
+import kr.codesquad.jazzmeet.admin.entity.Admin;
+import kr.codesquad.jazzmeet.global.permission.AdminAuth;
 import kr.codesquad.jazzmeet.inquiry.dto.request.InquiryDeleteRequest;
 import kr.codesquad.jazzmeet.inquiry.dto.request.InquirySaveRequest;
 import kr.codesquad.jazzmeet.inquiry.dto.request.answer.InquiryAnswerSaveRequest;
@@ -66,12 +68,22 @@ public class InquiryController {
 	}
 
 	/**
-	 * 문의 글 삭제 API
+	 * 문의 글 삭제 API - 사용자가 비밀번호로 삭제
 	 */
 	@DeleteMapping("/api/inquiries/{inquiryId}")
 	public ResponseEntity<Void> delete(@PathVariable Long inquiryId,
 		@RequestBody @Valid InquiryDeleteRequest inquiryDeleteRequest) {
-		inquiryService.delete(inquiryId, inquiryDeleteRequest);
+		inquiryService.delete(inquiryId, inquiryDeleteRequest, null);
+
+		return ResponseEntity.noContent().build();
+	}
+
+	/**
+	 * 문의 글 삭제 API - 관리자가 관리자 권한으로 삭제
+	 */
+	@DeleteMapping("/api/admin/inquiries/{inquiryId}")
+	public ResponseEntity<Void> delete(@PathVariable Long inquiryId, @AdminAuth Admin admin) {
+		inquiryService.delete(inquiryId, null, admin);
 
 		return ResponseEntity.noContent().build();
 	}

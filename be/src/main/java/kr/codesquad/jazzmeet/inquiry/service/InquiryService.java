@@ -7,6 +7,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import kr.codesquad.jazzmeet.admin.entity.Admin;
 import kr.codesquad.jazzmeet.global.error.CustomException;
 import kr.codesquad.jazzmeet.global.error.statuscode.InquiryErrorCode;
 import kr.codesquad.jazzmeet.global.util.PasswordEncoder;
@@ -84,10 +85,18 @@ public class InquiryService {
 	}
 
 	@Transactional
-	public void delete(Long inquiryId, InquiryDeleteRequest request) {
+	public void delete(Long inquiryId, InquiryDeleteRequest request, Admin admin) {
 		Inquiry inquiry = findById(inquiryId);
 		inspectDeletedInquiry(inquiry.getStatus());
-		PasswordEncoder.matchesPassword(request.password(), inquiry.getPassword());
+
+		if (request == null && admin == null) {
+			throw new CustomException(InquiryErrorCode.UNAUTHORIZED);
+		}
+
+		// 비밀번호로 삭제 시
+		if (request != null && !request.password().isEmpty()) {
+			PasswordEncoder.matchesPassword(request.password(), inquiry.getPassword());
+		}
 
 		inquiry.updateStatusToDeleted();
 	}
