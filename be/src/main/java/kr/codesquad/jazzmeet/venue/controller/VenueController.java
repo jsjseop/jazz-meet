@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
+import kr.codesquad.jazzmeet.global.permission.Permission;
 import kr.codesquad.jazzmeet.venue.controller.annotation.Latitude;
 import kr.codesquad.jazzmeet.venue.controller.annotation.Longitude;
 import kr.codesquad.jazzmeet.venue.dto.request.RangeCoordinatesRequest;
@@ -142,6 +143,7 @@ public class VenueController {
 	/**
 	 * 공연장 등록 API
 	 */
+	@Permission
 	@PostMapping("/api/venues")
 	public ResponseEntity<VenueCreateResponse> createVenue(@RequestBody @Valid VenueCreateRequest venueCreateRequest) {
 		VenueCreateResponse venueCreateResponse = venueFacade.createVenue(venueCreateRequest);
@@ -152,6 +154,7 @@ public class VenueController {
 	/**
 	 * 공연장 수정 API
 	 */
+	@Permission
 	@PutMapping("/api/venues/{venueId}")
 	public ResponseEntity<VenueDetailResponse> updateVenue(@RequestBody @Valid VenueUpdateRequest venueUpdateRequest,
 		@PathVariable Long venueId) {
@@ -163,6 +166,7 @@ public class VenueController {
 	/**
 	 * 공연장 삭제 API
 	 */
+	@Permission
 	@DeleteMapping("/api/venues/{venueId}")
 	public ResponseEntity<Void> deleteVenue(@PathVariable Long venueId) {
 		venueFacade.deleteVenue(venueId);
