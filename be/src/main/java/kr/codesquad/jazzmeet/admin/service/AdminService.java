@@ -73,8 +73,7 @@ public class AdminService {
 		return jwt;
 	}
 
-	public Jwt reissue(ReissueAdminRequest reissueAdminRequest) {
-		String refreshToken = reissueAdminRequest.refreshToken();
+	public Jwt reissue(String refreshToken) {
 		jwtProvider.validateAndGetClaims(refreshToken);
 		Admin admin = getAdminByRefreshToken(refreshToken);
 
