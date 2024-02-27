@@ -5,9 +5,8 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import kr.codesquad.jazzmeet.admin.AdminMapper;
+import kr.codesquad.jazzmeet.admin.mapper.AdminMapper;
 import kr.codesquad.jazzmeet.admin.dto.request.LoginAdminRequest;
-import kr.codesquad.jazzmeet.admin.dto.request.ReissueAdminRequest;
 import kr.codesquad.jazzmeet.admin.dto.request.SignUpAdminRequest;
 import kr.codesquad.jazzmeet.admin.entity.Admin;
 import kr.codesquad.jazzmeet.admin.entity.UserRole;
