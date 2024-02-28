@@ -8,10 +8,14 @@ import org.locationtech.jts.geom.Point;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import kr.codesquad.jazzmeet.admin.entity.Admin;
 import kr.codesquad.jazzmeet.image.entity.Image;
 import kr.codesquad.jazzmeet.show.entity.Show;
 import lombok.AccessLevel;
@@ -39,7 +43,9 @@ public class Venue {
 	private String description;
 	@Column(nullable = false, columnDefinition = "point")
 	private Point location;
-	private Long adminId;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "admin_id")
+	private Admin admin;
 	@Column(length = 500)
 	private String thumbnailUrl;
 	@OneToMany(mappedBy = "venue", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -53,13 +59,14 @@ public class Venue {
 
 	@Builder
 	public Venue(String name, String roadNameAddress, String lotNumberAddress, String phoneNumber, String description,
-		Point location, String thumbnailUrl) {
+		Point location, Admin admin, String thumbnailUrl) {
 		this.name = name;
 		this.roadNameAddress = roadNameAddress;
 		this.lotNumberAddress = lotNumberAddress;
 		this.phoneNumber = phoneNumber;
 		this.description = description;
 		this.location = location;
+		this.admin = admin;
 		this.thumbnailUrl = thumbnailUrl;
 	}
 

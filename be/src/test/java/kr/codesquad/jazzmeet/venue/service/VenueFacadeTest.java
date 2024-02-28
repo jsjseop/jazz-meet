@@ -11,6 +11,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import kr.codesquad.jazzmeet.IntegrationTestSupport;
+import kr.codesquad.jazzmeet.admin.entity.Admin;
+import kr.codesquad.jazzmeet.admin.entity.UserRole;
+import kr.codesquad.jazzmeet.admin.repository.AdminRepository;
+import kr.codesquad.jazzmeet.fixture.AdminFixture;
 import kr.codesquad.jazzmeet.fixture.ImageFixture;
 import kr.codesquad.jazzmeet.fixture.VenueFixture;
 import kr.codesquad.jazzmeet.image.entity.Image;
@@ -42,10 +46,14 @@ class VenueFacadeTest extends IntegrationTestSupport {
 	@Autowired
 	VenueRepository venueRepository;
 
+	@Autowired
+	AdminRepository adminRepository;
+
 	@AfterEach
 	void dbClean() {
 		imageRepository.deleteAllInBatch();
 		linkTypeRepository.deleteAllInBatch();
+		adminRepository.deleteAllInBatch();
 	}
 
 	@Test
@@ -80,8 +88,11 @@ class VenueFacadeTest extends IntegrationTestSupport {
 			.longitude(127.0249505634053)
 			.build();
 
+		Admin admin = AdminFixture.createAdmin("admin1", "1234", UserRole.ROOT_ADMIN);
+		adminRepository.save(admin);
+
 		// when
-		VenueCreateResponse response = venueFacade.createVenue(venueCreateRequest);
+		VenueCreateResponse response = venueFacade.createVenue(venueCreateRequest, admin);
 
 		// then
 		assertThat(response).extracting("id").isNotNull();
@@ -121,8 +132,11 @@ class VenueFacadeTest extends IntegrationTestSupport {
 			.longitude(127.0249505634053)
 			.build();
 
+		Admin admin = AdminFixture.createAdmin("admin1", "1234", UserRole.ROOT_ADMIN);
+		adminRepository.save(admin);
+
 		// 공연장 생성
-		Long venueId = venueFacade.createVenue(venueCreateRequest).id();
+		Long venueId = venueFacade.createVenue(venueCreateRequest, admin).id();
 
 		Image image3 = ImageFixture.createImage("url3");
 		Image image4 = ImageFixture.createImage("url4");

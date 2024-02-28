@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
+import kr.codesquad.jazzmeet.admin.entity.Admin;
+import kr.codesquad.jazzmeet.global.permission.AdminAuth;
 import kr.codesquad.jazzmeet.global.permission.Permission;
 import kr.codesquad.jazzmeet.venue.controller.annotation.Latitude;
 import kr.codesquad.jazzmeet.venue.controller.annotation.Longitude;
@@ -145,8 +147,8 @@ public class VenueController {
 	 */
 	@Permission
 	@PostMapping("/api/venues")
-	public ResponseEntity<VenueCreateResponse> createVenue(@RequestBody @Valid VenueCreateRequest venueCreateRequest) {
-		VenueCreateResponse venueCreateResponse = venueFacade.createVenue(venueCreateRequest);
+	public ResponseEntity<VenueCreateResponse> createVenue(@AdminAuth Admin admin, @RequestBody @Valid VenueCreateRequest venueCreateRequest) {
+		VenueCreateResponse venueCreateResponse = venueFacade.createVenue(venueCreateRequest, admin);
 
 		return ResponseEntity.status(HttpStatus.CREATED).body(venueCreateResponse);
 	}

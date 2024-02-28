@@ -7,6 +7,7 @@ import org.locationtech.jts.geom.Point;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import kr.codesquad.jazzmeet.admin.entity.Admin;
 import kr.codesquad.jazzmeet.image.entity.Image;
 import kr.codesquad.jazzmeet.image.service.ImageService;
 import kr.codesquad.jazzmeet.venue.dto.request.VenueCreateRequest;
@@ -37,12 +38,12 @@ public class VenueFacade {
 	private final LinkTypeService linkTypeService;
 
 	@Transactional
-	public VenueCreateResponse createVenue(VenueCreateRequest venueCreateRequest) {
+	public VenueCreateResponse createVenue(VenueCreateRequest venueCreateRequest, Admin admin) {
 		List<Long> imageIds = venueCreateRequest.imageIds();
 		Image thumbnailImage = imageService.findById(imageIds.get(THUMBNAIL_IMAGE_INDEX));
 
 		Point location = LocationUtil.createPoint(venueCreateRequest.latitude(), venueCreateRequest.longitude());
-		Venue venue = VenueMapper.INSTANCE.toVenue(venueCreateRequest, location, thumbnailImage.getUrl());
+		Venue venue = VenueMapper.INSTANCE.toVenue(venueCreateRequest, location, admin, thumbnailImage.getUrl());
 
 		addVenueImages(venue, imageIds);
 
