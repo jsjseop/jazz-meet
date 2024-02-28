@@ -66,7 +66,7 @@ public class AdminController {
 			// .secure(true) // 개발 완료 시 주석 해제하여 https 환경에서만 접근 가능하도록 변경하기
 			.httpOnly(false)
 			.sameSite("None")
-			.domain("https://www.jazzmeet-admin.site")
+			.domain("www.jazzmeet-admin.site")
 			.build();
 	}
 
