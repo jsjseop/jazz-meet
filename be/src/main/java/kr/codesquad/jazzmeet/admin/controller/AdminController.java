@@ -63,7 +63,7 @@ public class AdminController {
 		return ResponseCookie.from("refreshToken", jwt.getRefreshToken())
 			.maxAge(jwtProperties.getRefreshTokenExpiration())
 			.path("/")
-			.secure(true)
+			// .secure(true) // 개발 완료 시 주석 해제하여 https 환경에서만 접근 가능하도록 변경하기
 			.httpOnly(true)
 			.build();
 	}
@@ -74,6 +74,7 @@ public class AdminController {
 	@PostMapping("/api/admins/reissue")
 	public ResponseEntity<LoginAdminResponse> reissueToken(HttpServletRequest request) {
 
+		log.warn("cookies: {}", request.getCookies());
 		String refreshToken = extractRefreshToken(request.getCookies());
 
 		Jwt jwt = adminService.reissue(refreshToken);
