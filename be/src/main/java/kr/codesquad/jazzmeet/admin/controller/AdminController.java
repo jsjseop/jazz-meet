@@ -64,7 +64,7 @@ public class AdminController {
 			.maxAge(jwtProperties.getRefreshTokenExpiration())
 			.path("/")
 			// .secure(true) // 개발 완료 시 주석 해제하여 https 환경에서만 접근 가능하도록 변경하기
-			.httpOnly(true)
+			.httpOnly(false)
 			.sameSite("None")
 			.build();
 	}
