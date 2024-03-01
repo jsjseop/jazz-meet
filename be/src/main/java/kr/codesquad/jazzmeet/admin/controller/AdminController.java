@@ -65,6 +65,7 @@ public class AdminController {
 			.path("/")
 			.secure(true)
 			.httpOnly(false)
+			.domain(".jazzmeet.site")
 			.sameSite("None")
 			.build();
 	}
