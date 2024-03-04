@@ -1,4 +1,4 @@
-package kr.codesquad.jazzmeet.admin;
+package kr.codesquad.jazzmeet.admin.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

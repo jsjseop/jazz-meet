@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
+import kr.codesquad.jazzmeet.global.permission.Permission;
 import kr.codesquad.jazzmeet.show.dto.request.RegisterShowRequest;
 import kr.codesquad.jazzmeet.show.dto.response.ExistShowCalendarResponse;
 import kr.codesquad.jazzmeet.show.dto.response.RegisterShowResponse;
@@ -90,6 +91,7 @@ public class ShowController {
 	/**
 	 * 공연 목록 조회 API
 	 */
+	@Permission
 	@GetMapping("/api/shows")
 	public ResponseEntity<ShowResponse> getShows(@RequestParam(required = false) String word,
 		@RequestParam(defaultValue = "1") @Min(value = 1) int page) {
@@ -101,6 +103,7 @@ public class ShowController {
 	/**
 	 * 공연 상세 조회 API
 	 */
+	@Permission
 	@GetMapping("/api/shows/{showId}")
 	public ResponseEntity<ShowDetailResponse> getShowDetail(@PathVariable Long showId) {
 		ShowDetailResponse showDetailResponse = showService.getShowDetail(showId);
@@ -111,6 +114,7 @@ public class ShowController {
 	/**
 	 * 공연 등록 API
 	 */
+	@Permission
 	@PostMapping("/api/shows/{venueId}")
 	public ResponseEntity<RegisterShowResponse> registerShow(@PathVariable Long venueId,
 		@Valid @RequestBody RegisterShowRequest registerShowRequest) {
@@ -122,6 +126,7 @@ public class ShowController {
 	/**
 	 * 공연 수정 API
 	 */
+	@Permission
 	@PutMapping("/api/shows/{showId}")
 	public ResponseEntity<ShowDetailResponse> updateShow(@PathVariable Long showId,
 		@Valid @RequestBody RegisterShowRequest request) {
@@ -133,6 +138,7 @@ public class ShowController {
 	/**
 	 * 공연 삭제 API
 	 */
+	@Permission
 	@DeleteMapping("/api/shows/{showId}")
 	public ResponseEntity<Void> deleteShow(@PathVariable Long showId) {
 		showService.deleteShow(showId);
