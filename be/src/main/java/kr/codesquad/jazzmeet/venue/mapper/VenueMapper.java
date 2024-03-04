@@ -9,6 +9,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 import org.springframework.data.domain.Page;
 
+import kr.codesquad.jazzmeet.admin.entity.Admin;
 import kr.codesquad.jazzmeet.venue.dto.ShowInfo;
 import kr.codesquad.jazzmeet.venue.dto.VenueInfo;
 import kr.codesquad.jazzmeet.venue.dto.VenueSearch;
@@ -90,5 +91,5 @@ public interface VenueMapper {
 	VenueDetail toVenueDetail(Venue venue,
 		List<VenueDetailImage> images, List<VenueDetailLink> links, List<VenueDetailVenueHour> venueHours);
 
-	Venue toVenue(VenueCreateRequest venueCreateRequest, Point location, String thumbnailUrl);
+	Venue toVenue(VenueCreateRequest venueCreateRequest, Point location, Admin admin, String thumbnailUrl);
 }

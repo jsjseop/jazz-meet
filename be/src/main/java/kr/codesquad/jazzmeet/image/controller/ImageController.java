@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import kr.codesquad.jazzmeet.global.permission.Permission;
 import kr.codesquad.jazzmeet.image.dto.response.ImageCreateResponse;
 import kr.codesquad.jazzmeet.image.entity.ImageStatus;
 import kr.codesquad.jazzmeet.image.service.CloudService;
@@ -27,6 +28,7 @@ public class ImageController {
 	/**
 	 * 이미지 업로드 API
 	 */
+	@Permission
 	@PostMapping("/api/images")
 	public ResponseEntity<ImageCreateResponse> uploadImages(@RequestPart("image") List<MultipartFile> multipartFiles) {
 		List<String> imageUrls = cloudService.uploadImages(multipartFiles);
@@ -39,6 +41,7 @@ public class ImageController {
 	/**
 	 * 이미지 삭제 API
 	 */
+	@Permission
 	@DeleteMapping("/api/images/{imageId}")
 	public ResponseEntity<Void> deleteImage(@PathVariable Long imageId) {
 		imageService.deleteImage(imageId);
