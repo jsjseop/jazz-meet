@@ -25,7 +25,8 @@ public class WebConfig implements WebMvcConfigurer {
 			.allowedOrigins("https://admin.jazzmeet.site", "https://jazzmeet.site", "https://localhost:3000", "http://localhost:3000")
 			.allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
 			.allowCredentials(true)
-			.allowedHeaders("*");
+			.allowedHeaders("*")
+			.exposedHeaders("Set-Cookie");
 	}
 
 	@Override
