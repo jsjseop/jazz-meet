@@ -64,9 +64,8 @@ public class AdminController {
 			.maxAge(jwtProperties.getRefreshTokenExpiration())
 			.path("/")
 			.secure(true)
-			.httpOnly(false)
+			.httpOnly(true)
 			.domain(".jazzmeet.site")
-			.sameSite("None")
 			.build();
 	}
 
