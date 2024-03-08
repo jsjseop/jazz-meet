@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import kr.codesquad.jazzmeet.IntegrationTestSupport;
+import kr.codesquad.jazzmeet.admin.entity.Admin;
 import kr.codesquad.jazzmeet.fixture.InquiryFixture;
 import kr.codesquad.jazzmeet.global.error.CustomException;
 import kr.codesquad.jazzmeet.global.error.statuscode.ErrorCode;
@@ -141,11 +142,12 @@ class InquiryServiceTest extends IntegrationTestSupport {
 		// given
 		Inquiry inquiry1 = InquiryFixture.createInquiry(InquiryCategory.SERVICE);
 		Inquiry inquiry2 = InquiryFixture.createInquiry(InquiryCategory.SERVICE);
+		Admin admin = InquiryFixture.createAdmin();
 
 		inquiryRepository.save(inquiry1);
 		inquiryRepository.save(inquiry2);
 		InquiryAnswerSaveRequest request = InquiryFixture.createInquiryAnswerSaveRequest(inquiry1.getId());
-		inquiryService.saveAnswer(request);
+		inquiryService.saveAnswer(request, admin);
 
 		// when
 		String category = InquiryCategory.SERVICE.getKoName();
@@ -260,7 +262,29 @@ class InquiryServiceTest extends IntegrationTestSupport {
 		InquiryDeleteRequest inquiryDeleteRequest = InquiryFixture.createInquiryDeleteRequest(password);
 
 		// when
-		inquiryService.delete(inquiryId, inquiryDeleteRequest);
+		inquiryService.delete(inquiryId, inquiryDeleteRequest, null);
+		Inquiry savedInquiry = inquiryRepository.findById(inquiryId).get();
+
+		// then
+		assertAll(
+			() -> assertThat(savedInquiry.getStatus())
+				.isEqualTo(InquiryStatus.DELETED),
+			() -> assertThat(bCryptPasswordEncoder.matches(password, savedInquiry.getPassword()))
+				.isTrue()
+		);
+	}
+
+	@Test
+	@DisplayName("비밀번호가 일치하면 문의가 삭제된다.")
+	void deleteInquiryAdminPermission() {
+		// given
+		String password = "비밀번호 테스트";
+		Inquiry inquiry = InquiryFixture.createInquiry(bCryptPasswordEncoder.encode(password));
+		Long inquiryId = inquiryRepository.save(inquiry).getId();
+		InquiryDeleteRequest inquiryDeleteRequest = InquiryFixture.createInquiryDeleteRequest(password);
+
+		// when
+		inquiryService.delete(inquiryId, inquiryDeleteRequest, null);
 		Inquiry savedInquiry = inquiryRepository.findById(inquiryId).get();
 
 		// then
@@ -281,7 +305,7 @@ class InquiryServiceTest extends IntegrationTestSupport {
 		InquiryDeleteRequest inquiryDeleteRequest = InquiryFixture.createInquiryDeleteRequest(password);
 
 		// when // then
-		assertThatThrownBy(() -> inquiryService.delete(inquiryId, inquiryDeleteRequest))
+		assertThatThrownBy(() -> inquiryService.delete(inquiryId, inquiryDeleteRequest, null))
 			.isInstanceOf(CustomException.class)
 			.hasMessage(InquiryErrorCode.NOT_FOUND_INQUIRY.getMessage());
 
@@ -298,7 +322,7 @@ class InquiryServiceTest extends IntegrationTestSupport {
 		InquiryDeleteRequest inquiryDeleteRequest = InquiryFixture.createInquiryDeleteRequest(password);
 
 		// when // then
-		assertThatThrownBy(() -> inquiryService.delete(inquiryId, inquiryDeleteRequest))
+		assertThatThrownBy(() -> inquiryService.delete(inquiryId, inquiryDeleteRequest, null))
 			.isInstanceOf(CustomException.class)
 			.hasMessage(InquiryErrorCode.ALREADY_DELETED.getMessage());
 
@@ -315,7 +339,7 @@ class InquiryServiceTest extends IntegrationTestSupport {
 		InquiryDeleteRequest inquiryDeleteRequest = InquiryFixture.createInquiryDeleteRequest(wrongPassword);
 
 		// when // then
-		assertThatThrownBy(() -> inquiryService.delete(inquiryId, inquiryDeleteRequest))
+		assertThatThrownBy(() -> inquiryService.delete(inquiryId, inquiryDeleteRequest, null))
 			.isInstanceOf(CustomException.class)
 			.hasMessage(ErrorCode.WRONG_PASSWORD.getMessage());
 	}
@@ -327,9 +351,10 @@ class InquiryServiceTest extends IntegrationTestSupport {
 		Long inquiryId = inquiryRepository.save(InquiryFixture.createInquiry()).getId();
 		String content = "문의 답변 내용";
 		InquiryAnswerSaveRequest request = InquiryFixture.createInquiryAnswerSaveRequest(inquiryId, content);
+		Admin admin = InquiryFixture.createAdmin();
 
 		// when
-		InquiryAnswerSaveResponse response = inquiryService.saveAnswer(request);
+		InquiryAnswerSaveResponse response = inquiryService.saveAnswer(request, admin);
 
 		Inquiry inquiry = inquiryRepository.findById(inquiryId).get();
 		Answer answer = inquiryAnswerRepository.findById(response.id()).get();
@@ -353,9 +378,10 @@ class InquiryServiceTest extends IntegrationTestSupport {
 		Long inquiryId = 0L;
 		String content = "문의 답변 내용";
 		InquiryAnswerSaveRequest request = InquiryFixture.createInquiryAnswerSaveRequest(inquiryId, content);
+		Admin admin = InquiryFixture.createAdmin();
 
 		// when // then
-		assertThatThrownBy(() -> inquiryService.saveAnswer(request))
+		assertThatThrownBy(() -> inquiryService.saveAnswer(request, admin))
 			.isInstanceOf(CustomException.class)
 			.hasMessage(InquiryErrorCode.NOT_FOUND_INQUIRY.getMessage());
 	}
@@ -368,9 +394,10 @@ class InquiryServiceTest extends IntegrationTestSupport {
 		Long inquiryId = inquiryRepository.save(InquiryFixture.createInquiry(status)).getId();
 		String content = "문의 답변 내용";
 		InquiryAnswerSaveRequest request = InquiryFixture.createInquiryAnswerSaveRequest(inquiryId, content);
+		Admin admin = InquiryFixture.createAdmin();
 
 		// when // then
-		assertThatThrownBy(() -> inquiryService.saveAnswer(request))
+		assertThatThrownBy(() -> inquiryService.saveAnswer(request, admin))
 			.isInstanceOf(CustomException.class)
 			.hasMessage(InquiryErrorCode.ALREADY_REPLIED.getMessage());
 	}
@@ -415,9 +442,10 @@ class InquiryServiceTest extends IntegrationTestSupport {
 	@DisplayName("문의에 대한 답변을 삭제할 수 있다.")
 	void deleteAnswer() {
 		// given
+		Admin admin = InquiryFixture.createAdmin();
 		Inquiry inquiry = inquiryRepository.save(InquiryFixture.createInquiry());
 		Long answerId = inquiryService.saveAnswer(
-			InquiryFixture.createInquiryAnswerSaveRequest(inquiry.getId())).id();
+			InquiryFixture.createInquiryAnswerSaveRequest(inquiry.getId()), admin).id();
 
 		// when
 		inquiryService.deleteAnswer(answerId);

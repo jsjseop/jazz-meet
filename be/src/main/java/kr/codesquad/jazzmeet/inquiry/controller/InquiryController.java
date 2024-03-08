@@ -82,8 +82,9 @@ public class InquiryController {
 	/**
 	 * 문의 글 삭제 API - 관리자가 관리자 권한으로 삭제
 	 */
+	@Permission
 	@DeleteMapping("/api/admin/inquiries/{inquiryId}")
-	public ResponseEntity<Void> delete(@PathVariable Long inquiryId, @AdminAuth Admin admin) {
+	public ResponseEntity<Void> deleteByAdmin(@PathVariable Long inquiryId, @AdminAuth Admin admin) {
 		inquiryService.delete(inquiryId, null, admin);
 
 		return ResponseEntity.noContent().build();
@@ -94,8 +95,10 @@ public class InquiryController {
 	 */
 	@Permission
 	@PostMapping("/api/inquiries/answers")
-	public ResponseEntity<InquiryAnswerSaveResponse> saveAnswer(@RequestBody @Valid InquiryAnswerSaveRequest request) {
-		InquiryAnswerSaveResponse answer = inquiryService.saveAnswer(request);
+	public ResponseEntity<InquiryAnswerSaveResponse> saveAnswer(
+		@RequestBody @Valid InquiryAnswerSaveRequest request,
+		@AdminAuth Admin admin) {
+		InquiryAnswerSaveResponse answer = inquiryService.saveAnswer(request, admin);
 
 		return ResponseEntity.status(HttpStatus.CREATED).body(answer);
 	}
