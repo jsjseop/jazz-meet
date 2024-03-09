@@ -10,7 +10,8 @@ public enum InquiryErrorCode implements StatusCode {
 	NOT_FOUND_INQUIRY(HttpStatus.NOT_FOUND, "해당하는 문의가 없습니다."),
 	NOT_FOUND_ANSWER(HttpStatus.NOT_FOUND, "해당하는 답변이 없습니다."),
 	ALREADY_DELETED(HttpStatus.BAD_REQUEST, "이미 삭제 된 문의입니다."),
-	ALREADY_REPLIED(HttpStatus.BAD_REQUEST, "이미 답변이 완료 된 문의입니다.");
+	ALREADY_REPLIED(HttpStatus.BAD_REQUEST, "이미 답변이 완료 된 문의입니다."),
+	UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "삭제 할 권한이 없습니다.");
 
 	private final HttpStatus httpStatus;
 	private final String message;

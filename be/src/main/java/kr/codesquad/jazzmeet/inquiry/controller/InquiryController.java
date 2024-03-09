@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
+import kr.codesquad.jazzmeet.admin.entity.Admin;
+import kr.codesquad.jazzmeet.global.permission.AdminAuth;
+import kr.codesquad.jazzmeet.global.permission.Permission;
 import kr.codesquad.jazzmeet.inquiry.dto.request.InquiryDeleteRequest;
 import kr.codesquad.jazzmeet.inquiry.dto.request.InquirySaveRequest;
 import kr.codesquad.jazzmeet.inquiry.dto.request.answer.InquiryAnswerSaveRequest;
@@ -66,12 +69,23 @@ public class InquiryController {
 	}
 
 	/**
-	 * 문의 글 삭제 API
+	 * 문의 글 삭제 API - 사용자가 비밀번호로 삭제
 	 */
 	@DeleteMapping("/api/inquiries/{inquiryId}")
 	public ResponseEntity<Void> delete(@PathVariable Long inquiryId,
 		@RequestBody @Valid InquiryDeleteRequest inquiryDeleteRequest) {
-		inquiryService.delete(inquiryId, inquiryDeleteRequest);
+		inquiryService.delete(inquiryId, inquiryDeleteRequest, null);
+
+		return ResponseEntity.noContent().build();
+	}
+
+	/**
+	 * 문의 글 삭제 API - 관리자가 관리자 권한으로 삭제
+	 */
+	@Permission
+	@DeleteMapping("/api/admin/inquiries/{inquiryId}")
+	public ResponseEntity<Void> deleteByAdmin(@PathVariable Long inquiryId, @AdminAuth Admin admin) {
+		inquiryService.delete(inquiryId, null, admin);
 
 		return ResponseEntity.noContent().build();
 	}
@@ -79,9 +93,12 @@ public class InquiryController {
 	/**
 	 * 문의 답변 등록 API
 	 */
+	@Permission
 	@PostMapping("/api/inquiries/answers")
-	public ResponseEntity<InquiryAnswerSaveResponse> saveAnswer(@RequestBody @Valid InquiryAnswerSaveRequest request) {
-		InquiryAnswerSaveResponse answer = inquiryService.saveAnswer(request);
+	public ResponseEntity<InquiryAnswerSaveResponse> saveAnswer(
+		@RequestBody @Valid InquiryAnswerSaveRequest request,
+		@AdminAuth Admin admin) {
+		InquiryAnswerSaveResponse answer = inquiryService.saveAnswer(request, admin);
 
 		return ResponseEntity.status(HttpStatus.CREATED).body(answer);
 	}
@@ -89,6 +106,7 @@ public class InquiryController {
 	/**
 	 * 문의 답변 수정 API
 	 */
+	@Permission
 	@PutMapping("/api/inquiries/answers/{answerId}")
 	public ResponseEntity<InquiryAnswerUpdateResponse> updateAnswer(@PathVariable Long answerId,
 		@RequestBody @Valid InquiryAnswerUpdateRequest request) {
@@ -99,6 +117,7 @@ public class InquiryController {
 	/**
 	 * 문의 답변 삭제 API
 	 */
+	@Permission
 	@DeleteMapping("/api/inquiries/answers/{answerId}")
 	public ResponseEntity<Void> deleteAnswer(@PathVariable Long answerId) {
 		// TODO: 로그인 구현 시, token과 answer의 adminId가 같은지 검증 후 삭제 가능.

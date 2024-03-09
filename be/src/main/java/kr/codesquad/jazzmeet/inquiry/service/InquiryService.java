@@ -7,6 +7,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import kr.codesquad.jazzmeet.admin.entity.Admin;
+import kr.codesquad.jazzmeet.admin.service.AdminService;
 import kr.codesquad.jazzmeet.global.error.CustomException;
 import kr.codesquad.jazzmeet.global.error.statuscode.InquiryErrorCode;
 import kr.codesquad.jazzmeet.global.util.PasswordEncoder;
@@ -39,11 +41,11 @@ import lombok.RequiredArgsConstructor;
 public class InquiryService {
 	private static final int PAGE_NUMBER_OFFSET = 1;
 	private static final int PAGE_SIZE = 10;
-	private static final Long DEFAULT_ADMIN_ID = 1L;
 
 	private final InquiryQueryRepository inquiryQueryRepository;
 	private final InquiryAnswerRepository answerRepository;
 	private final InquiryRepository inquiryRepository;
+	private final AdminService adminService;
 
 	public InquirySearchResponse getInquiries(String category, String word, String status, int page) {
 		// request는 한글, DB 저장은 영어로 되어있기 때문에 변환 필요.
@@ -84,19 +86,28 @@ public class InquiryService {
 	}
 
 	@Transactional
-	public void delete(Long inquiryId, InquiryDeleteRequest request) {
+	public void delete(Long inquiryId, InquiryDeleteRequest request, Admin admin) {
 		Inquiry inquiry = findById(inquiryId);
 		inspectDeletedInquiry(inquiry.getStatus());
-		PasswordEncoder.matchesPassword(request.password(), inquiry.getPassword());
+
+		// 비밀번호, 혹은 관리자 인증 둘 중 하나만 확인 되면 문의 글 삭제 가능.
+		if (request == null && admin == null) {
+			throw new CustomException(InquiryErrorCode.UNAUTHORIZED);
+		}
+
+		// 비밀번호로 삭제 시
+		if (request != null && !request.password().isEmpty()) {
+			PasswordEncoder.matchesPassword(request.password(), inquiry.getPassword());
+		}
 
 		inquiry.updateStatusToDeleted();
 	}
 
 	@Transactional
-	public InquiryAnswerSaveResponse saveAnswer(InquiryAnswerSaveRequest request) {
+	public InquiryAnswerSaveResponse saveAnswer(InquiryAnswerSaveRequest request, Admin admin) {
 		Long inquiryId = request.inquiryId();
 		Inquiry inquiry = findById(inquiryId).inspectExistAnswer();
-		Answer answer = InquiryMapper.INSTANCE.toAnswer(request.content(), inquiry, DEFAULT_ADMIN_ID);
+		Answer answer = InquiryMapper.INSTANCE.toAnswer(request.content(), inquiry, admin.getId());
 		Answer savedAnswer = answerRepository.save(answer);
 		inquiry.updateStatusToReplied(savedAnswer);
 
@@ -141,4 +152,5 @@ public class InquiryService {
 		return answerRepository.findByIdWithInquiry(answerId)
 			.orElseThrow(() -> new CustomException(InquiryErrorCode.NOT_FOUND_ANSWER));
 	}
+
 }

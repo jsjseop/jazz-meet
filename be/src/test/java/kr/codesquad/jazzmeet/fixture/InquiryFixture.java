@@ -1,5 +1,7 @@
 package kr.codesquad.jazzmeet.fixture;
 
+import kr.codesquad.jazzmeet.admin.entity.Admin;
+import kr.codesquad.jazzmeet.admin.entity.UserRole;
 import kr.codesquad.jazzmeet.inquiry.dto.request.InquiryDeleteRequest;
 import kr.codesquad.jazzmeet.inquiry.dto.request.InquirySaveRequest;
 import kr.codesquad.jazzmeet.inquiry.dto.request.answer.InquiryAnswerSaveRequest;
@@ -121,5 +123,13 @@ public class InquiryFixture {
 
 	public static InquiryAnswerSaveRequest createInquiryAnswerSaveRequest(Long inquiryId) {
 		return new InquiryAnswerSaveRequest(inquiryId, "답변 내용");
+	}
+
+	public static Admin createAdmin() {
+		return Admin.builder()
+			.loginId("아이디")
+			.password("비밀번호")
+			.role(UserRole.ADMIN)
+			.build();
 	}
 }
