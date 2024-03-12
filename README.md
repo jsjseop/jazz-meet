@@ -55,8 +55,12 @@
 ### 디자인 맛보기
 ![디자인](https://github.com/jazz-meet/jazz-meet/assets/97204689/b7696dff-d503-4963-90f6-a5542a8300fa)
 
-## ⚙️ 인프라 구조
-![재즈밋 인프라](https://github.com/jazz-meet/jazz-meet/assets/97204689/1ca67883-7614-4fe8-b4c0-20f44d4868d3)
+## ⚙️ 시스템 아키텍처
+![jazzmeet](https://github.com/jazz-meet/jazz-meet/assets/57451700/032b9cb5-abd8-48af-a2a1-7b6762468260)
+
+## 🔧 CI/CD 파이프라인
+
+![jazzmeet_user_infra](https://github.com/jazz-meet/jazz-meet/assets/57451700/e8f47344-c048-457a-8837-2b08b85acf4d)
 
 ## 💾 ERD
 ![재즈밋ERD](https://github.com/jazz-meet/jazz-meet/assets/97204689/d9742b6e-29f7-4e01-bff7-b9c49bcdab24)
