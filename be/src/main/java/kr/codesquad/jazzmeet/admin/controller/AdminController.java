@@ -101,8 +101,8 @@ public class AdminController {
 	 */
 	@Permission
 	@PostMapping("/api/admins/logout")
-	public ResponseEntity<Void> logout(@AdminAuth Admin admin, @RequestAttribute String accessToken) {
-		adminService.logout(admin, accessToken);
+	public ResponseEntity<Void> logout(@AdminAuth Admin admin) {
+		adminService.logout(admin);
 		return ResponseEntity.ok().build();
 	}
 
