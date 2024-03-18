@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
+import kr.codesquad.jazzmeet.admin.entity.Admin;
+import kr.codesquad.jazzmeet.global.permission.AdminAuth;
 import kr.codesquad.jazzmeet.global.permission.Permission;
 import kr.codesquad.jazzmeet.show.dto.request.RegisterShowRequest;
 import kr.codesquad.jazzmeet.show.dto.response.ExistShowCalendarResponse;
@@ -116,9 +118,9 @@ public class ShowController {
 	 */
 	@Permission
 	@PostMapping("/api/shows/{venueId}")
-	public ResponseEntity<RegisterShowResponse> registerShow(@PathVariable Long venueId,
+	public ResponseEntity<RegisterShowResponse> registerShow(@AdminAuth Admin admin, @PathVariable Long venueId,
 		@Valid @RequestBody RegisterShowRequest registerShowRequest) {
-		RegisterShowResponse response = showService.registerShow(venueId, registerShowRequest);
+		RegisterShowResponse response = showService.registerShow(venueId, registerShowRequest, admin);
 
 		return ResponseEntity.status(HttpStatus.CREATED).body(response);
 	}

@@ -8,6 +8,8 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import kr.codesquad.jazzmeet.admin.entity.Admin;
+import kr.codesquad.jazzmeet.admin.service.AdminService;
 import kr.codesquad.jazzmeet.show.dto.request.RegisterShowRequest;
 import kr.codesquad.jazzmeet.show.repository.OcrHandler;
 import kr.codesquad.jazzmeet.show.repository.WebCrawler;
@@ -22,9 +24,11 @@ import lombok.extern.log4j.Log4j2;
 public class ShowScheduler {
 	public static final String ENTRY55 = "entry55";
 	public static final String ENTRY55_INSTAGRAM_URL = "https://www.instagram.com/entry55_official/";
+	public static final String AUTO_ADMIN_ID = "auto_admin";
 
 	private final ShowService showService;
 	private final VenueService venueService;
+	private final AdminService adminService;
 	private final OcrHandler ocrHandler;
 	private final WebCrawler crawler;
 
@@ -42,6 +46,9 @@ public class ShowScheduler {
 		Venue venue = venueService.findByName(ENTRY55);
 		String venueInstagramUrl = ENTRY55_INSTAGRAM_URL;
 
+		// 자동화로 공연을 저장할 Admin
+		Admin autoAdmin = adminService.findAdminByLoginId(AUTO_ADMIN_ID);
+
 		// 공연장에 저장 된 최신 공연을 가져온다.
 		LocalDate latestShowDate = showService.getLatestShowBy(venue.getId())
 			.map(show -> show.getStartTime().toLocalDate())
@@ -56,7 +63,7 @@ public class ShowScheduler {
 				showImageUrls.get(showImageUrl), latestShowDate);
 			// 3. DB에 새로운 공연을 넣는다.
 			for (RegisterShowRequest request : requests) {
-				showService.registerShow(venue.getId(), request);
+				showService.registerShow(venue.getId(), request, autoAdmin);
 			}
 		}
 	}
