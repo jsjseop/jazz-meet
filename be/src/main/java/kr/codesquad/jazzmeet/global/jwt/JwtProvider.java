@@ -71,9 +71,4 @@ public class JwtProvider {
 		return claims.getExpiration().getTime();
 	}
 
-	public void validateBlackList(String token) {
-		if(redisUtil.hasKeyBlackList(token)){
-			throw new CustomException(ErrorCode.EXIST_LOGOUT_USER);
-		}
-	}
 }

@@ -90,9 +90,7 @@ public class AdminService {
 	}
 
 	@Transactional
-	public void logout(Admin admin, String accessToken) {
+	public void logout(Admin admin) {
 		adminRepository.deleteRefreshTokenById(admin.getId());
-		Long expiration = jwtProvider.getExpiration(accessToken);
-		redisUtil.setBlackList(accessToken, "accessToken", expiration);
 	}
 }
