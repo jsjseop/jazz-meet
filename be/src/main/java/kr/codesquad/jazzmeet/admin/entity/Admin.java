@@ -33,9 +33,6 @@ public class Admin {
 	@Column(nullable = false, length = 10)
 	private UserRole role;
 
-	@Column(length = 500)
-	private String refreshToken;
-
 	@Builder
 	public Admin(String loginId, String password, UserRole role) {
 		this.loginId = loginId;
@@ -51,9 +48,5 @@ public class Admin {
 
 	public void isSame(String password) {
 		PasswordEncoder.matchesPassword(password, this.password);
-	}
-
-	public void update(String refreshToken) {
-		this.refreshToken = refreshToken;
 	}
 }
