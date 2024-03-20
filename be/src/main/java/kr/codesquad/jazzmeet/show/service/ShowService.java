@@ -15,6 +15,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import kr.codesquad.jazzmeet.admin.entity.Admin;
 import kr.codesquad.jazzmeet.global.error.CustomException;
 import kr.codesquad.jazzmeet.global.error.statuscode.ShowErrorCode;
 import kr.codesquad.jazzmeet.image.entity.Image;
@@ -132,14 +133,14 @@ public class ShowService {
 	}
 
 	@Transactional
-	public RegisterShowResponse registerShow(Long venueId, RegisterShowRequest registerShowRequest) {
+	public RegisterShowResponse registerShow(Long venueId, RegisterShowRequest registerShowRequest, Admin admin) {
 		Venue venue = venueService.findById(venueId);
 		Long posterId = registerShowRequest.posterId();
 		Image poster = null;
 		if (posterId != null) {
 			poster = imageService.findById(posterId);
 		}
-		Show show = ShowMapper.INSTANCE.toShow(registerShowRequest, venue, poster);
+		Show show = ShowMapper.INSTANCE.toShow(registerShowRequest, venue, poster, admin);
 
 		Show savedShow = showRepository.save(show);
 

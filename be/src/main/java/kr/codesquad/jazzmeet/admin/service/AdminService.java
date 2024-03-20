@@ -50,7 +50,7 @@ public class AdminService {
 		}
 	}
 
-	private Admin findAdminByLoginId(String loginId) {
+	public Admin findAdminByLoginId(String loginId) {
 		return adminRepository.findByLoginId(loginId)
 			.orElseThrow(() -> new CustomException(AdminErrorCode.NOT_FOUND_ADMIN));
 	}

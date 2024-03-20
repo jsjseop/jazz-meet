@@ -154,7 +154,7 @@ class ShowControllerTest {
 			.endTime(LocalDateTime.of(2023, 11, 13, 19, 00))
 			.build();
 
-		when(showService.registerShow(any(), any())).thenReturn(new RegisterShowResponse(1L));
+		when(showService.registerShow(any(), any(), any())).thenReturn(new RegisterShowResponse(1L));
 
 		//when //then
 		mockMvc.perform(
@@ -179,7 +179,7 @@ class ShowControllerTest {
 			.endTime(LocalDateTime.of(2023, 11, 13, 19, 00))
 			.build();
 
-		when(showService.registerShow(any(), any())).thenReturn(new RegisterShowResponse(1L));
+		when(showService.registerShow(any(), any(), any())).thenReturn(new RegisterShowResponse(1L));
 
 		//when //then
 		mockMvc.perform(
