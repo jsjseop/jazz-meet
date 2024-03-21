@@ -88,7 +88,6 @@ public class AdminService {
 
 	private Admin getAdminByRefreshToken(String refreshToken) {
 		RefreshToken findRefreshToken = findRefreshToken(refreshToken);
-		log.warn("통과");
 		return findAdmin(findRefreshToken);
 	}
 
@@ -98,7 +97,6 @@ public class AdminService {
 	}
 
 	private RefreshToken findRefreshToken(String refreshToken) {
-		log.warn("findRefreshToken : {}", refreshToken);
 		return refreshTokenRedisRepository.findByRefreshToken(refreshToken)
 			.orElseThrow(() -> new CustomException(AdminErrorCode.NOT_EXIST_REFRESH_TOKEN));
 	}
