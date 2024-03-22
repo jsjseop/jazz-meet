@@ -11,12 +11,13 @@ import kr.codesquad.jazzmeet.admin.dto.request.SignUpAdminRequest;
 import kr.codesquad.jazzmeet.admin.entity.Admin;
 import kr.codesquad.jazzmeet.admin.entity.UserRole;
 import kr.codesquad.jazzmeet.admin.repository.AdminRepository;
+import kr.codesquad.jazzmeet.admin.repository.RefreshTokenRedisRepository;
+import kr.codesquad.jazzmeet.admin.vo.RefreshToken;
 import kr.codesquad.jazzmeet.global.error.CustomException;
 import kr.codesquad.jazzmeet.global.error.statuscode.AdminErrorCode;
 import kr.codesquad.jazzmeet.global.jwt.Jwt;
 import kr.codesquad.jazzmeet.global.jwt.JwtProvider;
 import kr.codesquad.jazzmeet.global.util.PasswordEncoder;
-import kr.codesquad.jazzmeet.global.util.RedisUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -30,8 +31,8 @@ public class AdminService {
 	private static final String ROLE = "role";
 
 	private final AdminRepository adminRepository;
+	private final RefreshTokenRedisRepository refreshTokenRedisRepository;
 	private final JwtProvider jwtProvider;
-	private final RedisUtil redisUtil;
 
 	@Transactional
 	public Admin signUp(Admin rootAdmin, SignUpAdminRequest signUpAdminRequest) {
@@ -67,7 +68,8 @@ public class AdminService {
 
 		Map<String, Object> claims = Map.of(ADMIN_ID, admin.getId(), ROLE, admin.getRole());
 		Jwt jwt = jwtProvider.createJwt(claims);
-		admin.update(jwt.getRefreshToken());
+
+		refreshTokenRedisRepository.save(AdminMapper.INSTANCE.toRefreshToken(jwt, admin.getLoginId(), jwtProvider.getExpireTimeRefreshToken()));
 
 		return jwt;
 	}
@@ -85,12 +87,28 @@ public class AdminService {
 	}
 
 	private Admin getAdminByRefreshToken(String refreshToken) {
-		return adminRepository.findByRefreshToken(refreshToken)
+		RefreshToken findRefreshToken = findRefreshToken(refreshToken);
+		return findAdmin(findRefreshToken);
+	}
+
+	private Admin findAdmin(RefreshToken findRefreshToken) {
+		return adminRepository.findByLoginId(findRefreshToken.getUserId())
+			.orElseThrow(() -> new CustomException(AdminErrorCode.NOT_FOUND_ADMIN));
+	}
+
+	private RefreshToken findRefreshToken(String refreshToken) {
+		return refreshTokenRedisRepository.findByRefreshToken(refreshToken)
 			.orElseThrow(() -> new CustomException(AdminErrorCode.NOT_EXIST_REFRESH_TOKEN));
 	}
 
 	@Transactional
 	public void logout(Admin admin) {
-		adminRepository.deleteRefreshTokenById(admin.getId());
+		RefreshToken refreshToken = getRefreshTokenByAdmin(admin);
+		refreshTokenRedisRepository.delete(refreshToken);
+	}
+
+	private RefreshToken getRefreshTokenByAdmin(Admin admin) {
+		return refreshTokenRedisRepository.findById(admin.getLoginId())
+			.orElseThrow(() -> new CustomException(AdminErrorCode.NOT_EXIST_REFRESH_TOKEN));
 	}
 }
