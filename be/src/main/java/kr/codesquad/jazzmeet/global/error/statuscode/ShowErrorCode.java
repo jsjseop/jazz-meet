@@ -12,6 +12,7 @@ public enum ShowErrorCode implements StatusCode {
 	// 웹 크롤링 실패
 	CRAWLING_REQUEST_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "이미지 URL 추출에 실패했습니다."),
 	NOT_FOUND_SHOW_IMAGE_URL(HttpStatus.EXPECTATION_FAILED, "해당하는 이미지 url을 찾지 못했습니다."),
+	NOT_FOUND_SHOW_DATE(HttpStatus.NOT_FOUND, "공연 정보에서 공연 날짜를 찾지 못했습니다."),
 	// OCR 실패
 	OCR_REQUEST_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "OCR 요청이 실패했습니다."),
 	OCR_NOT_MATCHED_VENUE_AND_IMAGE(HttpStatus.INTERNAL_SERVER_ERROR, "자동 인식 된 OCR 템플릿이 공연장과 일치하지 않습니다."),

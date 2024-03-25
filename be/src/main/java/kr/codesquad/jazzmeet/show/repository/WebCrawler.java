@@ -10,7 +10,6 @@ import java.util.List;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -19,8 +18,8 @@ import org.springframework.util.ObjectUtils;
 import kr.codesquad.jazzmeet.global.error.CustomException;
 import kr.codesquad.jazzmeet.global.error.statuscode.ShowErrorCode;
 import kr.codesquad.jazzmeet.global.util.CustomLocalDate;
-import kr.codesquad.jazzmeet.global.util.TextParser;
 import kr.codesquad.jazzmeet.global.util.WebDriverUtil;
+import kr.codesquad.jazzmeet.show.util.TextParser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
@@ -94,7 +93,7 @@ public class WebCrawler {
 			// 	"https://www.instagram.com/accounts/onetap/?next=%2F")); // 로그인 완료 후 url 전환하기까지 대기
 			driver.get(venueInstagramUrl); // 공연장 instagram url로 이동
 			Thread.sleep(2000); // url 이동 대기 시간 (게시글)
-			
+
 			driver.findElements(
 					By.className("_aagw")) // 게시물 선택
 				.get(0).click();
@@ -110,6 +109,11 @@ public class WebCrawler {
 				String articleText = driver.findElements(
 						By.className("_a9zs"))
 					.get(0).getText();
+
+				// 공연 날짜(=숫자)가 존재하는 Line을 찾는다.
+				articleText = TextParser.findDateLine(articleText);
+
+				log.debug("게시물 텍스트 내용: {}", articleText);
 				if (!articleText.contains("라인업")) { // 스케줄 키워드가 포함되어있지 않으면 다음 게시물을 탐색한다.
 					driver.findElements(By.className(NEXT_ARTICLE_BUTTON_CLASS_NAME))
 						.get(nextBtnIndex)

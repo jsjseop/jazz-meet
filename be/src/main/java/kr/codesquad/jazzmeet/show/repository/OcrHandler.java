@@ -30,7 +30,6 @@ import kr.codesquad.jazzmeet.global.error.CustomException;
 import kr.codesquad.jazzmeet.global.error.statuscode.ShowErrorCode;
 import kr.codesquad.jazzmeet.global.util.CustomLocalDate;
 import kr.codesquad.jazzmeet.global.util.CustomMultipartFile;
-import kr.codesquad.jazzmeet.global.util.TextParser;
 import kr.codesquad.jazzmeet.image.dto.response.ImageCreateResponse;
 import kr.codesquad.jazzmeet.image.dto.response.ImageSaveResponse;
 import kr.codesquad.jazzmeet.image.entity.ImageStatus;
@@ -38,6 +37,7 @@ import kr.codesquad.jazzmeet.image.repository.S3ImageHandler;
 import kr.codesquad.jazzmeet.image.service.ImageService;
 import kr.codesquad.jazzmeet.show.dto.request.RegisterShowRequest;
 import kr.codesquad.jazzmeet.show.mapper.ShowMapper;
+import kr.codesquad.jazzmeet.show.util.TextParser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
