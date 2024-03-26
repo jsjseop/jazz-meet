@@ -52,4 +52,17 @@ public class TextParser {
 
 		throw new CustomException(ShowErrorCode.NOT_FOUND_SHOW_DATE);
 	}
+
+	public static String findDate(String text) {
+		String temp = text.replace(" ", "");
+		for (int i = 0; i < temp.length(); i++) {
+			char c = temp.charAt(i);
+			// 날짜(=문자)를 찾았다면 "시작 공연 날짜" 부터 추출하여 반환
+			if (Character.isDigit(c)) {
+				return temp.substring(i);
+			}
+		}
+
+		throw new CustomException(ShowErrorCode.OCR_NOT_FOUND_DATE);
+	}
 }

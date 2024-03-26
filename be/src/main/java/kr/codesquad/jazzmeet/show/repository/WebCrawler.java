@@ -130,17 +130,11 @@ public class WebCrawler {
 
 				// 오른쪽 화살표로 img 탐색.
 				// 이벤트가 존재하는 주(week)는, 공연 날짜가 추가되어 2번째 img에 스케줄표가 위치해 있다.
+				// 이벤트가 없는 기본(default) 주(week)는, 3번째 img에 스케줄표가 위치해 있다.
 				driver.findElements(By.className(NEXT_PHOTO_BUTTON_CLASS_NAME))
 					.get(0)
 					.click();
-				// 이벤트가 없는 기본(default) 주(week)는, 3번째 img에 스케줄표가 위치해 있다.
-				// 공연 일(day)수가 기본(default) 일수와 동일한지 확인.
-				boolean isEqualsToDefaultShowDayCount = isEqualsToDefaultShowDayCount(articleText);
-				if (isEqualsToDefaultShowDayCount) {
-					driver.findElements(By.className(NEXT_PHOTO_BUTTON_CLASS_NAME))
-						.get(0)
-						.click();
-				}
+
 				Thread.sleep(2000); // 대기 시간
 
 				// entry55(default Schedule)인 경우 3번째 img가 주간 공연 스케줄, 4번째부터 공연 poster가 나열된다.
@@ -150,13 +144,6 @@ public class WebCrawler {
 				// div._aagu _aa20 _aato > div._aagv > img .get(0)
 				// 클릭해서 이동 1, 2
 				String imageUrl = img.getAttribute("src");
-				log.debug("Instagram Image URL: {}", imageUrl);
-				if (!isEqualsToDefaultShowDayCount) {
-					// 오른쪽 화살표를 클릭해 다음 이미지로 넘어간다.
-					driver.findElements(By.className(NEXT_PHOTO_BUTTON_CLASS_NAME))
-						.get(0)
-						.click();
-				}
 
 				List<String> posterImgUrls = new ArrayList<>();
 				while (true) {
