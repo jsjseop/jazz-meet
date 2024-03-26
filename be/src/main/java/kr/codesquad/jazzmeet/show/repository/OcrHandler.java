@@ -155,9 +155,7 @@ public class OcrHandler {
 		}
 		// 일치하지 않는 공연장 템플릿(OCR)이 적용되었으면 에러를 반환한다.
 		String templateName = images.getJSONObject("matchedTemplate").get(NAME).toString();
-		System.out.println("templateName: " + templateName);
 		String venueNameSchedule = venueName + " " + SCHEDULE;
-		System.out.println("venueNameSchedule: " + venueNameSchedule);
 		if (!templateName.equals(venueNameSchedule)) {
 			throw new CustomException(ShowErrorCode.OCR_NOT_MATCHED_VENUE_AND_IMAGE);
 		}
