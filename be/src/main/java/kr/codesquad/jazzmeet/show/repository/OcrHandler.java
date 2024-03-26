@@ -1,10 +1,7 @@
 package kr.codesquad.jazzmeet.show.repository;
 
-import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -16,24 +13,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import javax.imageio.ImageIO;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import kr.codesquad.jazzmeet.global.error.CustomException;
 import kr.codesquad.jazzmeet.global.error.statuscode.ShowErrorCode;
 import kr.codesquad.jazzmeet.global.util.CustomLocalDate;
-import kr.codesquad.jazzmeet.global.util.CustomMultipartFile;
-import kr.codesquad.jazzmeet.image.dto.response.ImageCreateResponse;
-import kr.codesquad.jazzmeet.image.dto.response.ImageSaveResponse;
-import kr.codesquad.jazzmeet.image.entity.ImageStatus;
-import kr.codesquad.jazzmeet.image.repository.S3ImageHandler;
 import kr.codesquad.jazzmeet.image.service.ImageService;
 import kr.codesquad.jazzmeet.show.dto.request.RegisterShowRequest;
 import kr.codesquad.jazzmeet.show.mapper.ShowMapper;
@@ -58,7 +47,6 @@ public class OcrHandler {
 	private String apiURL;
 	@Value("${naver.clova.secretKey}")
 	private String secretKey;
-	private final S3ImageHandler s3imageHandler;
 	private final ImageService imageService;
 
 	@Transactional
@@ -233,7 +221,7 @@ public class OcrHandler {
 			throw new CustomException(ShowErrorCode.OCR_NOT_EQUAL_TEAMS_AND_POSTER_NUMBERS);
 		}
 
-		List<Long> posterIds = uploadPosters(posterUrls);
+		List<Long> posterIds = imageService.uploadPosters(posterUrls);
 
 		for (int i = 0; i < splitedArtists.length; i += 2) {
 			String teamName = splitedArtists[i];
@@ -282,38 +270,6 @@ public class OcrHandler {
 		}
 
 		return requests;
-	}
-
-	private List<Long> uploadPosters(List<String> posterUrls) {
-		// Image 가져오기
-		List<MultipartFile> multipartFiles = convertImageUrlToMultipartFile(posterUrls);
-		// S3에 사진 저장
-		List<String> uploadedImageUrls = s3imageHandler.uploadImages(multipartFiles);
-		// DB에 저장
-		ImageStatus imageStatus = ImageStatus.REGISTERED;
-		ImageCreateResponse imageCreateResponse = imageService.saveImages(uploadedImageUrls, imageStatus);
-
-		return imageCreateResponse.images().stream().map(ImageSaveResponse::id).toList();
-	}
-
-	private List<MultipartFile> convertImageUrlToMultipartFile(List<String> imageUrls) {
-		List<MultipartFile> multipartFiles = new ArrayList<>();
-		for (int i = 0; i < imageUrls.size(); i++) {
-			ByteArrayOutputStream out = new ByteArrayOutputStream();
-			try {
-				BufferedImage image = ImageIO.read(new URL(imageUrls.get(i)));
-				ImageIO.write(image, "jpeg", out);
-			} catch (IOException e) {
-				log.error("IO Error", e);
-				return null;
-			}
-			byte[] bytes = out.toByteArray();
-			CustomMultipartFile customMultipartFile = new CustomMultipartFile(bytes, "image" + i,
-				"posterImage" + i + ".jpeg",
-				"jpeg", bytes.length);
-			multipartFiles.add(customMultipartFile);
-		}
-		return multipartFiles;
 	}
 
 	private LocalTime setFirstShowTime(DayOfWeek dayOfWeek) {
