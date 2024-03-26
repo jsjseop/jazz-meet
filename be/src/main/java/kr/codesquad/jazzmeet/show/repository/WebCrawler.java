@@ -2,7 +2,6 @@ package kr.codesquad.jazzmeet.show.repository;
 
 import java.time.Duration;
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -182,17 +181,6 @@ public class WebCrawler {
 		}
 
 		return imageUrls;
-	}
-
-	private boolean isEqualsToDefaultShowDayCount(String articleText) {
-		// articleText = "02.07 - 02.12 아티스트 라인업입니다!"
-		String startDateText = TextParser.parseDate(articleText, true);
-		LocalDate startDate = CustomLocalDate.of(startDateText);
-		String endDateText = TextParser.parseDate(articleText, false);
-		LocalDate endDate = CustomLocalDate.of(endDateText);
-		long daysDiff = ChronoUnit.DAYS.between(startDate, endDate) + 1;
-
-		return DEFAULT_SHOW_DAY_COUNT == daysDiff;
 	}
 
 	private boolean isNewShowDate(String articleText, LocalDate latestShowDate) {
