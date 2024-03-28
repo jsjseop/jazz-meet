@@ -2,7 +2,6 @@ package kr.codesquad.jazzmeet.show.repository;
 
 import java.time.Duration;
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -10,7 +9,6 @@ import java.util.List;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -19,8 +17,8 @@ import org.springframework.util.ObjectUtils;
 import kr.codesquad.jazzmeet.global.error.CustomException;
 import kr.codesquad.jazzmeet.global.error.statuscode.ShowErrorCode;
 import kr.codesquad.jazzmeet.global.util.CustomLocalDate;
-import kr.codesquad.jazzmeet.global.util.TextParser;
 import kr.codesquad.jazzmeet.global.util.WebDriverUtil;
+import kr.codesquad.jazzmeet.show.util.TextParser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
@@ -94,7 +92,7 @@ public class WebCrawler {
 			// 	"https://www.instagram.com/accounts/onetap/?next=%2F")); // 로그인 완료 후 url 전환하기까지 대기
 			driver.get(venueInstagramUrl); // 공연장 instagram url로 이동
 			Thread.sleep(2000); // url 이동 대기 시간 (게시글)
-			
+
 			driver.findElements(
 					By.className("_aagw")) // 게시물 선택
 				.get(0).click();
@@ -110,6 +108,11 @@ public class WebCrawler {
 				String articleText = driver.findElements(
 						By.className("_a9zs"))
 					.get(0).getText();
+
+				// 공연 날짜(=숫자)가 존재하는 Line을 찾는다.
+				articleText = TextParser.findDateLine(articleText);
+
+				log.debug("게시물 텍스트 내용: {}", articleText);
 				if (!articleText.contains("라인업")) { // 스케줄 키워드가 포함되어있지 않으면 다음 게시물을 탐색한다.
 					driver.findElements(By.className(NEXT_ARTICLE_BUTTON_CLASS_NAME))
 						.get(nextBtnIndex)
@@ -126,17 +129,11 @@ public class WebCrawler {
 
 				// 오른쪽 화살표로 img 탐색.
 				// 이벤트가 존재하는 주(week)는, 공연 날짜가 추가되어 2번째 img에 스케줄표가 위치해 있다.
+				// 이벤트가 없는 기본(default) 주(week)는, 3번째 img에 스케줄표가 위치해 있다.
 				driver.findElements(By.className(NEXT_PHOTO_BUTTON_CLASS_NAME))
 					.get(0)
 					.click();
-				// 이벤트가 없는 기본(default) 주(week)는, 3번째 img에 스케줄표가 위치해 있다.
-				// 공연 일(day)수가 기본(default) 일수와 동일한지 확인.
-				boolean isEqualsToDefaultShowDayCount = isEqualsToDefaultShowDayCount(articleText);
-				if (isEqualsToDefaultShowDayCount) {
-					driver.findElements(By.className(NEXT_PHOTO_BUTTON_CLASS_NAME))
-						.get(0)
-						.click();
-				}
+
 				Thread.sleep(2000); // 대기 시간
 
 				// entry55(default Schedule)인 경우 3번째 img가 주간 공연 스케줄, 4번째부터 공연 poster가 나열된다.
@@ -146,13 +143,6 @@ public class WebCrawler {
 				// div._aagu _aa20 _aato > div._aagv > img .get(0)
 				// 클릭해서 이동 1, 2
 				String imageUrl = img.getAttribute("src");
-				log.debug("Instagram Image URL: {}", imageUrl);
-				if (!isEqualsToDefaultShowDayCount) {
-					// 오른쪽 화살표를 클릭해 다음 이미지로 넘어간다.
-					driver.findElements(By.className(NEXT_PHOTO_BUTTON_CLASS_NAME))
-						.get(0)
-						.click();
-				}
 
 				List<String> posterImgUrls = new ArrayList<>();
 				while (true) {
@@ -191,17 +181,6 @@ public class WebCrawler {
 		}
 
 		return imageUrls;
-	}
-
-	private boolean isEqualsToDefaultShowDayCount(String articleText) {
-		// articleText = "02.07 - 02.12 아티스트 라인업입니다!"
-		String startDateText = TextParser.parseDate(articleText, true);
-		LocalDate startDate = CustomLocalDate.of(startDateText);
-		String endDateText = TextParser.parseDate(articleText, false);
-		LocalDate endDate = CustomLocalDate.of(endDateText);
-		long daysDiff = ChronoUnit.DAYS.between(startDate, endDate) + 1;
-
-		return DEFAULT_SHOW_DAY_COUNT == daysDiff;
 	}
 
 	private boolean isNewShowDate(String articleText, LocalDate latestShowDate) {
