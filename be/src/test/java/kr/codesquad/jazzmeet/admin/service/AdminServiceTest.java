@@ -2,19 +2,17 @@ package kr.codesquad.jazzmeet.admin.service;
 
 import static org.assertj.core.api.Assertions.*;
 
-import org.apache.juli.logging.Log;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import kr.codesquad.jazzmeet.IntegrationTestSupport;
-import kr.codesquad.jazzmeet.admin.AdminMapper;
 import kr.codesquad.jazzmeet.admin.dto.request.LoginAdminRequest;
 import kr.codesquad.jazzmeet.admin.dto.request.SignUpAdminRequest;
 import kr.codesquad.jazzmeet.admin.entity.Admin;
 import kr.codesquad.jazzmeet.admin.entity.UserRole;
+import kr.codesquad.jazzmeet.admin.mapper.AdminMapper;
 import kr.codesquad.jazzmeet.admin.repository.AdminRepository;
 import kr.codesquad.jazzmeet.fixture.AdminFixture;
 import kr.codesquad.jazzmeet.global.error.CustomException;

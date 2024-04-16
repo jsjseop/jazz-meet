@@ -45,9 +45,6 @@ public class PermissionInterceptor implements HandlerInterceptor {
 
 		String token = extractJwtTokenFromHeader(request);
 
-		// Blacklist 존재하는지 확인
-		jwtProvider.validateBlackList(token);
-
 		Claims claims = jwtProvider.validateAndGetClaims(token);
 		String role = String.valueOf(claims.get("role"));
 		String adminId = String.valueOf(claims.get("adminId"));
@@ -55,14 +52,12 @@ public class PermissionInterceptor implements HandlerInterceptor {
 		// 일반 관리자인 경우
 		if (role.equals(UserRole.ADMIN.name())) {
 			request.setAttribute("adminId", adminId);
-			request.setAttribute("accessToken", token);
 			return true;
 		}
 
 		// 루트 관리자인 경우
 		if (role.equals(UserRole.ROOT_ADMIN.name())) {
 			request.setAttribute("adminId", adminId);
-			request.setAttribute("accessToken", token);
 			return true;
 		}
 

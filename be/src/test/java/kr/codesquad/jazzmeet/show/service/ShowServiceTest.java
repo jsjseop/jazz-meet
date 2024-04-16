@@ -14,6 +14,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import kr.codesquad.jazzmeet.IntegrationTestSupport;
+import kr.codesquad.jazzmeet.admin.entity.Admin;
+import kr.codesquad.jazzmeet.admin.entity.UserRole;
+import kr.codesquad.jazzmeet.admin.repository.AdminRepository;
+import kr.codesquad.jazzmeet.fixture.AdminFixture;
 import kr.codesquad.jazzmeet.fixture.ImageFixture;
 import kr.codesquad.jazzmeet.fixture.ShowFixture;
 import kr.codesquad.jazzmeet.fixture.VenueFixture;
@@ -44,12 +48,15 @@ class ShowServiceTest extends IntegrationTestSupport {
 	VenueRepository venueRepository;
 	@Autowired
 	ImageRepository imageRepository;
+	@Autowired
+	AdminRepository adminRepository;
 
 	@AfterEach
 	void dbClean() {
 		showRepository.deleteAllInBatch();
 		venueRepository.deleteAllInBatch();
 		imageRepository.deleteAllInBatch();
+		adminRepository.deleteAllInBatch();
 	}
 
 	@Test
@@ -438,8 +445,11 @@ class ShowServiceTest extends IntegrationTestSupport {
 			.endTime(LocalDateTime.of(2023, 11, 13, 11, 50))
 			.build();
 
+		Admin admin = AdminFixture.createAdmin("admin1", "1234", UserRole.ROOT_ADMIN);
+		adminRepository.save(admin);
+
 		//when
-		RegisterShowResponse response = showService.registerShow(venueId, request);
+		RegisterShowResponse response = showService.registerShow(venueId, request, admin);
 
 		//then
 		assertThat(response.id()).isNotNull();

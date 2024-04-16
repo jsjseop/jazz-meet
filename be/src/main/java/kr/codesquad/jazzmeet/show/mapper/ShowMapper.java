@@ -7,6 +7,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 import org.springframework.data.domain.Page;
 
+import kr.codesquad.jazzmeet.admin.entity.Admin;
 import kr.codesquad.jazzmeet.image.entity.Image;
 import kr.codesquad.jazzmeet.show.dto.request.RegisterShowRequest;
 import kr.codesquad.jazzmeet.show.dto.response.ShowByDateAndVenueResponse;
@@ -33,7 +34,7 @@ public interface ShowMapper {
 	ShowDetailResponse toShowDetailResponse(Show show);
 
 	@Mapping(target = "description", source = "registerShowRequest.description")
-	Show toShow(RegisterShowRequest registerShowRequest, Venue venue, Image poster);
+	Show toShow(RegisterShowRequest registerShowRequest, Venue venue, Image poster, Admin admin);
 
 	RegisterShowRequest toRegisterShowRequest(String teamName, String description, Long posterId,
 		LocalDateTime startTime, LocalDateTime endTime);
