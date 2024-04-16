@@ -36,10 +36,10 @@ public class Show {
 	@Column(nullable = false)
 	private LocalDateTime startTime;
 	private LocalDateTime endTime;
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "venue_id")
 	private Venue venue;
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "poster_id")
 	private Image poster;
 	@ManyToOne(fetch = FetchType.LAZY)
