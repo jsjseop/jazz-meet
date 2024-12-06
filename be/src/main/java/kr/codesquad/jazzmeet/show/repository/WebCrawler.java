@@ -24,7 +24,7 @@ import lombok.extern.log4j.Log4j2;
 
 @Log4j2
 @RequiredArgsConstructor
-@Component
+// @Component
 public class WebCrawler {
 
 	private static final String NEXT_ARTICLE_BUTTON_CLASS_NAME = "_abl-";

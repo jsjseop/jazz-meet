@@ -11,7 +11,7 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-@Component
+// @Component
 public class WebDriverUtil {
 
 	public static WebDriver getChromeDriver() {

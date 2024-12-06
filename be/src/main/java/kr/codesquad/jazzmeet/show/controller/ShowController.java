@@ -36,7 +36,7 @@ import lombok.RequiredArgsConstructor;
 public class ShowController {
 
 	private final ShowService showService;
-	private final ShowScheduler showScheduler;
+	// private final ShowScheduler showScheduler;
 
 	/**
 	 * 진행 중인 공연 조회 API
@@ -151,10 +151,10 @@ public class ShowController {
 	/**
 	 * 공연 데이터 자동화 테스트 API
 	 */
-	@GetMapping("/api/crawling-test")
-	public ResponseEntity<Void> crawlingTest() {
-		showScheduler.autoInsertShowSchedule();
-
-		return ResponseEntity.ok().build();
-	}
+	// @GetMapping("/api/crawling-test")
+	// public ResponseEntity<Void> crawlingTest() {
+	// 	showScheduler.autoInsertShowSchedule();
+	//
+	// 	return ResponseEntity.ok().build();
+	// }
 }

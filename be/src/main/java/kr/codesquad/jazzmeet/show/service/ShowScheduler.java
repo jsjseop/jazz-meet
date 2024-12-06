@@ -20,7 +20,7 @@ import lombok.extern.log4j.Log4j2;
 
 @Log4j2
 @RequiredArgsConstructor
-@Component
+// @Component
 public class ShowScheduler {
 	public static final String ENTRY55 = "entry55";
 	public static final String ENTRY55_INSTAGRAM_URL = "https://www.instagram.com/entry55_official/";

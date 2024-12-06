@@ -24,7 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RequiredArgsConstructor
-@Component
+// @Component
 public class OcrHandler {
 
 	@Value("${naver.clova.endpoint}")
