@@ -34,5 +34,9 @@ public class Review extends BaseTimeEntity {
 		this.content = content;
 		this.venue = venue;
 	}
+
+	public void updateContent(String content) {
+		this.content = content;
+	}
 }
 

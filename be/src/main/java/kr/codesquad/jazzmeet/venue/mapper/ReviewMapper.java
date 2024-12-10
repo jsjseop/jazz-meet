@@ -6,6 +6,7 @@ import org.mapstruct.factory.Mappers;
 
 import kr.codesquad.jazzmeet.venue.dto.request.ReviewCreateRequest;
 import kr.codesquad.jazzmeet.venue.dto.response.ReviewCreateResponse;
+import kr.codesquad.jazzmeet.venue.dto.response.ReviewUpdateResponse;
 import kr.codesquad.jazzmeet.venue.entity.Review;
 import kr.codesquad.jazzmeet.venue.entity.Venue;
 
@@ -17,4 +18,6 @@ public interface ReviewMapper {
 	Review toReview(ReviewCreateRequest reviewCreateRequest, String encryptedPassword, Venue venue);
 
 	ReviewCreateResponse toReviewCreateResponse(Review review);
+
+	ReviewUpdateResponse toReviewUpdateResponse(Review review);
 }
