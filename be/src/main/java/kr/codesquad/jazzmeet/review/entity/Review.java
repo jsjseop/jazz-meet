@@ -1,6 +1,8 @@
 package kr.codesquad.jazzmeet.review.entity;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -27,6 +29,8 @@ public class Review extends BaseTimeEntity {
 	@ManyToOne
 	@JoinColumn(name = "venue_id")
 	private Venue venue;
+	@Enumerated(value = EnumType.STRING)
+	private ReviewStatus status = ReviewStatus.CREATED;
 
 	@Builder
 	public Review(String nickname, String password, String content, Venue venue) {
@@ -38,6 +42,10 @@ public class Review extends BaseTimeEntity {
 
 	public void updateContent(String content) {
 		this.content = content;
+	}
+
+	public void deleteReview() {
+		this.status = ReviewStatus.DELETED;
 	}
 }
 

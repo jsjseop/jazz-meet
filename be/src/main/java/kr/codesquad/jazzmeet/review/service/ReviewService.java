@@ -47,7 +47,7 @@ public class ReviewService {
 		if (!bCryptPasswordEncoder.matches(reviewDeleteRequest.password(), review.getPassword())) {
 			throw new CustomException(ErrorCode.WRONG_PASSWORD);
 		}
-		reviewRepository.delete(review);
+		review.deleteReview();
 	}
 }
 
