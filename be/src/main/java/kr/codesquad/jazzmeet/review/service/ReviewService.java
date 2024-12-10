@@ -1,15 +1,15 @@
-package kr.codesquad.jazzmeet.venue.service;
+package kr.codesquad.jazzmeet.review.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import kr.codesquad.jazzmeet.global.error.CustomException;
 import kr.codesquad.jazzmeet.global.error.statuscode.VenueErrorCode;
-import kr.codesquad.jazzmeet.venue.dto.request.ReviewUpdateRequest;
-import kr.codesquad.jazzmeet.venue.dto.response.ReviewUpdateResponse;
-import kr.codesquad.jazzmeet.venue.entity.Review;
-import kr.codesquad.jazzmeet.venue.mapper.ReviewMapper;
-import kr.codesquad.jazzmeet.venue.repository.ReviewRepository;
+import kr.codesquad.jazzmeet.review.dto.request.ReviewUpdateRequest;
+import kr.codesquad.jazzmeet.review.dto.response.ReviewUpdateResponse;
+import kr.codesquad.jazzmeet.review.entity.Review;
+import kr.codesquad.jazzmeet.review.mapper.ReviewMapper;
+import kr.codesquad.jazzmeet.review.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
 
 @Transactional(readOnly = true)

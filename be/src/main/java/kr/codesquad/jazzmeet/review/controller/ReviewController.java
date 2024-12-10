@@ -1,4 +1,4 @@
-package kr.codesquad.jazzmeet.venue.controller;
+package kr.codesquad.jazzmeet.review.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -8,12 +8,12 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import kr.codesquad.jazzmeet.venue.dto.request.ReviewCreateRequest;
-import kr.codesquad.jazzmeet.venue.dto.request.ReviewUpdateRequest;
-import kr.codesquad.jazzmeet.venue.dto.response.ReviewCreateResponse;
-import kr.codesquad.jazzmeet.venue.dto.response.ReviewUpdateResponse;
-import kr.codesquad.jazzmeet.venue.service.ReviewFacade;
-import kr.codesquad.jazzmeet.venue.service.ReviewService;
+import kr.codesquad.jazzmeet.review.dto.request.ReviewCreateRequest;
+import kr.codesquad.jazzmeet.review.dto.request.ReviewUpdateRequest;
+import kr.codesquad.jazzmeet.review.dto.response.ReviewCreateResponse;
+import kr.codesquad.jazzmeet.review.dto.response.ReviewUpdateResponse;
+import kr.codesquad.jazzmeet.review.service.ReviewFacade;
+import kr.codesquad.jazzmeet.review.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor

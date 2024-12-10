@@ -1,13 +1,13 @@
-package kr.codesquad.jazzmeet.venue.mapper;
+package kr.codesquad.jazzmeet.review.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
-import kr.codesquad.jazzmeet.venue.dto.request.ReviewCreateRequest;
-import kr.codesquad.jazzmeet.venue.dto.response.ReviewCreateResponse;
-import kr.codesquad.jazzmeet.venue.dto.response.ReviewUpdateResponse;
-import kr.codesquad.jazzmeet.venue.entity.Review;
+import kr.codesquad.jazzmeet.review.dto.request.ReviewCreateRequest;
+import kr.codesquad.jazzmeet.review.dto.response.ReviewCreateResponse;
+import kr.codesquad.jazzmeet.review.dto.response.ReviewUpdateResponse;
+import kr.codesquad.jazzmeet.review.entity.Review;
 import kr.codesquad.jazzmeet.venue.entity.Venue;
 
 @Mapper

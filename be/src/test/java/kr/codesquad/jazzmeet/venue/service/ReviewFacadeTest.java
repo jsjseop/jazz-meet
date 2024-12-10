@@ -12,13 +12,15 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import kr.codesquad.jazzmeet.fixture.VenueFixture;
-import kr.codesquad.jazzmeet.venue.dto.request.ReviewCreateRequest;
-import kr.codesquad.jazzmeet.venue.dto.response.ReviewCreateResponse;
-import kr.codesquad.jazzmeet.venue.entity.Review;
+import kr.codesquad.jazzmeet.review.dto.request.ReviewCreateRequest;
+import kr.codesquad.jazzmeet.review.dto.response.ReviewCreateResponse;
+import kr.codesquad.jazzmeet.review.entity.Review;
+import kr.codesquad.jazzmeet.review.service.ReviewFacade;
+import kr.codesquad.jazzmeet.review.service.ReviewService;
 import kr.codesquad.jazzmeet.venue.entity.Venue;
 
 @ExtendWith(MockitoExtension.class)
-public class ReviewFacadeTest {
+class ReviewFacadeTest {
 
 	@InjectMocks
 	ReviewFacade reviewFacade;

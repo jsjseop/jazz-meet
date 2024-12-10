@@ -1,4 +1,4 @@
-package kr.codesquad.jazzmeet.venue.dto.response;
+package kr.codesquad.jazzmeet.review.dto.response;
 
 public record ReviewUpdateResponse(
 	Long id,

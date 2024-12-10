@@ -1,4 +1,4 @@
-package kr.codesquad.jazzmeet.venue.dto.request;
+package kr.codesquad.jazzmeet.review.dto.request;
 
 public record ReviewUpdateRequest(
 	String content
