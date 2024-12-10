@@ -30,8 +30,8 @@ public class ReviewService {
 	}
 
 	@Transactional
-	public ReviewUpdateResponse updateReview(ReviewUpdateRequest reviewUpdateRequest) {
-		Review review = findById(reviewUpdateRequest.id());
+	public ReviewUpdateResponse updateReview(Long reviewId, ReviewUpdateRequest reviewUpdateRequest) {
+		Review review = findById(reviewId);
 		review.updateContent(reviewUpdateRequest.content());
 
 		return ReviewMapper.INSTANCE.toReviewUpdateResponse(review);

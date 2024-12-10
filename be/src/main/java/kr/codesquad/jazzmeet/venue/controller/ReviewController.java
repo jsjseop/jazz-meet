@@ -2,6 +2,7 @@ package kr.codesquad.jazzmeet.venue.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -35,9 +36,10 @@ public class ReviewController {
 	/**
 	 * 리뷰 수정 API
 	 */
-	@PutMapping("/api/reviews")
-	public  ResponseEntity<ReviewUpdateResponse> updateReview(@RequestBody ReviewUpdateRequest reviewUpdateRequest) {
-		ReviewUpdateResponse reviewUpdateResponse = reviewService.updateReview(reviewUpdateRequest);
+	@PutMapping("/api/reviews/{reviewId}")
+	public  ResponseEntity<ReviewUpdateResponse> updateReview(@PathVariable Long reviewId,
+		@RequestBody ReviewUpdateRequest reviewUpdateRequest) {
+		ReviewUpdateResponse reviewUpdateResponse = reviewService.updateReview(reviewId, reviewUpdateRequest);
 
 		return ResponseEntity.status(HttpStatus.OK).body(reviewUpdateResponse);
 	}
