@@ -1,5 +1,7 @@
 package kr.codesquad.jazzmeet.admin.entity;
 
+import java.util.Objects;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -48,5 +50,9 @@ public class Admin {
 
 	public void isSame(String password) {
 		PasswordEncoder.matchesPassword(password, this.password);
+	}
+
+	public boolean isSame(Admin admin) {
+		return Objects.equals(this.id, admin.id);
 	}
 }

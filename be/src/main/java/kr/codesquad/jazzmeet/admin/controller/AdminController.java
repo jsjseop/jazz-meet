@@ -5,18 +5,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
-import kr.codesquad.jazzmeet.admin.mapper.AdminMapper;
 import kr.codesquad.jazzmeet.admin.dto.request.LoginAdminRequest;
 import kr.codesquad.jazzmeet.admin.dto.request.SignUpAdminRequest;
 import kr.codesquad.jazzmeet.admin.dto.response.LoginAdminResponse;
 import kr.codesquad.jazzmeet.admin.entity.Admin;
+import kr.codesquad.jazzmeet.admin.mapper.AdminMapper;
 import kr.codesquad.jazzmeet.admin.service.AdminService;
 import kr.codesquad.jazzmeet.global.error.CustomException;
 import kr.codesquad.jazzmeet.global.error.statuscode.AdminErrorCode;
@@ -43,6 +42,16 @@ public class AdminController {
 	public ResponseEntity<Void> signUp(@AdminAuth Admin rootAdmin,
 		@Valid @RequestBody SignUpAdminRequest signUpAdminRequest) {
 		adminService.signUp(rootAdmin, signUpAdminRequest);
+
+		return ResponseEntity.status(HttpStatus.CREATED).build();
+	}
+
+	/**
+	 * 사용자 계정 생성 API
+	 */
+	@PostMapping("/api/admins/signup")
+	public ResponseEntity<Void> userSignUp(@Valid @RequestBody SignUpAdminRequest signUpAdminRequest) {
+		adminService.userSignUp(signUpAdminRequest);
 
 		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}

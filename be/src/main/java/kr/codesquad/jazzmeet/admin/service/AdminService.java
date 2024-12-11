@@ -45,6 +45,16 @@ public class AdminService {
 		return adminRepository.save(admin);
 	}
 
+	@Transactional
+	public void userSignUp(SignUpAdminRequest signUpAdminRequest) {
+		isExistAdmin(signUpAdminRequest.loginId());
+
+		String encodedPassword = PasswordEncoder.encode(signUpAdminRequest.password());
+		Admin admin = AdminMapper.INSTANCE.toAdmin(signUpAdminRequest, encodedPassword, UserRole.USER);
+
+		adminRepository.save(admin);
+	}
+
 	private void isExistAdmin(String loginId) {
 		if (adminRepository.existsByLoginId(loginId)) {
 			throw new CustomException(AdminErrorCode.ALREADY_EXIST_ADMIN);

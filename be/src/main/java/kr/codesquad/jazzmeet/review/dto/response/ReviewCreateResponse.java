@@ -1,11 +1,11 @@
-package kr.codesquad.jazzmeet.venue.dto.response;
+package kr.codesquad.jazzmeet.review.dto.response;
 
 import java.time.LocalDateTime;
 
 public record ReviewCreateResponse(
 
 	Long id,
-	String nickname,
+	String userId,
 	String content,
 	LocalDateTime createdAt
 ) {
