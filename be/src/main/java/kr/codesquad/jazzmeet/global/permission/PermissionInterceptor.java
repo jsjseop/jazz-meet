@@ -38,11 +38,24 @@ public class PermissionInterceptor implements HandlerInterceptor {
 
 		// Permission 어노테이션 포함 여부 검사 로직
 		HandlerMethod handlerMethod = (HandlerMethod) handler;
+
+		// LoginPermission 어노테이션인 경우
+		LoginPermission loginPermission = handlerMethod.getMethodAnnotation(LoginPermission.class);
+		if (loginPermission != null) {
+			String token = extractJwtTokenFromHeader(request);
+
+			Claims claims = jwtProvider.validateAndGetClaims(token);
+			String adminId = String.valueOf(claims.get("adminId"));
+			request.setAttribute("adminId", adminId);
+			return true;
+		}
+
 		Permission permission = handlerMethod.getMethodAnnotation(Permission.class);
 		if (permission == null) {
 			return true;
 		}
 
+		// Permission 어노테이션인 경우
 		String token = extractJwtTokenFromHeader(request);
 
 		Claims claims = jwtProvider.validateAndGetClaims(token);

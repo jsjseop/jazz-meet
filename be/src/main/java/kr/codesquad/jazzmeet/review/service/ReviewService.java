@@ -1,13 +1,11 @@
 package kr.codesquad.jazzmeet.review.service;
 
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import kr.codesquad.jazzmeet.admin.entity.Admin;
 import kr.codesquad.jazzmeet.global.error.CustomException;
-import kr.codesquad.jazzmeet.global.error.statuscode.ErrorCode;
 import kr.codesquad.jazzmeet.global.error.statuscode.VenueErrorCode;
-import kr.codesquad.jazzmeet.review.dto.request.ReviewDeleteRequest;
 import kr.codesquad.jazzmeet.review.dto.request.ReviewUpdateRequest;
 import kr.codesquad.jazzmeet.review.dto.response.ReviewUpdateResponse;
 import kr.codesquad.jazzmeet.review.entity.Review;
@@ -21,7 +19,6 @@ import lombok.RequiredArgsConstructor;
 public class ReviewService {
 
 	private final ReviewRepository reviewRepository;
-	private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
 	@Transactional
 	public Review save(Review review) {
@@ -34,18 +31,21 @@ public class ReviewService {
 	}
 
 	@Transactional
-	public ReviewUpdateResponse updateReview(Long reviewId, ReviewUpdateRequest reviewUpdateRequest) {
+	public ReviewUpdateResponse updateReview(Long reviewId, Admin user, ReviewUpdateRequest reviewUpdateRequest) {
 		Review review = findById(reviewId);
+		if (!review.isAuthor(user)) {
+			throw new CustomException(VenueErrorCode.UNAUTHORIZED);
+		}
 		review.updateContent(reviewUpdateRequest.content());
 
 		return ReviewMapper.INSTANCE.toReviewUpdateResponse(review);
 	}
 
 	@Transactional
-	public void deleteReview(Long reviewId, ReviewDeleteRequest reviewDeleteRequest) {
+	public void deleteReview(Long reviewId, Admin user) {
 		Review review = findById(reviewId);
-		if (!bCryptPasswordEncoder.matches(reviewDeleteRequest.password(), review.getPassword())) {
-			throw new CustomException(ErrorCode.WRONG_PASSWORD);
+		if (!review.isAuthor(user)) {
+			throw new CustomException(VenueErrorCode.UNAUTHORIZED);
 		}
 		review.deleteReview();
 	}

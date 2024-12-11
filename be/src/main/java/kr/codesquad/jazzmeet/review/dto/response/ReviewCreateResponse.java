@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 public record ReviewCreateResponse(
 
 	Long id,
-	String nickname,
+	String userId,
 	String content,
 	LocalDateTime createdAt
 ) {

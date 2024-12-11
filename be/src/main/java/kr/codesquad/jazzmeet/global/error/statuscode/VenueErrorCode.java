@@ -18,7 +18,8 @@ public enum VenueErrorCode implements StatusCode {
 	NOT_FOUND_DAY_OF_WEEK(HttpStatus.NOT_FOUND, "해당하는 요일이 없습니다."),
 
 	// -- [Review] -- //
-	NOT_FOUND_REVIEW(HttpStatus.NOT_FOUND, "해당하는 리뷰가 없습니다.");
+	NOT_FOUND_REVIEW(HttpStatus.NOT_FOUND, "해당하는 리뷰가 없습니다."),
+	UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "권한이 없습니다.");
 
 	private final HttpStatus httpStatus;
 	private final String message;

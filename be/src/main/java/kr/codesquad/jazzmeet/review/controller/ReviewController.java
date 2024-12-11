@@ -9,8 +9,10 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import kr.codesquad.jazzmeet.admin.entity.Admin;
+import kr.codesquad.jazzmeet.global.permission.AdminAuth;
+import kr.codesquad.jazzmeet.global.permission.LoginPermission;
 import kr.codesquad.jazzmeet.review.dto.request.ReviewCreateRequest;
-import kr.codesquad.jazzmeet.review.dto.request.ReviewDeleteRequest;
 import kr.codesquad.jazzmeet.review.dto.request.ReviewUpdateRequest;
 import kr.codesquad.jazzmeet.review.dto.response.ReviewCreateResponse;
 import kr.codesquad.jazzmeet.review.dto.response.ReviewUpdateResponse;
@@ -28,9 +30,11 @@ public class ReviewController {
 	/**
 	 * 리뷰 등록 API
 	 */
+	@LoginPermission
 	@PostMapping("/api/reviews")
-	public ResponseEntity<ReviewCreateResponse> createReview(@RequestBody ReviewCreateRequest reviewCreateRequest) {
-		ReviewCreateResponse reviewCreateResponse = reviewFacade.createReview(reviewCreateRequest);
+	public ResponseEntity<ReviewCreateResponse> createReview(@AdminAuth Admin user,
+		@RequestBody ReviewCreateRequest reviewCreateRequest) {
+		ReviewCreateResponse reviewCreateResponse = reviewFacade.createReview(user, reviewCreateRequest);
 
 		return ResponseEntity.status(HttpStatus.CREATED).body(reviewCreateResponse);
 	}
@@ -38,10 +42,11 @@ public class ReviewController {
 	/**
 	 * 리뷰 수정 API
 	 */
+	@LoginPermission
 	@PutMapping("/api/reviews/{reviewId}")
-	public ResponseEntity<ReviewUpdateResponse> updateReview(@PathVariable Long reviewId,
+	public ResponseEntity<ReviewUpdateResponse> updateReview(@PathVariable Long reviewId, @AdminAuth Admin user,
 		@RequestBody ReviewUpdateRequest reviewUpdateRequest) {
-		ReviewUpdateResponse reviewUpdateResponse = reviewService.updateReview(reviewId, reviewUpdateRequest);
+		ReviewUpdateResponse reviewUpdateResponse = reviewService.updateReview(reviewId, user, reviewUpdateRequest);
 
 		return ResponseEntity.status(HttpStatus.OK).body(reviewUpdateResponse);
 	}
@@ -49,10 +54,10 @@ public class ReviewController {
 	/**
 	 * 리뷰 삭제 API
 	 */
+	@LoginPermission
 	@DeleteMapping("/api/reviews/{reviewId}")
-	public ResponseEntity<Void> deleteReview(@PathVariable Long reviewId,
-		@RequestBody ReviewDeleteRequest reviewDeleteRequest) {
-		reviewService.deleteReview(reviewId, reviewDeleteRequest);
+	public ResponseEntity<Void> deleteReview(@PathVariable Long reviewId, @AdminAuth Admin user) {
+		reviewService.deleteReview(reviewId, user);
 
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
