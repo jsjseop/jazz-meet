@@ -37,15 +37,12 @@ class ReviewFacadeTest {
 	void createReview() {
 		// given
 		ReviewCreateRequest reviewCreateRequest = new ReviewCreateRequest("리뷰 내용", 1L);
-		Admin user = AdminFixture.createAdmin("user", "1234", UserRole.USER);
 
 		Venue venue = VenueFixture.createVenue("공연장", "주소");
 		when(venueService.findById(anyLong())).thenReturn(venue);
-		Review review = ReviewFixture.createReview(user, "1234", "리뷰 내용");
+		Admin user = AdminFixture.createAdmin("user", "1234", UserRole.USER);
+		Review review = ReviewFixture.createReview(user, "리뷰 내용");
 		when(reviewService.save(any(Review.class))).thenReturn(review);
-
-		// when(reviewMapper.toReview(any(ReviewCreateRequest.class), anyString(), any(Venue.class))).thenReturn(review);
-		// when(reviewMapper.toReviewCreateResponse(any(Review.class))).thenReturn(reviewCreateResponse);
 
 		// when
 		ReviewCreateResponse result = reviewFacade.createReview(user, reviewCreateRequest);

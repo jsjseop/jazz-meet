@@ -5,7 +5,7 @@ import kr.codesquad.jazzmeet.review.entity.Review;
 
 public class ReviewFixture {
 
-	public static Review createReview(Admin user, String password, String content) {
+	public static Review createReview(Admin user, String content) {
 		return Review.builder()
 			.author(user)
 			.content(content)

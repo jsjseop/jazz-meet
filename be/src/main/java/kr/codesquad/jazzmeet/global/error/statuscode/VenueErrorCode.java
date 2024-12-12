@@ -19,7 +19,10 @@ public enum VenueErrorCode implements StatusCode {
 
 	// -- [Review] -- //
 	NOT_FOUND_REVIEW(HttpStatus.NOT_FOUND, "해당하는 리뷰가 없습니다."),
-	UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "권한이 없습니다.");
+	UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "권한이 없습니다."),
+	NO_MATCH_VALUES(HttpStatus.NOT_FOUND, "해당하는 종류가 없습니다."),
+	ALREADY_EXIST_REACTION(HttpStatus.BAD_REQUEST, "이미 반응을 했습니다."),
+	NOT_FOUND_REACTION(HttpStatus.NOT_FOUND, "해당하는 반응이 없습니다.");
 
 	private final HttpStatus httpStatus;
 	private final String message;
