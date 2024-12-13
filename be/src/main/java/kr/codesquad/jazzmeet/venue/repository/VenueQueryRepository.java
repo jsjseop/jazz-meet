@@ -1,7 +1,9 @@
 package kr.codesquad.jazzmeet.venue.repository;
 
 import static com.querydsl.core.group.GroupBy.*;
+import static kr.codesquad.jazzmeet.admin.entity.QAdmin.*;
 import static kr.codesquad.jazzmeet.image.entity.QImage.*;
+import static kr.codesquad.jazzmeet.review.entity.QReview.*;
 import static kr.codesquad.jazzmeet.show.entity.QShow.*;
 import static kr.codesquad.jazzmeet.venue.entity.QLink.*;
 import static kr.codesquad.jazzmeet.venue.entity.QLinkType.*;
@@ -27,6 +29,9 @@ import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
+import kr.codesquad.jazzmeet.image.entity.ImageStatus;
+import kr.codesquad.jazzmeet.review.entity.ReviewStatus;
+import kr.codesquad.jazzmeet.review.vo.ReviewDetail;
 import kr.codesquad.jazzmeet.venue.dto.ShowInfo;
 import kr.codesquad.jazzmeet.venue.dto.VenueInfo;
 import kr.codesquad.jazzmeet.venue.vo.NearbyVenue;
@@ -250,10 +255,12 @@ public class VenueQueryRepository {
 		return query
 			.from(venue)
 			.leftJoin(venueImage).on(venue.id.eq(venueImage.venue.id))
-			.leftJoin(image).on(venueImage.image.id.eq(image.id))
+			.leftJoin(image).on(venueImage.image.id.eq(image.id).and(image.status.eq(ImageStatus.REGISTERED)))
 			.leftJoin(link).on(venue.id.eq(link.venue.id))
 			.leftJoin(linkType).on(link.linkType.id.eq(linkType.id))
 			.leftJoin(venueHour).on(venue.id.eq(venueHour.venue.id))
+			.leftJoin(review).on(venue.id.eq(review.venue.id).and(review.status.eq(ReviewStatus.CREATED)))
+			.leftJoin(admin).on(review.author.id.eq(admin.id))
 			.where(venue.id.eq(venueId))
 			.transform(
 				groupBy(venue.id).list(
@@ -269,7 +276,9 @@ public class VenueQueryRepository {
 						set(Projections.constructor(VenueDetailImage.class, image.id, image.url)).as("images"),
 						set(Projections.constructor(VenueDetailLink.class, linkType.name, link.url)).as("links"),
 						set(Projections.constructor(VenueDetailVenueHour.class, venueHour.day,
-							venueHour.businessHour)).as("venueHours")
+							venueHour.businessHour)).as("venueHours"),
+						set(Projections.constructor(ReviewDetail.class, review.id, review.content, admin.loginId,
+							review.likeCount, review.dislikeCount)).as("reviews")
 					)
 				)
 			)

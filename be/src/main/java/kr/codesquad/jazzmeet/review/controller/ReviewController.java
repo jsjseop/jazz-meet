@@ -16,6 +16,7 @@ import kr.codesquad.jazzmeet.review.dto.request.ReviewCreateRequest;
 import kr.codesquad.jazzmeet.review.dto.request.ReviewUpdateRequest;
 import kr.codesquad.jazzmeet.review.dto.response.ReviewCreateResponse;
 import kr.codesquad.jazzmeet.review.dto.response.ReviewUpdateResponse;
+import kr.codesquad.jazzmeet.review.entity.ReactionType;
 import kr.codesquad.jazzmeet.review.service.ReviewFacade;
 import kr.codesquad.jazzmeet.review.service.ReviewService;
 import lombok.RequiredArgsConstructor;
@@ -60,5 +61,49 @@ public class ReviewController {
 		reviewService.deleteReview(reviewId, user);
 
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+	}
+
+	/**
+	 * 리뷰 좋아요 반응 추가 API
+	 */
+	@LoginPermission
+	@PostMapping("/api/reviews/{reviewId}/reactions/like")
+	public ResponseEntity<Void> createLike(@PathVariable Long reviewId, @AdminAuth Admin user) {
+		reviewService.createReaction(reviewId, user, ReactionType.LIKE);
+
+		return ResponseEntity.noContent().build();
+	}
+
+	/**
+	 * 리뷰 좋아요 반응 삭제 API
+	 */
+	@LoginPermission
+	@DeleteMapping("/api/reviews/{reviewId}/reactions/like")
+	public ResponseEntity<Void> deleteLike(@PathVariable Long reviewId, @AdminAuth Admin user) {
+		reviewService.deleteReaction(reviewId, user, ReactionType.LIKE);
+
+		return ResponseEntity.noContent().build();
+	}
+
+	/**
+	 * 리뷰 싫어요 반응 추가 API
+	 */
+	@LoginPermission
+	@PostMapping("/api/reviews/{reviewId}/reactions/dislike")
+	public ResponseEntity<Void> createDislike(@PathVariable Long reviewId, @AdminAuth Admin user) {
+		reviewService.createReaction(reviewId, user, ReactionType.DISLIKE);
+
+		return ResponseEntity.noContent().build();
+	}
+
+	/**
+	 * 리뷰 싫어요 반응 삭제 API
+	 */
+	@LoginPermission
+	@DeleteMapping("/api/reviews/{reviewId}/reactions/dislike")
+	public ResponseEntity<Void> deleteDislike(@PathVariable Long reviewId, @AdminAuth Admin user) {
+		reviewService.deleteReaction(reviewId, user, ReactionType.DISLIKE);
+
+		return ResponseEntity.noContent().build();
 	}
 }
