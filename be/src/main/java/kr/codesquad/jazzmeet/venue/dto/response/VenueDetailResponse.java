@@ -2,6 +2,7 @@ package kr.codesquad.jazzmeet.venue.dto.response;
 
 import java.util.List;
 
+import kr.codesquad.jazzmeet.review.vo.ReviewDetail;
 import kr.codesquad.jazzmeet.venue.vo.VenueDetailImage;
 import kr.codesquad.jazzmeet.venue.vo.VenueDetailLink;
 import kr.codesquad.jazzmeet.venue.vo.VenueDetailVenueHour;
@@ -19,6 +20,7 @@ public record VenueDetailResponse(
 	List<VenueDetailVenueHour> venueHours,
 	String description,
 	Double latitude,
-	Double longitude
+	Double longitude,
+	List<ReviewDetail> reviews
 ) {
 }
